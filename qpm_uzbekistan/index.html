@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QPM Uzbekistan — Policy Simulator</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --navy:   #1a3a5c;
+  --blue:   #2471a3;
+  --teal:   #148f77;
+  --red:    #c0392b;
+  --amber:  #d68910;
+  --purple: #7d3c98;
+  --green:  #1e8449;
+  --bg:     #eef2f7;
+  --panel:  #ffffff;
+  --border: #d0dce9;
+  --text:   #1c2b3a;
+  --muted:  #6b8096;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* NAV */
+nav{background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:space-between;
+    padding:0 24px;height:56px;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,.25)}
+.nav-brand{display:flex;align-items:center;gap:10px}
+.nav-logo{width:36px;height:36px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center}
+.nav-logo svg{width:22px;height:22px}
+.brand-title{font-size:1rem;font-weight:700}
+.brand-sub{font-size:.65rem;opacity:.65;letter-spacing:.8px;text-transform:uppercase;margin-top:1px}
+.nav-tabs{display:flex;gap:2px}
+.ntab{background:none;border:none;color:rgba(255,255,255,.6);padding:6px 16px;border-radius:6px;
+      cursor:pointer;font-size:.88rem;font-weight:500;transition:all .15s}
+.ntab:hover{color:#fff;background:rgba(255,255,255,.1)}
+.ntab.on{color:#fff;background:rgba(255,255,255,.18);border-bottom:2px solid #1abc9c;border-radius:6px 6px 0 0}
+.badge{background:#1abc9c;color:#fff;font-size:.6rem;padding:1px 5px;border-radius:8px;margin-left:4px}
+
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:280px 1fr;min-height:calc(100vh - 56px)}
+
+/* SIDEBAR */
+.sidebar{background:var(--panel);border-right:1px solid var(--border);padding:16px 14px;overflow-y:auto}
+.sec{margin-bottom:18px}
+.sec-hd{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.9px;
+        color:var(--muted);margin-bottom:10px;padding-bottom:4px;border-bottom:1px solid var(--border)}
+
+/* Shock buttons */
+.shock-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.sbtn{border:2px solid var(--border);background:#fff;border-radius:10px;padding:10px 7px;
+      cursor:pointer;transition:all .15s;text-align:center}
+.sbtn:hover{border-color:var(--blue)}
+.sbtn.on{border-color:var(--blue);background:#e8f4fd}
+.sbtn .ico{font-size:1.4rem;margin-bottom:3px}
+.sbtn .lbl{font-size:.7rem;font-weight:600;line-height:1.3}
+
+/* Sliders */
+.prow{margin-bottom:12px}
+.plabel{display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:3px}
+.pname{font-weight:500}
+.pval{color:var(--blue);font-weight:700;min-width:34px;text-align:right}
+.pdesc{font-size:.65rem;color:var(--muted);margin-bottom:3px}
+input[type=range]{width:100%;height:4px;border-radius:2px;outline:none;-webkit-appearance:none;cursor:pointer;
+  background:linear-gradient(to right,var(--blue) 0%,var(--blue) var(--pct,50%),#d0dce9 var(--pct,50%),#d0dce9 100%)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;
+  background:var(--blue);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+
+.shk-size{margin-top:10px;background:#f5f8fc;border-radius:8px;padding:10px 12px}
+.shk-size-hd{font-size:.7rem;font-weight:600;color:var(--muted);margin-bottom:8px}
+
+.run-btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:8px;
+         padding:9px 20px;font-size:.88rem;font-weight:600;cursor:pointer;transition:background .15s;
+         display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px}
+.run-btn:hover{background:var(--navy)}
+
+/* MAIN */
+.main{padding:22px 24px;overflow-y:auto}
+.page{display:none}.page.on{display:block}
+
+/* KPI row */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.kcard{background:var(--panel);border-radius:12px;padding:14px 16px;border:1px solid var(--border)}
+.klbl{font-size:.65rem;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:5px}
+.kval{font-size:1.55rem;font-weight:700}
+.ksub{font-size:.68rem;color:var(--muted);margin-top:3px}
+
+/* Charts */
+.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.ccard{background:var(--panel);border-radius:12px;padding:16px 18px;border:1px solid var(--border)}
+.ctitle{font-size:.83rem;font-weight:700;color:var(--text)}
+.cvar{font-size:.65rem;color:var(--blue);font-family:'Courier New',monospace;font-weight:600;margin:1px 0}
+.csub{font-size:.68rem;color:var(--muted);margin-bottom:12px}
+.cwrap{position:relative;height:195px}
+
+/* Section header */
+.shdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.stitle{font-size:1rem;font-weight:700;color:var(--navy)}
+.sdesc{font-size:.75rem;color:var(--muted);margin-top:2px}
+.sbadge{background:#e8f4fd;color:var(--blue);font-size:.7rem;font-weight:600;padding:3px 10px;border-radius:20px}
+
+/* Horizon buttons */
+.hbtns{display:flex;gap:4px}
+.hbtn{border:1px solid var(--border);background:#fff;border-radius:6px;padding:4px 10px;
+      cursor:pointer;font-size:.72rem;font-weight:600;color:var(--muted);transition:all .12s}
+.hbtn.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+
+/* Solver quality tag */
+.solver-tag{font-size:.65rem;padding:2px 8px;border-radius:10px;font-weight:600}
+.solver-ok{background:#d5f5e3;color:#1e8449}
+.solver-warn{background:#fef9e7;color:#d68910}
+
+/* About page */
+.agrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.acard{background:var(--panel);border-radius:12px;padding:18px 20px;border:1px solid var(--border)}
+.acard h3{font-size:.9rem;font-weight:700;color:var(--navy);margin-bottom:10px}
+.acard p,.acard li{font-size:.8rem;line-height:1.65;color:var(--muted)}
+.acard ul{padding-left:16px}.acard li{margin-bottom:4px}
+.eq{background:#f5f8fc;border-left:3px solid var(--blue);padding:7px 12px;border-radius:0 6px 6px 0;
+    margin:5px 0;font-family:'Courier New',monospace;font-size:.75rem;color:var(--text)}
+.ptable{width:100%;border-collapse:collapse;font-size:.75rem}
+.ptable th{background:#f0f4f8;padding:5px 9px;text-align:left;font-weight:600;border-bottom:2px solid var(--border)}
+.ptable td{padding:6px 9px;border-bottom:1px solid var(--border)}
+.ptable tr:hover td{background:#f8fbff}
+.changed{color:#e67e22;font-weight:700}
+
+/* Baseline */
+.bl-ctrls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.cgrp{display:flex;flex-direction:column;gap:3px}
+.clbl{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+.cinput{border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:.82rem;
+        color:var(--text);background:#fff;width:120px}
+
+/* Bug-fix badge */
+.fix-note{background:#fff3cd;border:1px solid #ffc107;border-radius:8px;padding:10px 14px;
+          margin-bottom:18px;font-size:.75rem;color:#856404;line-height:1.6}
+.fix-note strong{font-size:.78rem}
+
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .kpis{grid-template-columns:1fr 1fr}
+  .cgrid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <div class="nav-logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#1a3a5c" stroke-width="2.2" stroke-linecap="round">
+        <path d="M3 3v18h18"/><path d="M7 16l4-4 4 4 4-8"/>
+      </svg>
+    </div>
+    <div>
+      <div class="brand-title">QPM Uzbekistan</div>
+      <div class="brand-sub">Central Bank Macroeconomic Simulator</div>
+    </div>
+  </div>
+  <div class="nav-tabs">
+    <button class="ntab on" onclick="showPage('irf',this)">Shock Analysis <span class="badge">IRF</span></button>
+    <button class="ntab" onclick="showPage('baseline',this)">Baseline Forecast</button>
+    <button class="ntab" onclick="showPage('about',this)">Model</button>
+  </div>
+</nav>
+
+<div class="layout">
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+
+  <div class="sec">
+    <div class="sec-hd">Shock Type</div>
+    <div class="shock-grid">
+      <button class="sbtn on" onclick="setShock('demand',this)">
+        <div class="ico">📊</div><div class="lbl">Aggregate<br>Demand</div>
+      </button>
+      <button class="sbtn" onclick="setShock('inflation',this)">
+        <div class="ico">🔥</div><div class="lbl">Cost-Push<br>Inflation</div>
+      </button>
+      <button class="sbtn" onclick="setShock('exchange',this)">
+        <div class="ico">💱</div><div class="lbl">UZS<br>Depreciation</div>
+      </button>
+      <button class="sbtn" onclick="setShock('monetary',this)">
+        <div class="ico">🏦</div><div class="lbl">Monetary<br>Tightening</div>
+      </button>
+    </div>
+    <div class="shk-size">
+      <div class="shk-size-hd">Simulation Settings</div>
+      <div class="prow">
+        <div class="plabel"><span class="pname">Shock size</span><span class="pval" id="vShkSz">1.0 pp</span></div>
+        <input type="range" id="shkSz" min="0.25" max="5" step="0.25" value="1"
+               oninput="sl(this,'vShkSz',v=>v.toFixed(2)+' pp');run()">
+      </div>
+      <div class="prow">
+        <div class="plabel"><span class="pname">Horizon</span><span class="pval" id="vHorizon">20 Q</span></div>
+        <input type="range" id="horizon" min="8" max="32" step="4" value="20"
+               oninput="sl(this,'vHorizon',v=>v+' Q');run()">
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hd">IS Curve — Aggregate Demand</div>
+    <div class="prow">
+      <div class="plabel"><span class="pname">b₁ — Gap persistence</span><span class="pval" id="vb1">0.70</span></div>
+      <div class="pdesc">Inertia in output gap dynamics</div>
+      <input type="range" id="b1" min="0.3" max="0.95" step="0.05" value="0.7" oninput="sl(this,'vb1',f2)">
+    </div>
+    <div class="prow">
+      <div class="plabel"><span class="pname">b₂ — MCI sensitivity</span><span class="pval" id="vb2">0.20</span></div>
+      <div class="pdesc">Monetary policy transmission to demand</div>
+      <input type="range" id="b2" min="0.05" max="0.6" step="0.05" value="0.2" oninput="sl(this,'vb2',f2)">
+    </div>
+    <div class="prow">
+      <div class="plabel"><span class="pname">b₃ — External demand</span><span class="pval" id="vb3">0.30</span></div>
+      <div class="pdesc">Foreign output gap spillover</div>
+      <input type="range" id="b3" min="0.05" max="0.6" step="0.05" value="0.3" oninput="sl(this,'vb3',f2)">
+    </div>
+    <div class="prow">
+      <div class="plabel"><span class="pname">b₄ — IR weight in MCI</span><span class="pval" id="vb4">0.60</span></div>
+      <div class="pdesc">Interest rate vs exchange rate (1-b₄) in MCI</div>
+      <input type="range" id="b4" min="0.1" max="0.9" step="0.1" value="0.6" oninput="sl(this,'vb4',f2)">
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hd">Phillips Curve — Inflation</div>
+    <div class="prow">
+      <div class="plabel"><span class="pname">a₁ — Inflation persistence</span><span class="pval" id="va1">0.60</span></div>
+      <div class="pdesc">Backward-looking share of expectations</div>
+      <input type="range" id="a1" min="0.3" max="0.9" step="0.05" value="0.6" oninput="sl(this,'va1',f2)">
+    </div>
+    <div class="prow">
+      <div class="plabel"><span class="pname">a₂ — Marginal cost pass-through</span><span class="pval" id="va2">0.20</span></div>
+      <div class="pdesc">RMC impact on inflation ★ updated</div>
+      <input type="range" id="a2" min="0.05" max="0.5" step="0.05" value="0.20" oninput="sl(this,'va2',f2)">
+    </div>
+    <div class="prow">
+      <div class="plabel"><span class="pname">a₃ — Domestic cost share</span><span class="pval" id="va3">0.65</span></div>
+      <div class="pdesc">Domestic vs imported inflation ★ updated</div>
+      <input type="range" id="a3" min="0.2" max="0.9" step="0.05" value="0.65" oninput="sl(this,'va3',f2)">
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hd">Taylor Rule — Monetary Policy</div>
+    <div class="prow">
+      <div class="plabel"><span class="pname">g₁ — Rate smoothing</span><span class="pval" id="vg1">0.80</span></div>
+      <div class="pdesc">CBU gradualism in rate adjustments</div>
+      <input type="range" id="g1" min="0.3" max="0.95" step="0.05" value="0.8" oninput="sl(this,'vg1',f2)">
+    </div>
+    <div class="prow">
+      <div class="plabel"><span class="pname">g₂ — Inflation response</span><span class="pval" id="vg2">1.50</span></div>
+      <div class="pdesc">Taylor principle: must be &gt; 1 for stability</div>
+      <input type="range" id="g2" min="1.0" max="3.0" step="0.1" value="1.5" oninput="sl(this,'vg2',f2)">
+    </div>
+    <div class="prow">
+      <div class="plabel"><span class="pname">g₃ — Output gap response</span><span class="pval" id="vg3">0.50</span></div>
+      <div class="pdesc">Weight on economic activity</div>
+      <input type="range" id="g3" min="0.1" max="1.5" step="0.1" value="0.5" oninput="sl(this,'vg3',f2)">
+    </div>
+    <div class="prow">
+      <div class="plabel"><span class="pname">e₁ — UIP backward weight</span><span class="pval" id="ve1">0.70</span></div>
+      <div class="pdesc">Exchange rate backward-looking share</div>
+      <input type="range" id="e1" min="0.1" max="0.9" step="0.1" value="0.7" oninput="sl(this,'ve1',f2)">
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hd">Steady-State Values</div>
+    <div class="prow">
+      <div class="plabel"><span class="pname">Inflation Target π* (%)</span><span class="pval" id="vtar">5.0</span></div>
+      <input type="range" id="ssTar" min="3" max="12" step="0.5" value="5" oninput="sl(this,'vtar',v=>v.toFixed(1))">
+    </div>
+    <div class="prow">
+      <div class="plabel"><span class="pname">Neutral Real Rate r̄ (%)</span><span class="pval" id="vrrbar">3.5</span></div>
+      <input type="range" id="ssRRbar" min="1" max="8" step="0.5" value="3.5" oninput="sl(this,'vrrbar',v=>v.toFixed(1))">
+    </div>
+    <div class="prow">
+      <div class="plabel"><span class="pname">Potential Growth ȳ (%)</span><span class="pval" id="vgdpbar">6.0</span></div>
+      <input type="range" id="ssGdpbar" min="2" max="10" step="0.5" value="6" oninput="sl(this,'vgdpbar',v=>v.toFixed(1))">
+    </div>
+  </div>
+
+  <button class="run-btn" onclick="run()">▶ &nbsp;Run Simulation</button>
+  <div style="text-align:center;margin-top:8px;font-size:.68rem;color:var(--muted)">
+    Solver: <span id="solverTag" class="solver-tag solver-ok">Ready</span>
+  </div>
+
+</aside>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+
+  <!-- IRF PAGE -->
+  <div class="page on" id="page-irf">
+    <div class="shdr">
+      <div>
+        <div class="stitle" id="irfTitle">Aggregate Demand Shock — Impulse Response Functions</div>
+        <div class="sdesc">Deviation from steady state · <span id="irfDesc">Shock = 1.0 pp · Horizon = 20 Q</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="hbtns">
+          <button class="hbtn" onclick="setH(8)">2Y</button>
+          <button class="hbtn on" onclick="setH(20)">5Y</button>
+          <button class="hbtn" onclick="setH(32)">8Y</button>
+        </div>
+        <button class="run-btn" style="width:auto;padding:7px 16px" onclick="run()">▶ Run</button>
+      </div>
+    </div>
+
+    <div class="kpis">
+      <div class="kcard">
+        <div class="klbl">Peak Inflation (D4L_CPI)</div>
+        <div class="kval" id="kpi0" style="color:var(--red)">—</div>
+        <div class="ksub" id="kpi0s">at quarter —</div>
+      </div>
+      <div class="kcard">
+        <div class="klbl">Peak Output Gap (L_GDP_GAP)</div>
+        <div class="kval" id="kpi1" style="color:var(--blue)">—</div>
+        <div class="ksub" id="kpi1s">at quarter —</div>
+      </div>
+      <div class="kcard">
+        <div class="klbl">Peak Policy Rate (RS)</div>
+        <div class="kval" id="kpi2" style="color:var(--navy)">—</div>
+        <div class="ksub" id="kpi2s">at quarter —</div>
+      </div>
+      <div class="kcard">
+        <div class="klbl">Peak NER Depreciation (D4L_S)</div>
+        <div class="kval" id="kpi3" style="color:var(--amber)">—</div>
+        <div class="ksub" id="kpi3s">at quarter —</div>
+      </div>
+    </div>
+
+    <div class="cgrid">
+      <div class="ccard">
+        <div class="ctitle">CPI Inflation YoY</div>
+        <div class="cvar">D4L_CPI = L_CPI − L_CPI{−4}</div>
+        <div class="csub">Year-on-year inflation deviation, percentage points</div>
+        <div class="cwrap"><canvas id="ch0"></canvas></div>
+      </div>
+      <div class="ccard">
+        <div class="ctitle">Output Gap</div>
+        <div class="cvar">L_GDP_GAP = L_GDP − L_GDP_BAR</div>
+        <div class="csub">Deviation of GDP from potential, percent</div>
+        <div class="cwrap"><canvas id="ch1"></canvas></div>
+      </div>
+      <div class="ccard">
+        <div class="ctitle">Nominal Policy Rate</div>
+        <div class="cvar">RS — CBU Key Rate</div>
+        <div class="csub">Deviation from neutral rate, percentage points</div>
+        <div class="cwrap"><canvas id="ch2"></canvas></div>
+      </div>
+      <div class="ccard">
+        <div class="ctitle">Nominal Exchange Rate Depreciation YoY</div>
+        <div class="cvar">D4L_S = L_S − L_S{−4}</div>
+        <div class="csub">Annual UZS/USD depreciation deviation, pp (+ = weaker UZS)</div>
+        <div class="cwrap"><canvas id="ch3"></canvas></div>
+      </div>
+      <div class="ccard">
+        <div class="ctitle">Real Exchange Rate Gap</div>
+        <div class="cvar">L_Z_GAP = (L_S + L_CPI_RW − L_CPI) − L_Z_BAR</div>
+        <div class="csub">RER deviation from equilibrium (+ = undervalued UZS)</div>
+        <div class="cwrap"><canvas id="ch4"></canvas></div>
+      </div>
+      <div class="ccard">
+        <div class="ctitle">Real Monetary Conditions Index</div>
+        <div class="cvar">MCI = b₄·RR_GAP − (1−b₄)·L_Z_GAP</div>
+        <div class="csub">Combined monetary tightness (+ = tighter conditions)</div>
+        <div class="cwrap"><canvas id="ch5"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BASELINE PAGE -->
+  <div class="page" id="page-baseline">
+    <div class="shdr">
+      <div class="stitle">Baseline Macroeconomic Forecast</div>
+      <div class="sbadge">2024Q1 – 2027Q4</div>
+    </div>
+    <div class="fix-note">
+      <strong>ℹ Baseline method:</strong> Uses current initial conditions and runs the model forward toward steady state.
+      Set starting values below to match your latest data observation.
+    </div>
+    <div class="bl-ctrls">
+      <div class="cgrp"><div class="clbl">Inflation YoY (%)</div>
+        <input class="cinput" type="number" id="bl_pi" value="10.5" step="0.5" oninput="runBL()"></div>
+      <div class="cgrp"><div class="clbl">Policy Rate (%)</div>
+        <input class="cinput" type="number" id="bl_rs" value="13.5" step="0.25" oninput="runBL()"></div>
+      <div class="cgrp"><div class="clbl">Output Gap (%)</div>
+        <input class="cinput" type="number" id="bl_gap" value="-1.5" step="0.25" oninput="runBL()"></div>
+      <div class="cgrp"><div class="clbl">NER Depreciation YoY (%)</div>
+        <input class="cinput" type="number" id="bl_d4ls" value="8.0" step="0.5" oninput="runBL()"></div>
+    </div>
+    <div class="kpis">
+      <div class="kcard"><div class="klbl">Inflation 2025 avg (%)</div>
+        <div class="kval" id="bk0" style="color:var(--red)">—</div><div class="ksub">YoY annual avg</div></div>
+      <div class="kcard"><div class="klbl">Policy Rate at Q8 (%)</div>
+        <div class="kval" id="bk1" style="color:var(--navy)">—</div><div class="ksub">8 quarters ahead</div></div>
+      <div class="kcard"><div class="klbl">GDP Growth 2025 (%)</div>
+        <div class="kval" id="bk2" style="color:var(--teal)">—</div><div class="ksub">Potential + gap</div></div>
+      <div class="kcard"><div class="klbl">NER Deprec. at Q8 (%)</div>
+        <div class="kval" id="bk3" style="color:var(--amber)">—</div><div class="ksub">Annual rate</div></div>
+    </div>
+    <div class="cgrid">
+      <div class="ccard"><div class="ctitle">CPI Inflation Path</div>
+        <div class="csub">YoY, percent — converging to target</div>
+        <div class="cwrap"><canvas id="blc0"></canvas></div></div>
+      <div class="ccard"><div class="ctitle">CBU Policy Rate Path</div>
+        <div class="csub">Nominal, percent per annum</div>
+        <div class="cwrap"><canvas id="blc1"></canvas></div></div>
+      <div class="ccard"><div class="ctitle">Output Gap Closure</div>
+        <div class="csub">Cyclical position of economy, percent</div>
+        <div class="cwrap"><canvas id="blc2"></canvas></div></div>
+      <div class="ccard"><div class="ctitle">NER Depreciation Path</div>
+        <div class="csub">Annual UZS/USD depreciation, percent</div>
+        <div class="cwrap"><canvas id="blc3"></canvas></div></div>
+    </div>
+  </div>
+
+  <!-- ABOUT PAGE -->
+  <div class="page" id="page-about">
+    <div class="shdr">
+      <div class="stitle">QPM Model — Structure & Parameters</div>
+      <div class="sbadge">Uzbekistan Calibration</div>
+    </div>
+    <div class="agrid">
+      <div class="acard">
+        <h3>Core Equations</h3>
+        <div class="eq">IS:  gap_t = b₁·gap_{t-1} − b₂·MCI_t + b₃·gap*_t + ε_gap</div>
+        <div class="eq">PC:  π_t  = a₁·π_{t-1} + (1−a₁)·Eπ_{t+1} + a₂·RMC_t + ε_π</div>
+        <div class="eq">TR:  i_t  = g₁·i_{t-1} + (1−g₁)·[Eπ_{t+1} + g₂·π4_{t+4} + g₃·gap_t] + ε_i</div>
+        <div class="eq">UIP: s_t  = (1−e₁)·Es_{t+1} + e₁·s_{t-1} − i_t/4 + ε_s</div>
+        <div class="eq">MCI  = b₄·RR_gap − (1−b₄)·Z_gap</div>
+        <div class="eq">RMC  = a₃·gap + (1−a₃)·Z_gap</div>
+        <div class="eq">RR_gap = RS − Eπ_{t+1} − RR_BAR</div>
+        <div class="eq">Z_gap  = (L_S + L_CPI_RW − L_CPI) − L_Z_BAR</div>
+        <div class="eq">D4L_S  = L_S − L_S{−4}   (YoY NER)</div>
+        <div class="eq">D4L_CPI= L_CPI − L_CPI{−4} (YoY inflation)</div>
+      </div>
+      <div class="acard">
+        <h3>Calibrated Parameters</h3>
+        <table class="ptable"><thead><tr><th>Param</th><th>Value</th><th>Description</th></tr></thead>
+        <tbody id="ptbody"></tbody></table>
+      </div>
+      <div class="acard">
+        <h3>Solver: Bidirectional Gauss-Seidel</h3>
+        <p>The rational expectations model is solved by iterating between:</p><br>
+        <ul>
+          <li><strong>Backward sweep (T→0):</strong> UIP exchange rate equation — s[t] depends on s[t+1] (forward-looking). Sweeping backward ensures s[t+1] is already updated in the current pass.</li>
+          <li><strong>Forward sweep (0→T):</strong> IS curve, Phillips curve, Taylor rule — depend on lagged values gap[t-1], π[t-1]. Also uses current-period RS in rr_gap (not lagged).</li>
+          <li><strong>RER gap:</strong> Properly computed as Z_gap = s[t] − ΣΔπ[k]/4 (CPI level cumulated from QoQ inflation).</li>
+          <li><strong>Convergence:</strong> ‖Δπ‖, ‖Δs‖, ‖Δgap‖ &lt; 10⁻¹⁰ (max 600 iterations)</li>
+        </ul>
+        <br>
+        <p>Q0 on all charts = the shock-impact period (same convention as MATLAB/IRIS).</p>
+      </div>
+      <div class="acard">
+        <h3>Uzbekistan-Specific Notes</h3>
+        <ul>
+          <li><strong>a₂ = 0.20</strong> (updated from 0.15) — stronger marginal cost pass-through reflecting rising wage pressures</li>
+          <li><strong>a₃ = 0.65</strong> (updated from 0.60) — higher domestic cost share as structural reforms deepen</li>
+          <li><strong>e₁ = 0.70</strong> — UZS is largely backward-looking due to limited FX market depth</li>
+          <li><strong>g₁ = 0.80</strong> — CBU rate gradualism</li>
+          <li><strong>π* = 5%</strong> — CBU medium-term inflation target</li>
+          <li><strong>r̄ = 3.5%</strong> — neutral real rate (structural premium over EM average)</li>
+          <li><strong>Balassa-Samuelson:</strong> RER trend appreciation of −1% p.a. from productivity catch-up</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<script>
+'use strict';
+
+// ═══════════════════════════════════════════════════════════
+//  QPM UZBEKISTAN — CORRECTED JAVASCRIPT IMPLEMENTATION v2
+//
+//  Fixes vs v1:
+//   1. Q0 timing: shock at t=1 in array → displayed as Q0 (matches MATLAB)
+//   2. rr_gap uses current rs[t] not rs[t-1]
+//   3. z_gap = s[t] − l_cpi[t]  (proper RER formula, not just s[t])
+//   4. d4l_s = s[t] − s[t−4]    (YoY NER rate, not cumulative level)
+//   5. Solver: backward sweep for UIP then forward sweep for IS/PC/TR
+// ═══════════════════════════════════════════════════════════
+
+let activeShock = 'demand';
+let charts = {};
+const f2 = v => (+v).toFixed(2);
+
+// ── Slider helper ──
+function sl(el, vid, fmt) {
+  const pct = ((+el.value - +el.min) / (+el.max - +el.min) * 100).toFixed(1) + '%';
+  el.style.setProperty('--pct', pct);
+  document.getElementById(vid).textContent = fmt(+el.value);
+  run();
+}
+
+// Initialise gradients
+document.querySelectorAll('input[type=range]').forEach(el => {
+  el.style.setProperty('--pct', ((+el.value - +el.min)/(+el.max - +el.min)*100).toFixed(1)+'%');
+});
+
+// ── Read parameters from DOM ──
+function P() {
+  const g = id => +document.getElementById(id).value;
+  return {
+    b1: g('b1'), b2: g('b2'), b3: g('b3'), b4: g('b4'),
+    a1: g('a1'), a2: g('a2'), a3: g('a3'),
+    g1: g('g1'), g2: g('g2'), g3: g('g3'),
+    e1: g('e1'),
+    tar:    g('ssTar'),
+    rrbar:  g('ssRRbar'),
+    gdpbar: g('ssGdpbar'),
+  };
+}
+
+// ═══════════════════════════════════════════════════════════
+//  CORE QPM SOLVER — Bidirectional Gauss-Seidel
+// ═══════════════════════════════════════════════════════════
+function solveIRF(p, shockType, shockSize, T) {
+  // N = total array length; shock lands at index SHOCK_T = 1
+  // Chart shows indices [SHOCK_T .. SHOCK_T+T] as Q0..QT
+  const N = T + 8;          // buffer for t+4 lookups
+  const ST = 1;             // shock period index = Q0
+
+  const z = () => new Float64Array(N);
+  let gap    = z(), pi     = z(), pi4    = z();
+  let rs     = z(), rr_gap = z(), mci    = z();
+  let rmc    = z(), s      = z(), l_cpi  = z();
+  let l_z_gap= z(), d4l_s  = z();
+
+  const shk_gap = z(), shk_pi = z(), shk_s = z(), shk_rs = z();
+  if (shockType === 'demand')    shk_gap[ST] = shockSize;
+  if (shockType === 'inflation') shk_pi[ST]  = shockSize;
+  if (shockType === 'exchange')  shk_s[ST]   = shockSize;
+  if (shockType === 'monetary')  shk_rs[ST]  = shockSize;
+
+  const { b1, b2, b3, b4, a1, a2, a3, g1, g2, g3, e1 } = p;
+
+  // Safe array accessor (zero outside bounds)
+  const G = (arr, t) => (t >= 0 && t < N) ? arr[t] : 0;
+
+  let iters = 0;
+
+  for (let iter = 0; iter < 600; iter++) {
+    iters = iter + 1;
+    const pi0  = pi.slice();
+    const s0   = s.slice();
+    const gap0 = gap.slice();
+
+    // ── PASS 1: Backward sweep for UIP (exchange rate) ──────
+    // UIP: s[t] = (1-e1)*s[t+1] + e1*s[t-1] - rs[t]/4 + shk_s[t]
+    // Sweep T→ST so that s[t+1] is already updated this pass
+    for (let t = N - 2; t >= ST; t--) {
+      s[t] = (1-e1)*G(s,t+1) + e1*G(s,t-1) - rs[t]/4 + shk_s[t];
+    }
+
+    // ── PASS 2: Forward sweep for IS/PC/Taylor ───────────────
+    // Sweep ST→N so that lagged values are updated
+    for (let t = ST; t < N - 1; t++) {
+
+      // CPI price level (cumulative from quarterly π)
+      // L_CPI[t] = L_CPI[t-1] + DLA_CPI[t-1]/4  (before update)
+      l_cpi[t] = l_cpi[t-1] + G(pi, t-1) / 4;
+
+      // RER gap: Z_GAP = (L_S + L_CPI_RW - L_CPI) - L_Z_BAR
+      // Deviation form: L_CPI_RW_dev=0, L_Z_BAR_dev=0
+      // => z_gap[t] = s[t] - l_cpi[t]
+      l_z_gap[t] = G(s,t) - l_cpi[t];
+
+      // Real Marginal Cost: RMC = a3*gap + (1-a3)*z_gap
+      rmc[t] = a3 * G(gap,t-1) + (1-a3) * l_z_gap[t];
+
+      // Phillips curve (hybrid NK):
+      // π_t = a1*π_{t-1} + (1-a1)*Eπ_{t+1} + a2*RMC + shk
+      pi[t] = a1*G(pi,t-1) + (1-a1)*G(pi,t+1) + a2*rmc[t] + shk_pi[t];
+
+      // Refresh l_cpi and z_gap with updated π[t]
+      l_cpi[t]   = l_cpi[t-1] + pi[t] / 4;
+      l_z_gap[t] = G(s,t) - l_cpi[t];
+
+      // YoY inflation: D4L_CPI = (π_t + π_{t-1} + π_{t-2} + π_{t-3}) / 4
+      pi4[t] = (G(pi,t) + G(pi,t-1) + G(pi,t-2) + G(pi,t-3)) / 4;
+
+      // Taylor rule (deviation form, TAR_dev=0, RR_BAR_dev=0):
+      // RS = g1*RS{-1} + (1-g1)*(Eπ_{t+1} + g2*π4_{t+4} + g3*gap) + shk
+      rs[t] = g1*G(rs,t-1)
+            + (1-g1)*(G(pi,t+1) + g2*G(pi4,t+4) + g3*G(gap,t-1))
+            + shk_rs[t];
+
+      // Real interest rate gap: RR_GAP = RS - Eπ_{t+1}  [RR_BAR_dev=0]
+      // FIX: uses current rs[t], NOT rs[t-1]
+      rr_gap[t] = rs[t] - G(pi, t+1);
+
+      // MCI = b4*RR_GAP + (1-b4)*(-Z_GAP)
+      mci[t] = b4 * rr_gap[t] - (1-b4) * l_z_gap[t];
+
+      // IS curve: gap_t = b1*gap_{t-1} - b2*MCI + shk
+      gap[t] = b1*G(gap,t-1) - b2*mci[t] + shk_gap[t];
+
+      // Final refresh: update RMC and Phillips with realised gap
+      rmc[t]     = a3*gap[t] + (1-a3)*l_z_gap[t];
+      pi[t]      = a1*G(pi,t-1) + (1-a1)*G(pi,t+1) + a2*rmc[t] + shk_pi[t];
+      l_cpi[t]   = l_cpi[t-1] + pi[t] / 4;
+      l_z_gap[t] = G(s,t) - l_cpi[t];
+      pi4[t]     = (G(pi,t)+G(pi,t-1)+G(pi,t-2)+G(pi,t-3)) / 4;
+
+      // Final Taylor and MCI with updated gap and π
+      rs[t]      = g1*G(rs,t-1) + (1-g1)*(G(pi,t+1) + g2*G(pi4,t+4) + g3*gap[t]) + shk_rs[t];
+      rr_gap[t]  = rs[t] - G(pi,t+1);
+      mci[t]     = b4*rr_gap[t] - (1-b4)*l_z_gap[t];
+    }
+
+    // ── Derived: YoY NER depreciation ───────────────────────
+    // D4L_S = L_S[t] - L_S[t-4]   (NOT the level itself)
+    for (let t = 0; t < N; t++) {
+      d4l_s[t] = G(s,t) - G(s,t-4);
+    }
+
+    // ── Convergence check ────────────────────────────────────
+    let diff = 0;
+    for (let t = 0; t < N; t++) {
+      diff = Math.max(diff,
+        Math.abs(pi[t]  - pi0[t]),
+        Math.abs(s[t]   - s0[t]),
+        Math.abs(gap[t] - gap0[t])
+      );
+    }
+    if (iter > 3 && diff < 1e-10) break;
+  }
+
+  // Slice output: Q0 (=ST) to QT (=ST+T), inclusive → T+1 points
+  const sl = (arr, offset) => {
+    const out = [];
+    for (let i = 0; i <= T; i++) out.push(G(arr, ST + offset + i));
+    return out;
+  };
+
+  return {
+    gap:     sl(gap,     0),   // L_GDP_GAP
+    pi4:     sl(pi4,     0),   // D4L_CPI  (YoY)
+    rs:      sl(rs,      0),   // RS
+    d4l_s:   sl(d4l_s,   0),   // D4L_S    (YoY NER depreciation)
+    l_z_gap: sl(l_z_gap, 0),   // L_Z_GAP
+    mci:     sl(mci,     0),   // MCI
+    iters,
+  };
+}
+
+// ═══════════════════════════════════════════════════════════
+//  IRF RUNNER
+// ═══════════════════════════════════════════════════════════
+const SHOCK_NAMES = {
+  demand:    'Aggregate Demand Shock',
+  inflation: 'Cost-Push Inflation Shock',
+  exchange:  'UZS Depreciation Shock',
+  monetary:  'Monetary Policy Tightening Shock',
+};
+const CHART_COLORS = [
+  'rgba(192,57,43,1)',   // red   — inflation
+  'rgba(36,113,163,1)',  // blue  — gap
+  'rgba(26,58,92,1)',    // navy  — rate
+  'rgba(214,137,16,1)',  // amber — NER
+  'rgba(30,132,73,1)',   // green — RER
+  'rgba(125,60,152,1)',  // purple— MCI
+];
+
+function run() {
+  const p  = P();
+  const T  = +document.getElementById('horizon').value;
+  const sz = +document.getElementById('shkSz').value;
+
+  const r = solveIRF(p, activeShock, sz, T);
+
+  // Solver quality badge
+  const tag = document.getElementById('solverTag');
+  tag.textContent = `Converged in ${r.iters} iters`;
+  tag.className = 'solver-tag ' + (r.iters < 100 ? 'solver-ok' : 'solver-warn');
+
+  // Labels: Q0..QT
+  const lbls = Array.from({length: T+1}, (_, i) => `Q${i}`);
+
+  // Update header
+  document.getElementById('irfTitle').textContent = SHOCK_NAMES[activeShock] + ' — Impulse Response Functions';
+  document.getElementById('irfDesc').textContent  = `Shock = ${sz.toFixed(2)} pp  ·  Horizon = ${T} Q  ·  Q0 = shock period`;
+
+  const series = [r.pi4, r.gap, r.rs, r.d4l_s, r.l_z_gap, r.mci];
+  const ids    = ['ch0','ch1','ch2','ch3','ch4','ch5'];
+
+  // Peak KPIs (4 top cards)
+  const kpiSeries = [r.pi4, r.gap, r.rs, r.d4l_s];
+  kpiSeries.forEach((arr, i) => {
+    let pk = arr[0], qi = 0;
+    arr.forEach((v, j) => { if (Math.abs(v) > Math.abs(pk)) { pk = v; qi = j; } });
+    const sign = pk >= 0 ? '+' : '';
+    document.getElementById(`kpi${i}`).textContent = `${sign}${pk.toFixed(3)} pp`;
+    document.getElementById(`kpi${i}s`).textContent = `at quarter Q${qi}`;
+  });
+
+  // Draw charts
+  const zero = new Array(T+1).fill(0);
+  series.forEach((data, i) => {
+    const clr = CHART_COLORS[i];
+    const fill_clr = clr.replace('1)', '0.12)');
+    if (charts[i]) charts[i].destroy();
+    charts[i] = new Chart(document.getElementById(ids[i]).getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: lbls,
+        datasets: [
+          { label: 'Deviation', data, borderColor: clr, backgroundColor: fill_clr,
+            borderWidth: 2.5, pointRadius: 2.5, fill: true, tension: 0.3 },
+          { label: 'Baseline',  data: zero, borderColor: 'rgba(0,0,0,.2)',
+            borderWidth: 1, borderDash: [5,4], pointRadius: 0, fill: false },
+        ]
+      },
+      options: chartOpts(),
+    });
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+//  BASELINE FORECAST
+// ═══════════════════════════════════════════════════════════
+function runBL() {
+  const p   = P();
+  const T   = 16;
+  const pi0 = +document.getElementById('bl_pi').value;
+  const rs0 = +document.getElementById('bl_rs').value;
+  const g0  = +document.getElementById('bl_gap').value;
+  const d0  = +document.getElementById('bl_d4ls').value;
+  const tar = p.tar;
+  const neutral_nominal = p.rrbar + tar;
+
+  let pi  = new Float64Array(T+2);
+  let rs  = new Float64Array(T+2);
+  let gap = new Float64Array(T+2);
+  let dep = new Float64Array(T+2);
+
+  pi[0] = pi0; rs[0] = rs0; gap[0] = g0; dep[0] = d0;
+
+  for (let t = 1; t <= T; t++) {
+    const pi_f = pi[t-1] * 0.75 + tar * 0.25;
+    const pi_gap = pi[t-1] - tar;
+
+    rs[t]  = p.g1 * rs[t-1] + (1-p.g1) * (neutral_nominal + p.g2 * pi_gap + p.g3 * gap[t-1]);
+    const rr = rs[t-1] - pi[t-1];
+    gap[t] = p.b1 * gap[t-1] - p.b2 * Math.max(0, rr - p.rrbar) * 0.4;
+    const rmc = p.a3 * gap[t];
+    pi[t]  = p.a1 * pi[t-1] + (1-p.a1) * pi_f + p.a2 * rmc * 3;
+    dep[t] = Math.max(0, dep[t-1] * 0.65 + Math.max(0, pi[t-1] - tar) * 0.6);
+  }
+
+  const lbls = [];
+  for (let t = 0; t < T; t++) {
+    lbls.push(['Q1','Q2','Q3','Q4'][t%4] + ' ' + (2024 + Math.floor(t/4)));
+  }
+
+  const slPi  = Array.from(pi.slice(0,T));
+  const slRS  = Array.from(rs.slice(0,T));
+  const slGap = Array.from(gap.slice(0,T));
+  const slDep = Array.from(dep.slice(0,T));
+
+  const avg2025 = slPi.slice(4,8).reduce((a,b)=>a+b,0)/4;
+  document.getElementById('bk0').textContent = avg2025.toFixed(1)+'%';
+  document.getElementById('bk1').textContent = slRS[Math.min(7,T-1)].toFixed(2)+'%';
+  document.getElementById('bk2').textContent = (p.gdpbar + slGap[Math.min(7,T-1)]).toFixed(1)+'%';
+  document.getElementById('bk3').textContent = slDep[Math.min(7,T-1)].toFixed(1)+'%';
+
+  const blDefs = [
+    { id:'blc0', data:slPi,  lbl:'Inflation YoY (%)', clr:'rgba(192,57,43,.9)',  tar: tar },
+    { id:'blc1', data:slRS,  lbl:'Policy Rate (%)',   clr:'rgba(26,58,92,.9)',   tar: null },
+    { id:'blc2', data:slGap, lbl:'Output Gap (%)',    clr:'rgba(36,113,163,.9)', tar: 0 },
+    { id:'blc3', data:slDep, lbl:'NER Deprec. (%)',   clr:'rgba(214,137,16,.9)', tar: null },
+  ];
+
+  blDefs.forEach(d => {
+    const k = 'bl_'+d.id;
+    if (charts[k]) charts[k].destroy();
+    const ds = [{
+      label: d.lbl, data: d.data, borderColor: d.clr,
+      backgroundColor: d.clr.replace('.9)','.1)'),
+      borderWidth: 2.5, pointRadius: 2, fill: true, tension: 0.3,
+    }];
+    if (d.tar !== null) ds.push({
+      label: 'Target', data: new Array(T).fill(d.tar),
+      borderColor:'rgba(0,0,0,.25)', borderWidth:1.2, borderDash:[5,4], pointRadius:0,
+    });
+    charts[k] = new Chart(document.getElementById(d.id).getContext('2d'), {
+      type:'line', data:{labels:lbls, datasets:ds}, options:chartOpts(),
+    });
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+//  CHART OPTIONS
+// ═══════════════════════════════════════════════════════════
+function chartOpts() {
+  return {
+    responsive:true, maintainAspectRatio:false, animation:{duration:300},
+    interaction:{mode:'index', intersect:false},
+    plugins:{
+      legend:{display:false},
+      tooltip:{callbacks:{
+        label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(4)} pp`
+      }}
+    },
+    scales:{
+      x:{grid:{color:'rgba(0,0,0,.04)'}, ticks:{font:{size:9}, maxRotation:0,
+           callback:(v,i,a) => { return (i % Math.max(1, Math.floor(a.length/8)) === 0) ? a[i].label : ''; }}},
+      y:{grid:{color:'rgba(0,0,0,.04)'}, ticks:{font:{size:9}}},
+    }
+  };
+}
+
+// ═══════════════════════════════════════════════════════════
+//  UI HELPERS
+// ═══════════════════════════════════════════════════════════
+function setShock(type, btn) {
+  document.querySelectorAll('.sbtn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  activeShock = type;
+  run();
+}
+
+function setH(q) {
+  const sl = document.getElementById('horizon');
+  sl.value = q;
+  sl.style.setProperty('--pct', ((q-+sl.min)/(+sl.max-+sl.min)*100).toFixed(1)+'%');
+  document.getElementById('vHorizon').textContent = q+' Q';
+  document.querySelectorAll('.hbtn').forEach(b => {
+    b.classList.toggle('on', parseInt(b.textContent)*4===q || b.textContent==='2Y'&&q===8 || b.textContent==='5Y'&&q===20 || b.textContent==='8Y'&&q===32);
+  });
+  run();
+}
+
+function showPage(name, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.ntab').forEach(b => b.classList.remove('on'));
+  document.getElementById('page-'+name).classList.add('on');
+  btn.classList.add('on');
+  if (name === 'baseline') runBL();
+  if (name === 'about')    fillParamTable();
+}
+
+function fillParamTable() {
+  const p = P();
+  const rows = [
+    ['b₁','b1', p.b1.toFixed(2), 'Output gap persistence',      'IS curve',    false],
+    ['b₂','b2', p.b2.toFixed(2), 'MCI → output sensitivity',     'IS curve',    false],
+    ['b₃','b3', p.b3.toFixed(2), 'External demand weight',        'IS curve',    false],
+    ['b₄','b4', p.b4.toFixed(2), 'IR weight in MCI',              'MCI',         false],
+    ['a₁','a1', p.a1.toFixed(2), 'Inflation persistence',         'Phillips',    false],
+    ['a₂','a2', p.a2.toFixed(2), 'Marginal cost pass-through',    'Phillips',    true ],
+    ['a₃','a3', p.a3.toFixed(2), 'Domestic cost share',           'Phillips',    true ],
+    ['g₁','g1', p.g1.toFixed(2), 'Interest rate smoothing',       'Taylor rule', false],
+    ['g₂','g2', p.g2.toFixed(2), 'Inflation response (>1)',       'Taylor rule', false],
+    ['g₃','g3', p.g3.toFixed(2), 'Output gap response',           'Taylor rule', false],
+    ['e₁','e1', p.e1.toFixed(2), 'UIP backward-looking weight',   'UIP',         false],
+    ['π*','—',  p.tar.toFixed(1)+'%', 'Inflation target',         'SS',          false],
+    ['r̄', '—',  p.rrbar.toFixed(1)+'%','Neutral real rate',       'SS',          false],
+    ['ȳ', '—',  p.gdpbar.toFixed(1)+'%','Potential GDP growth',   'SS',          false],
+  ];
+  document.getElementById('ptbody').innerHTML = rows.map(([sym,_,val,desc,blk,chg]) =>
+    `<tr><td><strong>${sym}</strong></td>
+         <td class="${chg?'changed':''}"><strong>${val}</strong>${chg?' ★':''}</td>
+         <td>${desc} <span style="color:var(--muted);font-size:.65rem">[${blk}]</span></td></tr>`
+  ).join('');
+}
+
+// ── Init ──
+run();
+</script>
+</body>
+</html>

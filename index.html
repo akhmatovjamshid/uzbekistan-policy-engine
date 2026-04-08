@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uzbekistan Macroeconomic Policy Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="dfm_nowcast/dfm_data.js" onerror="window.DFM_DATA=null"></script>
+<style>
+/* ═══════════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════════ */
+:root {
+  --navy:      #0d1f3c;
+  --navy2:     #1a3a6e;
+  --blue:      #2563eb;
+  --blue-l:    #3b82f6;
+  --teal:      #0d9488;
+  --teal-l:    #14b8a6;
+  --green:     #16a34a;
+  --green-l:   #22c55e;
+  --amber:     #d97706;
+  --amber-l:   #f59e0b;
+  --red:       #dc2626;
+  --purple:    #7c3aed;
+  --bg:        #f8fafc;
+  --surface:   #ffffff;
+  --surface2:  #f1f5f9;
+  --border:    #e2e8f0;
+  --border2:   #cbd5e1;
+  --text:      #0f172a;
+  --text2:     #475569;
+  --text3:     #94a3b8;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+  --shadow:    0 4px 16px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.05);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,.12), 0 4px 12px rgba(0,0,0,.08);
+  --radius:    12px;
+  --radius-lg: 18px;
+  --sidebar-w: 260px;
+  --header-h:  60px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; }
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg); color: var(--text);
+  min-height: 100vh; overflow-x: hidden;
+}
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; cursor: pointer; }
+
+/* ═══════════════════════════════════════════
+   HEADER
+═══════════════════════════════════════════ */
+.header {
+  position: fixed; top: 0; left: 0; right: 0; height: var(--header-h);
+  background: var(--navy); color: #fff;
+  display: flex; align-items: center; gap: 16px; padding: 0 24px;
+  z-index: 200; box-shadow: 0 2px 12px rgba(0,0,0,.3);
+}
+.header-logo {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 17px; font-weight: 800; letter-spacing: -.3px;
+  white-space: nowrap;
+}
+.header-logo-icon {
+  width: 34px; height: 34px; background: linear-gradient(135deg, var(--teal), var(--blue));
+  border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.header-logo span { color: var(--teal-l); }
+.header-divider { width: 1px; height: 24px; background: rgba(255,255,255,.15); }
+.header-subtitle { font-size: 12px; color: rgba(255,255,255,.5); font-weight: 400; }
+.header-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+.header-pill {
+  background: rgba(255,255,255,.1); color: rgba(255,255,255,.8);
+  border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: 600;
+  letter-spacing: .5px; text-transform: uppercase; border: 1px solid rgba(255,255,255,.15);
+}
+.header-pill.live { background: rgba(16,185,129,.15); color: #6ee7b7; border-color: rgba(16,185,129,.3); }
+.menu-toggle {
+  display: none; background: none; border: none; color: #fff; font-size: 20px; padding: 4px 8px;
+}
+
+/* ═══════════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════════ */
+.layout {
+  display: flex; padding-top: var(--header-h); min-height: 100vh;
+}
+
+/* ═══════════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════════ */
+.sidebar {
+  width: var(--sidebar-w); flex-shrink: 0;
+  background: var(--surface); border-right: 1px solid var(--border);
+  position: fixed; top: var(--header-h); left: 0; bottom: 0;
+  overflow-y: auto; z-index: 100; transition: transform .25s ease;
+  display: flex; flex-direction: column;
+}
+.sidebar-section { padding: 16px 12px 8px; }
+.sidebar-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--text3); padding: 0 8px; margin-bottom: 6px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 8px; color: var(--text2);
+  font-size: 13.5px; font-weight: 500; cursor: pointer;
+  transition: all .15s ease; position: relative; border: none; background: none; width: 100%; text-align: left;
+}
+.nav-item:hover { background: var(--surface2); color: var(--text); }
+.nav-item.active { background: #eff6ff; color: var(--blue); font-weight: 600; }
+.nav-item.active .nav-icon { color: var(--blue); }
+.nav-icon { font-size: 17px; flex-shrink: 0; width: 22px; text-align: center; }
+.nav-badge {
+  margin-left: auto; font-size: 9px; font-weight: 700; padding: 2px 7px;
+  border-radius: 10px; letter-spacing: .3px;
+}
+.nav-badge.available { background: #dcfce7; color: var(--green); }
+.nav-badge.soon { background: #f1f5f9; color: var(--text3); }
+.nav-badge.live { background: #ecfdf5; color: var(--teal); }
+.nav-divider { height: 1px; background: var(--border); margin: 8px 12px; }
+.sidebar-footer {
+  margin-top: auto; padding: 16px; border-top: 1px solid var(--border);
+  font-size: 11px; color: var(--text3); line-height: 1.5;
+}
+
+/* ═══════════════════════════════════════════
+   MAIN CONTENT
+═══════════════════════════════════════════ */
+.main {
+  flex: 1; margin-left: var(--sidebar-w);
+  min-width: 0; display: flex; flex-direction: column;
+}
+.page { display: none; flex: 1; }
+.page.active { display: flex; flex-direction: column; }
+
+/* ── iframe pages fill the space ── */
+.model-frame-wrap {
+  flex: 1; display: flex; flex-direction: column;
+}
+.model-frame-header {
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  padding: 12px 24px; display: flex; align-items: center; gap: 12px;
+  flex-shrink: 0;
+}
+.model-frame-title { font-size: 14px; font-weight: 700; color: var(--text); }
+.model-frame-sub   { font-size: 12px; color: var(--text3); }
+.model-frame-pill  {
+  font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+  text-transform: uppercase; letter-spacing: .5px;
+}
+.pill-qpm  { background: #eff6ff; color: var(--blue); }
+.pill-dfm  { background: #ecfdf5; color: var(--teal); }
+.pill-soon { background: #f8fafc; color: var(--text3); border: 1px solid var(--border); }
+.model-iframe {
+  flex: 1; border: none; width: 100%; height: 100%;
+  min-height: calc(100vh - var(--header-h) - 52px);
+}
+
+/* ── Home page ── */
+.home-content { padding: 32px 40px 60px; overflow-y: auto; flex: 1; }
+
+/* ── Hero ── */
+.hero {
+  background: linear-gradient(135deg, var(--navy) 0%, #1e3a5f 45%, #163354 100%);
+  border-radius: var(--radius-lg); color: #fff; padding: 48px 52px;
+  margin-bottom: 36px; position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; top: -60px; right: -60px;
+  width: 320px; height: 320px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(13,148,136,.25) 0%, transparent 70%);
+}
+.hero::after {
+  content: ''; position: absolute; bottom: -80px; left: 30%;
+  width: 250px; height: 250px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(37,99,235,.2) 0%, transparent 70%);
+}
+.hero-tag {
+  display: inline-block; background: rgba(13,184,166,.2); color: var(--teal-l);
+  border: 1px solid rgba(13,184,166,.3); border-radius: 20px;
+  padding: 4px 14px; font-size: 11px; font-weight: 700; letter-spacing: .8px;
+  text-transform: uppercase; margin-bottom: 18px;
+}
+.hero h1 {
+  font-size: 36px; font-weight: 900; line-height: 1.15; letter-spacing: -.5px;
+  margin-bottom: 14px; position: relative; z-index: 1;
+}
+.hero h1 em { color: var(--teal-l); font-style: normal; }
+.hero p {
+  font-size: 16px; color: rgba(255,255,255,.72); line-height: 1.65;
+  max-width: 620px; margin-bottom: 28px; position: relative; z-index: 1;
+}
+.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; position: relative; z-index: 1; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 24px; border-radius: 9px; font-size: 14px;
+  font-weight: 600; border: none; transition: all .2s ease; cursor: pointer;
+  font-family: inherit;
+}
+.btn-primary { background: var(--teal); color: #fff; }
+.btn-primary:hover { background: var(--teal-l); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(13,148,136,.4); }
+.btn-ghost   { background: rgba(255,255,255,.1); color: #fff; border: 1px solid rgba(255,255,255,.2); }
+.btn-ghost:hover { background: rgba(255,255,255,.18); }
+.hero-stats {
+  display: flex; gap: 32px; margin-top: 36px; padding-top: 28px;
+  border-top: 1px solid rgba(255,255,255,.12); position: relative; z-index: 1;
+}
+.hero-stat-val { font-size: 28px; font-weight: 800; color: var(--teal-l); }
+.hero-stat-lbl { font-size: 11px; color: rgba(255,255,255,.5); margin-top: 2px; text-transform: uppercase; letter-spacing: .6px; }
+
+/* ── Section headers ── */
+.section-header {
+  display: flex; align-items: baseline; gap: 12px; margin-bottom: 18px;
+}
+.section-header h2 {
+  font-size: 18px; font-weight: 800; color: var(--text); letter-spacing: -.3px;
+}
+.section-header span { font-size: 12px; color: var(--text3); font-weight: 400; }
+
+/* ── Model cards ── */
+.model-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px; margin-bottom: 40px;
+}
+.model-card {
+  background: var(--surface); border-radius: var(--radius);
+  border: 1px solid var(--border); padding: 22px 24px;
+  box-shadow: var(--shadow-sm); transition: all .2s ease; cursor: pointer;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.model-card:hover { border-color: var(--blue-l); box-shadow: var(--shadow); transform: translateY(-2px); }
+.model-card.soon { cursor: default; opacity: .7; }
+.model-card.soon:hover { transform: none; box-shadow: var(--shadow-sm); border-color: var(--border); }
+.mc-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.mc-icon {
+  width: 46px; height: 46px; border-radius: 12px; display: flex;
+  align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;
+}
+.mc-icon.qpm  { background: linear-gradient(135deg, #dbeafe, #bfdbfe); }
+.mc-icon.dfm  { background: linear-gradient(135deg, #ccfbf1, #99f6e4); }
+.mc-icon.io   { background: linear-gradient(135deg, #fef9c3, #fde68a); }
+.mc-icon.pe   { background: linear-gradient(135deg, #fce7f3, #fbcfe8); }
+.mc-icon.cge  { background: linear-gradient(135deg, #ede9fe, #ddd6fe); }
+.mc-icon.fpp  { background: linear-gradient(135deg, #fee2e2, #fecaca); }
+.mc-status {
+  font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 20px;
+  text-transform: uppercase; letter-spacing: .5px; white-space: nowrap;
+}
+.mc-status.ready { background: #dcfce7; color: #15803d; }
+.mc-status.soon  { background: #f1f5f9; color: var(--text3); }
+.mc-name { font-size: 16px; font-weight: 700; color: var(--text); letter-spacing: -.2px; }
+.mc-desc { font-size: 13px; color: var(--text2); line-height: 1.55; flex: 1; }
+.mc-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.mc-tag {
+  font-size: 10.5px; padding: 3px 8px; border-radius: 6px; font-weight: 500;
+  background: var(--surface2); color: var(--text3);
+}
+.mc-action {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 12px; border-top: 1px solid var(--border);
+  font-size: 13px; font-weight: 600; color: var(--blue);
+}
+.mc-action.soon { color: var(--text3); }
+.mc-arrow { font-size: 16px; }
+
+/* ── Policy Questions ── */
+.questions-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 12px; margin-bottom: 40px;
+}
+.q-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 18px 20px; box-shadow: var(--shadow-sm); cursor: pointer;
+  transition: all .2s ease; display: flex; align-items: flex-start; gap: 14px;
+}
+.q-card:hover { border-color: var(--blue-l); box-shadow: var(--shadow); transform: translateY(-1px); }
+.q-icon {
+  width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.q-text { font-size: 13.5px; font-weight: 500; color: var(--text); line-height: 1.5; }
+.q-model { font-size: 11px; color: var(--text3); margin-top: 4px; font-weight: 500; }
+
+/* ── Macro snapshot ── */
+.macro-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px; margin-bottom: 40px;
+}
+.macro-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 18px 20px; box-shadow: var(--shadow-sm);
+}
+.macro-label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px; color: var(--text3); margin-bottom: 6px; }
+.macro-val   { font-size: 28px; font-weight: 800; line-height: 1.1; }
+.macro-sub   { font-size: 12px; color: var(--text2); margin-top: 4px; }
+.macro-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; margin-top: 6px;
+}
+.macro-badge.up   { background: #dcfce7; color: var(--green); }
+.macro-badge.down { background: #fee2e2; color: var(--red); }
+.macro-badge.flat { background: var(--surface2); color: var(--text3); }
+
+/* ── Nowcast bar chart ── */
+.chart-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 22px 24px; box-shadow: var(--shadow-sm); margin-bottom: 40px;
+}
+.chart-card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; }
+.chart-card-title { font-size: 15px; font-weight: 700; color: var(--text); }
+.chart-card-sub   { font-size: 12px; color: var(--text3); margin-top: 3px; }
+.legend-row { display: flex; gap: 16px; margin-top: 10px; flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--text2); }
+.legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+
+/* ── Coming soon overlay ── */
+.coming-soon-page {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  padding: 60px 40px; text-align: center;
+}
+.cs-inner { max-width: 480px; }
+.cs-icon { font-size: 64px; margin-bottom: 20px; }
+.cs-title { font-size: 26px; font-weight: 800; color: var(--text); margin-bottom: 10px; letter-spacing: -.3px; }
+.cs-desc  { font-size: 15px; color: var(--text2); line-height: 1.65; margin-bottom: 28px; }
+.cs-timeline {
+  background: var(--surface2); border-radius: var(--radius); padding: 20px 24px;
+  text-align: left; border: 1px solid var(--border);
+}
+.cs-timeline h4 { font-size: 12px; text-transform: uppercase; letter-spacing: .7px; color: var(--text3); margin-bottom: 12px; }
+.cs-item { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.cs-item:last-child { border-bottom: none; }
+.cs-dot-ok  { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+.cs-dot-wip { width: 8px; height: 8px; border-radius: 50%; background: var(--amber); flex-shrink: 0; }
+.cs-dot-plan{ width: 8px; height: 8px; border-radius: 50%; background: var(--border2); flex-shrink: 0; }
+
+/* ── Compare page ── */
+.compare-content { padding: 32px 40px 60px; overflow-y: auto; flex: 1; }
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 28px; }
+.compare-frame-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); }
+.compare-frame-hdr { padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 13px; font-weight: 700; color: var(--text); background: var(--surface2); }
+.compare-iframe { width: 100%; border: none; height: 520px; }
+
+/* ── About page ── */
+.about-content { padding: 32px 40px 60px; overflow-y: auto; flex: 1; max-width: 900px; }
+.about-content h2 { font-size: 22px; font-weight: 800; margin-bottom: 10px; }
+.about-content p  { font-size: 14px; color: var(--text2); line-height: 1.7; margin-bottom: 18px; }
+.about-content h3 { font-size: 16px; font-weight: 700; margin: 28px 0 10px; }
+.method-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px; }
+.method-table th { text-align: left; font-size: 10.5px; text-transform: uppercase; letter-spacing: .6px; color: var(--text3); padding: 8px 14px; border-bottom: 2px solid var(--border); }
+.method-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.method-table tr:last-child td { border-bottom: none; }
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; }
+  .menu-toggle { display: block; }
+  .hero { padding: 32px 28px; }
+  .hero h1 { font-size: 26px; }
+  .home-content, .compare-content, .about-content { padding: 20px; }
+  .model-grid, .compare-grid { grid-template-columns: 1fr; }
+  .hero-stats { flex-wrap: wrap; gap: 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════
+     HEADER
+════════════════════════════════════════════ -->
+<header class="header">
+  <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+  <div class="header-logo">
+    <div class="header-logo-icon">🏛️</div>
+    <div>
+      <div>Uzbekistan <span>Policy Engine</span></div>
+    </div>
+  </div>
+  <div class="header-divider"></div>
+  <div class="header-subtitle">Macroeconomic Simulation Platform</div>
+  <div class="header-right">
+    <div class="header-pill live">● Live Models: 2</div>
+    <div class="header-pill">Beta v0.2</div>
+  </div>
+</header>
+
+<!-- ════════════════════════════════════════════
+     LAYOUT
+════════════════════════════════════════════ -->
+<div class="layout">
+
+  <!-- ── SIDEBAR ── -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Overview</div>
+      <button class="nav-item active" onclick="navigate('home')">
+        <span class="nav-icon">🏠</span> Home
+      </button>
+      <button class="nav-item" onclick="navigate('compare')">
+        <span class="nav-icon">⚖️</span> Compare Scenarios
+      </button>
+    </div>
+
+    <div class="nav-divider"></div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Available Models</div>
+      <button class="nav-item" onclick="navigate('qpm')">
+        <span class="nav-icon">📈</span> QPM
+        <span class="nav-badge available">Ready</span>
+      </button>
+      <button class="nav-item" onclick="navigate('dfm')">
+        <span class="nav-icon">🔮</span> Nowcasting DFM
+        <span class="nav-badge live">Live</span>
+      </button>
+    </div>
+
+    <div class="nav-divider"></div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Upcoming Models</div>
+      <button class="nav-item" onclick="navigate('io')">
+        <span class="nav-icon">🔗</span> Input-Output
+        <span class="nav-badge soon">Soon</span>
+      </button>
+      <button class="nav-item" onclick="navigate('pe')">
+        <span class="nav-icon">⚖️</span> Partial Equilibrium
+        <span class="nav-badge soon">Soon</span>
+      </button>
+      <button class="nav-item" onclick="navigate('cge')">
+        <span class="nav-icon">⚙️</span> CGE Model
+        <span class="nav-badge soon">Soon</span>
+      </button>
+      <button class="nav-item" onclick="navigate('fpp')">
+        <span class="nav-icon">💰</span> Fin. Programming
+        <span class="nav-badge soon">Soon</span>
+      </button>
+    </div>
+
+    <div class="nav-divider"></div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Platform</div>
+      <button class="nav-item" onclick="navigate('about')">
+        <span class="nav-icon">📖</span> Methodology
+      </button>
+    </div>
+
+    <div class="sidebar-footer">
+      Central Bank of Uzbekistan<br>
+      Macroeconomic Research Division<br>
+      <span style="color:var(--teal)">Open-source · Data-driven</span>
+    </div>
+  </nav>
+
+  <!-- ════════════════════════════════════════
+       MAIN CONTENT
+  ════════════════════════════════════════ -->
+  <main class="main">
+
+    <!-- ── HOME ── -->
+    <div id="page-home" class="page active">
+      <div class="home-content">
+
+        <!-- Hero -->
+        <div class="hero">
+          <div class="hero-tag">🇺🇿 Uzbekistan · Macroeconomic Policy Engine</div>
+          <h1>Simulate. Analyse.<br><em>Decide with confidence.</em></h1>
+          <p>
+            An open, integrated platform for macroeconomic policy simulation.
+            Explore how changes in monetary policy, fiscal spending, exchange rates,
+            and external shocks propagate through Uzbekistan's economy — backed by
+            state-of-the-art structural models.
+          </p>
+          <div class="hero-actions">
+            <button class="btn btn-primary" onclick="navigate('qpm')">▶ Open QPM Simulator</button>
+            <button class="btn btn-ghost" onclick="navigate('dfm')">📈 View GDP Nowcast</button>
+          </div>
+          <div class="hero-stats">
+            <div>
+              <div class="hero-stat-val">6</div>
+              <div class="hero-stat-lbl">Models Planned</div>
+            </div>
+            <div>
+              <div class="hero-stat-val">2</div>
+              <div class="hero-stat-lbl">Live Now</div>
+            </div>
+            <div>
+              <div class="hero-stat-val">35</div>
+              <div class="hero-stat-lbl">Indicators Tracked</div>
+            </div>
+            <div>
+              <div class="hero-stat-val" id="hero-nowcast">—</div>
+              <div class="hero-stat-lbl">GDP Nowcast YoY</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Macro Snapshot -->
+        <div class="section-header">
+          <h2>Macro Snapshot</h2>
+          <span>Key indicators · Latest available data</span>
+        </div>
+        <div class="macro-grid" id="macro-grid">
+          <div class="macro-card">
+            <div class="macro-label">GDP Growth YoY</div>
+            <div class="macro-val" id="snap-gdp" style="color:var(--green)">—</div>
+            <div class="macro-sub" id="snap-gdp-per">—</div>
+            <div class="macro-badge up" id="snap-gdp-badge">DFM Nowcast</div>
+          </div>
+          <div class="macro-card">
+            <div class="macro-label">Inflation Target</div>
+            <div class="macro-val" style="color:var(--amber)">5.0%</div>
+            <div class="macro-sub">CBU annual target</div>
+            <div class="macro-badge flat">QPM SS</div>
+          </div>
+          <div class="macro-card">
+            <div class="macro-label">Neutral Real Rate</div>
+            <div class="macro-val" style="color:var(--blue)">3.5%</div>
+            <div class="macro-sub">Long-run equilibrium</div>
+            <div class="macro-badge flat">QPM SS</div>
+          </div>
+          <div class="macro-card">
+            <div class="macro-label">Potential Growth</div>
+            <div class="macro-val" style="color:var(--teal)">6.0%</div>
+            <div class="macro-sub">Annual trend rate</div>
+            <div class="macro-badge flat">QPM SS</div>
+          </div>
+          <div class="macro-card">
+            <div class="macro-label">Common Factor</div>
+            <div class="macro-val" id="snap-factor" style="color:var(--purple)">—</div>
+            <div class="macro-sub">DFM economic momentum</div>
+            <div class="macro-badge flat" id="snap-factor-badge">DFM</div>
+          </div>
+        </div>
+
+        <!-- GDP Chart -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div>
+              <div class="chart-card-title">GDP Year-on-Year Growth Rate — Uzbekistan</div>
+              <div class="chart-card-sub">Official data (Statistics Agency) + DFM Nowcast · Quarterly</div>
+            </div>
+          </div>
+          <div style="height:280px; position:relative">
+            <canvas id="hub-gdp-chart"></canvas>
+          </div>
+          <div class="legend-row">
+            <div class="legend-item"><div class="legend-dot" style="background:rgba(37,99,235,.7)"></div>Official (Statistics Agency)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:rgba(217,119,6,.9)"></div>DFM Nowcast</div>
+          </div>
+        </div>
+
+        <!-- Models -->
+        <div class="section-header">
+          <h2>Models & Tools</h2>
+          <span>Click to open a model</span>
+        </div>
+        <div class="model-grid">
+          <div class="model-card" onclick="navigate('qpm')">
+            <div class="mc-top">
+              <div class="mc-icon qpm">📈</div>
+              <span class="mc-status ready">✓ Available</span>
+            </div>
+            <div class="mc-name">Quarterly Projection Model (QPM)</div>
+            <div class="mc-desc">New-Keynesian small open-economy DSGE model. Simulate monetary policy shocks, aggregate demand, exchange rate movements, and cost-push inflation. Full impulse response functions with 20-quarter horizon.</div>
+            <div class="mc-tags">
+              <span class="mc-tag">Monetary Policy</span>
+              <span class="mc-tag">Inflation</span>
+              <span class="mc-tag">Exchange Rate</span>
+              <span class="mc-tag">IRF</span>
+            </div>
+            <div class="mc-action">Open QPM Simulator <span class="mc-arrow">→</span></div>
+          </div>
+
+          <div class="model-card" onclick="navigate('dfm')">
+            <div class="mc-top">
+              <div class="mc-icon dfm">🔮</div>
+              <span class="mc-status ready">✓ Available</span>
+            </div>
+            <div class="mc-name">GDP Nowcasting (DFM)</div>
+            <div class="mc-desc">Mixed-frequency Dynamic Factor Model extracting a common latent factor from 34 monthly indicators to nowcast quarterly GDP. Live Kalman filter — update the nowcast as new data arrives.</div>
+            <div class="mc-tags">
+              <span class="mc-tag">GDP Forecast</span>
+              <span class="mc-tag">Kalman Filter</span>
+              <span class="mc-tag">35 Indicators</span>
+              <span class="mc-tag">Real-time</span>
+            </div>
+            <div class="mc-action">Open Nowcasting Dashboard <span class="mc-arrow">→</span></div>
+          </div>
+
+          <div class="model-card soon">
+            <div class="mc-top">
+              <div class="mc-icon io">🔗</div>
+              <span class="mc-status soon">Coming Soon</span>
+            </div>
+            <div class="mc-name">Input-Output Model (2022)</div>
+            <div class="mc-desc">Leontief input-output table for Uzbekistan (2022 benchmark). Analyse sectoral linkages, multipliers, and the propagation of demand or supply shocks through the production network.</div>
+            <div class="mc-tags">
+              <span class="mc-tag">Sectoral Analysis</span>
+              <span class="mc-tag">Multipliers</span>
+              <span class="mc-tag">Leontief</span>
+            </div>
+            <div class="mc-action soon">In development <span class="mc-arrow">↗</span></div>
+          </div>
+
+          <div class="model-card soon">
+            <div class="mc-top">
+              <div class="mc-icon pe">⚖️</div>
+              <span class="mc-status soon">Coming Soon</span>
+            </div>
+            <div class="mc-name">Partial Equilibrium Model</div>
+            <div class="mc-desc">Market-level analysis of price and quantity effects from policy interventions. Ideal for sector-specific subsidy/tax analysis, tariff changes, and regulated price adjustments.</div>
+            <div class="mc-tags">
+              <span class="mc-tag">Price Analysis</span>
+              <span class="mc-tag">Subsidies</span>
+              <span class="mc-tag">Tariffs</span>
+            </div>
+            <div class="mc-action soon">In development <span class="mc-arrow">↗</span></div>
+          </div>
+
+          <div class="model-card soon">
+            <div class="mc-top">
+              <div class="mc-icon cge">⚙️</div>
+              <span class="mc-status soon">Coming Soon</span>
+            </div>
+            <div class="mc-name">Computable General Equilibrium (CGE)</div>
+            <div class="mc-desc">Economy-wide multi-sector model capturing interactions across households, firms, government, and the rest of the world. Simulate tax reforms, trade policy, and structural change.</div>
+            <div class="mc-tags">
+              <span class="mc-tag">Tax Reform</span>
+              <span class="mc-tag">Trade Policy</span>
+              <span class="mc-tag">Welfare</span>
+            </div>
+            <div class="mc-action soon">In development <span class="mc-arrow">↗</span></div>
+          </div>
+
+          <div class="model-card soon">
+            <div class="mc-top">
+              <div class="mc-icon fpp">💰</div>
+              <span class="mc-status soon">Coming Soon</span>
+            </div>
+            <div class="mc-name">Financial Programming & Policies (FPP)</div>
+            <div class="mc-desc">IMF-style consistency framework linking the monetary, fiscal, external, and real sectors. Build coherent medium-term macro frameworks and assess financing gaps and sustainability.</div>
+            <div class="mc-tags">
+              <span class="mc-tag">Fiscal Balance</span>
+              <span class="mc-tag">BOP</span>
+              <span class="mc-tag">Debt Sustainability</span>
+            </div>
+            <div class="mc-action soon">In development <span class="mc-arrow">↗</span></div>
+          </div>
+        </div>
+
+        <!-- Policy Questions -->
+        <div class="section-header">
+          <h2>Policy Questions You Can Answer</h2>
+          <span>Click a question to open the relevant model</span>
+        </div>
+        <div class="questions-grid">
+          <div class="q-card" onclick="navigate('qpm')">
+            <div class="q-icon" style="background:#eff6ff">📊</div>
+            <div>
+              <div class="q-text">"What happens to inflation if the CBU raises the policy rate by 1 percentage point?"</div>
+              <div class="q-model">→ QPM · Monetary Tightening Shock</div>
+            </div>
+          </div>
+          <div class="q-card" onclick="navigate('qpm')">
+            <div class="q-icon" style="background:#fef9c3">💹</div>
+            <div>
+              <div class="q-text">"How does a 10% UZS depreciation affect domestic inflation and the output gap?"</div>
+              <div class="q-model">→ QPM · Exchange Rate Shock</div>
+            </div>
+          </div>
+          <div class="q-card" onclick="navigate('qpm')">
+            <div class="q-icon" style="background:#ecfdf5">🏗️</div>
+            <div>
+              <div class="q-text">"What is the GDP impact of a public investment surge in the next quarter?"</div>
+              <div class="q-model">→ QPM · Aggregate Demand Shock</div>
+            </div>
+          </div>
+          <div class="q-card" onclick="navigate('dfm')">
+            <div class="q-icon" style="background:#f0fdf4">🔮</div>
+            <div>
+              <div class="q-text">"What is the best estimate of GDP growth this quarter given the latest industrial production data?"</div>
+              <div class="q-model">→ DFM · GDP Nowcasting</div>
+            </div>
+          </div>
+          <div class="q-card" onclick="navigate('dfm')">
+            <div class="q-icon" style="background:#fdf4ff">📡</div>
+            <div>
+              <div class="q-text">"How does a surprise in retail trade data revise our GDP nowcast?"</div>
+              <div class="q-model">→ DFM · News Decomposition</div>
+            </div>
+          </div>
+          <div class="q-card" onclick="navigate('io')">
+            <div class="q-icon" style="background:#fff7ed">🔗</div>
+            <div>
+              <div class="q-text">"Which sector has the highest multiplier effect on total output and employment?"</div>
+              <div class="q-model">→ Input-Output · Multiplier Analysis <span style="color:var(--amber)">· Coming Soon</span></div>
+            </div>
+          </div>
+          <div class="q-card" onclick="navigate('fpp')">
+            <div class="q-icon" style="background:#fff1f2">💰</div>
+            <div>
+              <div class="q-text">"What fiscal deficit is consistent with debt sustainability over a 5-year horizon?"</div>
+              <div class="q-model">→ FPP · Fiscal Sustainability Framework <span style="color:var(--amber)">· Coming Soon</span></div>
+            </div>
+          </div>
+          <div class="q-card" onclick="navigate('cge')">
+            <div class="q-icon" style="background:#f5f3ff">⚙️</div>
+            <div>
+              <div class="q-text">"How do VAT rate changes affect household welfare across income groups?"</div>
+              <div class="q-model">→ CGE · Tax Incidence Analysis <span style="color:var(--amber)">· Coming Soon</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── QPM ── -->
+    <div id="page-qpm" class="page">
+      <div class="model-frame-wrap">
+        <div class="model-frame-header">
+          <span class="model-frame-pill pill-qpm">QPM</span>
+          <div>
+            <div class="model-frame-title">Quarterly Projection Model</div>
+            <div class="model-frame-sub">New-Keynesian DSGE · IRF Simulator · 4 shocks · 20Q horizon</div>
+          </div>
+        </div>
+        <iframe class="model-iframe" id="iframe-qpm" src="qpm_uzbekistan/index.html"
+                title="QPM Simulator" loading="lazy"></iframe>
+      </div>
+    </div>
+
+    <!-- ── DFM ── -->
+    <div id="page-dfm" class="page">
+      <div class="model-frame-wrap">
+        <div class="model-frame-header">
+          <span class="model-frame-pill pill-dfm">DFM</span>
+          <div>
+            <div class="model-frame-title">GDP Nowcasting — Dynamic Factor Model</div>
+            <div class="model-frame-sub">Mixed-frequency · 34 indicators · Live Kalman filter update</div>
+          </div>
+        </div>
+        <iframe class="model-iframe" id="iframe-dfm" src="dfm_nowcast/index.html"
+                title="DFM Nowcasting" loading="lazy"></iframe>
+      </div>
+    </div>
+
+    <!-- ── Coming soon pages ── -->
+    <div id="page-io" class="page">
+      <div class="coming-soon-page">
+        <div class="cs-inner">
+          <div class="cs-icon">🔗</div>
+          <div class="cs-title">Input-Output Model</div>
+          <div class="cs-desc">
+            The 2022 Uzbekistan Input-Output table will power sector multiplier analysis, supply chain shock propagation,
+            and demand-side decomposition of GDP growth. Based on the Leontief framework.
+          </div>
+          <div class="cs-timeline">
+            <h4>Roadmap</h4>
+            <div class="cs-item"><div class="cs-dot-ok"></div> I-O table digitized (2022 benchmark)</div>
+            <div class="cs-item"><div class="cs-dot-wip"></div> Multiplier computation engine</div>
+            <div class="cs-item"><div class="cs-dot-plan"></div> Browser-based sector shock simulator</div>
+            <div class="cs-item"><div class="cs-dot-plan"></div> Integration with QPM for demand linkages</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="page-pe" class="page">
+      <div class="coming-soon-page">
+        <div class="cs-inner">
+          <div class="cs-icon">⚖️</div>
+          <div class="cs-title">Partial Equilibrium Model</div>
+          <div class="cs-desc">
+            Market-level supply-demand analysis. Evaluate the price and welfare effects of subsidies, tariffs,
+            regulated price changes, and sector-specific policy interventions.
+          </div>
+          <div class="cs-timeline">
+            <h4>Roadmap</h4>
+            <div class="cs-item"><div class="cs-dot-wip"></div> Core supply/demand framework</div>
+            <div class="cs-item"><div class="cs-dot-plan"></div> Energy subsidy reform module</div>
+            <div class="cs-item"><div class="cs-dot-plan"></div> Agricultural price policy module</div>
+            <div class="cs-item"><div class="cs-dot-plan"></div> Welfare decomposition by income decile</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="page-cge" class="page">
+      <div class="coming-soon-page">
+        <div class="cs-inner">
+          <div class="cs-icon">⚙️</div>
+          <div class="cs-title">Computable General Equilibrium (CGE)</div>
+          <div class="cs-desc">
+            Economy-wide model capturing circular flows between households, firms, government, and the rest of the world.
+            Simulate tax reforms, trade policy, structural transformation, and investment programs.
+          </div>
+          <div class="cs-timeline">
+            <h4>Roadmap</h4>
+            <div class="cs-item"><div class="cs-dot-wip"></div> Social Accounting Matrix (SAM) calibration</div>
+            <div class="cs-item"><div class="cs-dot-plan"></div> Static CGE core model</div>
+            <div class="cs-item"><div class="cs-dot-plan"></div> Dynamic extension (capital accumulation)</div>
+            <div class="cs-item"><div class="cs-dot-plan"></div> Trade policy and FTA analysis module</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="page-fpp" class="page">
+      <div class="coming-soon-page">
+        <div class="cs-inner">
+          <div class="cs-icon">💰</div>
+          <div class="cs-title">Financial Programming & Policies (FPP)</div>
+          <div class="cs-desc">
+            IMF-style consistency framework linking monetary, fiscal, external, and real sectors.
+            Build coherent medium-term macro frameworks, identify financing gaps, and assess debt sustainability.
+          </div>
+          <div class="cs-timeline">
+            <h4>Roadmap</h4>
+            <div class="cs-item"><div class="cs-dot-wip"></div> Four-sector consistency matrix</div>
+            <div class="cs-item"><div class="cs-dot-plan"></div> Fiscal programming module (revenue, spending)</div>
+            <div class="cs-item"><div class="cs-dot-plan"></div> BOP and external financing gap module</div>
+            <div class="cs-item"><div class="cs-dot-plan"></div> Debt sustainability analysis (DSA)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── COMPARE ── -->
+    <div id="page-compare" class="page">
+      <div class="compare-content">
+        <div class="section-header" style="margin-bottom:24px">
+          <h2>Compare Scenarios</h2>
+          <span>Run two models side by side</span>
+        </div>
+        <div class="compare-grid">
+          <div class="compare-frame-wrap">
+            <div class="compare-frame-hdr">📈 QPM — Monetary Policy Simulator</div>
+            <iframe class="compare-iframe" src="qpm_uzbekistan/index.html" title="QPM Compare"></iframe>
+          </div>
+          <div class="compare-frame-wrap">
+            <div class="compare-frame-hdr">🔮 DFM — GDP Nowcasting</div>
+            <iframe class="compare-iframe" src="dfm_nowcast/index.html" title="DFM Compare"></iframe>
+          </div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;font-size:13.5px;color:var(--text2);line-height:1.65">
+          <strong style="color:var(--text)">How to use:</strong> Run a shock in the QPM panel (e.g., monetary tightening) and observe the implied output gap path.
+          Then cross-reference with the DFM nowcast on the right to see how current real-time data aligns with the model projection.
+          Future updates will add automated cross-model scenario linking.
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ABOUT / METHODOLOGY ── -->
+    <div id="page-about" class="page">
+      <div class="about-content">
+        <h2>Methodology & Model Documentation</h2>
+        <p>
+          The Uzbekistan Macroeconomic Policy Engine is an open, modular platform for evidence-based
+          macroeconomic analysis. Each model is independently documented and calibrated to Uzbekistan's
+          economic structure.
+        </p>
+
+        <h3>Model Overview</h3>
+        <table class="method-table">
+          <thead>
+            <tr><th>Model</th><th>Type</th><th>Frequency</th><th>Key Output</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>QPM</strong></td>
+              <td>New-Keynesian DSGE</td>
+              <td>Quarterly</td>
+              <td>IRF: inflation, output gap, policy rate, exchange rate</td>
+              <td style="color:var(--green);font-weight:700">✓ Live</td>
+            </tr>
+            <tr>
+              <td><strong>DFM</strong></td>
+              <td>Mixed-frequency Factor Model</td>
+              <td>Monthly → Quarterly</td>
+              <td>GDP nowcast YoY/QoQ, news decomposition</td>
+              <td style="color:var(--green);font-weight:700">✓ Live</td>
+            </tr>
+            <tr>
+              <td><strong>Input-Output</strong></td>
+              <td>Leontief I-O Table</td>
+              <td>Annual (2022)</td>
+              <td>Sector multipliers, output/employment effects</td>
+              <td style="color:var(--amber);font-weight:700">⏳ Development</td>
+            </tr>
+            <tr>
+              <td><strong>Partial Equilibrium</strong></td>
+              <td>Supply-demand market model</td>
+              <td>As needed</td>
+              <td>Price, quantity, welfare effects by policy change</td>
+              <td style="color:var(--amber);font-weight:700">⏳ Development</td>
+            </tr>
+            <tr>
+              <td><strong>CGE</strong></td>
+              <td>Multi-sector general equilibrium</td>
+              <td>Annual</td>
+              <td>Economy-wide welfare, trade, tax incidence</td>
+              <td style="color:var(--amber);font-weight:700">⏳ Development</td>
+            </tr>
+            <tr>
+              <td><strong>FPP</strong></td>
+              <td>Financial programming framework</td>
+              <td>Annual / MTF</td>
+              <td>Fiscal balance, BOP, debt sustainability</td>
+              <td style="color:var(--amber);font-weight:700">⏳ Development</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>QPM — Quarterly Projection Model</h3>
+        <p>
+          The QPM is a calibrated New-Keynesian small open-economy model solved with the IRIS Toolbox in MATLAB.
+          It features four core equations: IS curve (aggregate demand), hybrid New-Keynesian Phillips curve,
+          forward-looking Taylor rule, and a modified UIP condition for the exchange rate.
+          The model is solved using Gauss-Seidel iteration with bidirectional sweeps to handle
+          both backward-looking (UIP) and forward-looking (IS, Phillips, Taylor) dynamics.
+        </p>
+        <p>
+          Key calibrated parameters: <code>b₁ = 0.70</code> (output gap persistence),
+          <code>a₁ = 0.60</code> (inflation inertia), <code>a₂ = 0.20</code> (marginal cost pass-through),
+          <code>g₂ = 1.50</code> (Taylor rule inflation response).
+          Steady-state: inflation target 5%, potential growth 6%, neutral real rate 3.5%.
+        </p>
+
+        <h3>DFM — Dynamic Factor Model</h3>
+        <p>
+          The DFM follows Bańbura & Modugno (2014) and extracts a single latent common factor from
+          34 mixed-frequency indicators (monthly + quarterly GDP) using the EM algorithm with a
+          Kalman filter/smoother. The factor captures broad economic momentum and is used to
+          nowcast quarterly GDP up to 3 months ahead. Parameters are estimated in R and exported
+          as a JSON file; the prediction step (Kalman filter update) runs live in the browser.
+        </p>
+
+        <h3>Data Sources</h3>
+        <table class="method-table">
+          <thead><tr><th>Source</th><th>Coverage</th></tr></thead>
+          <tbody>
+            <tr><td>Statistics Agency under the President of Uzbekistan</td><td>GDP, industrial production, trade, prices, construction</td></tr>
+            <tr><td>Central Bank of Uzbekistan (CBU)</td><td>Monetary aggregates, interest rates, exchange rate, NPL</td></tr>
+            <tr><td>CERR (Centre for Economic Research and Reforms)</td><td>Business activity index, real estate, car sales, climate indices</td></tr>
+            <tr><td>Bureau of National Statistics (Kazakhstan)</td><td>Kazakhstan leading indicator</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ════════════════════════════════════════
+     JS
+════════════════════════════════════════ -->
+<script>
+'use strict';
+
+const STATOFFICE_YOY = {
+  '2016Q1':6.2,'2016Q2':5.9,'2016Q3':6.4,'2016Q4':6.7,
+  '2017Q1':4.8,'2017Q2':4.3,'2017Q3':3.9,'2017Q4':4.7,
+  '2018Q1':5.9,'2018Q2':6.2,'2018Q3':6.0,'2018Q4':5.7,
+  '2019Q1':6.8,'2019Q2':6.8,'2019Q3':6.7,'2019Q4':6.8,
+  '2020Q1':4.9,'2020Q2':0.8,'2020Q3':0.0,'2020Q4':1.6,
+  '2021Q1':4.8,'2021Q2':8.4,'2021Q3':8.8,'2021Q4':8.2,
+  '2022Q1':5.1,'2022Q2':4.5,'2022Q3':5.3,'2022Q4':6.1,
+  '2023Q1':6.4,'2023Q2':7.1,'2023Q3':6.5,'2023Q4':6.3,
+  '2024Q1':6.4,'2024Q2':6.6,'2024Q3':6.6,'2024Q4':6.7,
+  '2025Q1':6.8,'2025Q2':7.2,'2025Q3':7.6,'2025Q4':7.7
+};
+
+// ── Navigation ──────────────────────────────────────────
+function navigate(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name)?.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(b => {
+    if (b.getAttribute('onclick')?.includes("'" + name + "'")) b.classList.add('active');
+  });
+  // Close sidebar on mobile
+  if (window.innerWidth < 900) document.getElementById('sidebar').classList.remove('open');
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ── Macro snapshot & chart ──────────────────────────────
+function fmtQ(ds) {
+  const d = new Date(ds);
+  return `${d.getFullYear()}Q${Math.floor(d.getMonth()/3)+1}`;
+}
+
+function initDashboard() {
+  const D = window.DFM_DATA;
+
+  // GDP chart — StatOffice full history + DFM forecast
+  const soKeys = Object.keys(STATOFFICE_YOY).sort();
+  const lastSO = soKeys[soKeys.length - 1];
+
+  let forecastEntries = [];
+  if (D) {
+    const dfmDates = D.gdp.dates.map(fmtQ);
+    const dfmYoY   = D.gdp.grw_yoy.map(v => v === null ? null : +v);
+    forecastEntries = dfmDates
+      .map((q, i) => ({q, v: dfmYoY[i]}))
+      .filter(({q, v}) => q > lastSO && v !== null);
+  }
+
+  const showN = 16;
+  const chartLabels = [...soKeys.slice(-showN), ...forecastEntries.map(e => e.q)];
+  const chartValues = [...soKeys.slice(-showN).map(k => STATOFFICE_YOY[k]),
+                       ...forecastEntries.map(e => e.v)];
+  const isFc = [...new Array(showN).fill(false), ...forecastEntries.map(() => true)];
+
+  const bgColors = chartValues.map((v, i) =>
+    isFc[i] ? 'rgba(217,119,6,.88)' : v >= 0 ? 'rgba(37,99,235,.70)' : 'rgba(220,38,38,.70)'
+  );
+  const borderColors = chartValues.map((v, i) =>
+    isFc[i] ? 'rgba(180,90,0,1)' : v >= 0 ? 'rgba(37,99,235,1)' : 'rgba(220,38,38,1)'
+  );
+
+  const ctx = document.getElementById('hub-gdp-chart');
+  if (ctx) {
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: chartLabels,
+        datasets: [
+          {
+            label: 'StatOffice (official)',
+            data: chartValues.map((v,i) => isFc[i] ? null : v),
+            backgroundColor: bgColors.map((c,i) => isFc[i] ? 'transparent' : c),
+            borderColor:     borderColors.map((c,i) => isFc[i] ? 'transparent' : c),
+            borderWidth: 1, borderRadius: 5, borderSkipped: false
+          },
+          {
+            label: 'DFM Nowcast',
+            data: chartValues.map((v,i) => isFc[i] ? v : null),
+            backgroundColor: chartValues.map((v,i) => isFc[i] ? 'rgba(217,119,6,.88)' : 'transparent'),
+            borderColor:     chartValues.map((v,i) => isFc[i] ? 'rgba(180,90,0,1)' : 'transparent'),
+            borderWidth: 2, borderRadius: 5, borderSkipped: false
+          }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: {display: false},
+          tooltip: {
+            callbacks: {
+              label: c => ` ${c.raw?.toFixed(2)}%  ${isFc[c.dataIndex] ? '(DFM Nowcast)' : '(StatOffice)'}`
+            }
+          }
+        },
+        scales: {
+          x: {ticks: {font:{size:10}, maxRotation:45}, grid:{display:false}},
+          y: {ticks: {font:{size:10}, callback: v => v+'%'}, grid:{color:'#f0f2f6'}}
+        }
+      }
+    });
+  }
+
+  // KPI snap from DFM
+  if (D) {
+    const dfmDates = D.gdp.dates.map(fmtQ);
+    const dfmYoY   = D.gdp.grw_yoy.map(v => v === null ? null : +v);
+    const allWithVal = dfmDates.map((q,i) => ({q, v: dfmYoY[i]})).filter(x => x.v !== null);
+    const latest = allWithVal[allWithVal.length - 1];
+    if (latest) {
+      const isForecast = latest.q > lastSO;
+      const val = latest.v.toFixed(1) + '%';
+      document.getElementById('snap-gdp').textContent = (latest.v >= 0 ? '+' : '') + val;
+      document.getElementById('snap-gdp-per').textContent = latest.q + (isForecast ? ' · Nowcast' : ' · Official');
+      document.getElementById('hero-nowcast').textContent = (latest.v >= 0 ? '+' : '') + val;
+    }
+
+    const fp = D.factor.path.map(Number);
+    const lf = fp[fp.length - 1];
+    const factorEl = document.getElementById('snap-factor');
+    factorEl.textContent = lf?.toFixed(3) ?? '—';
+    factorEl.style.color = lf > 0.1 ? 'var(--green)' : lf < -0.1 ? 'var(--red)' : 'var(--purple)';
+
+    const fBadge = document.getElementById('snap-factor-badge');
+    fBadge.textContent = lf > 0.1 ? '↑ Above trend' : lf < -0.1 ? '↓ Below trend' : '→ Near trend';
+    fBadge.className = 'macro-badge ' + (lf > 0.1 ? 'up' : lf < -0.1 ? 'down' : 'flat');
+  }
+}
+
+window.addEventListener('DOMContentLoaded', initDashboard);
+</script>
+</body>
+</html>
