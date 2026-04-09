@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FPP Model — CERR Policy Engine</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="../shared/report-engine.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f1f5f9;color:#1e293b;min-height:100vh}
+
+/* === HEADER === */
+.hdr{background:linear-gradient(135deg,#1e1b4b 0%,#312e81 60%,#4c1d95 100%);color:#fff;padding:18px 28px;display:flex;align-items:center;gap:18px;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.hdr-icon{width:52px;height:52px;background:rgba(255,255,255,.15);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.hdr-title{font-size:1.3rem;font-weight:700;letter-spacing:-.3px}
+.hdr-sub{font-size:.8rem;color:rgba(255,255,255,.75);margin-top:2px}
+.hdr-badges{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.badge{padding:4px 12px;border-radius:20px;font-size:.73rem;font-weight:700;letter-spacing:.4px;white-space:nowrap}
+.badge.real{background:rgba(59,130,246,.35);color:#bfdbfe}
+.badge.ext{background:rgba(34,197,94,.3);color:#bbf7d0}
+.badge.fiscal{background:rgba(245,158,11,.3);color:#fde68a}
+.badge.mon{background:rgba(168,85,247,.3);color:#e9d5ff}
+
+/* === TABS === */
+.tabs{display:flex;gap:0;background:#fff;border-bottom:2px solid #e2e8f0;padding:0 24px}
+.tab{padding:14px 22px;font-size:.85rem;font-weight:600;color:#64748b;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;white-space:nowrap}
+.tab:hover{color:#4338ca}
+.tab.active{color:#4338ca;border-bottom-color:#4338ca}
+
+/* === LAYOUT === */
+.main{max-width:1400px;margin:0 auto;padding:24px 20px}
+.page-section{display:none}
+.page-section.active{display:block}
+
+/* === SIMULATOR LAYOUT === */
+.sim-layout{display:grid;grid-template-columns:360px 1fr;gap:20px;align-items:start}
+@media(max-width:1100px){.sim-layout{grid-template-columns:1fr}}
+
+/* === ASSUMPTIONS PANEL === */
+.assume-panel{background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.07);overflow:hidden;position:sticky;top:16px}
+.assume-hdr{background:linear-gradient(135deg,#1e1b4b,#4c1d95);color:#fff;padding:16px 20px}
+.assume-hdr h3{font-size:.95rem;font-weight:700}
+.assume-hdr p{font-size:.76rem;color:rgba(255,255,255,.7);margin-top:4px}
+.sector-block{padding:14px 18px;border-bottom:1px solid #f1f5f9}
+.sector-block:last-child{border-bottom:none}
+.sector-label{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;padding:4px 10px;border-radius:20px;display:inline-block;margin-bottom:10px}
+.sl-real{background:#dbeafe;color:#1d4ed8}
+.sl-ext{background:#dcfce7;color:#15803d}
+.sl-fiscal{background:#fef3c7;color:#b45309}
+.sl-mon{background:#f3e8ff;color:#7e22ce}
+
+.inp-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.inp-col{text-align:center}
+.inp-year{font-size:.68rem;font-weight:700;color:#94a3b8;margin-bottom:4px}
+.inp-field{display:flex;flex-direction:column;gap:3px;margin-bottom:6px}
+.inp-field label{font-size:.67rem;color:#64748b;font-weight:500}
+.inp-field input{width:100%;padding:5px 6px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:.8rem;font-weight:600;text-align:center;background:#f8fafc;transition:border-color .2s}
+.inp-field input:focus{outline:none;border-color:#6366f1;background:#fff}
+.run-btn{width:100%;margin:14px 18px;width:calc(100% - 36px);padding:12px;background:linear-gradient(135deg,#4338ca,#6d28d9);color:#fff;border:none;border-radius:10px;font-size:.9rem;font-weight:700;cursor:pointer;transition:opacity .2s}
+.run-btn:hover{opacity:.9}
+
+/* === RESULTS PANEL === */
+.results-panel{display:flex;flex-direction:column;gap:20px}
+
+/* === KPI GRID === */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:900px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+.kpi-card{background:#fff;border-radius:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.06);text-align:center;border-top:4px solid #e2e8f0}
+.kpi-card.real{border-top-color:#3b82f6}
+.kpi-card.ext{border-top-color:#22c55e}
+.kpi-card.fiscal{border-top-color:#f59e0b}
+.kpi-card.mon{border-top-color:#8b5cf6}
+.kpi-label{font-size:.7rem;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.kpi-val{font-size:1.6rem;font-weight:800;margin:4px 0;color:#1e293b}
+.kpi-meta{font-size:.7rem;color:#64748b}
+
+/* === CONSISTENCY MATRIX === */
+.consist-card{background:#fff;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.07);padding:20px}
+.consist-card h3{font-size:.9rem;font-weight:700;color:#1e293b;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.consist-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+@media(max-width:800px){.consist-grid{grid-template-columns:repeat(2,1fr)}}
+.ccheck{border-radius:10px;padding:12px 10px;text-align:center;transition:all .3s}
+.ccheck.green{background:#f0fdf4;border:1.5px solid #86efac}
+.ccheck.yellow{background:#fffbeb;border:1.5px solid #fcd34d}
+.ccheck.red{background:#fff1f2;border:1.5px solid #fca5a5}
+.ccheck-icon{font-size:1.4rem;margin-bottom:4px}
+.ccheck-name{font-size:.68rem;font-weight:700;color:#475569}
+.ccheck-val{font-size:.8rem;font-weight:700;margin-top:4px}
+.ccheck.green .ccheck-val{color:#16a34a}
+.ccheck.yellow .ccheck-val{color:#d97706}
+.ccheck.red .ccheck-val{color:#dc2626}
+
+/* === RESULTS TABLE === */
+.rtable-card{background:#fff;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.07);padding:20px;overflow-x:auto}
+.rtable-card h3{font-size:.9rem;font-weight:700;color:#1e293b;margin-bottom:16px}
+.rtable{width:100%;border-collapse:collapse;font-size:.81rem}
+.rtable th{text-align:center;padding:8px 10px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#94a3b8;background:#f8fafc;border-bottom:2px solid #e2e8f0}
+.rtable th.left{text-align:left}
+.rtable td{padding:7px 10px;border-bottom:1px solid #f1f5f9;text-align:center}
+.rtable td.left{text-align:left;font-weight:600;color:#374151}
+.rtable tr:hover td{background:#f8fafc}
+.sec-divider td{background:#f8fafc!important;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.6px;padding:6px 10px}
+.sec-divider.real td.left{color:#1d4ed8}
+.sec-divider.ext td.left{color:#15803d}
+.sec-divider.fiscal td.left{color:#b45309}
+.sec-divider.mon td.left{color:#7e22ce}
+.badge-green{background:#dcfce7;color:#166534;padding:2px 8px;border-radius:20px;font-size:.7rem;font-weight:700}
+.badge-red{background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:20px;font-size:.7rem;font-weight:700}
+.badge-yellow{background:#fef9c3;color:#854d0e;padding:2px 8px;border-radius:20px;font-size:.7rem;font-weight:700}
+
+/* === CHARTS === */
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:800px){.chart-grid{grid-template-columns:1fr}}
+.chart-card{background:#fff;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.07);padding:18px}
+.chart-card h4{font-size:.82rem;font-weight:700;color:#374151;margin-bottom:14px}
+.chart-wrap{position:relative;height:220px}
+
+/* === HISTORICAL TABLE === */
+.hist-card{background:#fff;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.07);padding:20px;overflow-x:auto}
+.hist-card h3{font-size:.9rem;font-weight:700;margin-bottom:16px;color:#1e293b}
+.htable{width:100%;border-collapse:collapse;font-size:.79rem}
+.htable th{padding:8px 10px;text-align:center;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#94a3b8;background:#f8fafc;border-bottom:2px solid #e2e8f0}
+.htable th.left{text-align:left}
+.htable td{padding:6px 10px;border-bottom:1px solid #f1f5f9;text-align:center}
+.htable td.left{text-align:left;font-weight:600;color:#374151}
+.htable tr:hover td{background:#f8fafc}
+.heat-pos{color:#16a34a;font-weight:700}
+.heat-neg{color:#dc2626;font-weight:700}
+
+/* === ABOUT === */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:900px){.about-grid{grid-template-columns:1fr}}
+.about-card{background:#fff;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.07);padding:22px}
+.about-card h3{font-size:.95rem;font-weight:700;color:#1e293b;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid #f1f5f9}
+.about-card p{font-size:.83rem;color:#475569;line-height:1.7;margin-bottom:10px}
+.about-card ul{padding-left:18px;font-size:.83rem;color:#475569;line-height:1.8}
+.eq-box{background:#f8fafc;border-left:4px solid #6366f1;border-radius:0 8px 8px 0;padding:12px 16px;margin:12px 0;font-family:'Courier New',monospace;font-size:.82rem;color:#312e81;line-height:1.7}
+.sector-eq-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.sector-eq{border-radius:10px;padding:14px;font-size:.79rem}
+.sector-eq.real{background:#eff6ff;border:1px solid #bfdbfe}
+.sector-eq.ext{background:#f0fdf4;border:1px solid #bbf7d0}
+.sector-eq.fiscal{background:#fffbeb;border:1px solid #fde68a}
+.sector-eq.mon{background:#faf5ff;border:1px solid #e9d5ff}
+.sector-eq h4{font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.sector-eq.real h4{color:#1d4ed8}
+.sector-eq.ext h4{color:#15803d}
+.sector-eq.fiscal h4{color:#b45309}
+.sector-eq.mon h4{color:#7e22ce}
+.sector-eq code{display:block;font-family:'Courier New',monospace;font-size:.75rem;color:#374151;line-height:1.6}
+
+/* === EXPORT TOOLBAR === */
+.export-toolbar{background:#fff;border-radius:12px;padding:14px 18px;box-shadow:0 2px 8px rgba(0,0,0,.06);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.export-toolbar span{font-size:.78rem;font-weight:700;color:#64748b;margin-right:4px}
+.exp-btn{padding:8px 16px;border:1.5px solid #e2e8f0;border-radius:8px;background:#fff;font-size:.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s;color:#374151}
+.exp-btn:hover{border-color:#6366f1;color:#4338ca;background:#f5f3ff}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-icon">💰</div>
+  <div>
+    <div class="hdr-title">Financial Programming &amp; Policies (FPP)</div>
+    <div class="hdr-sub">IMF four-sector consistency framework · Uzbekistan baseline 2023 · 3-year projection</div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge real">🔵 Real</span>
+    <span class="badge ext">🟢 External</span>
+    <span class="badge fiscal">🟡 Fiscal</span>
+    <span class="badge mon">🟣 Monetary</span>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('sim')">📊 Simulator</div>
+  <div class="tab" onclick="switchTab('hist')">📈 Historical Data</div>
+  <div class="tab" onclick="switchTab('about')">📘 Model &amp; Equations</div>
+</div>
+
+<div class="main">
+
+<!-- ===================== SIMULATOR ===================== -->
+<div id="tab-sim" class="page-section active">
+<div class="sim-layout">
+
+  <!-- LEFT: Assumptions -->
+  <div class="assume-panel">
+    <div class="assume-hdr">
+      <h3>Policy Assumptions</h3>
+      <p>Set targets for each sector · 2024–2026 projection</p>
+    </div>
+
+    <!-- REAL SECTOR -->
+    <div class="sector-block">
+      <span class="sector-label sl-real">🔵 Real Sector</span>
+      <div class="inp-grid">
+        <div class="inp-col"><div class="inp-year">2024</div></div>
+        <div class="inp-col"><div class="inp-year">2025</div></div>
+        <div class="inp-col"><div class="inp-year">2026</div></div>
+        <div class="inp-col"><div class="inp-field"><label>GDP growth (%)</label><input id="g0" type="number" value="7.0" step="0.1"></div></div>
+        <div class="inp-col"><div class="inp-field"><label>GDP growth (%)</label><input id="g1" type="number" value="6.5" step="0.1"></div></div>
+        <div class="inp-col"><div class="inp-field"><label>GDP growth (%)</label><input id="g2" type="number" value="6.0" step="0.1"></div></div>
+        <div class="inp-col"><div class="inp-field"><label>NER dep. (%)</label><input id="ner0" type="number" value="7.5" step="0.1"></div></div>
+        <div class="inp-col"><div class="inp-field"><label>NER dep. (%)</label><input id="ner1" type="number" value="7.0" step="0.1"></div></div>
+        <div class="inp-col"><div class="inp-field"><label>NER dep. (%)</label><input id="ner2" type="number" value="6.0" step="0.1"></div></div>
+      </div>
+    </div>
+
+    <!-- EXTERNAL SECTOR -->
+    <div class="sector-block">
+      <span class="sector-label sl-ext">🟢 External Sector</span>
+      <div class="inp-grid">
+        <div class="inp-col"></div><div class="inp-col"></div><div class="inp-col"></div>
+        <div class="inp-col"><div class="inp-field"><label>CA/GDP (%)</label><input id="ca0" type="number" value="-9.0" step="0.1"></div></div>
+        <div class="inp-col"><div class="inp-field"><label>CA/GDP (%)</label><input id="ca1" type="number" value="-8.0" step="0.1"></div></div>
+        <div class="inp-col"><div class="inp-field"><label>CA/GDP (%)</label><input id="ca2" type="number" value="-7.0" step="0.1"></div></div>
+        <div class="inp-col"><div class="inp-field"><label>FDI (bln $)</label><input id="fdi0" type="number" value="3.2" step="0.1"></div></div>
+        <div class="inp-col"><div class="inp-field"><label>FDI (bln $)</label><input id="fdi1" type="number" value="3.5" step="0.1"></div></div>
+        <div class="inp-col"><div class="inp-field"><label>FDI (bln $)</label><input id="fdi2" type="number" value="4.0" step="0.1"></div></div>
+        <div class="inp-col"><div class="inp-field"><label>Other FA (bln $)</label><input id="fa0" type="number" value="2.0" step="0.1"></div></div>
+        <div class="inp-col"><div class="inp-field"><label>Other FA (bln $)</label><input id="fa1" type="number" value="2.5" step="0.1"></div></div>
+        <div class="inp-col"><div class="inp-field"><label>Other FA (bln $)</label><input id="fa2" type="number" value="3.0" step="0.1"></div></div>
+      </div>
+    </div>
+
+    <!-- FISCAL SECTOR -->
+    <div class="sector-block">
+      <span class="sector-label sl-fiscal">🟡 Fiscal Sector</span>
+      <div class="inp-grid">
+        <div class="inp-col"></div><div class="inp-col"></div><div class="inp-col"></div>
+        <div class="inp-col"><div class="inp-field"><label>Revenue/GDP (%)</label><input id="rev0" type="number" value="22.5" step="0.1"></div></div>
+        <div class="inp-col"><div class="inp-field"><label>Revenue/GDP (%)</label><input id="rev1" type="number" value="23.0" step="0.1"></div></div>
+        <div class="inp-col"><div class="inp-field"><label>Revenue/GDP (%)</label><input id="rev2" type="number" value="23.5" step="0.1"></div></div>
+        <div class="inp-col"><div class="inp-field"><label>Expense/GDP (%)</label><input id="exp0" type="number" value="23.5" step="0.1"></div></div>
+        <div class="inp-col"><div class="inp-field"><label>Expense/GDP (%)</label><input id="exp1" type="number" value="23.5" step="0.1"></div></div>
+        <div class="inp-col"><div class="inp-field"><label>Expense/GDP (%)</label><input id="exp2" type="number" value="23.5" step="0.1"></div></div>
+      </div>
+    </div>
+
+    <!-- MONETARY SECTOR -->
+    <div class="sector-block">
+      <span class="sector-label sl-mon">🟣 Monetary Sector</span>
+      <div class="inp-grid">
+        <div class="inp-col"></div><div class="inp-col"></div><div class="inp-col"></div>
+        <div class="inp-col"><div class="inp-field"><label>Velocity</label><input id="vel0" type="number" value="5.5" step="0.05"></div></div>
+        <div class="inp-col"><div class="inp-field"><label>Velocity</label><input id="vel1" type="number" value="5.4" step="0.05"></div></div>
+        <div class="inp-col"><div class="inp-field"><label>Velocity</label><input id="vel2" type="number" value="5.3" step="0.05"></div></div>
+        <div class="inp-col"><div class="inp-field"><label>Credit growth (%)</label><input id="crd0" type="number" value="22.0" step="0.5"></div></div>
+        <div class="inp-col"><div class="inp-field"><label>Credit growth (%)</label><input id="crd1" type="number" value="20.0" step="0.5"></div></div>
+        <div class="inp-col"><div class="inp-field"><label>Credit growth (%)</label><input id="crd2" type="number" value="18.0" step="0.5"></div></div>
+      </div>
+    </div>
+
+    <button class="run-btn" onclick="runFPP()">▶ Run Projection</button>
+  </div>
+
+  <!-- RIGHT: Results -->
+  <div class="results-panel" id="results-panel">
+
+    <!-- KPI Grid -->
+    <div class="kpi-grid">
+      <div class="kpi-card real">
+        <div class="kpi-label">GDP Growth '26</div>
+        <div class="kpi-val" id="kpi-gdp">—</div>
+        <div class="kpi-meta">% real (avg 3yr)</div>
+      </div>
+      <div class="kpi-card ext">
+        <div class="kpi-label">Reserves '26</div>
+        <div class="kpi-val" id="kpi-res">—</div>
+        <div class="kpi-meta">months import cover</div>
+      </div>
+      <div class="kpi-card fiscal">
+        <div class="kpi-label">Fiscal Bal '26</div>
+        <div class="kpi-val" id="kpi-fb">—</div>
+        <div class="kpi-meta">% of GDP</div>
+      </div>
+      <div class="kpi-card mon">
+        <div class="kpi-label">Inflation '26</div>
+        <div class="kpi-val" id="kpi-pi">—</div>
+        <div class="kpi-meta">% Phillips Curve</div>
+      </div>
+    </div>
+
+    <!-- Consistency Matrix -->
+    <div class="consist-card">
+      <h3>🚦 Consistency Matrix</h3>
+      <div class="consist-grid" id="consist-grid">
+        <div class="ccheck" id="cc-growth"><div class="ccheck-icon">📊</div><div class="ccheck-name">Growth vs Potential</div><div class="ccheck-val">—</div></div>
+        <div class="ccheck" id="cc-inflation"><div class="ccheck-icon">🎯</div><div class="ccheck-name">Inflation Target</div><div class="ccheck-val">—</div></div>
+        <div class="ccheck" id="cc-reserves"><div class="ccheck-icon">🏦</div><div class="ccheck-name">Reserve Adequacy</div><div class="ccheck-val">—</div></div>
+        <div class="ccheck" id="cc-fiscal"><div class="ccheck-icon">⚖️</div><div class="ccheck-name">Fiscal Sustainability</div><div class="ccheck-val">—</div></div>
+        <div class="ccheck" id="cc-money"><div class="ccheck-icon">💳</div><div class="ccheck-name">Monetary Consistency</div><div class="ccheck-val">—</div></div>
+      </div>
+    </div>
+
+    <!-- Results Table -->
+    <div class="rtable-card">
+      <h3>📋 Four-Sector Projection Table</h3>
+      <table class="rtable" id="proj-table">
+        <thead>
+          <tr>
+            <th class="left">Indicator</th>
+            <th>2023<br><small>(Base)</small></th>
+            <th>2024</th>
+            <th>2025</th>
+            <th>2026</th>
+          </tr>
+        </thead>
+        <tbody id="proj-tbody">
+          <tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:24px">Click "Run Projection" to generate results</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Charts -->
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h4>🔵 Real GDP Growth &amp; Inflation (%)</h4>
+        <div class="chart-wrap"><canvas id="chart-real"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h4>🟢 Balance of Payments (bln USD)</h4>
+        <div class="chart-wrap"><canvas id="chart-ext"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h4>🟡 Fiscal Position (% GDP)</h4>
+        <div class="chart-wrap"><canvas id="chart-fiscal"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h4>🟣 Money Growth &amp; NDA/NFA Decomposition (%)</h4>
+        <div class="chart-wrap"><canvas id="chart-mon"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Export Toolbar -->
+    <div class="export-toolbar">
+      <span>Export Results:</span>
+      <button class="exp-btn" onclick="fppExportCSV()">📥 CSV Download</button>
+      <button class="exp-btn" onclick="fppExportPNG()">🖼 PNG Chart</button>
+      <button class="exp-btn" onclick="fppExportPDF()">📄 PDF Report</button>
+    </div>
+
+  </div><!-- end results-panel -->
+</div><!-- end sim-layout -->
+</div>
+
+<!-- ===================== HISTORICAL DATA ===================== -->
+<div id="tab-hist" class="page-section">
+  <div class="hist-card">
+    <h3>📊 Uzbekistan: Selected Economic Indicators, 2014–2023</h3>
+    <p style="font-size:.78rem;color:#64748b;margin-bottom:16px">Source: IMF FPP Working Paper (uzn_fpp_2024_09.xlsx) — SEFI Table</p>
+    <table class="htable">
+      <thead>
+        <tr>
+          <th class="left">Indicator</th>
+          <th>2014</th><th>2015</th><th>2016</th><th>2017</th><th>2018</th>
+          <th>2019</th><th>2020</th><th>2021</th><th>2022</th><th>2023</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="11" style="background:#eff6ff;color:#1d4ed8;font-weight:800;font-size:.7rem;padding:6px 10px;text-transform:uppercase">REAL SECTOR</td></tr>
+        <tr><td class="left">Real GDP growth (%)</td><td class="heat-pos">6.9</td><td class="heat-pos">7.2</td><td class="heat-pos">5.9</td><td>4.4</td><td class="heat-pos">5.6</td><td class="heat-pos">6.8</td><td>1.6</td><td class="heat-pos">8.0</td><td class="heat-pos">6.0</td><td class="heat-pos">6.3</td></tr>
+        <tr><td class="left">CPI inflation, end-period (%)</td><td>6.1</td><td>5.6</td><td>5.7</td><td>14.4</td><td>14.3</td><td>15.2</td><td>11.1</td><td>10.0</td><td>12.0</td><td>10.0</td></tr>
+        <tr><td class="left">GDP deflator (%)</td><td>14.0</td><td>10.5</td><td>8.9</td><td>33.7</td><td>25.9</td><td>17.6</td><td>10.6</td><td>13.7</td><td>14.5</td><td>12.7</td></tr>
+        <tr><td class="left">NER depreciation, avg (%)</td><td>10.4</td><td>11.2</td><td>15.4</td><td>73.1</td><td>57.0</td><td>9.7</td><td>12.9</td><td>6.7</td><td>3.5</td><td>6.8</td></tr>
+        <tr><td class="left">GDP, nominal (bln UZS)</td><td>186,830</td><td>221,351</td><td>255,422</td><td>356,454</td><td>473,653</td><td>594,660</td><td>668,038</td><td>820,537</td><td>995,573</td><td>1,192,163</td></tr>
+        <tr><td class="left">GDP (bln USD)</td><td>80.7</td><td>86.0</td><td>86.0</td><td>69.3</td><td>58.7</td><td>67.2</td><td>66.9</td><td>77.0</td><td>90.2</td><td>101.2</td></tr>
+        <tr><td colspan="11" style="background:#f0fdf4;color:#15803d;font-weight:800;font-size:.7rem;padding:6px 10px;text-transform:uppercase">EXTERNAL SECTOR</td></tr>
+        <tr><td class="left">Current account (% GDP)</td>
+          <td class="heat-pos">2.6</td><td class="heat-pos">1.0</td><td class="heat-pos">0.2</td><td class="heat-pos">2.1</td>
+          <td class="heat-neg">-6.1</td><td class="heat-neg">-5.0</td><td class="heat-neg">-4.5</td><td class="heat-neg">-6.4</td>
+          <td class="heat-neg">-0.7</td><td class="heat-neg">-7.7</td></tr>
+        <tr><td class="left">Trade balance (% GDP)</td>
+          <td class="heat-neg">-4.3</td><td class="heat-neg">-3.3</td><td class="heat-neg">-4.6</td><td class="heat-neg">-5.9</td>
+          <td class="heat-neg">-15.9</td><td class="heat-neg">-14.2</td><td class="heat-neg">-12.1</td><td class="heat-neg">-14.9</td>
+          <td class="heat-neg">-15.2</td><td class="heat-neg">-17.4</td></tr>
+        <tr><td class="left">Int'l reserves (mln USD)</td><td>24,149</td><td>24,313</td><td>26,429</td><td>28,077</td><td>27,081</td><td>29,172</td><td>34,904</td><td>35,139</td><td>35,768</td><td>34,565</td></tr>
+        <tr><td class="left">Reserve cover (months of imports)</td><td>17.7</td><td>19.9</td><td>21.9</td><td>20.5</td><td>13.9</td><td>13.2</td><td>18.5</td><td>15.1</td><td>12.1</td><td>9.9</td></tr>
+        <tr><td colspan="11" style="background:#fffbeb;color:#b45309;font-weight:800;font-size:.7rem;padding:6px 10px;text-transform:uppercase">FISCAL SECTOR</td></tr>
+        <tr><td class="left">Revenue (% GDP)</td><td>26.9</td><td>25.5</td><td>25.5</td><td>20.2</td><td>23.0</td><td>24.0</td><td>23.5</td><td>23.7</td><td>26.7</td><td>21.8</td></tr>
+        <tr><td class="left">Expenditure (% GDP)</td><td>20.7</td><td>20.5</td><td>19.9</td><td>17.0</td><td>18.2</td><td>19.6</td><td>25.5</td><td>23.7</td><td>24.8</td><td>23.2</td></tr>
+        <tr><td class="left">Overall fiscal balance (% GDP)</td>
+          <td class="heat-pos">3.0</td><td class="heat-pos">1.1</td><td class="heat-pos">1.8</td>
+          <td class="heat-neg">-1.7</td><td class="heat-neg">-1.0</td><td class="heat-neg">-3.0</td>
+          <td class="heat-neg">-4.6</td><td class="heat-neg">-2.6</td><td class="heat-neg">-0.7</td><td class="heat-neg">-1.4</td></tr>
+        <tr><td class="left">Primary balance (% GDP)</td>
+          <td class="heat-pos">3.0</td><td class="heat-pos">1.1</td><td class="heat-pos">1.8</td>
+          <td class="heat-neg">-1.6</td><td class="heat-neg">-0.9</td><td class="heat-neg">-2.8</td>
+          <td class="heat-neg">-4.3</td><td class="heat-neg">-2.3</td><td class="heat-neg">-0.4</td><td class="heat-neg">-1.1</td></tr>
+        <tr><td colspan="11" style="background:#faf5ff;color:#7e22ce;font-weight:800;font-size:.7rem;padding:6px 10px;text-transform:uppercase">MONETARY SECTOR</td></tr>
+        <tr><td class="left">Broad money M2 growth (% eop)</td><td>15.7</td><td>24.3</td><td>23.5</td><td>40.2</td><td>14.1</td><td>13.9</td><td>17.7</td><td>29.7</td><td>30.2</td><td>12.2</td></tr>
+        <tr><td class="left">Credit to private sector (% ch.)</td><td>24.6</td><td>23.3</td><td>28.8</td><td>103.8</td><td>51.3</td><td>23.8</td><td>34.4</td><td>18.4</td><td>21.4</td><td>23.2</td></tr>
+        <tr><td class="left">Velocity (GDP / M2)</td><td>5.89</td><td>5.80</td><td>5.40</td><td>5.68</td><td>6.04</td><td>6.70</td><td>6.40</td><td>—</td><td>5.26</td><td>5.62</td></tr>
+        <tr><td class="left">NFA contribution to M2 growth</td><td>28.0</td><td>23.8</td><td>40.7</td><td>259.5</td><td>-16.8</td><td>30.9</td><td>56.0</td><td>-8.5</td><td>0.4</td><td>-1.0</td></tr>
+        <tr><td class="left">NDA contribution to M2 growth</td><td>-3.8</td><td>2.8</td><td>3.0</td><td>-69.2</td><td>49.2</td><td>65.6</td><td>32.5</td><td>46.0</td><td>39.9</td><td>53.2</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="hist-card" style="margin-top:20px">
+    <h3>🌐 Balance of Payments, 2014–2022 (mln USD)</h3>
+    <p style="font-size:.78rem;color:#64748b;margin-bottom:16px">Source: IMF FPP file (+BOP sheet)</p>
+    <table class="htable">
+      <thead>
+        <tr>
+          <th class="left">Item</th>
+          <th>2014</th><th>2015</th><th>2016</th><th>2017</th><th>2018</th><th>2019</th><th>2020</th><th>2021</th><th>2022</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="left" style="font-weight:700">Current account</td><td class="heat-pos">2,076</td><td class="heat-pos">896</td><td class="heat-pos">213</td><td class="heat-pos">1,478</td><td class="heat-neg">-3,593</td><td class="heat-neg">-3,371</td><td class="heat-neg">-3,028</td><td class="heat-neg">-4,898</td><td class="heat-neg">-618</td></tr>
+        <tr><td class="left">&nbsp; Trade balance (goods)</td><td class="heat-neg">-2,958</td><td class="heat-neg">-2,095</td><td class="heat-neg">-2,392</td><td class="heat-neg">-2,216</td><td class="heat-neg">-6,867</td><td class="heat-neg">-7,291</td><td class="heat-neg">-6,216</td><td class="heat-neg">-8,767</td><td class="heat-neg">-11,199</td></tr>
+        <tr><td class="left">&nbsp;&nbsp; Exports of goods</td><td>10,556</td><td>9,481</td><td>8,645</td><td>10,162</td><td>11,386</td><td>13,899</td><td>12,832</td><td>14,142</td><td>17,110</td></tr>
+        <tr><td class="left">&nbsp;&nbsp; Imports of goods</td><td>13,514</td><td>11,576</td><td>11,037</td><td>12,377</td><td>18,252</td><td>21,190</td><td>19,048</td><td>22,909</td><td>28,309</td></tr>
+        <tr><td class="left">&nbsp; Services balance</td><td class="heat-neg">-515</td><td class="heat-neg">-728</td><td class="heat-neg">-1,539</td><td class="heat-neg">-1,842</td><td class="heat-neg">-2,442</td><td class="heat-neg">-2,271</td><td class="heat-neg">-1,885</td><td class="heat-neg">-2,727</td><td class="heat-neg">-2,486</td></tr>
+        <tr><td class="left">&nbsp; Secondary income (remittances)</td><td class="heat-pos">4,435</td><td class="heat-pos">2,291</td><td class="heat-pos">3,292</td><td class="heat-pos">4,323</td><td class="heat-pos">4,208</td><td class="heat-pos">5,455</td><td class="heat-pos">4,914</td><td class="heat-pos">6,239</td><td class="heat-pos">12,164</td></tr>
+        <tr><td class="left" style="font-weight:700">Financial account</td><td>1,500</td><td>756</td><td>-16</td><td>-673</td><td>-1,318</td><td>-6,473</td><td>-5,534</td><td>-5,931</td><td>-316</td></tr>
+        <tr><td class="left">&nbsp; Direct investment (net)</td><td class="heat-neg">-804</td><td class="heat-neg">-1,037</td><td class="heat-neg">-1,657</td><td class="heat-neg">-1,790</td><td class="heat-neg">-623</td><td class="heat-neg">-2,313</td><td class="heat-neg">-1,717</td><td class="heat-neg">-2,278</td><td class="heat-neg">-2,650</td></tr>
+        <tr><td class="left" style="font-weight:700">Change in reserves (+ = increase)</td><td class="heat-pos">561</td><td class="heat-pos">132</td><td class="heat-neg">-1,562</td><td class="heat-pos">1,411</td><td class="heat-pos">1,778</td><td class="heat-neg">-454</td><td class="heat-neg">-1,314</td><td class="heat-neg">-2,689</td><td class="heat-neg">-4,577</td></tr>
+        <tr><td class="left">Int'l reserves level (mln USD)</td><td>26,429</td><td>28,077</td><td>27,081</td><td>29,172</td><td>34,904</td><td>35,139</td><td>35,768</td><td>34,565</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===================== ABOUT ===================== -->
+<div id="tab-about" class="page-section">
+  <div class="about-grid">
+    <div class="about-card">
+      <h3>What is the FPP Model?</h3>
+      <p>The <strong>Financial Programming and Policies (FPP)</strong> framework is an IMF analytical tool that ensures consistency across four macroeconomic sectors: Real, External, Fiscal, and Monetary. Originally developed as the "monetary approach to balance of payments," it was extended to a multi-sector framework by Polak (1957) and refined over decades of IMF practice.</p>
+      <p>The core insight: <em>any inconsistency between sector-level targets must manifest as a financing gap, reserve drawdown, or monetary accommodation</em>. FPP forces the policymaker to confront these trade-offs explicitly.</p>
+      <p><strong>This implementation</strong> is calibrated to Uzbekistan using IMF FPP data (uzn_fpp_2024_09.xlsx), with base year 2023 and projections to 2026.</p>
+    </div>
+    <div class="about-card">
+      <h3>Phillips Curve — Inflation Equation</h3>
+      <p>Inflation is projected via a semi-structural Phillips Curve estimated for Uzbekistan:</p>
+      <div class="eq-box">
+        π<sub>t</sub> = 1.4 + 0.7·π<sub>t−1</sub> + 1.4·y_gap<sub>t</sub> + 0.28·RER_gap<sub>t</sub>
+      </div>
+      <p><strong>Coefficients (from +Inflation sheet):</strong></p>
+      <ul>
+        <li><strong>Constant</strong>: 1.4 (trend/structural inflation)</li>
+        <li><strong>Persistence (0.70)</strong>: strong inflation inertia — past inflation strongly predicts current</li>
+        <li><strong>Output gap (1.40)</strong>: 1pp above potential → +1.4pp inflation</li>
+        <li><strong>RER gap (0.28)</strong>: exchange rate pass-through; base RER gap = 1.2%</li>
+      </ul>
+      <p>The output gap is computed as the cumulative deviation of actual growth from potential (6.5% p.a.). The RER gap reflects the differential between foreign real rates + risk premium and domestic real rates.</p>
+    </div>
+    <div class="about-card" style="grid-column:1/-1">
+      <h3>Four-Sector Equations</h3>
+      <div class="sector-eq-grid">
+        <div class="sector-eq real">
+          <h4>🔵 Real Sector</h4>
+          <code>Y_nom[t] = Y_nom[t-1] · (1 + g/100) · (1 + π/100)</code>
+          <code>y_gap[t] = y_gap[t-1] + (g - g_pot)  [g_pot = 6.5%]</code>
+          <code>π[t] = 1.4 + 0.7·π[t-1] + 1.4·y_gap + 0.28·RER_gap</code>
+          <code>NER[t] = NER[t-1] · (1 + dep/100)</code>
+          <code>Y_USD[t] = Y_nom[t] / NER[t]  [bln USD]</code>
+        </div>
+        <div class="sector-eq ext">
+          <h4>🟢 External Sector</h4>
+          <code>CA[t] = (CA_GDP/100) · Y_USD[t]  [bln USD]</code>
+          <code>FA[t] = FDI[t] + Other_FA[t]  [bln USD]</code>
+          <code>ΔRes[t] = CA[t] + FA[t]</code>
+          <code>Res[t] = Res[t-1] + ΔRes[t]·1000  [mln USD]</code>
+          <code>Cover[t] = Res[t] / (Imports[t]/12)  [months]</code>
+          <code>Imports ≈ 35% of GDP (Y_USD·350)</code>
+        </div>
+        <div class="sector-eq fiscal">
+          <h4>🟡 Fiscal Sector</h4>
+          <code>Revenue[t] = (Rev_GDP/100) · Y_USD[t]</code>
+          <code>Expense[t] = (Exp_GDP/100) · Y_USD[t]</code>
+          <code>Fiscal Bal[t] = Revenue[t] - Expense[t]</code>
+          <code>Primary Bal[t] ≈ Fiscal Bal[t] + 0.3% GDP</code>
+          <code>Financing need = -Fiscal Bal[t]</code>
+          <code>Debt[t] = Debt[t-1] + Financing_need[t]</code>
+        </div>
+        <div class="sector-eq mon">
+          <h4>🟣 Monetary Sector</h4>
+          <code>M2[t] = Y_nom[t] / Velocity[t]  [bln UZS]</code>
+          <code>ΔM2[t] = M2[t] - M2[t-1]</code>
+          <code>M2_growth[t] = ΔM2[t] / M2[t-1] · 100</code>
+          <code>ΔNFA[t] = ΔRes[t] · NER[t]  [bln UZS]</code>
+          <code>ΔNDA[t] = ΔM2[t] - ΔNFA[t]  [residual]</code>
+          <code>NDA/M2_check: |ΔNDA/M2[t-1]| vs credit plan</code>
+        </div>
+      </div>
+    </div>
+    <div class="about-card">
+      <h3>Consistency Checks</h3>
+      <ul>
+        <li><strong>Growth vs Potential</strong>: Is real growth near potential (6.5%)? Sustained above-potential growth builds inflationary pressure.</li>
+        <li><strong>Inflation Target</strong>: Does Phillips Curve π match the CBU target (8%→6%→5%)? Large deviations signal policy tightening needed.</li>
+        <li><strong>Reserve Adequacy</strong>: IMF benchmark = minimum 3 months of imports. Below 3 months signals external vulnerability.</li>
+        <li><strong>Fiscal Sustainability</strong>: Deficit > 5% GDP is marked red. Deficit 3-5% GDP is yellow. Below 3% GDP is green.</li>
+        <li><strong>Monetary Consistency</strong>: Does ΔNDA implied by money demand match credit growth targets? Large gaps suggest monetary financing of deficit or excessive credit.</li>
+      </ul>
+    </div>
+    <div class="about-card">
+      <h3>Data Sources &amp; Calibration</h3>
+      <ul>
+        <li><strong>Base year</strong>: 2023 (GDP: 1,192,163 bln UZS; 101.2 bln USD)</li>
+        <li><strong>NER (2023)</strong>: ~11,780 UZS/USD</li>
+        <li><strong>Potential growth</strong>: 6.5% p.a. (consensus estimate)</li>
+        <li><strong>RER gap</strong>: 1.2% = foreign rate (0.5%) + risk premium (1.5%) − domestic rate (0.8%)</li>
+        <li><strong>Velocity base</strong>: 5.62 (2023 estimated)</li>
+        <li><strong>Reserves base</strong>: 34,565 mln USD (2023)</li>
+        <li><strong>Import share</strong>: ~35% of GDP (BOP data)</li>
+        <li><strong>External debt/GDP</strong>: ~38% (2023 estimate)</li>
+        <li><strong>Phillips Curve</strong>: Estimated in IMF FPP worksheet for Uzbekistan (2021 vintage)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</div><!-- end main -->
+
+<script>
+// ======================================================
+// BASE YEAR CALIBRATION (2023)
+// ======================================================
+const BASE = {
+  year: 2023,
+  Y_nom: 1192163,    // bln UZS
+  Y_USD: 101.2,      // bln USD
+  NER: 11780,        // UZS/USD
+  g_real: 6.3,
+  pi: 10.0,
+  y_gap: -0.2,       // slightly below potential
+  CA_GDP: -7.7,
+  rev_GDP: 21.8,
+  exp_GDP: 23.2,
+  fb_GDP: -1.4,
+  M2: 212153,        // bln UZS (~1,192,163/5.62)
+  velocity: 5.62,
+  credit: 400000,    // bln UZS (private credit ~2023 estimate)
+  reserves_USD: 34565,  // mln USD
+  ext_debt_GDP: 38.0,
+  RER_gap: 1.2       // % (fixed; = 0.5+1.5-0.8)
+};
+
+const G_POT = 6.5;       // potential growth %
+const IMPORT_SHARE = 0.35; // imports as % of GDP
+const PI_TARGETS = [8.0, 6.0, 5.0]; // CBU targets 2024-2026
+
+// Chart instances
+let charts = {};
+let lastResults = null;
+
+// ======================================================
+// MODEL SOLVER
+// ======================================================
+function solveFPP(assumptions) {
+  const results = [];
+  const prev = {
+    Y_nom: BASE.Y_nom,
+    Y_USD: BASE.Y_USD,
+    NER: BASE.NER,
+    pi: BASE.pi,
+    y_gap: BASE.y_gap,
+    M2: BASE.M2,
+    credit: BASE.credit,
+    reserves_USD: BASE.reserves_USD,
+    ext_debt_GDP: BASE.ext_debt_GDP
+  };
+
+  for (let i = 0; i < assumptions.length; i++) {
+    const a = assumptions[i];
+    const r = { year: a.year };
+
+    // --- 1. REAL SECTOR ---
+    r.g_real = a.g_real;
+    r.y_gap = prev.y_gap + (a.g_real - G_POT);  // cumulative output gap
+    r.y_gap = Math.max(-8, Math.min(8, r.y_gap)); // clamp
+    r.pi = 1.4 + 0.7 * prev.pi + 1.4 * r.y_gap + 0.28 * BASE.RER_gap;
+    r.pi = Math.max(2.0, r.pi);  // floor at 2%
+    r.NER_dep = a.ner_dep;
+    r.NER = prev.NER * (1 + a.ner_dep / 100);
+    r.Y_nom = prev.Y_nom * (1 + a.g_real / 100) * (1 + r.pi / 100);
+    r.Y_USD = r.Y_nom / r.NER;  // bln USD (Y_nom in bln UZS / NER in UZS/USD)
+
+    // --- 2. EXTERNAL SECTOR ---
+    r.CA_GDP = a.ca_gdp;
+    r.CA = (a.ca_gdp / 100) * r.Y_USD;  // bln USD
+    r.FDI = a.fdi;
+    r.FA = a.fdi + a.other_fa;
+    r.delta_reserves = (r.CA + r.FA) * 1000; // mln USD
+    r.reserves_USD = prev.reserves_USD + r.delta_reserves;
+    r.reserves_USD = Math.max(0, r.reserves_USD);
+    r.imports_USD = IMPORT_SHARE * r.Y_USD * 1000; // mln USD
+    r.import_cover = r.reserves_USD / (r.imports_USD / 12); // months
+
+    // --- 3. FISCAL SECTOR ---
+    r.rev_GDP = a.rev_gdp;
+    r.exp_GDP = a.exp_gdp;
+    r.fb_GDP = a.rev_gdp - a.exp_gdp;
+    r.revenue = (a.rev_gdp / 100) * r.Y_USD;   // bln USD
+    r.expenditure = (a.exp_gdp / 100) * r.Y_USD;
+    r.fiscal_bal = r.revenue - r.expenditure;  // bln USD
+    r.primary_bal_GDP = r.fb_GDP + 0.3; // rough: interest ≈ 0.3% GDP
+    r.financing_need = -r.fiscal_bal;  // bln USD (positive = deficit to finance)
+    r.ext_debt_GDP = prev.ext_debt_GDP + (r.financing_need * 0.5 / r.Y_USD * 100);
+    r.ext_debt_GDP = Math.max(0, r.ext_debt_GDP);
+
+    // --- 4. MONETARY SECTOR ---
+    r.velocity = a.velocity;
+    r.M2 = r.Y_nom / r.velocity;  // bln UZS
+    r.delta_M2 = r.M2 - prev.M2;
+    r.M2_growth = (r.delta_M2 / prev.M2) * 100;
+    // NFA change in local currency
+    r.delta_NFA_local = r.delta_reserves * r.NER / 1e3; // mln USD * NER/1000 = bln UZS
+    // NDA change as residual
+    r.delta_NDA_local = r.delta_M2 - r.delta_NFA_local;
+    r.NDA_growth_pct = (r.delta_NDA_local / prev.M2) * 100;
+    r.NFA_growth_pct = (r.delta_NFA_local / prev.M2) * 100;
+    r.credit_growth = a.credit_growth;
+    r.credit = prev.credit * (1 + a.credit_growth / 100);
+    r.delta_credit = r.credit - prev.credit;
+    // Monetary gap: required NDA vs credit-implied NDA
+    r.mon_gap = r.delta_NDA_local - r.delta_credit * 0.7; // 70% of credit ~ NDA
+    r.mon_gap_pct = (r.mon_gap / prev.M2) * 100;
+
+    results.push(r);
+
+    // Update previous values
+    prev.Y_nom = r.Y_nom;
+    prev.Y_USD = r.Y_USD;
+    prev.NER = r.NER;
+    prev.pi = r.pi;
+    prev.y_gap = r.y_gap;
+    prev.M2 = r.M2;
+    prev.credit = r.credit;
+    prev.reserves_USD = r.reserves_USD;
+    prev.ext_debt_GDP = r.ext_debt_GDP;
+  }
+
+  return results;
+}
+
+// ======================================================
+// READ INPUTS
+// ======================================================
+function readAssumptions() {
+  return [0, 1, 2].map(i => ({
+    year: 2024 + i,
+    g_real:   parseFloat(document.getElementById(`g${i}`).value) || 6.0,
+    ner_dep:  parseFloat(document.getElementById(`ner${i}`).value) || 7.0,
+    ca_gdp:   parseFloat(document.getElementById(`ca${i}`).value) || -8.0,
+    fdi:      parseFloat(document.getElementById(`fdi${i}`).value) || 3.0,
+    other_fa: parseFloat(document.getElementById(`fa${i}`).value) || 2.0,
+    rev_gdp:  parseFloat(document.getElementById(`rev${i}`).value) || 22.0,
+    exp_gdp:  parseFloat(document.getElementById(`exp${i}`).value) || 23.0,
+    velocity: parseFloat(document.getElementById(`vel${i}`).value) || 5.5,
+    credit_growth: parseFloat(document.getElementById(`crd${i}`).value) || 20.0
+  }));
+}
+
+// ======================================================
+// RUN & RENDER
+// ======================================================
+function runFPP() {
+  const assumptions = readAssumptions();
+  const results = solveFPP(assumptions);
+  lastResults = results;
+
+  updateKPIs(results);
+  updateConsistency(results);
+  updateTable(results);
+  updateCharts(results);
+}
+
+function fmt1(v) { return v == null ? '—' : v.toFixed(1); }
+function fmt2(v) { return v == null ? '—' : v.toFixed(2); }
+function fmt0(v) { return v == null ? '—' : Math.round(v).toLocaleString(); }
+function fmtPct(v) { return (v >= 0 ? '+' : '') + fmt1(v) + '%'; }
+
+// ======================================================
+// KPI CARDS
+// ======================================================
+function updateKPIs(results) {
+  const r0 = results[0], rL = results[results.length - 1];
+  const avgG = results.reduce((s, r) => s + r.g_real, 0) / results.length;
+
+  document.getElementById('kpi-gdp').textContent = fmt1(avgG) + '%';
+  document.getElementById('kpi-res').textContent = fmt1(rL.import_cover) + ' mo';
+  document.getElementById('kpi-fb').textContent = fmtPct(rL.fb_GDP);
+  document.getElementById('kpi-pi').textContent = fmt1(rL.pi) + '%';
+}
+
+// ======================================================
+// CONSISTENCY MATRIX
+// ======================================================
+function setCheck(id, cls, val) {
+  const el = document.getElementById(id);
+  el.className = `ccheck ${cls}`;
+  el.querySelector('.ccheck-val').textContent = val;
+}
+
+function updateConsistency(results) {
+  const rL = results[results.length - 1];
+  const r0 = results[0];
+  const avgG = results.reduce((s, r) => s + r.g_real, 0) / results.length;
+  const avgY = results.reduce((s, r) => s + Math.abs(r.y_gap), 0) / results.length;
+
+  // 1. Growth vs Potential
+  if (avgY <= 1.0) setCheck('cc-growth', 'green', `Gap: ${fmtPct(rL.y_gap)}`);
+  else if (avgY <= 2.5) setCheck('cc-growth', 'yellow', `Gap: ${fmtPct(rL.y_gap)}`);
+  else setCheck('cc-growth', 'red', `Gap: ${fmtPct(rL.y_gap)}`);
+
+  // 2. Inflation vs Target
+  const piDev = rL.pi - PI_TARGETS[2];
+  if (Math.abs(piDev) <= 1.5) setCheck('cc-inflation', 'green', `π=${fmt1(rL.pi)}% (tgt 5%)`);
+  else if (Math.abs(piDev) <= 3.0) setCheck('cc-inflation', 'yellow', `π=${fmt1(rL.pi)}% (tgt 5%)`);
+  else setCheck('cc-inflation', 'red', `π=${fmt1(rL.pi)}% (tgt 5%)`);
+
+  // 3. Reserve Adequacy
+  if (rL.import_cover >= 5) setCheck('cc-reserves', 'green', `${fmt1(rL.import_cover)} months`);
+  else if (rL.import_cover >= 3) setCheck('cc-reserves', 'yellow', `${fmt1(rL.import_cover)} months`);
+  else setCheck('cc-reserves', 'red', `${fmt1(rL.import_cover)} months ⚠️`);
+
+  // 4. Fiscal Sustainability
+  const avgFB = results.reduce((s, r) => s + r.fb_GDP, 0) / results.length;
+  if (avgFB >= -3.0) setCheck('cc-fiscal', 'green', `Avg: ${fmtPct(avgFB)}`);
+  else if (avgFB >= -5.0) setCheck('cc-fiscal', 'yellow', `Avg: ${fmtPct(avgFB)}`);
+  else setCheck('cc-fiscal', 'red', `Avg: ${fmtPct(avgFB)} ⚠️`);
+
+  // 5. Monetary Consistency
+  const avgMonGap = results.reduce((s, r) => s + Math.abs(r.mon_gap_pct), 0) / results.length;
+  if (avgMonGap <= 3) setCheck('cc-money', 'green', `NDA gap: ${fmt1(rL.mon_gap_pct)}pp`);
+  else if (avgMonGap <= 7) setCheck('cc-money', 'yellow', `NDA gap: ${fmt1(rL.mon_gap_pct)}pp`);
+  else setCheck('cc-money', 'red', `NDA gap: ${fmt1(rL.mon_gap_pct)}pp ⚠️`);
+}
+
+// ======================================================
+// PROJECTION TABLE
+// ======================================================
+function updateTable(results) {
+  const B = BASE;
+  const tbody = document.getElementById('proj-tbody');
+
+  function badge(v, greenFn, redFn) {
+    const disp = typeof v === 'number' ? fmtPct(v) : v;
+    if (greenFn && greenFn(v)) return `<span class="badge-green">${disp}</span>`;
+    if (redFn && redFn(v)) return `<span class="badge-red">${disp}</span>`;
+    return `<span class="badge-yellow">${disp}</span>`;
+  }
+
+  const rows = [];
+
+  // REAL
+  rows.push(`<tr class="sec-divider real"><td class="left" colspan="5">🔵 REAL SECTOR</td></tr>`);
+  rows.push(row('Real GDP growth (%)', B.g_real, results, r => fmt1(r.g_real) + '%', v => v >= 5, v => v < 3));
+  rows.push(row('CPI Inflation — Phillips Curve (%)', B.pi, results, r => fmt1(r.pi) + '%', v => v <= 7, v => v > 11));
+  rows.push(row('Output gap (pp from potential)', B.y_gap, results, r => fmtPct(r.y_gap), v => Math.abs(v) <= 1, v => Math.abs(v) > 3));
+  rows.push(row('NER depreciation (%)', '—', results, r => fmt1(r.NER_dep) + '%', null, v => v > 15));
+  rows.push(row('NER level (UZS/USD)', fmt0(B.NER), results, r => fmt0(r.NER), null, null, false));
+  rows.push(row('Nominal GDP (bln UZS)', fmt0(B.Y_nom), results, r => fmt0(r.Y_nom), null, null, false));
+  rows.push(row('GDP (bln USD)', fmt1(B.Y_USD), results, r => fmt1(r.Y_USD), null, null, false));
+
+  // EXTERNAL
+  rows.push(`<tr class="sec-divider ext"><td class="left" colspan="5">🟢 EXTERNAL SECTOR</td></tr>`);
+  rows.push(row('Current account (% GDP)', fmtPct(B.CA_GDP), results, r => fmtPct(r.CA_GDP), v => v >= -4, v => v < -10));
+  rows.push(row('Current account (bln USD)', fmt1(B.CA_GDP/100*B.Y_USD), results, r => fmt1(r.CA), null, v => v < -12));
+  rows.push(row('FDI inflows (bln USD)', '—', results, r => fmt1(r.FDI), v => v >= 3, null, false));
+  rows.push(row('ΔReserves (mln USD)', '—', results, r => (r.delta_reserves >= 0 ? '+' : '') + fmt0(r.delta_reserves), v => v >= 0, v => v < -2000, false));
+  rows.push(row('Int\'l reserves (mln USD)', fmt0(B.reserves_USD), results, r => fmt0(r.reserves_USD), v => v >= 30000, v => v < 15000, false));
+  rows.push(row('Import cover (months)', '9.9', results, r => fmt1(r.import_cover) + ' mo', v => v >= 5, v => v < 3));
+
+  // FISCAL
+  rows.push(`<tr class="sec-divider fiscal"><td class="left" colspan="5">🟡 FISCAL SECTOR</td></tr>`);
+  rows.push(row('Revenue (% GDP)', fmtPct(B.rev_GDP), results, r => fmtPct(r.rev_GDP), v => v >= 22, null));
+  rows.push(row('Expenditure (% GDP)', fmtPct(B.exp_GDP), results, r => fmtPct(r.exp_GDP), null, v => v > 27));
+  rows.push(row('Overall fiscal balance (% GDP)', fmtPct(B.fb_GDP), results, r => fmtPct(r.fb_GDP), v => v >= -2, v => v < -5));
+  rows.push(row('Primary balance (% GDP)', '—', results, r => fmtPct(r.primary_bal_GDP), v => v >= -1, v => v < -4));
+  rows.push(row('Ext. debt/GDP (%, est.)', fmt1(B.ext_debt_GDP) + '%', results, r => fmt1(r.ext_debt_GDP) + '%', v => parseFloat(v) <= 35, v => parseFloat(v) > 50));
+
+  // MONETARY
+  rows.push(`<tr class="sec-divider mon"><td class="left" colspan="5">🟣 MONETARY SECTOR</td></tr>`);
+  rows.push(row('M2 (bln UZS)', fmt0(B.M2), results, r => fmt0(r.M2), null, null, false));
+  rows.push(row('M2 growth (%)', fmt1(B.velocity), results, r => fmt1(r.M2_growth) + '%', v => parseFloat(v) <= 20, v => parseFloat(v) > 35));
+  rows.push(row('Velocity (GDP/M2)', fmt1(B.velocity), results, r => fmt1(r.velocity), null, null, false));
+  rows.push(row('ΔNFA contribution (pp M2)', '−1.0', results, r => fmt1(r.NFA_growth_pct) + 'pp', null, null, false));
+  rows.push(row('ΔNDA contribution (pp M2)', '+53.2', results, r => fmt1(r.NDA_growth_pct) + 'pp', v => parseFloat(v) <= 25, v => parseFloat(v) > 40));
+  rows.push(row('Private credit growth (%)', '23.2', results, r => fmt1(r.credit_growth) + '%', v => parseFloat(v) <= 20, v => parseFloat(v) > 30));
+
+  tbody.innerHTML = rows.join('');
+}
+
+function row(label, baseVal, results, valFn, greenFn, redFn, useBadge = true) {
+  let cols = `<td class="left">${label}</td><td>${baseVal}</td>`;
+  results.forEach(r => {
+    const raw = valFn(r);
+    let cell = raw;
+    if (useBadge && (greenFn || redFn)) {
+      const numVal = typeof raw === 'string' ? parseFloat(raw) : raw;
+      if (greenFn && greenFn(numVal)) cell = `<span class="badge-green">${raw}</span>`;
+      else if (redFn && redFn(numVal)) cell = `<span class="badge-red">${raw}</span>`;
+      else cell = `<span class="badge-yellow">${raw}</span>`;
+    }
+    cols += `<td>${cell}</td>`;
+  });
+  return `<tr>${cols}</tr>`;
+}
+
+// ======================================================
+// CHARTS
+// ======================================================
+function updateCharts(results) {
+  const years = ['2023', ...results.map(r => String(r.year))];
+  const baseG = BASE.g_real;
+  const basePi = BASE.pi;
+
+  // Chart 1: Real GDP growth & Inflation
+  makeChart('chart-real', {
+    type: 'line',
+    data: {
+      labels: years,
+      datasets: [
+        {
+          label: 'Real GDP Growth (%)',
+          data: [baseG, ...results.map(r => r.g_real)],
+          borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,.12)',
+          fill: true, tension: 0.4, pointRadius: 5, borderWidth: 2.5
+        },
+        {
+          label: 'CPI Inflation (Phillips Curve, %)',
+          data: [basePi, ...results.map(r => r.pi)],
+          borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,.08)',
+          fill: true, tension: 0.4, pointRadius: 5, borderWidth: 2.5, borderDash: [5, 3]
+        },
+        {
+          label: 'Inflation Target (%)',
+          data: [null, ...PI_TARGETS],
+          borderColor: '#94a3b8', borderWidth: 1.5, borderDash: [4, 4],
+          pointRadius: 3, fill: false
+        }
+      ]
+    }
+  });
+
+  // Chart 2: BOP
+  makeChart('chart-ext', {
+    type: 'bar',
+    data: {
+      labels: results.map(r => String(r.year)),
+      datasets: [
+        {
+          label: 'Current Account (bln USD)',
+          data: results.map(r => r.CA),
+          backgroundColor: 'rgba(34,197,94,.7)', borderRadius: 6
+        },
+        {
+          label: 'FDI Inflows (bln USD)',
+          data: results.map(r => r.FDI),
+          backgroundColor: 'rgba(59,130,246,.7)', borderRadius: 6
+        },
+        {
+          label: 'ΔReserves (bln USD)',
+          data: results.map(r => r.delta_reserves / 1000),
+          backgroundColor: 'rgba(245,158,11,.7)', borderRadius: 6, type: 'line',
+          borderColor: '#f59e0b', pointRadius: 5, fill: false
+        }
+      ]
+    }
+  });
+
+  // Chart 3: Fiscal
+  makeChart('chart-fiscal', {
+    type: 'bar',
+    data: {
+      labels: years,
+      datasets: [
+        {
+          label: 'Revenue (% GDP)',
+          data: [BASE.rev_GDP, ...results.map(r => r.rev_GDP)],
+          backgroundColor: 'rgba(34,197,94,.7)', borderRadius: 4
+        },
+        {
+          label: 'Expenditure (% GDP)',
+          data: [BASE.exp_GDP, ...results.map(r => r.exp_GDP)],
+          backgroundColor: 'rgba(239,68,68,.7)', borderRadius: 4
+        },
+        {
+          label: 'Fiscal Balance (% GDP)',
+          data: [BASE.fb_GDP, ...results.map(r => r.fb_GDP)],
+          type: 'line', borderColor: '#f59e0b', backgroundColor: 'transparent',
+          pointRadius: 5, borderWidth: 2.5, fill: false
+        }
+      ]
+    }
+  });
+
+  // Chart 4: Monetary
+  makeChart('chart-mon', {
+    type: 'bar',
+    data: {
+      labels: results.map(r => String(r.year)),
+      datasets: [
+        {
+          label: 'ΔNFA (% M2)',
+          data: results.map(r => r.NFA_growth_pct),
+          backgroundColor: 'rgba(59,130,246,.7)', borderRadius: 4
+        },
+        {
+          label: 'ΔNDA (% M2)',
+          data: results.map(r => r.NDA_growth_pct),
+          backgroundColor: 'rgba(168,85,247,.7)', borderRadius: 4
+        },
+        {
+          label: 'M2 Growth (%)',
+          data: results.map(r => r.M2_growth),
+          type: 'line', borderColor: '#1e293b', backgroundColor: 'transparent',
+          pointRadius: 5, borderWidth: 2.5, fill: false
+        }
+      ]
+    },
+    options: { scales: { x: { stacked: true }, y: { stacked: true } } }
+  });
+}
+
+function makeChart(id, cfg) {
+  if (charts[id]) charts[id].destroy();
+  const ctx = document.getElementById(id).getContext('2d');
+  const defaults = {
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: true, labels: { font: { size: 10 }, boxWidth: 12 } } },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+        y: { grid: { color: '#f1f5f9' }, ticks: { font: { size: 10 } } }
+      }
+    }
+  };
+  const merged = deepMerge(defaults, cfg);
+  charts[id] = new Chart(ctx, merged);
+}
+
+function deepMerge(target, source) {
+  const out = Object.assign({}, target);
+  if (isObj(target) && isObj(source)) {
+    Object.keys(source).forEach(k => {
+      if (isObj(source[k])) { out[k] = deepMerge(target[k] || {}, source[k]); }
+      else { out[k] = source[k]; }
+    });
+  }
+  return out;
+}
+function isObj(x) { return x && typeof x === 'object' && !Array.isArray(x); }
+
+// ======================================================
+// EXPORT FUNCTIONS
+// ======================================================
+function fppExportCSV() {
+  if (!lastResults) { alert('Run projection first.'); return; }
+  const rows = [['Indicator', 'Base 2023', '2024', '2025', '2026']];
+  const r = lastResults;
+  const push = (label, bv, fn) => rows.push([label, bv, ...r.map(fn)]);
+  push('Real GDP growth (%)', BASE.g_real, x => fmt1(x.g_real));
+  push('CPI Inflation — Phillips Curve (%)', BASE.pi, x => fmt1(x.pi));
+  push('Output gap (%)', BASE.y_gap, x => fmt1(x.y_gap));
+  push('NER (UZS/USD)', BASE.NER, x => Math.round(x.NER));
+  push('GDP — nominal (bln UZS)', BASE.Y_nom, x => Math.round(x.Y_nom));
+  push('GDP (bln USD)', BASE.Y_USD, x => fmt1(x.Y_USD));
+  push('Current account (% GDP)', BASE.CA_GDP, x => fmt1(x.CA_GDP));
+  push('FDI inflows (bln USD)', '—', x => fmt1(x.FDI));
+  push('Reserves (mln USD)', BASE.reserves_USD, x => Math.round(x.reserves_USD));
+  push('Import cover (months)', 9.9, x => fmt1(x.import_cover));
+  push('Revenue (% GDP)', BASE.rev_GDP, x => fmt1(x.rev_GDP));
+  push('Expenditure (% GDP)', BASE.exp_GDP, x => fmt1(x.exp_GDP));
+  push('Fiscal balance (% GDP)', BASE.fb_GDP, x => fmt1(x.fb_GDP));
+  push('M2 (bln UZS)', BASE.M2, x => Math.round(x.M2));
+  push('M2 growth (%)', '12.2', x => fmt1(x.M2_growth));
+  push('Velocity', BASE.velocity, x => fmt1(x.velocity));
+  push('Private credit growth (%)', '23.2', x => fmt1(x.credit_growth));
+  ReportEngine.downloadCSV('FPP Model — Uzbekistan Projection 2024-2026', rows[0], rows.slice(1), 'fpp_projection.csv');
+}
+
+function fppExportPNG() {
+  if (!charts['chart-real']) { alert('Run projection first.'); return; }
+  ReportEngine.downloadChartPNG('chart-real', 'fpp_gdp_inflation.png');
+}
+
+function fppExportPDF() {
+  if (!lastResults) { alert('Run projection first.'); return; }
+  const r = lastResults;
+  const rL = r[r.length - 1];
+
+  const assumptions = {
+    'Base Year': '2023',
+    'Projection Horizon': '2024–2026',
+    'GDP growth (2026)': fmt1(rL.g_real) + '%',
+    'Inflation PC (2026)': fmt1(rL.pi) + '%',
+    'Fiscal balance (2026)': fmtPct(rL.fb_GDP),
+    'Reserves (2026)': fmt0(rL.reserves_USD) + ' mln USD',
+    'Import cover (2026)': fmt1(rL.import_cover) + ' months',
+    'M2 growth (2026)': fmt1(rL.M2_growth) + '%'
+  };
+
+  const kpis = [
+    { label: 'Avg GDP Growth', value: fmt1(r.reduce((s,x)=>s+x.g_real,0)/r.length) + '%' },
+    { label: 'Inflation 2026 (PC)', value: fmt1(rL.pi) + '%' },
+    { label: 'Fiscal Bal 2026', value: fmtPct(rL.fb_GDP) },
+    { label: 'Reserves 2026', value: fmt1(rL.import_cover) + ' mo' }
+  ];
+
+  const tableRows = r.map(x => [
+    x.year, fmt1(x.g_real)+'%', fmt1(x.pi)+'%', fmtPct(x.CA_GDP),
+    fmtPct(x.fb_GDP), fmt0(x.reserves_USD), fmt1(x.M2_growth)+'%'
+  ]);
+
+  ReportEngine.generatePDF({
+    title: 'Financial Programming & Policies (FPP)',
+    subtitle: 'Uzbekistan Medium-Term Projection Report',
+    modelTag: 'FPP',
+    tagColor: [220, 38, 38],
+    assumptions,
+    kpis,
+    tableHeaders: ['Year', 'GDP gr.', 'Inflation', 'CA/GDP', 'FB/GDP', 'Reserves (mln$)', 'M2 gr.'],
+    tableRows,
+    canvasId: 'chart-real',
+    filename: 'fpp_report.pdf'
+  });
+}
+
+// ======================================================
+// TABS
+// ======================================================
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', ['sim', 'hist', 'about'][i] === name);
+  });
+  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+  document.getElementById(`tab-${name}`).classList.add('active');
+}
+
+// ======================================================
+// AUTO-RUN ON LOAD
+// ======================================================
+window.addEventListener('load', () => {
+  runFPP();
+});
+</script>
+</body>
+</html>

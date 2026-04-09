@@ -386,7 +386,7 @@ button { font-family: inherit; cursor: pointer; }
   <div class="header-divider"></div>
   <div class="header-subtitle">Macroeconomic Simulation Platform</div>
   <div class="header-right">
-    <div class="header-pill live">● Live Models: 4</div>
+    <div class="header-pill live">● Live Models: 5</div>
     <div class="header-pill">Beta v0.2</div>
   </div>
 </header>
@@ -438,11 +438,13 @@ button { font-family: inherit; cursor: pointer; }
         <span class="nav-icon">⚖️</span> Partial Equilibrium
         <span class="nav-badge soon">Soon</span>
       </button>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Available Models</div>
       <button class="nav-item" onclick="navigate('fpp')">
         <span class="nav-icon">💰</span> Fin. Programming
-        <span class="nav-badge soon">Soon</span>
+        <span class="nav-badge available">✓</span>
       </button>
-    </div>
 
     <div class="nav-divider"></div>
 
@@ -641,19 +643,20 @@ button { font-family: inherit; cursor: pointer; }
             <div class="mc-action">Open CGE Simulator <span class="mc-arrow">→</span></div>
           </div>
 
-          <div class="model-card soon">
+          <div class="model-card" onclick="navigate('fpp')" style="cursor:pointer">
             <div class="mc-top">
               <div class="mc-icon fpp">💰</div>
-              <span class="mc-status soon">Coming Soon</span>
+              <span class="mc-status available">✓ Available</span>
             </div>
             <div class="mc-name">Financial Programming & Policies (FPP)</div>
-            <div class="mc-desc">IMF-style consistency framework linking the monetary, fiscal, external, and real sectors. Build coherent medium-term macro frameworks and assess financing gaps and sustainability.</div>
+            <div class="mc-desc">IMF four-sector consistency framework calibrated to Uzbekistan 2023. Phillips Curve inflation, BOP projections, fiscal programming, and monetary sector balance — 3-year medium-term projection.</div>
             <div class="mc-tags">
               <span class="mc-tag">Fiscal Balance</span>
               <span class="mc-tag">BOP</span>
               <span class="mc-tag">Debt Sustainability</span>
+              <span class="mc-tag">Phillips Curve</span>
             </div>
-            <div class="mc-action soon">In development <span class="mc-arrow">↗</span></div>
+            <div class="mc-action">Open FPP Simulator <span class="mc-arrow">→</span></div>
           </div>
         </div>
 
@@ -709,7 +712,7 @@ button { font-family: inherit; cursor: pointer; }
             <div class="q-icon" style="background:#fff1f2">💰</div>
             <div>
               <div class="q-text">"What fiscal deficit is consistent with debt sustainability over a 5-year horizon?"</div>
-              <div class="q-model">→ FPP · Fiscal Sustainability Framework <span style="color:var(--amber)">· Coming Soon</span></div>
+              <div class="q-model">→ FPP · Financial Programming &amp; Policies</div>
             </div>
           </div>
           <div class="q-card" onclick="navigate('cge')">
@@ -802,22 +805,15 @@ button { font-family: inherit; cursor: pointer; }
     </div>
 
     <div id="page-fpp" class="page">
-      <div class="coming-soon-page">
-        <div class="cs-inner">
-          <div class="cs-icon">💰</div>
-          <div class="cs-title">Financial Programming & Policies (FPP)</div>
-          <div class="cs-desc">
-            IMF-style consistency framework linking monetary, fiscal, external, and real sectors.
-            Build coherent medium-term macro frameworks, identify financing gaps, and assess debt sustainability.
-          </div>
-          <div class="cs-timeline">
-            <h4>Roadmap</h4>
-            <div class="cs-item"><div class="cs-dot-wip"></div> Four-sector consistency matrix</div>
-            <div class="cs-item"><div class="cs-dot-plan"></div> Fiscal programming module (revenue, spending)</div>
-            <div class="cs-item"><div class="cs-dot-plan"></div> BOP and external financing gap module</div>
-            <div class="cs-item"><div class="cs-dot-plan"></div> Debt sustainability analysis (DSA)</div>
+      <div class="model-frame-wrap">
+        <div class="model-frame-header">
+          <span class="model-frame-pill" style="background:#fee2e2;color:#991b1b;">FPP</span>
+          <div>
+            <div class="model-frame-title">Financial Programming &amp; Policies — Uzbekistan 2023</div>
+            <div class="model-frame-sub">IMF four-sector consistency framework · Phillips Curve · BOP · Fiscal · Monetary · 3-year projection</div>
           </div>
         </div>
+        <iframe class="model-iframe" src="fpp_model/index.html" title="FPP Model" loading="lazy"></iframe>
       </div>
     </div>
 
@@ -902,7 +898,7 @@ button { font-family: inherit; cursor: pointer; }
               <td>Financial programming framework</td>
               <td>Annual / MTF</td>
               <td>Fiscal balance, BOP, debt sustainability</td>
-              <td style="color:var(--amber);font-weight:700">⏳ Development</td>
+              <td style="color:#16a34a;font-weight:700">✓ Live</td>
             </tr>
           </tbody>
         </table>
