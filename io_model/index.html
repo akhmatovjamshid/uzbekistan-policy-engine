@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Input-Output Model — Uzbekistan 2022</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg:#f4f6f9; --card:#fff; --primary:#1a3a6e; --primary-l:#2563eb;
+  --amber:#d97706; --amber-l:#f59e0b; --green:#16a34a; --green-l:#22c55e;
+  --red:#dc2626; --teal:#0d9488; --purple:#7c3aed;
+  --text:#0f172a; --text2:#475569; --text3:#94a3b8;
+  --border:#e2e8f0; --shadow:0 2px 12px rgba(0,0,0,.07); --radius:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* Header */
+header{background:linear-gradient(135deg,#0d2550,#1a3a6e,#1e4d8c);color:#fff;padding:0 24px;
+  display:flex;align-items:center;gap:14px;height:60px;box-shadow:0 2px 10px rgba(0,0,0,.25);
+  position:sticky;top:0;z-index:100;}
+.logo{width:36px;height:36px;background:linear-gradient(135deg,#d97706,#f59e0b);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:18px;}
+.header-title h1{font-size:16px;font-weight:700;}
+.header-title p{font-size:10px;opacity:.6;text-transform:uppercase;letter-spacing:1px;}
+.hbadge{margin-left:auto;background:rgba(217,119,6,.2);color:#fbbf24;border:1px solid rgba(217,119,6,.3);
+  font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.5px;}
+
+/* Nav */
+nav{background:var(--card);border-bottom:1px solid var(--border);display:flex;padding:0 20px;}
+.tab{padding:13px 20px;font-size:13px;font-weight:600;color:var(--text2);border:none;background:none;
+  cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;}
+.tab:hover{color:var(--primary);}
+.tab.active{color:var(--primary);border-bottom-color:var(--primary);}
+
+/* Pages */
+.page{display:none;padding:22px 22px 50px;max-width:1280px;margin:0 auto;}
+.page.active{display:block;}
+
+/* Loading */
+#loading{text-align:center;padding:80px 20px;}
+.spinner{width:44px;height:44px;border:4px solid var(--border);border-top-color:var(--amber);
+  border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* Grid */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.span2{grid-column:span 2;}
+.span3{grid-column:span 3;}
+
+/* Cards */
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+  padding:18px 20px;border:1px solid var(--border);}
+.card-title{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;
+  color:var(--text3);margin-bottom:4px;}
+.card-sub{font-size:11px;color:#aab;margin-bottom:12px;}
+
+/* KPI */
+.kpi{font-size:32px;font-weight:800;line-height:1.1;}
+.kpi-unit{font-size:12px;color:var(--text2);margin-top:3px;}
+.kpi-note{font-size:11px;color:var(--text3);margin-top:5px;}
+
+/* Section label */
+.slabel{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;
+  color:var(--text3);margin:22px 0 12px;display:flex;align-items:center;gap:8px;}
+.slabel::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* Chart */
+.chart-wrap{position:relative;}
+
+/* Search */
+.search-row{display:flex;gap:10px;margin-bottom:14px;align-items:center;flex-wrap:wrap;}
+.search-input{flex:1;min-width:200px;border:1px solid var(--border);border-radius:8px;
+  padding:8px 14px;font-size:13px;color:var(--text);background:#fafbfd;outline:none;}
+.search-input:focus{border-color:var(--amber);}
+.filter-select{border:1px solid var(--border);border-radius:8px;padding:8px 12px;
+  font-size:12px;color:var(--text2);background:#fafbfd;cursor:pointer;}
+
+/* Table */
+table{width:100%;border-collapse:collapse;font-size:12.5px;}
+th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.6px;
+  color:var(--text3);font-weight:700;padding:8px 10px;border-bottom:2px solid var(--border);
+  cursor:pointer;user-select:none;white-space:nowrap;}
+th:hover{color:var(--primary);}
+th .sort-arrow{font-size:9px;margin-left:3px;opacity:.5;}
+td{padding:8px 10px;border-bottom:1px solid #f0f2f5;vertical-align:middle;}
+tr:hover td{background:#fffbf3;}
+.code-badge{font-family:'JetBrains Mono','Consolas',monospace;font-size:10px;
+  background:var(--bg);padding:2px 6px;border-radius:5px;color:var(--text2);}
+.mult-bar{display:inline-block;height:6px;border-radius:3px;background:var(--amber-l);
+  margin-left:6px;vertical-align:middle;}
+.pos{color:var(--green);font-weight:700;}
+.neg{color:var(--red);font-weight:700;}
+.clickable{cursor:pointer;color:var(--primary-l);font-weight:600;}
+.clickable:hover{text-decoration:underline;}
+
+/* Shock simulator */
+.shock-panel{background:linear-gradient(135deg,#fffbeb,#fef9c3);border:1px solid #fde68a;
+  border-radius:var(--radius);padding:20px 22px;margin-bottom:18px;}
+.shock-title{font-size:14px;font-weight:700;color:#92400e;margin-bottom:4px;}
+.shock-sub{font-size:12px;color:#a16207;margin-bottom:14px;}
+.shock-inputs{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;}
+.shock-field{display:flex;flex-direction:column;gap:4px;}
+.shock-field label{font-size:11px;font-weight:600;color:#78350f;}
+.shock-field input,.shock-field select{border:1px solid #fcd34d;border-radius:7px;
+  padding:8px 12px;font-size:13px;background:#fff;outline:none;min-width:180px;}
+.shock-field input:focus,.shock-field select:focus{border-color:var(--amber);}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 20px;border-radius:8px;
+  font-size:13px;font-weight:700;cursor:pointer;border:none;font-family:inherit;transition:all .18s;}
+.btn-amber{background:var(--amber);color:#fff;}
+.btn-amber:hover{background:#b45309;transform:translateY(-1px);}
+.btn-sm{padding:5px 12px;font-size:11px;}
+.btn-red{background:#fee2e2;color:var(--red);border:1px solid #fca5a5;}
+.btn-red:hover{background:var(--red);color:#fff;}
+
+/* Sector tags for shock list */
+.shock-list{display:flex;gap:6px;flex-wrap:wrap;min-height:32px;padding:6px 0;}
+.shock-tag{display:flex;align-items:center;gap:5px;background:#fff;border:1px solid #fcd34d;
+  border-radius:6px;padding:3px 10px;font-size:11px;font-weight:600;color:#92400e;}
+.shock-tag button{background:none;border:none;cursor:pointer;color:#dc2626;font-size:13px;
+  padding:0;line-height:1;}
+
+/* Results */
+.result-card{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #86efac;
+  border-radius:var(--radius);padding:18px 20px;margin-bottom:16px;}
+.result-title{font-size:13px;font-weight:700;color:#14532d;margin-bottom:10px;}
+.result-kpis{display:flex;gap:24px;flex-wrap:wrap;}
+.rkpi{border-right:1px solid #86efac;padding-right:24px;}
+.rkpi:last-child{border-right:none;}
+.rkpi-val{font-size:22px;font-weight:800;color:var(--green);}
+.rkpi-lbl{font-size:11px;color:#166534;margin-top:2px;}
+
+/* Sector detail modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;
+  align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--card);border-radius:16px;width:90%;max-width:760px;
+  max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.25);}
+.modal-header{padding:20px 24px 0;display:flex;justify-content:space-between;align-items:flex-start;}
+.modal-body{padding:20px 24px 24px;}
+.modal-close{background:var(--bg);border:1px solid var(--border);border-radius:8px;
+  padding:6px 12px;font-size:18px;cursor:pointer;line-height:1;}
+
+/* Sector detail charts */
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;}
+
+@media(max-width:900px){
+  .g2,.g3,.g4{grid-template-columns:1fr;}
+  .span2,.span3{grid-column:span 1;}
+  .detail-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🔗</div>
+  <div class="header-title">
+    <h1>Input-Output Model — Uzbekistan 2022</h1>
+    <p>Center for Economic Research and Reforms · Policy Engine</p>
+  </div>
+  <div class="hbadge">136 Sectors · Leontief</div>
+</header>
+
+<nav>
+  <button class="tab active" onclick="showTab('overview')">📊 Overview & Multipliers</button>
+  <button class="tab" onclick="showTab('shock')">⚡ Demand Shock Simulator</button>
+  <button class="tab" onclick="showTab('sectors')">🔍 Sector Explorer</button>
+</nav>
+
+<!-- Loading -->
+<div id="loading">
+  <div class="spinner"></div>
+  <p style="color:var(--text2);font-size:14px;">Loading Input-Output table (136 sectors)…</p>
+</div>
+
+<!-- ═══════════════════════════════
+     TAB 1: OVERVIEW
+═══════════════════════════════ -->
+<div id="page-overview" class="page">
+
+  <div class="g4" style="margin-bottom:18px;" id="overview-kpis"></div>
+
+  <div class="g2" style="margin-bottom:18px;">
+    <div class="card span2">
+      <div class="card-title">Top 20 Sectors by Output Multiplier</div>
+      <div class="card-sub">Output multiplier = total economy-wide output triggered per 1 unit of final demand increase in the sector</div>
+      <div class="chart-wrap" style="height:440px;">
+        <canvas id="chart-top-mult"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Top 20 Sectors by Value-Added Multiplier</div>
+      <div class="card-sub">VA multiplier = GVA generated per unit of output</div>
+      <div class="chart-wrap" style="height:400px;">
+        <canvas id="chart-va-mult"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Output by Broad Sector (ISIC Section)</div>
+      <div class="card-sub">Total output by sector group, thousand UZS</div>
+      <div class="chart-wrap" style="height:400px;">
+        <canvas id="chart-sector-output"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     TAB 2: SHOCK SIMULATOR
+═══════════════════════════════ -->
+<div id="page-shock" class="page">
+
+  <div class="shock-panel">
+    <div class="shock-title">⚡ Demand Shock Simulator — Leontief Multiplier Analysis</div>
+    <div class="shock-sub">Select one or more sectors, specify a final demand increase, then run the simulation to see economy-wide output and value-added effects.</div>
+    <div class="shock-inputs">
+      <div class="shock-field" style="flex:2;min-width:240px;">
+        <label>Search & Add Sector</label>
+        <input type="text" id="shock-search" placeholder="Type sector name or code…" oninput="filterShockSearch()" autocomplete="off">
+        <div id="shock-dropdown" style="display:none;position:absolute;background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow);max-height:220px;overflow-y:auto;z-index:50;min-width:340px;margin-top:2px;font-size:12.5px;"></div>
+      </div>
+      <div class="shock-field">
+        <label>Demand Increase</label>
+        <input type="number" id="shock-amount" value="100" min="0" step="10" style="width:130px;">
+      </div>
+      <div class="shock-field">
+        <label>Unit</label>
+        <select id="shock-unit">
+          <option value="bln">Billion UZS</option>
+          <option value="pct">% of current output</option>
+          <option value="trln">Trillion UZS</option>
+        </select>
+      </div>
+      <button class="btn btn-amber" onclick="runShock()">▶ Run Simulation</button>
+      <button class="btn btn-red btn-sm" onclick="clearShock()">✕ Clear</button>
+    </div>
+    <div style="margin-top:12px;">
+      <div style="font-size:11px;font-weight:700;color:#78350f;margin-bottom:4px;">Selected sectors:</div>
+      <div class="shock-list" id="shock-list">
+        <span style="font-size:12px;color:#a16207;font-style:italic;">No sectors selected yet</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results (hidden until simulation runs) -->
+  <div id="shock-results" style="display:none;">
+    <div class="result-card">
+      <div class="result-title">📈 Simulation Results — Economy-wide Effects</div>
+      <div class="result-kpis" id="result-kpis"></div>
+    </div>
+
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">Top 15 Most Affected Sectors (Output Change)</div>
+        <div class="card-sub">Economy-wide output change triggered by your demand shock, billion UZS</div>
+        <div class="chart-wrap" style="height:380px;"><canvas id="chart-shock-output"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Shock Propagation — Value-Added Effects</div>
+        <div class="card-sub">GVA contribution of each affected sector, billion UZS</div>
+        <div class="chart-wrap" style="height:380px;"><canvas id="chart-shock-va"></canvas></div>
+      </div>
+    </div>
+
+    <div class="slabel">Full Sector Impact Table</div>
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Sector</th>
+            <th>Code</th>
+            <th>Output Change (bln UZS)</th>
+            <th>VA Change (bln UZS)</th>
+            <th>Share of Total Effect (%)</th>
+          </tr>
+        </thead>
+        <tbody id="shock-table-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     TAB 3: SECTOR EXPLORER
+═══════════════════════════════ -->
+<div id="page-sectors" class="page">
+  <div class="search-row">
+    <input class="search-input" id="sector-search" placeholder="🔍  Search by sector name or code…" oninput="filterSectors()">
+    <select class="filter-select" id="sector-filter-section" onchange="filterSectors()">
+      <option value="">All ISIC Sections</option>
+    </select>
+    <select class="filter-select" id="sector-sort" onchange="filterSectors()">
+      <option value="output_mult_desc">Sort: Output Multiplier ↓</option>
+      <option value="output_mult_asc">Sort: Output Multiplier ↑</option>
+      <option value="output_desc">Sort: Output ↓</option>
+      <option value="va_mult_desc">Sort: VA Multiplier ↓</option>
+      <option value="gva_desc">Sort: GVA ↓</option>
+    </select>
+    <span id="sector-count" style="font-size:12px;color:var(--text3);white-space:nowrap;"></span>
+  </div>
+
+  <div class="card">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Sector Name</th>
+          <th>Code</th>
+          <th onclick="sortSectors('output')">Output (bln) <span class="sort-arrow">↕</span></th>
+          <th onclick="sortSectors('gva')">GVA (bln) <span class="sort-arrow">↕</span></th>
+          <th onclick="sortSectors('output_multiplier')">Output Mult. <span class="sort-arrow">↕</span></th>
+          <th onclick="sortSectors('va_multiplier')">VA Mult. <span class="sort-arrow">↕</span></th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody id="sector-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Sector Detail Modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div>
+        <div style="font-size:11px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px;" id="modal-code"></div>
+        <div style="font-size:18px;font-weight:800;color:var(--text);max-width:580px;line-height:1.3;" id="modal-name"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="g4" id="modal-kpis" style="margin-bottom:16px;"></div>
+      <div class="detail-grid">
+        <div class="card" style="padding:14px 16px;">
+          <div class="card-title" style="margin-bottom:8px;">Top Backward Linkages</div>
+          <div class="card-sub">Sectors this sector buys most from (column of A matrix)</div>
+          <div class="chart-wrap" style="height:220px;"><canvas id="chart-backward"></canvas></div>
+        </div>
+        <div class="card" style="padding:14px 16px;">
+          <div class="card-title" style="margin-bottom:8px;">Top Forward Linkages</div>
+          <div class="card-sub">Sectors that use this sector's output most (row of A matrix)</div>
+          <div class="chart-wrap" style="height:220px;"><canvas id="chart-forward"></canvas></div>
+        </div>
+      </div>
+      <div style="margin-top:14px;">
+        <div class="card-title" style="margin-bottom:6px;">Final Demand Breakdown</div>
+        <div class="g3" id="modal-demand"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ── State ────────────────────────────────────
+let IO = null;          // full JSON data
+let sectors = [];       // parsed sector array
+let A = [], L = [];     // matrices as float64
+let X = [], GVA = [];   // output and gva vectors
+let shockSelected = []; // [{id, name, code}]
+let sortCol = 'output_multiplier', sortDir = -1;
+let charts = {};
+
+// ── Parse European decimal number ────────────
+function pf(v) {
+  if (v === null || v === undefined) return 0;
+  return parseFloat(String(v).replace(',', '.')) || 0;
+}
+
+// ── Tab navigation ────────────────────────────
+function showTab(name) {
+  document.querySelectorAll('.tab').forEach((b,i) => {
+    const names = ['overview','shock','sectors'];
+    b.classList.toggle('active', names[i] === name);
+  });
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+}
+
+// ── Destroy chart helper ──────────────────────
+function dc(id) { if(charts[id]){charts[id].destroy();delete charts[id];} }
+
+// ── LOAD JSON ────────────────────────────────
+async function loadData() {
+  try {
+    const resp = await fetch('io_data.json');
+    IO = await resp.json();
+    processData();
+    document.getElementById('loading').style.display = 'none';
+    document.querySelector('.page').classList.add('active');
+    showTab('overview');
+  } catch(e) {
+    document.getElementById('loading').innerHTML =
+      '<div style="color:#dc2626;font-size:14px;">⚠️ Could not load io_data.json.<br>Make sure the file is in the same folder.</div>';
+  }
+}
+
+function processData() {
+  sectors = IO.sectors.map((s, i) => ({
+    id: pf(s.id),
+    code: s.code || '',
+    name: s.name || s.code || `Sector ${i}`,
+    output: pf(s.output),
+    total_resources: pf(s.total_resources),
+    imports: pf(s.imports),
+    gva: pf(s.gva),
+    coe: pf(s.coe),
+    gos: pf(s.gos),
+    output_multiplier: pf(s.output_multiplier),
+    va_multiplier: pf(s.va_multiplier),
+    fd_household: pf(s.final_demand?.household),
+    fd_government: pf(s.final_demand?.government),
+    fd_gfcf: pf(s.final_demand?.gfcf),
+    fd_exports: pf(s.final_demand?.exports),
+    fd_total: pf(s.final_demand?.total),
+    section: (s.code || '').match(/^[A-Z]/)?.[0] || '?'
+  }));
+
+  // Parse A and L matrices
+  A = IO.A.map(row => (Array.isArray(row) ? row : Object.values(row)).map(pf));
+  L = IO.L.map(row => (Array.isArray(row) ? row : Object.values(row)).map(pf));
+  X = sectors.map(s => s.output);
+  GVA = sectors.map(s => s.gva);
+
+  renderOverview();
+  buildSectorExplorer();
+}
+
+// ═══════════════════════════════════════════
+// PAGE 1: OVERVIEW
+// ═══════════════════════════════════════════
+function renderOverview() {
+  const n = sectors.length;
+  const totalOutput = sectors.reduce((s, x) => s + x.output, 0);
+  const totalGVA    = sectors.reduce((s, x) => s + x.gva, 0);
+  const avgMult     = sectors.reduce((s, x) => s + x.output_multiplier, 0) / n;
+  const maxMult     = Math.max(...sectors.map(s => s.output_multiplier));
+
+  document.getElementById('overview-kpis').innerHTML = [
+    ['Total Economy Output', fmt(totalOutput / 1e9, 1) + ' trln UZS', '2022 benchmark', 'var(--amber)'],
+    ['Total GVA', fmt(totalGVA / 1e9, 1) + ' trln UZS', 'Gross value added', 'var(--green)'],
+    ['Number of Sectors', n, 'ISIC Rev.4 classification', 'var(--primary-l)'],
+    ['Avg Output Multiplier', fmt(avgMult, 3), 'Economy-wide average', 'var(--teal)']
+  ].map(([lbl, val, note, col]) => `
+    <div class="card">
+      <div class="card-title">${lbl}</div>
+      <div class="kpi" style="color:${col}">${val}</div>
+      <div class="kpi-note">${note}</div>
+    </div>`).join('');
+
+  // Top 20 by output multiplier
+  const top20 = [...sectors].sort((a,b) => b.output_multiplier - a.output_multiplier).slice(0, 20);
+  renderHorzBar('chart-top-mult', top20.map(s => truncate(s.name, 38)),
+    top20.map(s => s.output_multiplier), '#d97706');
+
+  // Top 20 by VA multiplier
+  const topVA = [...sectors].sort((a,b) => b.va_multiplier - a.va_multiplier).slice(0, 20);
+  renderHorzBar('chart-va-mult', topVA.map(s => truncate(s.name, 30)),
+    topVA.map(s => s.va_multiplier), '#16a34a');
+
+  // Output by ISIC section
+  const sectionMap = {};
+  sectors.forEach(s => {
+    sectionMap[s.section] = (sectionMap[s.section] || 0) + s.output;
+  });
+  const sectionLabels = {
+    A:'Agriculture',B:'Mining',C:'Manufacturing',D:'Electricity',E:'Water/Waste',
+    F:'Construction',G:'Trade',H:'Transport',I:'Accommodation',J:'ICT',
+    K:'Finance',L:'Real Estate',M:'Professional',N:'Admin',O:'Public Admin',
+    P:'Education',Q:'Health',R:'Arts',S:'Other Services',T:'Households'
+  };
+  const secs = Object.entries(sectionMap).sort((a,b) => b[1]-a[1]);
+  dc('chart-sector-output');
+  const ctx = document.getElementById('chart-sector-output');
+  if (ctx) {
+    charts['chart-sector-output'] = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: secs.map(([k]) => sectionLabels[k] || k),
+        datasets: [{
+          data: secs.map(([,v]) => +(v/1e9).toFixed(1)),
+          backgroundColor: ['#3b82f6','#f59e0b','#10b981','#8b5cf6','#ef4444',
+            '#06b6d4','#f97316','#84cc16','#ec4899','#6366f1',
+            '#14b8a6','#a78bfa','#fb923c','#4ade80','#60a5fa',
+            '#facc15','#f472b6','#34d399','#818cf8','#fbbf24'],
+          borderWidth: 2, borderColor: '#fff'
+        }]
+      },
+      options: {
+        responsive:true, maintainAspectRatio:false,
+        plugins:{legend:{position:'right',labels:{font:{size:10},boxWidth:12}},
+          tooltip:{callbacks:{label:c=>` ${c.label}: ${c.raw} trln UZS`}}}
+      }
+    });
+  }
+}
+
+function renderHorzBar(id, labels, values, color) {
+  dc(id);
+  const ctx = document.getElementById(id);
+  if (!ctx) return;
+  charts[id] = new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels,
+      datasets:[{data:values,backgroundColor:color+'cc',borderColor:color,
+        borderWidth:1,borderRadius:4}]
+    },
+    options:{
+      indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},
+        tooltip:{callbacks:{label:c=>` ${c.raw?.toFixed(4)}`}}},
+      scales:{
+        x:{ticks:{font:{size:9}},grid:{color:'#f0f0f0'}},
+        y:{ticks:{font:{size:9.5}}}
+      }
+    }
+  });
+}
+
+// ═══════════════════════════════════════════
+// PAGE 2: SHOCK SIMULATOR
+// ═══════════════════════════════════════════
+let dropdownVisible = false;
+
+function filterShockSearch() {
+  const q = document.getElementById('shock-search').value.toLowerCase().trim();
+  const dd = document.getElementById('shock-dropdown');
+  if (!q) { dd.style.display = 'none'; return; }
+  const matches = sectors.filter(s =>
+    s.name.toLowerCase().includes(q) || s.code.toLowerCase().includes(q)
+  ).slice(0, 20);
+  if (!matches.length) { dd.style.display = 'none'; return; }
+  dd.innerHTML = matches.map(s => `
+    <div onclick="addShockSector(${s.id})"
+         style="padding:8px 14px;cursor:pointer;border-bottom:1px solid #f0f2f5;"
+         onmouseover="this.style.background='#fffbf3'" onmouseout="this.style.background='#fff'">
+      <strong style="font-size:12px">${truncate(s.name, 55)}</strong>
+      <span style="font-size:10px;color:#aaa;margin-left:6px">${s.code}</span>
+    </div>`).join('');
+  dd.style.display = 'block';
+}
+
+function addShockSector(id) {
+  if (shockSelected.find(s => s.id === id)) return;
+  const s = sectors[id];
+  shockSelected.push({id, name: s.name, code: s.code});
+  renderShockList();
+  document.getElementById('shock-search').value = '';
+  document.getElementById('shock-dropdown').style.display = 'none';
+}
+
+function removeShockSector(id) {
+  shockSelected = shockSelected.filter(s => s.id !== id);
+  renderShockList();
+}
+
+function renderShockList() {
+  const el = document.getElementById('shock-list');
+  if (!shockSelected.length) {
+    el.innerHTML = '<span style="font-size:12px;color:#a16207;font-style:italic;">No sectors selected yet</span>';
+    return;
+  }
+  el.innerHTML = shockSelected.map(s => `
+    <div class="shock-tag">
+      <span>${truncate(s.name, 30)}</span>
+      <span style="font-size:10px;color:#a16207;margin-left:2px">[${s.code}]</span>
+      <button onclick="removeShockSector(${s.id})">✕</button>
+    </div>`).join('');
+}
+
+function runShock() {
+  if (!shockSelected.length) { alert('Please select at least one sector.'); return; }
+  const amount  = parseFloat(document.getElementById('shock-amount').value) || 100;
+  const unit    = document.getElementById('shock-unit').value;
+  const n       = sectors.length;
+
+  // Build ΔY vector (in thousand UZS to match matrix units)
+  const deltaY = new Float64Array(n);
+  shockSelected.forEach(({id}) => {
+    let val;
+    if      (unit === 'bln')  val = amount * 1e6;   // bln → thousand UZS
+    else if (unit === 'trln') val = amount * 1e9;
+    else                      val = X[id] * amount / 100; // % of current output
+    deltaY[id] = val;
+  });
+
+  // ΔX = L × ΔY  (Leontief multiplier)
+  const deltaX = new Float64Array(n);
+  for (let i = 0; i < n; i++) {
+    let sum = 0;
+    for (let j = 0; j < n; j++) sum += L[i][j] * deltaY[j];
+    deltaX[i] = sum;
+  }
+
+  // VA change = deltaX_i × (gva_i / output_i)
+  const deltaVA = sectors.map((s, i) =>
+    s.output > 0 ? deltaX[i] * (s.gva / s.output) : 0
+  );
+
+  const totalDX  = deltaX.reduce((s, v) => s + v, 0);
+  const totalDVA = deltaVA.reduce((s, v) => s + v, 0);
+  const totalDY  = shockSelected.reduce((s, {id}) => s + deltaY[id], 0);
+  const multiplier = totalDY > 0 ? totalDX / totalDY : 0;
+
+  // Show results
+  document.getElementById('shock-results').style.display = 'block';
+
+  document.getElementById('result-kpis').innerHTML = [
+    ['Initial Demand Shock', fmt(totalDY/1e6, 1) + ' bln UZS', '#16a34a'],
+    ['Total Output Effect', fmt(totalDX/1e6, 1) + ' bln UZS', '#0d9488'],
+    ['Total GVA Effect', fmt(totalDVA/1e6, 1) + ' bln UZS', '#2563eb'],
+    ['Effective Multiplier', fmt(multiplier, 3) + 'x', '#d97706']
+  ].map(([lbl, val, col]) => `
+    <div class="rkpi">
+      <div class="rkpi-val" style="color:${col}">${val}</div>
+      <div class="rkpi-lbl">${lbl}</div>
+    </div>`).join('');
+
+  // Top 15 affected sectors
+  const ranked = sectors.map((s, i) => ({name:s.name, code:s.code, dx:deltaX[i], dva:deltaVA[i]}))
+    .filter(x => Math.abs(x.dx) > 0)
+    .sort((a,b) => b.dx - a.dx).slice(0, 15);
+
+  dc('chart-shock-output');
+  const ctx1 = document.getElementById('chart-shock-output');
+  if (ctx1) {
+    charts['chart-shock-output'] = new Chart(ctx1, {
+      type:'bar', indexAxis:'y',
+      data:{labels:ranked.map(x=>truncate(x.name,32)),datasets:[{
+        data:ranked.map(x=>+(x.dx/1e6).toFixed(2)),
+        backgroundColor:'rgba(13,148,136,.8)',borderColor:'#0d9488',borderWidth:1,borderRadius:4
+      }]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.raw} bln UZS`}}},
+        scales:{x:{ticks:{font:{size:9}},grid:{color:'#f0f0f0'}},y:{ticks:{font:{size:9.5}}}}}
+    });
+  }
+
+  dc('chart-shock-va');
+  const ctx2 = document.getElementById('chart-shock-va');
+  if (ctx2) {
+    charts['chart-shock-va'] = new Chart(ctx2, {
+      type:'bar', indexAxis:'y',
+      data:{labels:ranked.map(x=>truncate(x.name,32)),datasets:[{
+        data:ranked.map(x=>+(x.dva/1e6).toFixed(2)),
+        backgroundColor:'rgba(37,99,235,.8)',borderColor:'#2563eb',borderWidth:1,borderRadius:4
+      }]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.raw} bln UZS`}}},
+        scales:{x:{ticks:{font:{size:9}},grid:{color:'#f0f0f0'}},y:{ticks:{font:{size:9.5}}}}}
+    });
+  }
+
+  // Full table
+  const allRanked = sectors.map((s,i) => ({...s, dx:deltaX[i], dva:deltaVA[i]}))
+    .filter(x=>Math.abs(x.dx)>1e3).sort((a,b)=>b.dx-a.dx);
+  document.getElementById('shock-table-body').innerHTML = allRanked.map((s,i) => `
+    <tr>
+      <td><strong>${truncate(s.name, 40)}</strong></td>
+      <td><span class="code-badge">${s.code}</span></td>
+      <td class="pos">${fmt(s.dx/1e6, 2)}</td>
+      <td class="pos">${fmt(s.dva/1e6, 2)}</td>
+      <td>${totalDX > 0 ? fmt(s.dx/totalDX*100, 2) : '0.00'}%</td>
+    </tr>`).join('');
+
+  document.getElementById('shock-results').scrollIntoView({behavior:'smooth'});
+}
+
+function clearShock() {
+  shockSelected = [];
+  renderShockList();
+  document.getElementById('shock-results').style.display = 'none';
+  document.getElementById('shock-search').value = '';
+}
+
+// ═══════════════════════════════════════════
+// PAGE 3: SECTOR EXPLORER
+// ═══════════════════════════════════════════
+function buildSectorExplorer() {
+  // Populate ISIC section filter
+  const sections = [...new Set(sectors.map(s => s.section))].sort();
+  const sel = document.getElementById('sector-filter-section');
+  sections.forEach(sec => {
+    const opt = document.createElement('option');
+    opt.value = sec; opt.textContent = `Section ${sec}`;
+    sel.appendChild(opt);
+  });
+  filterSectors();
+}
+
+function filterSectors() {
+  const q       = (document.getElementById('sector-search').value || '').toLowerCase();
+  const section = document.getElementById('sector-filter-section').value;
+  const sortVal = document.getElementById('sector-sort').value;
+
+  let filtered = sectors.filter(s =>
+    (!q || s.name.toLowerCase().includes(q) || s.code.toLowerCase().includes(q)) &&
+    (!section || s.section === section)
+  );
+
+  const [col, dir] = sortVal.endsWith('_asc')
+    ? [sortVal.replace('_asc',''), 1] : [sortVal.replace('_desc',''), -1];
+  filtered.sort((a,b) => dir * (a[col] - b[col]));
+
+  document.getElementById('sector-count').textContent = `${filtered.length} of ${sectors.length} sectors`;
+
+  const maxMult = Math.max(...sectors.map(s => s.output_multiplier));
+  document.getElementById('sector-tbody').innerHTML = filtered.map((s, i) => {
+    const barW = Math.round(s.output_multiplier / maxMult * 80);
+    return `<tr>
+      <td style="color:var(--text3);font-size:11px">${i+1}</td>
+      <td class="clickable" onclick="openModal(${s.id})">${truncate(s.name, 48)}</td>
+      <td><span class="code-badge">${s.code}</span></td>
+      <td>${fmt(s.output/1e6, 1)}</td>
+      <td>${fmt(s.gva/1e6, 1)}</td>
+      <td>
+        <span style="color:var(--amber);font-weight:700">${s.output_multiplier.toFixed(3)}</span>
+        <span class="mult-bar" style="width:${barW}px"></span>
+      </td>
+      <td style="color:var(--green);font-weight:700">${s.va_multiplier.toFixed(3)}</td>
+      <td><button class="btn btn-sm" style="background:#eff6ff;color:var(--primary-l)" onclick="openModal(${s.id})">Details →</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function sortSectors(col) {
+  if (sortCol === col) sortDir *= -1; else { sortCol = col; sortDir = -1; }
+  filterSectors();
+}
+
+// ═══════════════════════════════════════════
+// SECTOR DETAIL MODAL
+// ═══════════════════════════════════════════
+function openModal(id) {
+  const s = sectors[id];
+  document.getElementById('modal-code').textContent = s.code;
+  document.getElementById('modal-name').textContent = s.name;
+
+  document.getElementById('modal-kpis').innerHTML = [
+    ['Output',            fmt(s.output/1e6, 1) + ' bln',  '#1a3a6e'],
+    ['GVA',               fmt(s.gva/1e6, 1) + ' bln',     '#16a34a'],
+    ['Output Multiplier', s.output_multiplier.toFixed(4),  '#d97706'],
+    ['VA Multiplier',     s.va_multiplier.toFixed(4),      '#0d9488']
+  ].map(([lbl, val, col]) => `
+    <div class="card" style="padding:12px 14px">
+      <div class="card-title">${lbl}</div>
+      <div style="font-size:20px;font-weight:800;color:${col}">${val}</div>
+    </div>`).join('');
+
+  // Final demand
+  document.getElementById('modal-demand').innerHTML = [
+    ['Household',    s.fd_household],
+    ['Government',   s.fd_government],
+    ['GFCF (Invest)',s.fd_gfcf],
+    ['Exports',      s.fd_exports],
+    ['Total FD',     s.fd_total]
+  ].map(([lbl, val]) => `
+    <div class="card" style="padding:10px 12px">
+      <div class="card-title" style="font-size:10px">${lbl}</div>
+      <div style="font-size:15px;font-weight:700;color:var(--primary)">${fmt(val/1e6, 2)} bln</div>
+    </div>`).join('');
+
+  // Backward linkages: column id of A matrix (inputs into sector id)
+  const backward = sectors.map((s2, j) => ({name:s2.name, code:s2.code, val: A[j][id]}))
+    .filter(x => x.val > 0).sort((a,b) => b.val - a.val).slice(0, 10);
+
+  dc('chart-backward');
+  const ctxB = document.getElementById('chart-backward');
+  if (ctxB) {
+    charts['chart-backward'] = new Chart(ctxB, {
+      type:'bar', indexAxis:'y',
+      data:{labels:backward.map(x=>truncate(x.name,28)),datasets:[{
+        data:backward.map(x=>+x.val.toFixed(4)),
+        backgroundColor:'rgba(217,119,6,.75)',borderRadius:3}]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` coeff: ${c.raw}`}}},
+        scales:{x:{ticks:{font:{size:8}}},y:{ticks:{font:{size:8.5}}}}}
+    });
+  }
+
+  // Forward linkages: row id of A matrix (outputs from sector id)
+  const forward = sectors.map((s2, j) => ({name:s2.name, code:s2.code, val: A[id][j]}))
+    .filter(x => x.val > 0).sort((a,b) => b.val - a.val).slice(0, 10);
+
+  dc('chart-forward');
+  const ctxF = document.getElementById('chart-forward');
+  if (ctxF) {
+    charts['chart-forward'] = new Chart(ctxF, {
+      type:'bar', indexAxis:'y',
+      data:{labels:forward.map(x=>truncate(x.name,28)),datasets:[{
+        data:forward.map(x=>+x.val.toFixed(4)),
+        backgroundColor:'rgba(37,99,235,.75)',borderRadius:3}]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` coeff: ${c.raw}`}}},
+        scales:{x:{ticks:{font:{size:8}}},y:{ticks:{font:{size:8.5}}}}}
+    });
+  }
+
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modal-overlay'))
+    document.getElementById('modal-overlay').classList.remove('open');
+}
+
+// ── Helpers ──────────────────────────────────
+function fmt(v, dec=2) { return v.toFixed(dec).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+function truncate(s, n) { return s && s.length > n ? s.slice(0, n) + '…' : (s || ''); }
+
+// Close dropdown on outside click
+document.addEventListener('click', e => {
+  if (!e.target.closest('#shock-search') && !e.target.closest('#shock-dropdown'))
+    document.getElementById('shock-dropdown').style.display = 'none';
+});
+
+// ── Boot ─────────────────────────────────────
+loadData();
+</script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -386,7 +386,7 @@ button { font-family: inherit; cursor: pointer; }
   <div class="header-divider"></div>
   <div class="header-subtitle">Macroeconomic Simulation Platform</div>
   <div class="header-right">
-    <div class="header-pill live">● Live Models: 2</div>
+    <div class="header-pill live">● Live Models: 3</div>
     <div class="header-pill">Beta v0.2</div>
   </div>
 </header>
@@ -420,16 +420,16 @@ button { font-family: inherit; cursor: pointer; }
         <span class="nav-icon">🔮</span> Nowcasting DFM
         <span class="nav-badge live">Live</span>
       </button>
+      <button class="nav-item" onclick="navigate('io')">
+        <span class="nav-icon">🔗</span> Input-Output
+        <span class="nav-badge available">Ready</span>
+      </button>
     </div>
 
     <div class="nav-divider"></div>
 
     <div class="sidebar-section">
       <div class="sidebar-label">Upcoming Models</div>
-      <button class="nav-item" onclick="navigate('io')">
-        <span class="nav-icon">🔗</span> Input-Output
-        <span class="nav-badge soon">Soon</span>
-      </button>
       <button class="nav-item" onclick="navigate('pe')">
         <span class="nav-icon">⚖️</span> Partial Equilibrium
         <span class="nav-badge soon">Soon</span>
@@ -454,8 +454,8 @@ button { font-family: inherit; cursor: pointer; }
     </div>
 
     <div class="sidebar-footer">
-      Central Bank of Uzbekistan<br>
-      Macroeconomic Research Division<br>
+      Center for Economic Research and Reforms (CERR)<br>
+      Macroeconomic Analysis Division<br>
       <span style="color:var(--teal)">Open-source · Data-driven</span>
     </div>
   </nav>
@@ -596,10 +596,10 @@ button { font-family: inherit; cursor: pointer; }
             <div class="mc-action">Open Nowcasting Dashboard <span class="mc-arrow">→</span></div>
           </div>
 
-          <div class="model-card soon">
+          <div class="model-card" onclick="navigate('io')">
             <div class="mc-top">
               <div class="mc-icon io">🔗</div>
-              <span class="mc-status soon">Coming Soon</span>
+              <span class="mc-status ready">✓ Available</span>
             </div>
             <div class="mc-name">Input-Output Model (2022)</div>
             <div class="mc-desc">Leontief input-output table for Uzbekistan (2022 benchmark). Analyse sectoral linkages, multipliers, and the propagation of demand or supply shocks through the production network.</div>
@@ -608,7 +608,7 @@ button { font-family: inherit; cursor: pointer; }
               <span class="mc-tag">Multipliers</span>
               <span class="mc-tag">Leontief</span>
             </div>
-            <div class="mc-action soon">In development <span class="mc-arrow">↗</span></div>
+            <div class="mc-action">Open I-O Simulator <span class="mc-arrow">→</span></div>
           </div>
 
           <div class="model-card soon">
@@ -754,24 +754,17 @@ button { font-family: inherit; cursor: pointer; }
       </div>
     </div>
 
-    <!-- ── Coming soon pages ── -->
+    <!-- ── I-O Model page ── -->
     <div id="page-io" class="page">
-      <div class="coming-soon-page">
-        <div class="cs-inner">
-          <div class="cs-icon">🔗</div>
-          <div class="cs-title">Input-Output Model</div>
-          <div class="cs-desc">
-            The 2022 Uzbekistan Input-Output table will power sector multiplier analysis, supply chain shock propagation,
-            and demand-side decomposition of GDP growth. Based on the Leontief framework.
-          </div>
-          <div class="cs-timeline">
-            <h4>Roadmap</h4>
-            <div class="cs-item"><div class="cs-dot-ok"></div> I-O table digitized (2022 benchmark)</div>
-            <div class="cs-item"><div class="cs-dot-wip"></div> Multiplier computation engine</div>
-            <div class="cs-item"><div class="cs-dot-plan"></div> Browser-based sector shock simulator</div>
-            <div class="cs-item"><div class="cs-dot-plan"></div> Integration with QPM for demand linkages</div>
+      <div class="model-frame-wrap">
+        <div class="model-frame-header">
+          <span class="model-frame-pill" style="background:#fef9c3;color:#92400e;">I-O</span>
+          <div>
+            <div class="model-frame-title">Input-Output Model — Uzbekistan 2022</div>
+            <div class="model-frame-sub">136 sectors · Leontief table · Demand shock simulator</div>
           </div>
         </div>
+        <iframe class="model-iframe" src="io_model/index.html" title="I-O Model" loading="lazy"></iframe>
       </div>
     </div>
 
@@ -951,7 +944,7 @@ button { font-family: inherit; cursor: pointer; }
           <tbody>
             <tr><td>Statistics Agency under the President of Uzbekistan</td><td>GDP, industrial production, trade, prices, construction</td></tr>
             <tr><td>Central Bank of Uzbekistan (CBU)</td><td>Monetary aggregates, interest rates, exchange rate, NPL</td></tr>
-            <tr><td>CERR (Centre for Economic Research and Reforms)</td><td>Business activity index, real estate, car sales, climate indices</td></tr>
+            <tr><td>Center for Economic Research and Reforms (CERR)</td><td>Business activity index, real estate, car sales, climate indices</td></tr>
             <tr><td>Bureau of National Statistics (Kazakhstan)</td><td>Kazakhstan leading indicator</td></tr>
           </tbody>
         </table>
