@@ -258,7 +258,7 @@ tr:hover td{background:#fffbf3;}
 
   <div class="g2" style="margin-bottom:18px;">
     <div class="card">
-      <div class="card-title">Top 20 — Employment Multiplier (total jobs per bln UZS)</div>
+      <div class="card-title">Top 20 — Employment Multiplier (persons per bln UZS)</div>
       <div class="card-sub">Total employment (formal + informal) triggered per 1 bln UZS of final demand</div>
       <div class="chart-wrap" style="height:420px;"><canvas id="chart-emp-mult"></canvas></div>
     </div>
@@ -307,7 +307,7 @@ tr:hover td{background:#fffbf3;}
         <tbody id="link-tbody"></tbody>
       </table>
     </div>
-    <p style="font-size:11px;color:var(--text3);margin-top:8px;">Output in billion UZS · Employment multiplier = jobs per billion UZS of final demand</p>
+    <p style="font-size:11px;color:var(--text3);margin-top:8px;">Output in billion UZS (X in millions UZS ÷ 1000) · Employment multiplier = persons per billion UZS of final demand</p>
   </div>
 </div>
 
@@ -439,8 +439,8 @@ tr:hover td{background:#fffbf3;}
           <thead>
             <tr>
               <th>#</th><th>Code</th><th>Sector</th>
-              <th>ΔY (shock)</th><th>ΔX (output effect)</th>
-              <th>ΔVA effect</th><th>ΔEmp (jobs)</th>
+              <th>ΔY (bln UZS)</th><th>ΔX (bln UZS)</th>
+              <th>ΔVA (bln UZS)</th><th>ΔEmp (persons)</th>
             </tr>
           </thead>
           <tbody id="demand-tbody"></tbody>
@@ -603,7 +603,7 @@ tr:hover td{background:#fffbf3;}
             <th>#</th><th>Code</th><th>Sector</th><th>Type</th>
             <th>BL</th><th>FL</th><th>Out Mult</th><th>VA Mult</th>
             <th>Emp Mult</th><th>Formal %</th>
-            <th>Output (bln)</th><th>GVA (bln)</th><th>Emp (000)</th>
+            <th>Output (bln)</th><th>GVA (bln)</th><th>Employment</th>
             <th>Detail</th>
           </tr>
         </thead>
@@ -628,7 +628,7 @@ tr:hover td{background:#fffbf3;}
       <div class="g4" style="margin-bottom:16px;" id="modal-kpis"></div>
       <div class="detail-grid">
         <div class="card"><div class="card-title">Multiplier Profile</div><canvas id="modal-chart-mult" style="max-height:200px;"></canvas></div>
-        <div class="card"><div class="card-title">Employment (000s)</div><canvas id="modal-chart-emp" style="max-height:200px;"></canvas></div>
+        <div class="card"><div class="card-title">Employment (persons)</div><canvas id="modal-chart-emp" style="max-height:200px;"></canvas></div>
       </div>
       <div style="margin-top:14px;" id="modal-top-suppliers"></div>
     </div>
@@ -643,8 +643,9 @@ const n = IO_DATA.codes.length; // 136
 
 // VA share per unit output
 const v = IO_DATA.X.map((x,i) => x > 0 ? IO_DATA.GVA[i] / x : 0);
-// Employment per unit output (per bln UZS)
-const eTotal  = IO_DATA.X.map((x,i) => x > 0 ? IO_DATA.EmpTotal[i]    / (x/1e3) : 0); // jobs per bln
+// Employment per unit output: persons per billion UZS output
+// X is in millions UZS → X/1e3 = billion UZS
+const eTotal  = IO_DATA.X.map((x,i) => x > 0 ? IO_DATA.EmpTotal[i]    / (x/1e3) : 0);
 const eFormal = IO_DATA.X.map((x,i) => x > 0 ? IO_DATA.EmpFormal[i]   / (x/1e3) : 0);
 const eInformal= IO_DATA.X.map((x,i)=> x > 0 ? IO_DATA.EmpInformal[i] / (x/1e3) : 0);
 
@@ -735,15 +736,15 @@ function initOverview(){
       <div class="kpi-unit">of 136 total sectors</div>
       <div class="kpi-note">Key: ${typeCounts.key} · BK: ${typeCounts.back} · FK: ${typeCounts.fwd}</div></div>
     <div class="card"><div class="card-title">Total Employment</div>
-      <div class="kpi">${fmtN(totalEmp)}</div>
-      <div class="kpi-unit">000 persons</div>
-      <div class="kpi-note">Formal: ${fmtN(IO_DATA.EmpFormal.reduce((a,b)=>a+b,0))} · Informal: ${fmtN(IO_DATA.EmpInformal.reduce((a,b)=>a+b,0))}</div></div>
+      <div class="kpi">${(totalEmp/1e6).toFixed(2)}M</div>
+      <div class="kpi-unit">persons (2022)</div>
+      <div class="kpi-note">Formal: ${(IO_DATA.EmpFormal.reduce((a,b)=>a+b,0)/1e6).toFixed(2)}M · Informal: ${(IO_DATA.EmpInformal.reduce((a,b)=>a+b,0)/1e6).toFixed(2)}M</div></div>
   `;
 
   buildScatter();
   buildTopChart('chart-out-mult', sectors.slice().sort((a,b)=>b.outm-a.outm).slice(0,20), 'outm', 'Output Multiplier', '#1a3a6e');
   buildTopChart('chart-va-mult',  sectors.slice().sort((a,b)=>b.vam-a.vam).slice(0,20),  'vam',  'VA Multiplier', '#16a34a');
-  buildTopChart('chart-emp-mult', sectors.slice().sort((a,b)=>b.empm-a.empm).slice(0,20),'empm', 'Emp Mult (jobs/bln UZS)', '#7c3aed');
+  buildTopChart('chart-emp-mult', sectors.slice().sort((a,b)=>b.empm-a.empm).slice(0,20),'empm', 'Emp Mult (persons/bln UZS)', '#7c3aed');
   buildEmpShareChart();
   buildLinkTable();
 }
@@ -973,8 +974,8 @@ function runDemandModel(){
 
   // VA effect = v_i * dX_i
   const dVA = dX.map((dx,i)=>dx*v[i]);
-  // Employment effect
-  const dEmp = dX.map((dx,i)=>dx*eTotal[i]/1e3); // convert mln to bln
+  // Employment effect: dX in bln UZS * eTotal in persons/bln = persons
+  const dEmp = dX.map((dx,i)=>dx*eTotal[i]);
 
   const totalDY=dY.reduce((a,b)=>a+b,0);
   const totalDX=dX.reduce((a,b)=>a+b,0);
@@ -986,7 +987,7 @@ function runDemandModel(){
     <div class="rkpi"><div class="rkpi-val">${fmtN(totalDY)}</div><div class="rkpi-lbl">Total Final Demand Shock ΔY (bln UZS)</div></div>
     <div class="rkpi"><div class="rkpi-val">${fmtN(totalDX)}</div><div class="rkpi-lbl">Total Output Effect ΔX (bln UZS)</div></div>
     <div class="rkpi"><div class="rkpi-val">${fmtN(totalDVA)}</div><div class="rkpi-lbl">Total VA Effect ΔVA (bln UZS)</div></div>
-    <div class="rkpi"><div class="rkpi-val">${totalDEmp.toFixed(1)}</div><div class="rkpi-lbl">Employment Effect (000 jobs)</div></div>
+    <div class="rkpi"><div class="rkpi-val">${fmtN(Math.round(totalDEmp))}</div><div class="rkpi-lbl">Employment Effect (persons)</div></div>
     <div class="rkpi"><div class="rkpi-val">${totalDY!==0?(totalDX/totalDY).toFixed(2):'—'}</div><div class="rkpi-lbl">Aggregate Multiplier (ΔX/ΔY)</div></div>
   `;
 
@@ -1022,7 +1023,7 @@ function runDemandModel(){
       <td class="${r.dy>0?'pos':r.dy<0?'neg':''}">${fmtN(r.dy)}</td>
       <td class="${r.dx>0?'pos':r.dx<0?'neg':''}">${fmtN(r.dx)}</td>
       <td class="${r.dva>0?'pos':r.dva<0?'neg':''}">${fmtN(r.dva)}</td>
-      <td>${r.demp.toFixed(2)}</td>
+      <td>${Math.round(r.demp).toLocaleString()}</td>
     </tr>`).join('');
 
   // JSON output
@@ -1040,10 +1041,10 @@ function runDemandModel(){
       total_dY:+totalDY.toFixed(2),
       total_dX:+totalDX.toFixed(2),
       total_dVA:+totalDVA.toFixed(2),
-      total_employment_effect:+totalDEmp.toFixed(2),
+      total_employment_effect_persons:Math.round(totalDEmp),
       aggregate_multiplier:totalDY!==0?+(totalDX/totalDY).toFixed(3):null,
       sector_dX: Object.fromEntries(tableRows.slice(0,30).map(r=>
-        [IO_DATA.codes[r.i],{name:IO_DATA.names[r.i],dY:+r.dy.toFixed(2),dX:+r.dx.toFixed(2),dVA:+r.dva.toFixed(2),dEmp:+r.demp.toFixed(2)}]))
+        [IO_DATA.codes[r.i],{name:IO_DATA.names[r.i],dY:+r.dy.toFixed(2),dX:+r.dx.toFixed(2),dVA:+r.dva.toFixed(2),dEmp_persons:Math.round(r.demp)}]))
     }
   };
   document.getElementById('demand-json').textContent=JSON.stringify(jObj,null,2);
@@ -1306,7 +1307,7 @@ function buildSecTable(){
       <td>${s.formalShare.toFixed(1)}%</td>
       <td>${fmtN(s.x)}</td>
       <td>${fmtN(s.gva)}</td>
-      <td>${fmtN(s.empT)}</td>
+      <td>${fmtEmp(s.empT)}</td>
       <td><button class="btn btn-outline btn-sm" onclick="openModal(${s.j})">Detail →</button></td>
     </tr>`).join('');
 }
@@ -1327,7 +1328,7 @@ function openModal(j){
     <div class="card"><div class="card-title">Output</div><div class="kpi" style="font-size:22px">${fmtN(s.x)}</div><div class="kpi-unit">bln UZS</div></div>
     <div class="card"><div class="card-title">GVA</div><div class="kpi" style="font-size:22px">${fmtN(s.gva)}</div><div class="kpi-unit">bln UZS</div></div>
     <div class="card"><div class="card-title">Output Mult</div><div class="kpi" style="font-size:22px">${s.outm.toFixed(3)}</div><div class="kpi-unit">per unit final demand</div></div>
-    <div class="card"><div class="card-title">Emp Multiplier</div><div class="kpi" style="font-size:22px">${s.empm.toFixed(2)}</div><div class="kpi-unit">jobs per bln UZS</div></div>
+    <div class="card"><div class="card-title">Emp Multiplier</div><div class="kpi" style="font-size:22px">${s.empm.toFixed(2)}</div><div class="kpi-unit">persons per bln UZS</div></div>
   `;
 
   if(modalChartMult){modalChartMult.destroy();}
@@ -1345,7 +1346,7 @@ function openModal(j){
   modalChartEmp=new Chart(document.getElementById('modal-chart-emp'),{
     type:'bar',
     data:{labels:['Total','Formal','Informal'],
-      datasets:[{label:'Employment (000)',data:[s.empT,s.empF,s.empI].map(v=>+v.toFixed(2)),
+      datasets:[{label:'Employment (persons)',data:[s.empT,s.empF,s.empI].map(v=>Math.round(v)),
         backgroundColor:['#0d9488cc','#2563ebcc','#f59e0bcc'],borderRadius:4}]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
       scales:{y:{beginAtZero:true}}}
@@ -1427,6 +1428,12 @@ function fmtN(v){
   if(Math.abs(v)>=1e6) return (v/1e6).toFixed(1)+'M';
   if(Math.abs(v)>=1e3) return (v/1e3).toFixed(1)+'K';
   return v.toFixed(1);
+}
+// Employment: persons — display as "343.6K" or "1.2M"
+function fmtEmp(v){
+  if(Math.abs(v)>=1e6) return (v/1e6).toFixed(2)+'M';
+  if(Math.abs(v)>=1e3) return (v/1e3).toFixed(1)+'K';
+  return Math.round(v).toString();
 }
 function fmtT(v){ // trillion
   if(Math.abs(v)>=1000) return (v/1000).toFixed(2)+' trl';
