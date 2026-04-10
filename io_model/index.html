@@ -722,7 +722,6 @@ function initOverview(){
   // KPI row
   const totalX = sectors.reduce((s,r)=>s+r.x,0);
   const totalGVA = sectors.reduce((s,r)=>s+r.gva,0);
-  const keySecs = typeCounts.key+typeCounts.back+typeCounts.fwd;
   const totalEmp = IO_DATA.EmpTotal.reduce((a,b)=>a+b,0);
   document.getElementById('kpi-row').innerHTML = `
     <div class="card"><div class="card-title">Total Output</div>
@@ -731,10 +730,10 @@ function initOverview(){
     <div class="card"><div class="card-title">Total GVA</div>
       <div class="kpi">${fmtT(totalGVA)}</div>
       <div class="kpi-unit">trillion UZS</div></div>
-    <div class="card"><div class="card-title">Key / Linked Sectors</div>
-      <div class="kpi">${keySecs}</div>
-      <div class="kpi-unit">of 136 total sectors</div>
-      <div class="kpi-note">Key: ${typeCounts.key} · BK: ${typeCounts.back} · FK: ${typeCounts.fwd}</div></div>
+    <div class="card"><div class="card-title">Sectors Analysed</div>
+      <div class="kpi">${n}</div>
+      <div class="kpi-unit">sectors (all linked)</div>
+      <div class="kpi-note">Key: ${typeCounts.key} · BK: ${typeCounts.back} · FK: ${typeCounts.fwd} · Weak: ${typeCounts.weak}</div></div>
     <div class="card"><div class="card-title">Total Employment</div>
       <div class="kpi">${(totalEmp/1e6).toFixed(2)}M</div>
       <div class="kpi-unit">persons (2022)</div>
