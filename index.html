@@ -437,10 +437,10 @@ button { font-family: inherit; cursor: pointer; }
     <div class="nav-divider"></div>
 
     <div class="sidebar-section">
-      <div class="sidebar-label">Upcoming Models</div>
+      <div class="sidebar-label">Available Models</div>
       <button class="nav-item" onclick="navigate('pe')">
         <span class="nav-icon">⚖️</span> Partial Equilibrium
-        <span class="nav-badge soon">Soon</span>
+        <span class="nav-badge available">Ready</span>
       </button>
     </div>
 
@@ -596,19 +596,19 @@ button { font-family: inherit; cursor: pointer; }
             <div class="mc-action">Open I-O Simulator <span class="mc-arrow">→</span></div>
           </div>
 
-          <div class="model-card soon">
+          <div class="model-card" onclick="navigate('pe')">
             <div class="mc-top">
               <div class="mc-icon pe">⚖️</div>
-              <span class="mc-status soon">Coming Soon</span>
+              <span class="mc-status ready">✓ Available</span>
             </div>
             <div class="mc-name">Partial Equilibrium Model</div>
-            <div class="mc-desc">Market-level analysis of price and quantity effects from policy interventions. Ideal for sector-specific subsidy/tax analysis, tariff changes, and regulated price adjustments.</div>
+            <div class="mc-desc">WITS-SMART methodology. Analyses WTO accession trade effects: trade creation, trade diversion, welfare and tariff revenue changes across HS 28–40 (Chemicals &amp; Plastics) — 3 liberalisation scenarios + custom simulator.</div>
             <div class="mc-tags">
-              <span class="mc-tag">Price Analysis</span>
-              <span class="mc-tag">Subsidies</span>
-              <span class="mc-tag">Tariffs</span>
+              <span class="mc-tag">WTO Accession</span>
+              <span class="mc-tag">Tariff Analysis</span>
+              <span class="mc-tag">Trade Flows</span>
             </div>
-            <div class="mc-action soon">In development <span class="mc-arrow">↗</span></div>
+            <div class="mc-action">Open PE Simulator <span class="mc-arrow">→</span></div>
           </div>
 
           <div class="model-card" onclick="navigate('cge')">
@@ -755,22 +755,15 @@ button { font-family: inherit; cursor: pointer; }
     </div>
 
     <div id="page-pe" class="page">
-      <div class="coming-soon-page">
-        <div class="cs-inner">
-          <div class="cs-icon">⚖️</div>
-          <div class="cs-title">Partial Equilibrium Model</div>
-          <div class="cs-desc">
-            Market-level supply-demand analysis. Evaluate the price and welfare effects of subsidies, tariffs,
-            regulated price changes, and sector-specific policy interventions.
-          </div>
-          <div class="cs-timeline">
-            <h4>Roadmap</h4>
-            <div class="cs-item"><div class="cs-dot-wip"></div> Core supply/demand framework</div>
-            <div class="cs-item"><div class="cs-dot-plan"></div> Energy subsidy reform module</div>
-            <div class="cs-item"><div class="cs-dot-plan"></div> Agricultural price policy module</div>
-            <div class="cs-item"><div class="cs-dot-plan"></div> Welfare decomposition by income decile</div>
+      <div class="model-frame-wrap">
+        <div class="model-frame-header">
+          <span class="model-frame-pill" style="background:#ccfbf1;color:#0f766e;">PE</span>
+          <div>
+            <div class="model-frame-title">Partial Equilibrium Model — WTO Accession Analysis</div>
+            <div class="model-frame-sub">WITS-SMART framework · HS 28–40 (Chemicals &amp; Plastics) · Trade creation, diversion &amp; welfare · 3 tariff scenarios + custom simulator</div>
           </div>
         </div>
+        <iframe class="model-iframe" src="pe_model/index.html" title="PE Model" loading="lazy"></iframe>
       </div>
     </div>
 
@@ -817,6 +810,7 @@ button { font-family: inherit; cursor: pointer; }
               <option value="qpm_uzbekistan/index.html">📈 QPM — Monetary Policy Simulator</option>
               <option value="dfm_nowcast/index.html">🔮 DFM — GDP Nowcasting</option>
               <option value="io_model/index.html">🔗 Input-Output Model</option>
+              <option value="pe_model/index.html">⚖️ Partial Equilibrium Model</option>
               <option value="fpp_model/index.html">💰 FPP — Financial Programming</option>
               <option value="cge_model/index.html">⚙️ CGE Model</option>
             </select>
@@ -828,6 +822,7 @@ button { font-family: inherit; cursor: pointer; }
               <option value="dfm_nowcast/index.html">🔮 DFM — GDP Nowcasting</option>
               <option value="qpm_uzbekistan/index.html">📈 QPM — Monetary Policy Simulator</option>
               <option value="io_model/index.html">🔗 Input-Output Model</option>
+              <option value="pe_model/index.html">⚖️ Partial Equilibrium Model</option>
               <option value="fpp_model/index.html">💰 FPP — Financial Programming</option>
               <option value="cge_model/index.html">⚙️ CGE Model</option>
             </select>
@@ -905,10 +900,10 @@ button { font-family: inherit; cursor: pointer; }
             </tr>
             <tr>
               <td><strong>Partial Equilibrium</strong></td>
-              <td>Supply-demand market model</td>
+              <td>WITS-SMART trade model · HS 28–40</td>
               <td>As needed</td>
-              <td>Price, quantity, welfare effects by policy change</td>
-              <td style="color:var(--amber);font-weight:700">⏳ In Development</td>
+              <td>Trade creation, diversion, welfare &amp; revenue effects</td>
+              <td style="color:var(--green);font-weight:700">✓ Available</td>
             </tr>
           </tbody>
         </table>
@@ -1039,6 +1034,7 @@ const COMPARE_LABELS = {
   'qpm_uzbekistan/index.html':  '📈 QPM — Monetary Policy Simulator',
   'dfm_nowcast/index.html':     '🔮 DFM — GDP Nowcasting',
   'io_model/index.html':        '🔗 Input-Output Model',
+  'pe_model/index.html':        '⚖️ Partial Equilibrium Model',
   'fpp_model/index.html':       '💰 FPP — Financial Programming',
   'cge_model/index.html':       '⚙️ CGE Model'
 };
