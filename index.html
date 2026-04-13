@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="dfm_nowcast/dfm_data.js" onerror="window.DFM_DATA=null"></script>
 <style>
 /* ═══════════════════════════════════════════
@@ -234,7 +235,7 @@ button { font-family: inherit; cursor: pointer; }
   box-shadow: var(--shadow-sm); transition: all .2s ease; cursor: pointer;
   display: flex; flex-direction: column; gap: 14px;
 }
-.model-card:hover { border-color: var(--blue-l); box-shadow: var(--shadow); transform: translateY(-2px); }
+.model-card:hover { border-color: var(--green-l); box-shadow: var(--shadow); transform: translateY(-2px); }
 .model-card.soon { cursor: default; opacity: .7; }
 .model-card.soon:hover { transform: none; box-shadow: var(--shadow-sm); border-color: var(--border); }
 .mc-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
@@ -264,7 +265,7 @@ button { font-family: inherit; cursor: pointer; }
 .mc-action {
   display: flex; align-items: center; justify-content: space-between;
   padding-top: 12px; border-top: 1px solid var(--border);
-  font-size: 13px; font-weight: 600; color: var(--blue);
+  font-size: 13px; font-weight: 600; color: var(--green);
 }
 .mc-action.soon { color: var(--text3); }
 .mc-arrow { font-size: 16px; }
@@ -386,8 +387,13 @@ button { font-family: inherit; cursor: pointer; }
   <div class="header-divider"></div>
   <div class="header-subtitle">Macroeconomic Simulation Platform</div>
   <div class="header-right">
-    <div class="header-pill live">● Live Models: 5</div>
-    <div class="header-pill">Beta v0.2</div>
+    <div class="header-pill live">● Live Models: 6</div>
+    <div class="header-pill">Beta v0.3</div>
+    <div style="display:flex;gap:4px;align-items:center;">
+      <button onclick="setLang('en')" id="lang-en" style="background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.4);border-radius:6px;padding:3px 9px;font-size:12px;font-weight:600;color:#fff;cursor:pointer;display:flex;align-items:center;gap:5px;">🇬🇧 EN</button>
+      <button onclick="setLang('ru')" id="lang-ru" style="background:none;border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:3px 9px;font-size:12px;font-weight:600;color:rgba(255,255,255,.6);cursor:pointer;display:flex;align-items:center;gap:5px;">🇷🇺 RU</button>
+      <button onclick="setLang('uz')" id="lang-uz" style="background:none;border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:3px 9px;font-size:12px;font-weight:600;color:rgba(255,255,255,.6);cursor:pointer;display:flex;align-items:center;gap:5px;">🇺🇿 UZ</button>
+    </div>
   </div>
 </header>
 
@@ -413,12 +419,16 @@ button { font-family: inherit; cursor: pointer; }
     <div class="sidebar-section">
       <div class="sidebar-label">Available Models</div>
       <button class="nav-item" onclick="navigate('qpm')">
-        <span class="nav-icon">📈</span> QPM
+        <span class="nav-icon">📈</span> QPM Simulator
         <span class="nav-badge available">Ready</span>
       </button>
       <button class="nav-item" onclick="navigate('dfm')">
         <span class="nav-icon">🔮</span> Nowcasting DFM
         <span class="nav-badge live">Live</span>
+      </button>
+      <button class="nav-item" onclick="navigate('pe')">
+        <span class="nav-icon">⚖️</span> Partial Equilibrium
+        <span class="nav-badge available">Ready</span>
       </button>
       <button class="nav-item" onclick="navigate('io')">
         <span class="nav-icon">🔗</span> Input-Output
@@ -437,19 +447,12 @@ button { font-family: inherit; cursor: pointer; }
     <div class="nav-divider"></div>
 
     <div class="sidebar-section">
-      <div class="sidebar-label">Available Models</div>
-      <button class="nav-item" onclick="navigate('pe')">
-        <span class="nav-icon">⚖️</span> Partial Equilibrium
-        <span class="nav-badge available">Ready</span>
-      </button>
-    </div>
-
-    <div class="nav-divider"></div>
-
-    <div class="sidebar-section">
       <div class="sidebar-label">Platform</div>
       <button class="nav-item" onclick="navigate('about')">
         <span class="nav-icon">📖</span> Methodology
+      </button>
+      <button class="nav-item" onclick="navigate('intl')">
+        <span class="nav-icon">🌐</span> Int'l Organizations
       </button>
     </div>
 
@@ -495,34 +498,40 @@ button { font-family: inherit; cursor: pointer; }
         </div>
         <div class="macro-grid" id="macro-grid">
           <div class="macro-card">
+            <div class="macro-label">Nominal GDP</div>
+            <div class="macro-val" id="snap-gdp-nom" style="color:var(--blue)">—</div>
+            <div class="macro-sub" id="snap-gdp-nom-per">trln UZS</div>
+            <div class="macro-badge flat" id="snap-gdp-nom-badge">Stat Agency</div>
+          </div>
+          <div class="macro-card">
             <div class="macro-label">GDP Growth YoY</div>
             <div class="macro-val" id="snap-gdp" style="color:var(--green)">—</div>
             <div class="macro-sub" id="snap-gdp-per">—</div>
-            <div class="macro-badge up" id="snap-gdp-badge">DFM Nowcast</div>
+            <div class="macro-badge up" id="snap-gdp-badge">Stat Agency</div>
           </div>
           <div class="macro-card">
-            <div class="macro-label">Inflation Target</div>
-            <div class="macro-val" style="color:var(--amber)">5.0%</div>
-            <div class="macro-sub">CBU annual target</div>
-            <div class="macro-badge flat">QPM SS</div>
+            <div class="macro-label">Industry Growth YoY</div>
+            <div class="macro-val" id="snap-ind" style="color:var(--teal)">—</div>
+            <div class="macro-sub" id="snap-ind-per">—</div>
+            <div class="macro-badge flat" id="snap-ind-badge">Stat Agency</div>
           </div>
           <div class="macro-card">
-            <div class="macro-label">Neutral Real Rate</div>
-            <div class="macro-val" style="color:var(--blue)">3.5%</div>
-            <div class="macro-sub">Long-run equilibrium</div>
-            <div class="macro-badge flat">QPM SS</div>
+            <div class="macro-label">Services Growth YoY</div>
+            <div class="macro-val" id="snap-svc" style="color:var(--purple)">—</div>
+            <div class="macro-sub" id="snap-svc-per">—</div>
+            <div class="macro-badge flat" id="snap-svc-badge">Stat Agency</div>
           </div>
           <div class="macro-card">
-            <div class="macro-label">Potential Growth</div>
-            <div class="macro-val" style="color:var(--teal)">6.0%</div>
-            <div class="macro-sub">Annual trend rate</div>
-            <div class="macro-badge flat">QPM SS</div>
+            <div class="macro-label">Agriculture Growth YoY</div>
+            <div class="macro-val" id="snap-agr" style="color:var(--amber)">—</div>
+            <div class="macro-sub" id="snap-agr-per">—</div>
+            <div class="macro-badge flat" id="snap-agr-badge">Stat Agency</div>
           </div>
           <div class="macro-card">
-            <div class="macro-label">Common Factor</div>
-            <div class="macro-val" id="snap-factor" style="color:var(--purple)">—</div>
-            <div class="macro-sub">DFM economic momentum</div>
-            <div class="macro-badge flat" id="snap-factor-badge">DFM</div>
+            <div class="macro-label">Policy Rate</div>
+            <div class="macro-val" style="color:var(--red)">14%</div>
+            <div class="macro-sub">CBU key rate</div>
+            <div class="macro-badge flat">CBU</div>
           </div>
         </div>
 
@@ -976,6 +985,27 @@ button { font-family: inherit; cursor: pointer; }
           and 40% debt-to-GDP ceiling.
         </p>
 
+        <h3>Partial Equilibrium Model — WITS-SMART Framework</h3>
+        <p>
+          The Partial Equilibrium model uses the WITS-SMART methodology to analyse the trade effects of
+          Uzbekistan's WTO accession across all HS chapters (full import coverage, 396,733 line items).
+          The model estimates trade creation (TC), trade diversion (TD), consumer welfare gains,
+          and tariff revenue changes resulting from MFN tariff liberalisation scenarios.
+        </p>
+        <p>
+          <strong>Trade Creation:</strong> TC<sub>ij</sub> = M<sub>ij</sub> · ε · (t<sub>new</sub> − t<sub>old</sub>) / (1 + t<sub>old</sub>),
+          where ε is the import demand elasticity (default 1.27), M is the baseline import value, and t is the ad-valorem tariff rate.<br>
+          <strong>Trade Diversion:</strong> TD<sub>ij</sub> = TC<sub>ij</sub> · σ / (1 + σ), where σ = 1.5 is the substitution elasticity between FTA and MFN sources. Applied only to FTA partner rows.<br>
+          <strong>Consumer Welfare:</strong> W = −TC · (t<sub>new</sub> − t<sub>old</sub>) / 2 (triangular area under demand curve).<br>
+          <strong>Tariff Revenue:</strong> ΔRev = M<sub>new</sub> · t<sub>new</sub> − M<sub>old</sub> · t<sub>old</sub>.
+        </p>
+        <p>
+          Three pre-set scenarios: 20% uniform MFN cut, 50% cut, full elimination. A custom scenario
+          simulator allows arbitrary tariff cuts by HS chapter, section, or globally. Results are
+          aggregated by HS section (21 sections), HS chapter (97), and partner country (211).
+          Key 2025 baseline: total imports $42.1 bn, TC $450M, TD $207M, welfare gain $226M, revenue change −$284M.
+        </p>
+
         <h3>Data Sources</h3>
         <table class="method-table">
           <thead><tr><th>Source</th><th>Coverage</th></tr></thead>
@@ -991,6 +1021,78 @@ button { font-family: inherit; cursor: pointer; }
       </div>
     </div>
 
+    <!-- ── INT'L ORGANIZATIONS ── -->
+    <div id="page-intl" class="page">
+      <div class="about-content">
+        <h2>International Organizations — Uzbekistan Economic Assessments</h2>
+        <p>Key projections, reports, and analytical frameworks published by international organizations on Uzbekistan's economy.</p>
+
+        <h3>International Monetary Fund (IMF)</h3>
+        <p>The IMF conducts annual Article IV consultations with Uzbekistan, assessing macroeconomic stability, fiscal sustainability, monetary policy, and structural reforms. Recent assessments highlight strong growth momentum (~7% GDP), improving monetary policy transmission, and the need for continued fiscal consolidation.</p>
+        <table class="method-table">
+          <thead><tr><th>Publication</th><th>Key Finding</th><th>Year</th></tr></thead>
+          <tbody>
+            <tr><td>Article IV Consultation</td><td>GDP growth 6.5–7%, inflation declining toward 5% target; fiscal deficit management critical</td><td>2024</td></tr>
+            <tr><td>World Economic Outlook</td><td>Uzbekistan among fastest-growing EMs; remittance dependency and commodity exposure flagged</td><td>2024</td></tr>
+            <tr><td>Financial Sector Assessment</td><td>Banking sector capitalisation adequate; NPL ratios elevated; credit growth requires monitoring</td><td>2023</td></tr>
+          </tbody>
+        </table>
+
+        <h3>World Bank (WB)</h3>
+        <p>The World Bank's Uzbekistan Economic Update (semi-annual) and Country Economic Memorandum provide in-depth analysis of growth drivers, poverty dynamics, human capital, and the investment climate.</p>
+        <table class="method-table">
+          <thead><tr><th>Publication</th><th>Key Finding</th><th>Year</th></tr></thead>
+          <tbody>
+            <tr><td>Uzbekistan Economic Update</td><td>Growth at 6.8%; private investment recovering; labor market tightening; inflation at 8.8%</td><td>2024</td></tr>
+            <tr><td>Country Economic Memorandum</td><td>Diversification away from gas/cotton essential; FDI quality upgrade required</td><td>2023</td></tr>
+            <tr><td>Poverty &amp; Equity Brief</td><td>Poverty rate fell to ~11%; inequality stable; rural-urban gap persists</td><td>2024</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Asian Development Bank (ADB)</h3>
+        <p>ADB's Asian Development Outlook covers Uzbekistan's growth prospects, with focus on infrastructure investment, regional connectivity, and energy transition.</p>
+        <table class="method-table">
+          <thead><tr><th>Publication</th><th>Key Finding</th><th>Year</th></tr></thead>
+          <tbody>
+            <tr><td>Asian Development Outlook</td><td>GDP forecast 6.0–6.5%; infrastructure bottlenecks remain key constraint</td><td>2024</td></tr>
+            <tr><td>Energy Sector Assessment</td><td>Energy deficit growing; renewable investment ($8bn target) on track; tariff reform needed</td><td>2023</td></tr>
+          </tbody>
+        </table>
+
+        <h3>European Bank for Reconstruction and Development (EBRD)</h3>
+        <table class="method-table">
+          <thead><tr><th>Publication</th><th>Key Finding</th><th>Year</th></tr></thead>
+          <tbody>
+            <tr><td>Regional Economic Prospects</td><td>Growth resilient at ~7%; reform momentum supports convergence; transition quality improving</td><td>2024</td></tr>
+            <tr><td>Transition Report</td><td>Private sector share rising but SOE dominance in key sectors remains reform priority</td><td>2023</td></tr>
+          </tbody>
+        </table>
+
+        <h3>UN Agencies (UNDP, UNECE, FAO, ILO)</h3>
+        <table class="method-table">
+          <thead><tr><th>Organization</th><th>Focus Area</th><th>Latest Report</th></tr></thead>
+          <tbody>
+            <tr><td>UNDP</td><td>Human Development Index (HDI), SDG progress, inclusive growth</td><td>Human Development Report 2024</td></tr>
+            <tr><td>UNECE</td><td>Trade facilitation, statistics, environmental performance</td><td>Environmental Performance Review 2023</td></tr>
+            <tr><td>FAO</td><td>Food security, agricultural productivity, water management</td><td>Country Programming Framework 2024–2027</td></tr>
+            <tr><td>ILO</td><td>Labour market, employment, wages, informality</td><td>Decent Work Country Programme 2021–2025</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Key Macro Projections Comparison (2024–2025)</h3>
+        <table class="method-table">
+          <thead><tr><th>Indicator</th><th>IMF</th><th>World Bank</th><th>ADB</th></tr></thead>
+          <tbody>
+            <tr><td>Real GDP Growth 2024</td><td>7.0%</td><td>6.8%</td><td>6.5%</td></tr>
+            <tr><td>Real GDP Growth 2025</td><td>6.5%</td><td>6.5%</td><td>6.0%</td></tr>
+            <tr><td>Inflation (avg) 2024</td><td>9.0%</td><td>8.8%</td><td>9.5%</td></tr>
+            <tr><td>Current Account (% GDP)</td><td>−4.5%</td><td>−4.8%</td><td>−4.0%</td></tr>
+            <tr><td>Fiscal Balance (% GDP)</td><td>−3.0%</td><td>−3.2%</td><td>−3.0%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </main>
 </div>
 
@@ -999,6 +1101,142 @@ button { font-family: inherit; cursor: pointer; }
 ════════════════════════════════════════ -->
 <script>
 'use strict';
+
+// ── i18n ────────────────────────────────────────────────
+const LANGS = {
+  en: {
+    nav_home:'Home', nav_compare:'Compare Scenarios', nav_qpm:'QPM Simulator',
+    nav_dfm:'Nowcasting DFM', nav_pe:'Partial Equilibrium', nav_io:'Input-Output',
+    nav_cge:'CGE Model', nav_fpp:'Fin. Programming', nav_about:'Methodology', nav_intl:"Int'l Organizations",
+    snap_title:'Macro Snapshot', snap_sub:'Key indicators · Latest available data',
+    snap_gdp_nom:'Nominal GDP', snap_gdp:'GDP Growth YoY', snap_ind:'Industry Growth YoY',
+    snap_svc:'Services Growth YoY', snap_agr:'Agriculture Growth YoY', snap_rate:'Policy Rate',
+  },
+  ru: {
+    nav_home:'Главная', nav_compare:'Сравнить сценарии', nav_qpm:'QPM симулятор',
+    nav_dfm:'Прогноз ВВП (DFM)', nav_pe:'Частичное равновесие', nav_io:'Межотраслевой баланс',
+    nav_cge:'Модель CGE', nav_fpp:'Фин. программирование', nav_about:'Методология', nav_intl:'Межд. организации',
+    snap_title:'Макро-индикаторы', snap_sub:'Ключевые показатели · Последние данные',
+    snap_gdp_nom:'Номинальный ВВП', snap_gdp:'Рост ВВП г/г', snap_ind:'Пром. производство г/г',
+    snap_svc:'Услуги г/г', snap_agr:'Сел. хоз-во г/г', snap_rate:'Ключевая ставка',
+  },
+  uz: {
+    nav_home:"Bosh sahifa", nav_compare:"Stsenariylarni solishtirish", nav_qpm:"QPM simulyatori",
+    nav_dfm:"YaIM bashorati (DFM)", nav_pe:"Qisman muvozanat", nav_io:"Tarmoqlararo balans",
+    nav_cge:"CGE modeli", nav_fpp:"Moliyaviy dasturlash", nav_about:"Metodologiya", nav_intl:"Xalqaro tashkilotlar",
+    snap_title:"Makro ko'rsatkichlar", snap_sub:"Asosiy ko'rsatkichlar · So'nggi ma'lumotlar",
+    snap_gdp_nom:"Nominal YaIM", snap_gdp:"YaIM o'sishi (y/y)", snap_ind:"Sanoat o'sishi (y/y)",
+    snap_svc:"Xizmatlar o'sishi (y/y)", snap_agr:"Qishloq xo'jaligi (y/y)", snap_rate:"Asosiy stavka",
+  }
+};
+let currentLang = 'en';
+
+function setLang(lang) {
+  currentLang = lang;
+  const t = LANGS[lang];
+  ['en','ru','uz'].forEach(l => {
+    const btn = document.getElementById('lang-'+l);
+    if (!btn) return;
+    if (l === lang) {
+      btn.style.background = 'rgba(255,255,255,.22)';
+      btn.style.borderColor = 'rgba(255,255,255,.4)';
+      btn.style.color = '#fff';
+    } else {
+      btn.style.background = 'none';
+      btn.style.borderColor = 'rgba(255,255,255,.15)';
+      btn.style.color = 'rgba(255,255,255,.6)';
+    }
+  });
+  // Nav items
+  const navMap = {
+    home:'nav_home', compare:'nav_compare', qpm:'nav_qpm', dfm:'nav_dfm',
+    pe:'nav_pe', io:'nav_io', cge:'nav_cge', fpp:'nav_fpp', about:'nav_about', intl:'nav_intl'
+  };
+  document.querySelectorAll('.nav-item').forEach(btn => {
+    const oc = btn.getAttribute('onclick') || '';
+    const m = oc.match(/'(\w+)'/);
+    if (!m || !navMap[m[1]]) return;
+    const icon = btn.querySelector('.nav-icon');
+    const badge = btn.querySelector('.nav-badge');
+    btn.textContent = '';
+    if (icon) btn.appendChild(icon);
+    btn.appendChild(document.createTextNode(' ' + t[navMap[m[1]]]));
+    if (badge) btn.appendChild(badge);
+  });
+  // Section headers
+  const snapH = document.querySelector('#macro-grid')?.closest('.home-content')?.querySelectorAll('.section-header');
+  if (snapH && snapH[0]) {
+    snapH[0].querySelector('h2').textContent = t.snap_title;
+    snapH[0].querySelector('span').textContent = t.snap_sub;
+  }
+  // Macro card labels by val id
+  const labelMap = {
+    'snap-gdp-nom':'snap_gdp_nom','snap-gdp':'snap_gdp','snap-ind':'snap_ind',
+    'snap-svc':'snap_svc','snap-agr':'snap_agr'
+  };
+  document.querySelectorAll('.macro-card').forEach(card => {
+    const val = card.querySelector('.macro-val');
+    if (val && labelMap[val.id]) card.querySelector('.macro-label').textContent = t[labelMap[val.id]];
+  });
+  document.querySelectorAll('.macro-label').forEach(lbl => {
+    if (/Policy Rate|Ключевая ставка|Asosiy stavka/.test(lbl.textContent)) lbl.textContent = t.snap_rate;
+  });
+}
+
+// ── Stat Agency Excel fetch ──────────────────────────────
+async function fetchLatestFromExcel(url) {
+  try {
+    const resp = await fetch(url);
+    if (!resp.ok) return {value: null, period: null};
+    const buf = await resp.arrayBuffer();
+    const wb = XLSX.read(buf, {type:'array'});
+    const ws = wb.Sheets[wb.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:null});
+    let lastVal = null, lastPer = null;
+    for (let i = 1; i < rows.length; i++) {
+      const row = rows[i];
+      if (!row) continue;
+      for (let c = 0; c < row.length; c++) {
+        if (typeof row[c] === 'number' && isFinite(row[c])) {
+          lastVal = row[c];
+          for (let p = 0; p < c; p++) {
+            if (row[p] !== null && row[p] !== '') { lastPer = String(row[p]); break; }
+          }
+        }
+      }
+    }
+    return {value: lastVal, period: lastPer};
+  } catch(e) { return {value: null, period: null}; }
+}
+
+async function loadStatData() {
+  const URLS = {
+    gdpNom: 'https://api.siat.stat.uz/media/uploads/sdmx/sdmx_data_1582.xlsx',
+    gdpGrw: 'https://api.siat.stat.uz/media/uploads/sdmx/sdmx_data_1857.xlsx',
+    ind:    'https://api.siat.stat.uz/media/uploads/sdmx/sdmx_data_1871.xlsx',
+    svc:    'https://api.siat.stat.uz/media/uploads/sdmx/sdmx_data_1777.xlsx',
+    agr:    'https://api.siat.stat.uz/media/uploads/sdmx/sdmx_data_1869.xlsx',
+  };
+  const [gdpNom, gdpGrw, ind, svc, agr] = await Promise.all(Object.values(URLS).map(fetchLatestFromExcel));
+
+  function setCard(valId, subId, badgeId, data, fmt, color) {
+    const el = document.getElementById(valId);
+    if (!el || data.value === null) return;
+    el.textContent = fmt(data.value);
+    el.style.color = color;
+    if (subId && data.period) document.getElementById(subId).textContent = data.period;
+    if (badgeId) { const b = document.getElementById(badgeId); if(b){b.textContent='Stat Agency';b.className='macro-badge flat';} }
+  }
+
+  const pct  = v => (v >= 0 ? '+' : '') + v.toFixed(1) + '%';
+  const trln = v => (v / 1e12).toFixed(1) + ' trln UZS';
+
+  setCard('snap-gdp-nom','snap-gdp-nom-per','snap-gdp-nom-badge', gdpNom, trln, 'var(--blue)');
+  setCard('snap-gdp',    'snap-gdp-per',    'snap-gdp-badge',     gdpGrw, pct,  'var(--green)');
+  setCard('snap-ind',    'snap-ind-per',    'snap-ind-badge',     ind,    pct,  'var(--teal)');
+  setCard('snap-svc',    'snap-svc-per',    'snap-svc-badge',     svc,    pct,  'var(--purple)');
+  setCard('snap-agr',    'snap-agr-per',    'snap-agr-badge',     agr,    pct,  'var(--amber)');
+}
 
 const STATOFFICE_YOY = {
   '2016Q1':6.2,'2016Q2':5.9,'2016Q3':6.4,'2016Q4':6.7,
@@ -1121,33 +1359,12 @@ function initDashboard() {
     });
   }
 
-  // KPI snap from DFM
-  if (D) {
-    const dfmDates = D.gdp.dates.map(fmtQ);
-    const dfmYoY   = D.gdp.grw_yoy.map(v => v === null ? null : +v);
-    const allWithVal = dfmDates.map((q,i) => ({q, v: dfmYoY[i]})).filter(x => x.v !== null);
-    const latest = allWithVal[allWithVal.length - 1];
-    if (latest) {
-      const isForecast = latest.q > lastSO;
-      const val = latest.v.toFixed(1) + '%';
-      document.getElementById('snap-gdp').textContent = (latest.v >= 0 ? '+' : '') + val;
-      document.getElementById('snap-gdp-per').textContent = latest.q + (isForecast ? ' · Nowcast' : ' · Official');
-      document.getElementById('hero-nowcast').textContent = (latest.v >= 0 ? '+' : '') + val;
-    }
-
-    const fp = D.factor.path.map(Number);
-    const lf = fp[fp.length - 1];
-    const factorEl = document.getElementById('snap-factor');
-    factorEl.textContent = lf?.toFixed(3) ?? '—';
-    factorEl.style.color = lf > 0.1 ? 'var(--green)' : lf < -0.1 ? 'var(--red)' : 'var(--purple)';
-
-    const fBadge = document.getElementById('snap-factor-badge');
-    fBadge.textContent = lf > 0.1 ? '↑ Above trend' : lf < -0.1 ? '↓ Below trend' : '→ Near trend';
-    fBadge.className = 'macro-badge ' + (lf > 0.1 ? 'up' : lf < -0.1 ? 'down' : 'flat');
-  }
 }
 
-window.addEventListener('DOMContentLoaded', initDashboard);
+window.addEventListener('DOMContentLoaded', () => {
+  initDashboard();
+  loadStatData();
+});
 </script>
 </body>
 </html>
