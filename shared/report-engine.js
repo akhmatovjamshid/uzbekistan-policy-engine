@@ -368,7 +368,7 @@
       '.re-btn{padding:7px 16px;border:1px solid #cbd5e1;background:white;',
       'border-radius:8px;font-size:12px;cursor:pointer;color:#334155;',
       'display:inline-flex;align-items:center;gap:6px;transition:all 0.15s;font-family:inherit;}',
-      '.re-btn:hover{background:#1a3a6e;color:white;border-color:#1a3a6e;}'
+      '.re-btn:hover{background:var(--navy2,#1a3a6e);color:white;border-color:var(--navy2,#1a3a6e);}'
     ].join('');
 
     // Inject styles once

@@ -4,28 +4,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FPP Model — CERR Policy Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/design-system.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="../shared/report-engine.js"></script>
+<script src="../shared/toast.js"></script>
+<script src="../shared/scenario-engine.js"></script>
+<script src="../shared/ai-advisor.js"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:#f1f5f9;color:#1e293b;min-height:100vh}
+/* Reset and typography inherited from design-system.css */
 
-.hdr{background:linear-gradient(135deg,#1e1b4b 0%,#312e81 60%,#4c1d95 100%);color:#fff;padding:18px 28px;display:flex;align-items:center;gap:18px;box-shadow:0 4px 20px rgba(0,0,0,.3)}
-.hdr-icon{width:52px;height:52px;background:rgba(255,255,255,.15);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
-.hdr-title{font-size:1.3rem;font-weight:700;letter-spacing:-.3px}
-.hdr-sub{font-size:.8rem;color:rgba(255,255,255,.75);margin-top:2px}
+.hdr{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:0 28px;height:var(--header-h);display:flex;align-items:center;gap:18px;box-shadow:0 2px 10px rgba(0,0,0,.25)}
+.hdr-icon{width:36px;height:36px;background:rgba(255,255,255,.12);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.hdr-title{font-size:16px;font-weight:700;letter-spacing:-.3px}
+.hdr-sub{font-size:10px;color:rgba(255,255,255,.65);margin-top:2px;text-transform:uppercase;letter-spacing:1px}
 .hdr-badges{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-.badge{padding:4px 12px;border-radius:20px;font-size:.73rem;font-weight:700;letter-spacing:.4px;white-space:nowrap}
-.badge.real{background:rgba(59,130,246,.35);color:#bfdbfe}
-.badge.ext{background:rgba(34,197,94,.3);color:#bbf7d0}
-.badge.fiscal{background:rgba(245,158,11,.3);color:#fde68a}
-.badge.mon{background:rgba(168,85,247,.3);color:#e9d5ff}
+.badge{padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.4px;white-space:nowrap}
+.badge.real{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.15);}
+.badge.ext{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.15);}
+.badge.fiscal{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.15);}
+.badge.mon{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.15);}
 
-.tabs{display:flex;gap:0;background:#fff;border-bottom:2px solid #e2e8f0;padding:0 24px;overflow-x:auto}
-.tab{padding:14px 22px;font-size:.85rem;font-weight:600;color:#64748b;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;white-space:nowrap}
-.tab:hover{color:#4338ca}
-.tab.active{color:#4338ca;border-bottom-color:#4338ca}
+.tabs{display:flex;gap:0;background:var(--surface);border-bottom:2px solid var(--border);padding:0 24px;overflow-x:auto}
+.tab{padding:14px 22px;font-size:13px;font-weight:600;color:var(--text2);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;white-space:nowrap}
+.tab:hover{color:var(--navy2)}
+.tab.active{color:var(--navy2);border-bottom-color:var(--navy2)}
 
 .main{max-width:1400px;margin:0 auto;padding:24px 20px}
 .page-section{display:none}
@@ -36,8 +41,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f1f5f9;color:#1e293
 @media(max-width:1100px){.sim-layout{grid-template-columns:1fr}}
 
 /* assumptions */
-.assume-panel{background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.07);overflow:hidden;position:sticky;top:16px}
-.assume-hdr{background:linear-gradient(135deg,#1e1b4b,#4c1d95);color:#fff;padding:16px 20px}
+.assume-panel{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;position:sticky;top:16px}
+.assume-hdr{background:var(--navy);color:#fff;padding:16px 20px}
 .assume-hdr h3{font-size:.95rem;font-weight:700}
 .assume-hdr p{font-size:.76rem;color:rgba(255,255,255,.7);margin-top:4px}
 .sector-block{padding:12px 16px;border-bottom:1px solid #f1f5f9}
@@ -55,8 +60,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f1f5f9;color:#1e293
 .inp-field label{font-size:.65rem;color:#64748b;font-weight:500;line-height:1.2}
 .inp-field input{width:100%;padding:4px 5px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:.79rem;font-weight:600;text-align:center;background:#f8fafc;transition:border-color .2s}
 .inp-field input:focus{outline:none;border-color:#6366f1;background:#fff}
-.run-btn{display:block;width:calc(100% - 32px);margin:12px 16px;padding:11px;background:linear-gradient(135deg,#4338ca,#6d28d9);color:#fff;border:none;border-radius:10px;font-size:.9rem;font-weight:700;cursor:pointer;transition:opacity .2s}
-.run-btn:hover{opacity:.9}
+.run-btn{display:block;width:calc(100% - 32px);margin:12px 16px;padding:11px;background:var(--navy2);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;transition:background .15s}
+.run-btn:hover{background:var(--navy)}
 .baseline-note{font-size:.68rem;color:#94a3b8;text-align:center;padding:0 16px 10px;line-height:1.4}
 
 /* results */
@@ -64,7 +69,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f1f5f9;color:#1e293
 
 .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 @media(max-width:900px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
-.kpi-card{background:#fff;border-radius:12px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.06);text-align:center;border-top:4px solid #e2e8f0}
+.kpi-card{background:var(--surface);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow-sm);text-align:center;border-top:4px solid var(--border)}
 .kpi-card.real{border-top-color:#3b82f6}
 .kpi-card.ext{border-top-color:#22c55e}
 .kpi-card.fiscal{border-top-color:#f59e0b}
@@ -73,7 +78,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f1f5f9;color:#1e293
 .kpi-val{font-size:1.5rem;font-weight:800;margin:3px 0;color:#1e293b}
 .kpi-meta{font-size:.68rem;color:#64748b}
 
-.consist-card{background:#fff;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.07);padding:18px}
+.consist-card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
 .consist-card h3{font-size:.88rem;font-weight:700;color:#1e293b;margin-bottom:14px}
 .consist-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
 @media(max-width:800px){.consist-grid{grid-template-columns:repeat(3,1fr)}}
@@ -310,6 +315,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f1f5f9;color:#1e293
       <button class="exp-btn" onclick="fppExportCSV()">📥 CSV</button>
       <button class="exp-btn" onclick="fppExportPNG()">🖼 PNG</button>
       <button class="exp-btn" onclick="fppExportPDF()">📄 PDF Report</button>
+      <button class="exp-btn" onclick="fppSaveScenario()" style="background:#16a34a;color:#fff;border-color:#16a34a;">💾 Save</button>
+      <button class="exp-btn" onclick="fppAIAnalysis()" style="background:var(--navy2);color:#fff;border-color:#2563eb;">🤖 AI</button>
     </div>
 
   </div>
@@ -965,6 +972,58 @@ function switchTab(name) {
     t.classList.toggle('active',['sim','hist','about'][i]===name));
   document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));
   document.getElementById(`tab-${name}`).classList.add('active');
+}
+
+/* ── Save scenario ── */
+function fppSaveScenario() {
+  if(!lastResults){ Toast.show('Run projection first','warning'); return; }
+  if(!window.ScenarioEngine){ Toast.show('Scenario engine not loaded','error'); return; }
+  const r=lastResults, rL=r[r.length-1];
+  const avg=a=>r.reduce((s,x)=>s+x[a],0)/r.length;
+  const name=prompt('Name this scenario:','FPP Projection 2025-2027');
+  if(!name)return;
+  ScenarioEngine.save({
+    name, model:'fpp',
+    params:{
+      baseYear:2024, horizon:'2025-2027',
+      shockReal:+document.getElementById('shock_real')?.value||0,
+      shockExt:+document.getElementById('shock_ext')?.value||0,
+      shockFiscal:+document.getElementById('shock_fiscal')?.value||0,
+      shockMon:+document.getElementById('shock_mon')?.value||0
+    },
+    results:{
+      kpis:[
+        {label:'Avg GDP Growth',value:f1(avg('g'))+'%'},
+        {label:'Inflation 2027',value:f1(rL.pi)+'%'},
+        {label:'Fiscal Bal 2027',value:sgn(rL.fb_GDP)},
+        {label:'Import Cover',value:f1(rL.import_cover)+' mo'}
+      ],chartData:null,tables:[]
+    },
+    tags:['fpp','projection'],notes:''
+  });
+  Toast.show('Scenario saved: '+name,'success');
+}
+
+async function fppAIAnalysis() {
+  if(!lastResults){ Toast.show('Run projection first','warning'); return; }
+  if(!window.PolicyAdvisor){ Toast.show('AI advisor not loaded','error'); return; }
+  const r=lastResults, rL=r[r.length-1];
+  const avg=a=>r.reduce((s,x)=>s+x[a],0)/r.length;
+  let c=document.getElementById('fpp-ai-output');
+  if(!c){c=document.createElement('div');c.id='fpp-ai-output';c.style.margin='20px 0';document.querySelector('.main-area')?.appendChild(c);}
+  c.innerHTML='<div style="padding:20px;color:#475569;">Analyzing...</div>';
+  const analysis=await PolicyAdvisor.analyzeSim('fpp',
+    {baseYear:2024,horizon:'2025-2027'},
+    {kpis:[
+      {label:'Avg GDP Growth',value:f1(avg('g'))+'%'},
+      {label:'Inflation 2027',value:f1(rL.pi)+'%'},
+      {label:'Fiscal Balance 2027',value:sgn(rL.fb_GDP)},
+      {label:'Current Account 2027',value:sgn(rL.CA_GDP)},
+      {label:'Reserves 2027',value:f0(rL.reserves)+' mln USD'},
+      {label:'Import Cover 2027',value:f1(rL.import_cover)+' months'}
+    ]}
+  );
+  PolicyAdvisor.renderAdvisorPanel('fpp-ai-output',analysis);
 }
 
 window.addEventListener('load', () => runFPP());

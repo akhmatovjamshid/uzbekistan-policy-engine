@@ -4,28 +4,30 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Partial Equilibrium Model — Uzbekistan Trade Analysis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/design-system.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="pe_data.js"></script>
+<script src="../shared/toast.js"></script>
+<script src="../shared/scenario-engine.js"></script>
+<script src="../shared/ai-advisor.js"></script>
 <style>
+/* Tokens inherited from design-system.css — aliases for backward compat */
 :root{
-  --bg:#f4f6f9;--card:#fff;--primary:#1a3a6e;--primary-l:#2563eb;
-  --amber:#d97706;--amber-l:#f59e0b;--green:#16a34a;--green-l:#22c55e;
-  --red:#dc2626;--teal:#0d9488;--teal-l:#14b8a6;--purple:#7c3aed;--orange:#ea580c;
-  --text:#0f172a;--text2:#475569;--text3:#94a3b8;
-  --border:#e2e8f0;--shadow:0 2px 12px rgba(0,0,0,.07);--radius:12px;
+  --card:var(--surface);--primary:var(--navy2);--primary-l:var(--blue);
+  --orange:#ea580c;
 }
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
-header{background:linear-gradient(135deg,#0d2550,#1a3a6e,#1e4d8c);color:#fff;padding:0 24px;
-  display:flex;align-items:center;gap:14px;height:60px;box-shadow:0 2px 10px rgba(0,0,0,.25);
+header{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:0 24px;
+  display:flex;align-items:center;gap:14px;height:var(--header-h);box-shadow:0 2px 10px rgba(0,0,0,.25);
   position:sticky;top:0;z-index:100;}
-.logo{width:36px;height:36px;background:linear-gradient(135deg,#0d9488,#14b8a6);border-radius:8px;
+.logo{width:36px;height:36px;background:rgba(255,255,255,.12);border-radius:8px;
   display:flex;align-items:center;justify-content:center;font-size:18px;}
 .header-title h1{font-size:16px;font-weight:700;}
 .header-title p{font-size:10px;opacity:.6;text-transform:uppercase;letter-spacing:1px;}
-.hbadge{margin-left:auto;background:rgba(13,148,136,.2);color:#5eead4;
-  border:1px solid rgba(13,148,136,.3);font-size:10px;font-weight:700;
+.hbadge{margin-left:auto;background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);
+  border:1px solid rgba(255,255,255,.2);font-size:10px;font-weight:700;
   padding:3px 10px;border-radius:20px;letter-spacing:.5px;}
 .hback{margin-left:8px;background:rgba(255,255,255,.1);color:#fff;
   border:1px solid rgba(255,255,255,.2);font-size:11px;font-weight:600;
@@ -296,6 +298,8 @@ select.ctrl-select{width:100%;padding:7px 10px;border:1px solid var(--border);bo
       <div style="flex:1;"></div>
       <button class="btn btn-ghost no-print" onclick="exportCSV('sim')">⬇ Export CSV</button>
       <button class="btn btn-primary no-print" onclick="printSection('sim')">🖨 Print</button>
+      <button class="btn btn-ghost no-print" onclick="peSaveScenario()" style="background:#16a34a;color:#fff;border-color:#16a34a;">💾 Save</button>
+      <button class="btn btn-ghost no-print" onclick="peAIAnalysis()" style="background:var(--navy2);color:#fff;border-color:#2563eb;">🤖 AI</button>
     </div>
     <table id="sim-table">
       <thead><tr>
@@ -1027,6 +1031,109 @@ function init(){
   try{ renderPartners(); }catch(e){ console.error('Partners:',e); }
 }
 document.addEventListener('DOMContentLoaded', init);
+
+/* ── Save scenario ── */
+function peSaveScenario() {
+  if(!window.ScenarioEngine){ Toast.show('Scenario engine not loaded','error'); return; }
+  const cut = parseInt(document.getElementById('sim-cut').value);
+  const scale = cut / 20;
+  const regime = document.getElementById('sim-regime').value;
+  const secId  = document.getElementById('sim-section').value;
+  const chId   = document.getElementById('sim-chapter').value;
+  const ctyId  = document.getElementById('sim-country').value;
+
+  // Recompute totals for KPIs
+  let rows = [];
+  D.sections.forEach(s=>{
+    if(secId!=='all' && s.id!==secId) return;
+    let imp=0, tc=0, td=0, welfare=0, taxChg=0;
+    s.chapters.forEach(ch=>{
+      if(chId!=='all' && parseInt(chId)!==ch) return;
+      const cd = D.chapters[ch]; if(!cd) return;
+      const rf = regime==='all'?1.0:0.6;
+      imp+=cd.imp*rf; tc+=cd.tc*scale*rf; td+=cd.td*scale*rf;
+      welfare+=cd.welfare*scale*rf; taxChg+=cd.taxChg*scale*rf;
+    });
+    if(imp>0) rows.push({imp,tc,td,welfare,taxChg});
+  });
+  if(ctyId!=='all'){
+    const cty=D.countries.find(c=>c.name===ctyId);
+    if(cty){ const sh=D.meta.totalImport>0?cty.imp/D.meta.totalImport:0;
+      rows=rows.map(r=>({...r,tc:r.tc*sh,td:r.td*sh,welfare:r.welfare*sh,taxChg:r.taxChg*sh}));
+    }
+  }
+  const totTC=rows.reduce((a,r)=>a+r.tc,0);
+  const totTD=rows.reduce((a,r)=>a+r.td,0);
+  const totWel=rows.reduce((a,r)=>a+r.welfare,0);
+  const totTax=rows.reduce((a,r)=>a+r.taxChg,0);
+
+  const name=prompt('Name this scenario:','PE Tariff Cut '+cut+'%');
+  if(!name) return;
+  ScenarioEngine.save({
+    name, model:'pe',
+    params:{
+      tariffCut:cut+'%', regime, section:secId, chapter:chId, country:ctyId
+    },
+    results:{
+      kpis:[
+        {label:'Trade Creation',value:fmtM(totTC)+' USD'},
+        {label:'Trade Diversion',value:fmtM(totTD)+' USD'},
+        {label:'Welfare Effect',value:fmtM(totWel)+' USD'},
+        {label:'Tariff Revenue Change',value:fmtM(totTax)+' USD'}
+      ],chartData:null,tables:[]
+    },
+    tags:['pe','wto','trade'],notes:''
+  });
+  Toast.show('Scenario saved: '+name,'success');
+}
+
+async function peAIAnalysis() {
+  if(!window.PolicyAdvisor){ Toast.show('AI advisor not loaded','error'); return; }
+  const cut = parseInt(document.getElementById('sim-cut').value);
+  const scale = cut / 20;
+  const regime = document.getElementById('sim-regime').value;
+  const secId  = document.getElementById('sim-section').value;
+  const chId   = document.getElementById('sim-chapter').value;
+  const ctyId  = document.getElementById('sim-country').value;
+
+  let rows = [];
+  D.sections.forEach(s=>{
+    if(secId!=='all' && s.id!==secId) return;
+    let imp=0, tc=0, td=0, welfare=0, taxChg=0;
+    s.chapters.forEach(ch=>{
+      if(chId!=='all' && parseInt(chId)!==ch) return;
+      const cd = D.chapters[ch]; if(!cd) return;
+      const rf = regime==='all'?1.0:0.6;
+      imp+=cd.imp*rf; tc+=cd.tc*scale*rf; td+=cd.td*scale*rf;
+      welfare+=cd.welfare*scale*rf; taxChg+=cd.taxChg*scale*rf;
+    });
+    if(imp>0) rows.push({imp,tc,td,welfare,taxChg});
+  });
+  if(ctyId!=='all'){
+    const cty=D.countries.find(c=>c.name===ctyId);
+    if(cty){ const sh=D.meta.totalImport>0?cty.imp/D.meta.totalImport:0;
+      rows=rows.map(r=>({...r,tc:r.tc*sh,td:r.td*sh,welfare:r.welfare*sh,taxChg:r.taxChg*sh}));
+    }
+  }
+  const totTC=rows.reduce((a,r)=>a+r.tc,0);
+  const totTD=rows.reduce((a,r)=>a+r.td,0);
+  const totWel=rows.reduce((a,r)=>a+r.welfare,0);
+  const totTax=rows.reduce((a,r)=>a+r.taxChg,0);
+
+  let c=document.getElementById('pe-ai-output');
+  if(!c){c=document.createElement('div');c.id='pe-ai-output';c.style.margin='20px 0';document.querySelector('.main')?.appendChild(c);}
+  c.innerHTML='<div style="padding:20px;color:#475569;">Analyzing...</div>';
+  const analysis=await PolicyAdvisor.analyzeSim('pe',
+    {tariffCut:cut+'%',regime,section:secId,chapter:chId,country:ctyId},
+    {kpis:[
+      {label:'Trade Creation',value:fmtM(totTC)+' USD'},
+      {label:'Trade Diversion',value:fmtM(totTD)+' USD'},
+      {label:'Welfare Effect',value:fmtM(totWel)+' USD'},
+      {label:'Tariff Revenue Change',value:fmtM(totTax)+' USD'}
+    ]}
+  );
+  PolicyAdvisor.renderAdvisorPanel('pe-ai-output',analysis);
+}
 </script>
 </body>
 </html>

@@ -4,28 +4,29 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Input-Output Model — Uzbekistan 2022</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/design-system.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="io_data.js"></script>
+<script src="../shared/toast.js"></script>
+<script src="../shared/scenario-engine.js"></script>
+<script src="../shared/ai-advisor.js"></script>
 <style>
+/* Tokens inherited from design-system.css — aliases for backward compat */
 :root{
-  --bg:#f4f6f9;--card:#fff;--primary:#1a3a6e;--primary-l:#2563eb;
-  --amber:#d97706;--amber-l:#f59e0b;--green:#16a34a;--green-l:#22c55e;
-  --red:#dc2626;--teal:#0d9488;--purple:#7c3aed;
-  --text:#0f172a;--text2:#475569;--text3:#94a3b8;
-  --border:#e2e8f0;--shadow:0 2px 12px rgba(0,0,0,.07);--radius:12px;
+  --card:var(--surface);--primary:var(--navy2);--primary-l:var(--blue);
 }
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
-header{background:linear-gradient(135deg,#0d2550,#1a3a6e,#1e4d8c);color:#fff;padding:0 24px;
-  display:flex;align-items:center;gap:14px;height:60px;box-shadow:0 2px 10px rgba(0,0,0,.25);
+header{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:0 24px;
+  display:flex;align-items:center;gap:14px;height:var(--header-h);box-shadow:0 2px 10px rgba(0,0,0,.25);
   position:sticky;top:0;z-index:100;}
-.logo{width:36px;height:36px;background:linear-gradient(135deg,#d97706,#f59e0b);border-radius:8px;
+.logo{width:36px;height:36px;background:rgba(255,255,255,.12);border-radius:8px;
   display:flex;align-items:center;justify-content:center;font-size:18px;}
 .header-title h1{font-size:16px;font-weight:700;}
 .header-title p{font-size:10px;opacity:.6;text-transform:uppercase;letter-spacing:1px;}
-.hbadge{margin-left:auto;background:rgba(217,119,6,.2);color:#fbbf24;border:1px solid rgba(217,119,6,.3);
+.hbadge{margin-left:auto;background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.2);
   font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.5px;}
 
 nav{background:var(--card);border-bottom:1px solid var(--border);display:flex;padding:0 20px;overflow-x:auto;}
@@ -82,8 +83,8 @@ tr:hover td{background:#fffbf3;}
 /* Buttons */
 .btn{display:inline-flex;align-items:center;gap:6px;padding:9px 20px;border-radius:8px;
   font-size:13px;font-weight:700;cursor:pointer;border:none;font-family:inherit;transition:all .18s;}
-.btn-amber{background:var(--amber);color:#fff;}
-.btn-amber:hover{background:#b45309;transform:translateY(-1px);}
+.btn-amber{background:var(--navy2);color:#fff;}
+.btn-amber:hover{background:var(--navy);}
 .btn-blue{background:var(--primary);color:#fff;}
 .btn-blue:hover{background:#0d2550;}
 .btn-outline{background:#fff;color:var(--text2);border:1px solid var(--border);}
@@ -93,7 +94,7 @@ tr:hover td{background:#fffbf3;}
 .btn-red:hover{background:var(--red);color:#fff;}
 
 /* Simulator panels */
-.sim-panel{background:linear-gradient(135deg,#fffbeb,#fef9c3);border:1px solid #fde68a;
+.sim-panel{background:var(--surface);border:1px solid var(--border);
   border-radius:var(--radius);padding:20px 22px;margin-bottom:18px;}
 .sim-title{font-size:14px;font-weight:700;color:#92400e;margin-bottom:4px;}
 .sim-sub{font-size:12px;color:#a16207;margin-bottom:14px;}
@@ -105,7 +106,7 @@ tr:hover td{background:#fffbf3;}
 .sim-field input:focus,.sim-field select:focus{border-color:var(--amber);}
 
 /* Price panel (blue theme) */
-.price-panel{background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #93c5fd;
+.price-panel{background:var(--surface);border:1px solid var(--border);
   border-radius:var(--radius);padding:20px 22px;margin-bottom:18px;}
 .price-title{font-size:14px;font-weight:700;color:#1e3a8a;margin-bottom:4px;}
 .price-sub{font-size:12px;color:#1e40af;margin-bottom:14px;}
@@ -130,9 +131,9 @@ tr:hover td{background:#fffbf3;}
 .dd-item:hover{background:#fffbf3;}
 
 /* Result card */
-.result-card{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #86efac;
+.result-card{background:var(--surface);border:1px solid var(--border);
   border-radius:var(--radius);padding:18px 22px;margin-bottom:16px;}
-.result-card.blue{background:linear-gradient(135deg,#eff6ff,#dbeafe);border-color:#93c5fd;}
+.result-card.blue{background:var(--surface);border-color:var(--border);}
 .result-title{font-size:13px;font-weight:700;color:#14532d;margin-bottom:10px;}
 .result-card.blue .result-title{color:#1e3a8a;}
 .result-kpis{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:12px;}
@@ -226,6 +227,8 @@ tr:hover td{background:#fffbf3;}
     <button class="export-btn" onclick="exportOverviewCSV()">📥 CSV — Linkage Table</button>
     <button class="export-btn" onclick="exportOverviewPNG()">🖼 PNG — Charts</button>
     <button class="export-btn" onclick="exportOverviewPDF()">📄 PDF — Full Report</button>
+    <button class="export-btn" onclick="ioSaveScenario()" style="background:#16a34a;color:#fff;border-color:#16a34a;">💾 Save</button>
+    <button class="export-btn" onclick="ioAIAnalysis()" style="background:var(--navy2);color:#fff;border-color:#2563eb;">🤖 AI</button>
   </div>
 
   <div class="slabel">Backward & Forward Linkages — Sector Classification</div>
@@ -887,6 +890,7 @@ function sortBy(f){
 // ═══════════════════════════════════════
 let demandShocks = []; // [{j, name, dc, dg, di, dx, dm, dy}]
 let demandChartRef = null;
+let lastDemandKPIs = null; // stored after runDemandModel for save/AI
 
 function toggleDemandMode(){
   const m = document.getElementById('demand-mode').value;
@@ -1052,6 +1056,8 @@ function runDemandModel(){
 
   // store for export
   window._demandResult={dY,dX,dVA,dEmp,jObj};
+  lastDemandKPIs={totalDY,totalDX,totalDVA,totalDEmp,
+    multiplier:totalDY!==0?+(totalDX/totalDY).toFixed(3):null};
 }
 
 function clearDemandModel(){
@@ -1059,6 +1065,7 @@ function clearDemandModel(){
   renderDemandTags();
   document.getElementById('demand-results').style.display='none';
   window._demandResult=null;
+  lastDemandKPIs=null;
 }
 
 function exportDemandCSV(){
@@ -1472,6 +1479,66 @@ if(document.readyState==='loading'){
   document.addEventListener('DOMContentLoaded', safeInit);
 } else {
   safeInit();
+}
+
+/* ── Save scenario ── */
+function ioSaveScenario() {
+  if(!lastDemandKPIs){ Toast.show('Run demand model first','warning'); return; }
+  if(!window.ScenarioEngine){ Toast.show('Scenario engine not loaded','error'); return; }
+  const k=lastDemandKPIs;
+  const mode=document.getElementById('demand-mode').value;
+  const shocks=mode==='agg'
+    ? {type:'aggregate',dist:document.getElementById('agg-dist').value,
+       dc:+document.getElementById('agg-dc').value, dg:+document.getElementById('agg-dg').value,
+       di:+document.getElementById('agg-di').value, dx:+document.getElementById('agg-dx').value,
+       dm:+document.getElementById('agg-dm').value}
+    : {type:'sector',sectors:demandShocks.map(s=>({code:s.code,name:s.name,dy:s.dy}))};
+
+  const name=prompt('Name this scenario:','IO Demand Shock');
+  if(!name) return;
+  ScenarioEngine.save({
+    name, model:'io',
+    params:{
+      shockType:shocks.type,
+      affectedSectors:shocks.type==='sector'?shocks.sectors.map(s=>s.code).join(', '):'All ('+shocks.dist+')',
+      shockSize:fmtN(k.totalDY)+' bln UZS',
+      details:shocks
+    },
+    results:{
+      kpis:[
+        {label:'Output Multiplier',value:k.multiplier!==null?k.multiplier.toFixed(2):'--'},
+        {label:'Employment Effect',value:fmtN(Math.round(k.totalDEmp))+' persons'},
+        {label:'Total Output Effect',value:fmtN(k.totalDX)+' bln UZS'},
+        {label:'VA Effect',value:fmtN(k.totalDVA)+' bln UZS'}
+      ],chartData:null,tables:[]
+    },
+    tags:['io','leontief'],notes:''
+  });
+  Toast.show('Scenario saved: '+name,'success');
+}
+
+async function ioAIAnalysis() {
+  if(!lastDemandKPIs){ Toast.show('Run demand model first','warning'); return; }
+  if(!window.PolicyAdvisor){ Toast.show('AI advisor not loaded','error'); return; }
+  const k=lastDemandKPIs;
+  const mode=document.getElementById('demand-mode').value;
+  const shockType=mode==='agg'?'aggregate':'sector';
+  const affectedSectors=mode==='agg'?'All ('+document.getElementById('agg-dist').value+')'
+    :demandShocks.map(s=>s.code).join(', ');
+
+  let c=document.getElementById('io-ai-output');
+  if(!c){c=document.createElement('div');c.id='io-ai-output';c.style.margin='20px 0';document.getElementById('page-overview')?.appendChild(c);}
+  c.innerHTML='<div style="padding:20px;color:#475569;">Analyzing...</div>';
+  const analysis=await PolicyAdvisor.analyzeSim('io',
+    {shockType,affectedSectors,shockSize:fmtN(k.totalDY)+' bln UZS'},
+    {kpis:[
+      {label:'Output Multiplier',value:k.multiplier!==null?k.multiplier.toFixed(2):'--'},
+      {label:'Employment Effect',value:fmtN(Math.round(k.totalDEmp))+' persons'},
+      {label:'Total Output Effect',value:fmtN(k.totalDX)+' bln UZS'},
+      {label:'VA Effect',value:fmtN(k.totalDVA)+' bln UZS'}
+    ]}
+  );
+  PolicyAdvisor.renderAdvisorPanel('io-ai-output',analysis);
 }
 </script>
 </body>
