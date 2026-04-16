@@ -127,9 +127,72 @@ No government or central bank in Central Asia has a **web-native, AI-enhanced, m
 
 ---
 
+## Phase 2.5: Knowledge Hub — Transparency & Intelligence Layer
+
+**Goal:** Transform from calculator to credible policy knowledge hub. Build trust with policymakers through model transparency, track reforms, and curate research. Inspired by [PolicyEngine.org](https://policyengine.org) (parameter explorer), [Digital Embassy](https://digitalembassy.net) (intelligence dashboard), and [Digital Policy Alert](https://digitalpolicyalert.org) (activity tracker).
+
+### 2.5.1 Model Parameter Explorer (P1)
+Searchable registry of all parameters, equations, data sources, and computation flows across all 6 models.
+- [ ] Create `shared/model-registry.js` — structured registry extracted from model source code
+  - QPM: 14 behavioral + 3 steady-state params, 4 core equations (IS, Phillips, Taylor, UIP)
+  - CGE: 8 CET/CES structural + 12 policy sliders + 30 base-year variables
+  - PE: demand/supply elasticities, tariff scenarios, WITS-SMART formulas
+  - FPP: Phillips curve coefficients, BASE constants, 4-sector input variables
+  - IO: 136-sector metadata, multiplier types (output, VA, employment)
+  - DFM: 34 indicator loadings, Kalman filter parameters
+- [ ] New sidebar section "Knowledge Hub" with 4 nav items
+- [ ] `#page-explorer` in hub with:
+  - 6 model summary cards (param count, model type, status)
+  - Searchable/filterable parameter table (model, symbol, value, range, type, equation, description)
+  - Data sources grid per model (institution, description, URL)
+  - Computation flowcharts as HTML/CSS (box-and-arrow variable dependency diagrams)
+- [ ] Full EN/RU/UZ i18n support
+
+### 2.5.2 Policy Reform Tracker (P1)
+Interactive dashboard tracking Uzbekistan's economic reforms with map, timeline, and KPIs. Design inspired by Digital Embassy (geographic intelligence sections, metric cards, AI briefings) and Digital Policy Alert (activity charts, document taxonomy, jurisdiction filtering).
+- [ ] Create `shared/policy-tracker-data.js` — reform entries with seed data:
+  - 10-15 initial reforms: WTO accession, Tax Code 2023, CBU inflation targeting, energy subsidy reform, SOE privatization, free economic zones, customs modernization, banking liberalization, agricultural reform, digital economy strategy
+  - Document type taxonomy: presidential_decree, cabinet_resolution, ministry_order, law, regulation, strategy
+  - Category metadata with colors/icons: wto, tax, trade, monetary, fiscal, structural
+  - 15 region definitions (national + 14 oblasts) with EN/RU/UZ names
+- [ ] `#page-tracker` with 3 sub-sections:
+  - **Reform Pulse Dashboard** — 4 KPI metric cards (Total, Completed, In Progress, Planned) + activity bar chart (Chart.js) showing policy changes by domain
+  - **Interactive Map + Domain Cards** — inline SVG of Uzbekistan (14 clickable oblasts) + reform domain card grid (Tax, Trade, Banking, Energy, Digital, Agriculture, SOE) with status badges, reform counts, last-updated timestamps, source count indicators
+  - **Reform Timeline** — vertical timeline with category/status/sector/region/document-type filters, expandable entries with linked model pills and source links
+- [ ] Map click highlights region and filters timeline
+- [ ] Full EN/RU/UZ i18n support
+
+### 2.5.3 Research & Analysis Blog (P2)
+Filterable grid of CERR team policy briefs and model-based analytical articles.
+- [ ] Create `shared/research-data.js` — 8-12 seed articles
+- [ ] `#page-research` with:
+  - Search input + topic/model/author filter dropdowns
+  - Responsive card grid (title, author, date, abstract, topic tags, linked model pill)
+  - "Read More" expand/collapse for full article body
+  - Topics: trade, monetary, fiscal, growth, inflation (with color coding)
+- [ ] "Publish as Brief" button on AI Advisor — saves AI analysis as draft research article
+- [ ] Full EN/RU/UZ i18n support
+
+### 2.5.4 Academic Literature Tracker (P2)
+Dedicated section tracking foundational and latest academic papers organized by model.
+- [ ] Create `shared/literature-data.js` — 15-25 foundational papers as seeds:
+  - QPM: Berg et al. (2006), IMF WP on QPM for low-income countries
+  - DFM: Banbura & Modugno (2014), Giannone et al. (2008) on nowcasting
+  - CGE: Devarajan et al. (1990/1997), World Bank 1-2-3 model papers
+  - IO: Leontief (1986), Miller & Blair (2009) on I-O analysis
+  - PE: WITS-SMART methodology papers, Laird & Yeats on trade liberalization
+  - FPP: IMF CAEM/Financial Programming manuals, Mussa & Savastano
+- [ ] `#page-literature` with:
+  - Search by title/author + model/topic filter dropdowns
+  - Papers grouped by model in collapsible sections
+  - Each paper: title, authors, year, journal, DOI/URL link, abstract snippet, relevance note
+- [ ] Full EN/RU/UZ i18n support
+
+---
+
 ## Phase 3: AI Integration — The Differentiator
 
-**Goal:** Make this the first macro platform where AI explains what the numbers mean.
+**Goal:** Make this the first macro platform where AI explains what the numbers mean AND keeps knowledge fresh automatically.
 
 ### 3.1 AI Policy Advisor
 - [ ] After any simulation run, generate a plain-language policy brief:
@@ -161,6 +224,32 @@ No government or central bank in Central Asia has a **web-native, AI-enhanced, m
 - [ ] Historical pattern matching: "The last time inflation was this high,
   the CBU raised rates by X and the effect was Y"
 - [ ] International best practice suggestions based on simulation results
+
+### 3.5 Knowledge Hub Automation Pipelines (NEW)
+Automated data pipelines that keep the Knowledge Hub (Phase 2.5) content fresh without manual intervention.
+
+#### 3.5.1 Academic Literature Pipeline
+- [ ] MCP tool `fetch_papers(model_id, keywords)` — queries Semantic Scholar API + OpenAlex API
+  - QPM keywords: "DSGE small open economy", "monetary policy transmission developing"
+  - DFM keywords: "dynamic factor model GDP nowcasting", "Kalman filter mixed frequency"
+  - CGE keywords: "computable general equilibrium developing countries", "1-2-3 model trade"
+  - IO keywords: "input-output analysis Leontief", "sectoral multiplier developing economy"
+  - PE keywords: "partial equilibrium trade liberalization", "SMART WITS tariff"
+  - FPP keywords: "IMF financial programming", "macroeconomic framework consistency"
+- [ ] MCP tool `curate_papers(candidates, model_id)` — Claude scores relevance (0-10), writes summaries, assigns tags
+- [ ] MCP tool `update_literature_file()` — merges new papers into `shared/literature-data.js` (dedup by DOI)
+- [ ] Scheduled Claude task `update-literature` — runs weekly (Monday), end-to-end pipeline
+
+#### 3.5.2 Policy Reform Pipeline
+- [ ] MCP tool `fetch_reforms()` — scrapes lex.uz (govt gazette), CBU announcements, WTO working party docs
+- [ ] MCP tool `categorize_reform(raw_text)` — Claude classifies: category, sector, region, document type, generates EN/RU/UZ summaries, links to relevant models
+- [ ] MCP tool `update_tracker_file()` — appends to `shared/policy-tracker-data.js`, recalculates KPIs
+- [ ] Scheduled Claude task `update-reforms` — runs weekly (Wednesday), end-to-end pipeline
+
+#### 3.5.3 Research Article Auto-Generation
+- [ ] Extend `shared/ai-advisor.js` with "Publish as Research Brief" button
+- [ ] MCP tool `save_research_article(title, analysis, model_id)` — writes to `shared/research-data.js`
+- [ ] Auto-save notable AI analyses as draft articles for CERR team review
 
 ---
 
@@ -204,9 +293,12 @@ No government or central bank in Central Asia has a **web-native, AI-enhanced, m
                         │
      ┌──────────────────┼──────────────────┐
      │                  │                  │
-     │  AI Policy       │  Scenario        │
-     │  Advisor         │  Comparison      │
-     │  (Phase 3.1)     │  (Phase 2.1)     │
+     │  Knowledge Hub   │  Scenario        │
+     │  (Phase 2.5)     │  Comparison      │
+     │                  │  (Phase 2.1)     │
+     │  AI Policy       │                  │
+     │  Advisor         │  Auto Pipelines  │
+     │  (Phase 3.1)     │  (Phase 3.5)     │
      │                  │                  │
 LOW ─┼──────────────────┼──────────────────┼─ HIGH
 EFFORT│                 │                  │  EFFORT
@@ -219,24 +311,30 @@ EFFORT│                 │                  │  EFFORT
                     LOW IMPACT
 ```
 
-**Do first:** Phase 1 fixes + Scenario Comparison + AI Policy Advisor
-**Do next:** Cross-model linkages + Uncertainty quantification
+**Do first:** Phase 1 fixes + Knowledge Hub frontend (Phase 2.5) + Scenario Comparison
+**Do next:** AI Policy Advisor + Automation Pipelines (Phase 3.5) + Cross-model linkages
 **Do later:** Platform features, new models, API
 
 ---
 
 ## Success Metrics
 
-| Metric | Current | Phase 1 Target | Phase 3 Target |
-|--------|---------|----------------|----------------|
-| Models operational | 6 | 6 (hardened) | 8+ |
-| i18n coverage | ~70% | 100% | 100% |
-| WCAG compliance | None | AA | AA |
-| Scenario save/compare | No | Yes | Yes + AI |
-| AI features | None | None | 3 modules |
-| Data auto-update | Partial | Full | Full + alerts |
-| Cross-model links | None | 2 pairs | All connected |
-| API access | None | None | REST + SDK |
+| Metric | Current | Phase 1 Target | Phase 2.5 Target | Phase 3 Target |
+|--------|---------|----------------|------------------|----------------|
+| Models operational | 6 | 6 (hardened) | 6 | 8+ |
+| i18n coverage | ~70% | 100% | 100% | 100% |
+| WCAG compliance | None | AA | AA | AA |
+| Scenario save/compare | No | Yes | Yes | Yes + AI |
+| Knowledge Hub pages | None | None | 4 pages live | 4 + auto-updated |
+| Model transparency | Per-model docs | Per-model docs | Unified explorer | Unified + flowcharts |
+| Reforms tracked | None | None | 10-15 seeded | Auto-updated weekly |
+| Literature tracked | None | None | 15-25 papers | Auto-curated (API + AI) |
+| Research articles | None | None | 8-12 seeded | Manual + AI-generated |
+| AI features | None | None | None | 3 modules + 3 pipelines |
+| Data auto-update | Partial | Full | Full | Full + alerts |
+| Cross-model links | None | 2 pairs | 2 pairs | All connected |
+| MCP tools | 12 | 12 | 12 | 19 (12 + 7 new) |
+| API access | None | None | None | REST + SDK |
 
 ---
 
