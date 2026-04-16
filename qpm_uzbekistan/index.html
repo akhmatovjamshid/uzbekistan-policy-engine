@@ -401,45 +401,45 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   <!-- BASELINE PAGE -->
   <div class="page" id="page-baseline">
     <div class="shdr">
-      <div class="stitle">Baseline Macroeconomic Forecast</div>
+      <div class="stitle" data-i18n="qpm_bl_title">Baseline Macroeconomic Forecast</div>
       <div class="sbadge">2024Q1 – 2027Q4</div>
     </div>
     <div class="fix-note">
-      <strong>ℹ Baseline method:</strong> Uses current initial conditions and runs the model forward toward steady state.
+      <strong data-i18n="qpm_bl_method">ℹ Baseline method:</strong> Uses current initial conditions and runs the model forward toward steady state.
       Set starting values below to match your latest data observation.
     </div>
     <div class="bl-ctrls">
-      <div class="cgrp"><div class="clbl">Inflation YoY (%)</div>
+      <div class="cgrp"><div class="clbl" data-i18n="qpm_bl_pi_lbl">Inflation YoY (%)</div>
         <input class="cinput" type="number" id="bl_pi" value="10.5" step="0.5" oninput="runBL()"></div>
-      <div class="cgrp"><div class="clbl">Policy Rate (%)</div>
+      <div class="cgrp"><div class="clbl" data-i18n="qpm_bl_rs_lbl">Policy Rate (%)</div>
         <input class="cinput" type="number" id="bl_rs" value="13.5" step="0.25" oninput="runBL()"></div>
-      <div class="cgrp"><div class="clbl">Output Gap (%)</div>
+      <div class="cgrp"><div class="clbl" data-i18n="qpm_bl_gap_lbl">Output Gap (%)</div>
         <input class="cinput" type="number" id="bl_gap" value="-1.5" step="0.25" oninput="runBL()"></div>
-      <div class="cgrp"><div class="clbl">NER Depreciation YoY (%)</div>
+      <div class="cgrp"><div class="clbl" data-i18n="qpm_bl_ner_lbl">NER Depreciation YoY (%)</div>
         <input class="cinput" type="number" id="bl_d4ls" value="8.0" step="0.5" oninput="runBL()"></div>
     </div>
     <div class="kpis">
-      <div class="kcard"><div class="klbl">Inflation 2025 avg (%)</div>
-        <div class="kval" id="bk0" style="color:var(--red)">—</div><div class="ksub">YoY annual avg</div></div>
-      <div class="kcard"><div class="klbl">Policy Rate at Q8 (%)</div>
-        <div class="kval" id="bk1" style="color:var(--navy)">—</div><div class="ksub">8 quarters ahead</div></div>
-      <div class="kcard"><div class="klbl">GDP Growth 2025 (%)</div>
-        <div class="kval" id="bk2" style="color:var(--teal)">—</div><div class="ksub">Potential + gap</div></div>
-      <div class="kcard"><div class="klbl">NER Deprec. at Q8 (%)</div>
-        <div class="kval" id="bk3" style="color:var(--amber)">—</div><div class="ksub">Annual rate</div></div>
+      <div class="kcard"><div class="klbl" data-i18n="qpm_bl_kpi0">Inflation 2025 avg (%)</div>
+        <div class="kval" id="bk0" style="color:var(--red)">—</div><div class="ksub" data-i18n="qpm_bl_kpi0s">YoY annual avg</div></div>
+      <div class="kcard"><div class="klbl" data-i18n="qpm_bl_kpi1">Policy Rate at Q8 (%)</div>
+        <div class="kval" id="bk1" style="color:var(--navy)">—</div><div class="ksub" data-i18n="qpm_bl_kpi1s">8 quarters ahead</div></div>
+      <div class="kcard"><div class="klbl" data-i18n="qpm_bl_kpi2">GDP Growth 2025 (%)</div>
+        <div class="kval" id="bk2" style="color:var(--teal)">—</div><div class="ksub" data-i18n="qpm_bl_kpi2s">Potential + gap</div></div>
+      <div class="kcard"><div class="klbl" data-i18n="qpm_bl_kpi3">NER Deprec. at Q8 (%)</div>
+        <div class="kval" id="bk3" style="color:var(--amber)">—</div><div class="ksub" data-i18n="qpm_bl_kpi3s">Annual rate</div></div>
     </div>
     <div class="cgrid">
-      <div class="ccard"><div class="ctitle">CPI Inflation Path</div>
-        <div class="csub">YoY, percent — converging to target</div>
+      <div class="ccard"><div class="ctitle" data-i18n="qpm_bl_c0_title">CPI Inflation Path</div>
+        <div class="csub" data-i18n="qpm_bl_c0_sub">YoY, percent — converging to target</div>
         <div class="cwrap"><canvas id="blc0"></canvas></div></div>
-      <div class="ccard"><div class="ctitle">CBU Policy Rate Path</div>
-        <div class="csub">Nominal, percent per annum</div>
+      <div class="ccard"><div class="ctitle" data-i18n="qpm_bl_c1_title">CBU Policy Rate Path</div>
+        <div class="csub" data-i18n="qpm_bl_c1_sub">Nominal, percent per annum</div>
         <div class="cwrap"><canvas id="blc1"></canvas></div></div>
-      <div class="ccard"><div class="ctitle">Output Gap Closure</div>
-        <div class="csub">Cyclical position of economy, percent</div>
+      <div class="ccard"><div class="ctitle" data-i18n="qpm_bl_c2_title">Output Gap Closure</div>
+        <div class="csub" data-i18n="qpm_bl_c2_sub">Cyclical position of economy, percent</div>
         <div class="cwrap"><canvas id="blc2"></canvas></div></div>
-      <div class="ccard"><div class="ctitle">NER Depreciation Path</div>
-        <div class="csub">Annual UZS/USD depreciation, percent</div>
+      <div class="ccard"><div class="ctitle" data-i18n="qpm_bl_c3_title">NER Depreciation Path</div>
+        <div class="csub" data-i18n="qpm_bl_c3_sub">Annual UZS/USD depreciation, percent</div>
         <div class="cwrap"><canvas id="blc3"></canvas></div></div>
     </div>
   </div>
@@ -447,12 +447,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   <!-- ABOUT PAGE -->
   <div class="page" id="page-about">
     <div class="shdr">
-      <div class="stitle">QPM Model — Structure & Parameters</div>
+      <div class="stitle" data-i18n="qpm_model_title">QPM Model — Structure & Parameters</div>
       <div class="sbadge">Uzbekistan Calibration</div>
     </div>
     <div class="agrid">
       <div class="acard">
-        <h3>Core Equations</h3>
+        <h3 data-i18n="qpm_eq_hd">Core Equations</h3>
         <div class="eq">IS:  gap_t = b₁·gap_{t-1} − b₂·MCI_t + b₃·gap*_t + ε_gap</div>
         <div class="eq">PC:  π_t  = a₁·π_{t-1} + (1−a₁)·Eπ_{t+1} + a₂·RMC_t + ε_π</div>
         <div class="eq">TR:  i_t  = g₁·i_{t-1} + (1−g₁)·[Eπ_{t+1} + g₂·π4_{t+4} + g₃·gap_t] + ε_i</div>
@@ -465,24 +465,24 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
         <div class="eq">D4L_CPI= L_CPI − L_CPI{−4} (YoY inflation)</div>
       </div>
       <div class="acard">
-        <h3>Calibrated Parameters</h3>
+        <h3 data-i18n="qpm_param_hd">Calibrated Parameters</h3>
         <table class="ptable"><thead><tr><th>Param</th><th>Value</th><th>Description</th></tr></thead>
         <tbody id="ptbody"></tbody></table>
       </div>
       <div class="acard">
-        <h3>Solver: Bidirectional Gauss-Seidel</h3>
-        <p>The rational expectations model is solved by iterating between:</p><br>
+        <h3 data-i18n="qpm_solver_hd">Solver: Bidirectional Gauss-Seidel</h3>
+        <p data-i18n="qpm_solver_intro">The rational expectations model is solved by iterating between:</p><br>
         <ul>
-          <li><strong>Backward sweep (T→0):</strong> UIP exchange rate equation — s[t] depends on s[t+1] (forward-looking). Sweeping backward ensures s[t+1] is already updated in the current pass.</li>
-          <li><strong>Forward sweep (0→T):</strong> IS curve, Phillips curve, Taylor rule — depend on lagged values gap[t-1], π[t-1]. Also uses current-period RS in rr_gap (not lagged).</li>
-          <li><strong>RER gap:</strong> Properly computed as Z_gap = s[t] − ΣΔπ[k]/4 (CPI level cumulated from QoQ inflation).</li>
-          <li><strong>Convergence:</strong> ‖Δπ‖, ‖Δs‖, ‖Δgap‖ &lt; 10⁻¹⁰ (max 600 iterations)</li>
+          <li data-i18n="qpm_solver_li1"><strong>Backward sweep (T→0):</strong> UIP exchange rate equation — s[t] depends on s[t+1] (forward-looking). Sweeping backward ensures s[t+1] is already updated in the current pass.</li>
+          <li data-i18n="qpm_solver_li2"><strong>Forward sweep (0→T):</strong> IS curve, Phillips curve, Taylor rule — depend on lagged values gap[t-1], π[t-1]. Also uses current-period RS in rr_gap (not lagged).</li>
+          <li data-i18n="qpm_solver_li3"><strong>RER gap:</strong> Properly computed as Z_gap = s[t] − ΣΔπ[k]/4 (CPI level cumulated from QoQ inflation).</li>
+          <li data-i18n="qpm_solver_li4"><strong>Convergence:</strong> ‖Δπ‖, ‖Δs‖, ‖Δgap‖ &lt; 10⁻¹⁰ (max 600 iterations)</li>
         </ul>
         <br>
-        <p>Q0 on all charts = the shock-impact period (same convention as MATLAB/IRIS).</p>
+        <p data-i18n="qpm_solver_q0">Q0 on all charts = the shock-impact period (same convention as MATLAB/IRIS).</p>
       </div>
       <div class="acard">
-        <h3>Uzbekistan-Specific Notes</h3>
+        <h3 data-i18n="qpm_notes_hd">Uzbekistan-Specific Notes</h3>
         <ul>
           <li><strong>a₂ = 0.20</strong> (updated from 0.15) — stronger marginal cost pass-through reflecting rising wage pressures</li>
           <li><strong>a₃ = 0.65</strong> (updated from 0.60) — higher domestic cost share as structural reforms deepen</li>
@@ -817,10 +817,10 @@ function runBL() {
   document.getElementById('bk3').textContent = slDep[Math.min(7,T-1)].toFixed(1)+'%';
 
   const blDefs = [
-    { id:'blc0', data:slPi,  lbl:'Inflation YoY (%)', clr:'rgba(192,57,43,.9)',  tar: tar },
-    { id:'blc1', data:slRS,  lbl:'Policy Rate (%)',   clr:'rgba(26,58,92,.9)',   tar: null },
-    { id:'blc2', data:slGap, lbl:'Output Gap (%)',    clr:'rgba(36,113,163,.9)', tar: 0 },
-    { id:'blc3', data:slDep, lbl:'NER Deprec. (%)',   clr:'rgba(214,137,16,.9)', tar: null },
+    { id:'blc0', data:slPi,  lbl:t('qpm_bl_pi_lbl','Inflation YoY (%)'),  clr:'rgba(192,57,43,.9)',  tar: tar },
+    { id:'blc1', data:slRS,  lbl:t('qpm_bl_rs_lbl','Policy Rate (%)'),    clr:'rgba(26,58,92,.9)',   tar: null },
+    { id:'blc2', data:slGap, lbl:t('qpm_bl_gap_lbl','Output Gap (%)'),    clr:'rgba(36,113,163,.9)', tar: 0 },
+    { id:'blc3', data:slDep, lbl:t('qpm_bl_ner_lbl','NER Deprec. (%)'),   clr:'rgba(214,137,16,.9)', tar: null },
   ];
 
   blDefs.forEach(d => {
@@ -832,7 +832,7 @@ function runBL() {
       borderWidth: 2.5, pointRadius: 2, fill: true, tension: 0.3,
     }];
     if (d.tar !== null) ds.push({
-      label: 'Target', data: new Array(T).fill(d.tar),
+      label: t('qpm_target_lbl','Target'), data: new Array(T).fill(d.tar),
       borderColor:'rgba(0,0,0,.25)', borderWidth:1.2, borderDash:[5,4], pointRadius:0,
     });
     charts[k] = new Chart(document.getElementById(d.id).getContext('2d'), {
@@ -894,26 +894,27 @@ function showPage(name, btn) {
 
 function fillParamTable() {
   const p = P();
+  // [symbol, domId, value, i18nKey, fallbackDesc, blockLabel, isChanged, tipText]
   const rows = [
-    ['b₁','b1', p.b1.toFixed(2), 'Output gap persistence',      'IS curve',    false],
-    ['b₂','b2', p.b2.toFixed(2), 'MCI → output sensitivity',     'IS curve',    false],
-    ['b₃','b3', p.b3.toFixed(2), 'External demand weight',        'IS curve',    false],
-    ['b₄','b4', p.b4.toFixed(2), 'IR weight in MCI',              'MCI',         false],
-    ['a₁','a1', p.a1.toFixed(2), 'Inflation persistence',         'Phillips',    false],
-    ['a₂','a2', p.a2.toFixed(2), 'Marginal cost pass-through',    'Phillips',    true ],
-    ['a₃','a3', p.a3.toFixed(2), 'Domestic cost share',           'Phillips',    true ],
-    ['g₁','g1', p.g1.toFixed(2), 'Interest rate smoothing',       'Taylor rule', false],
-    ['g₂','g2', p.g2.toFixed(2), 'Inflation response (>1)',       'Taylor rule', false],
-    ['g₃','g3', p.g3.toFixed(2), 'Output gap response',           'Taylor rule', false],
-    ['e₁','e1', p.e1.toFixed(2), 'UIP backward-looking weight',   'UIP',         false],
-    ['π*','—',  p.tar.toFixed(1)+'%', 'Inflation target',         'SS',          false],
-    ['r̄', '—',  p.rrbar.toFixed(1)+'%','Neutral real rate',       'SS',          false],
-    ['ȳ', '—',  p.gdpbar.toFixed(1)+'%','Potential GDP growth',   'SS',          false],
+    ['b₁','b1', p.b1.toFixed(2), 'qpm_pt_b1', 'Output gap persistence',      'IS curve',    false, 'Controls how quickly the GDP gap closes. Higher b₁ = more inertia.'],
+    ['b₂','b2', p.b2.toFixed(2), 'qpm_pt_b2', 'MCI → output sensitivity',     'IS curve',    false, 'How strongly monetary conditions affect the output gap.'],
+    ['b₃','b3', p.b3.toFixed(2), 'qpm_pt_b3', 'External demand weight',        'IS curve',    false, 'Sensitivity to foreign output gap — trade and remittance channel.'],
+    ['b₄','b4', p.b4.toFixed(2), 'qpm_pt_b4', 'IR weight in MCI',              'MCI',         false, 'Share of interest rate in the Monetary Conditions Index; (1−b₄) = FX weight.'],
+    ['a₁','a1', p.a1.toFixed(2), 'qpm_pt_a1', 'Inflation persistence',         'Phillips',    false, 'Backward-looking share of expectations. High a₁ = hard to disinflate.'],
+    ['a₂','a2', p.a2.toFixed(2), 'qpm_pt_a2', 'Marginal cost pass-through',    'Phillips',    true,  'Pass-through from real marginal cost (output gap) to CPI inflation.'],
+    ['a₃','a3', p.a3.toFixed(2), 'qpm_pt_a3', 'Domestic cost share',           'Phillips',    true,  'Share of domestic costs in CPI basket; (1−a₃) = import-driven component.'],
+    ['g₁','g1', p.g1.toFixed(2), 'qpm_pt_g1', 'Interest rate smoothing',       'Taylor rule', false, 'CBU gradualism: how slowly rates are adjusted each quarter.'],
+    ['g₂','g2', p.g2.toFixed(2), 'qpm_pt_g2', 'Inflation response (>1)',       'Taylor rule', false, 'Taylor Principle: must exceed 1 for inflation stability.'],
+    ['g₃','g3', p.g3.toFixed(2), 'qpm_pt_g3', 'Output gap response',           'Taylor rule', false, 'How much the CBU reacts to economic slack or overheating.'],
+    ['e₁','e1', p.e1.toFixed(2), 'qpm_pt_e1', 'UIP backward-looking weight',   'UIP',         false, 'Share of exchange rate expectations that are backward-looking (past rates).'],
+    ['π*','—',  p.tar.toFixed(1)+'%',  'qpm_pt_pi_ss', 'Inflation target',      'SS',          false, 'CBU official medium-term inflation target (5% for 2024–2026).'],
+    ['r̄', '—',  p.rrbar.toFixed(1)+'%','qpm_pt_rrbar', 'Neutral real rate',    'SS',          false, 'Equilibrium real rate: neither expansionary nor contractionary.'],
+    ['ȳ', '—',  p.gdpbar.toFixed(1)+'%','qpm_pt_gdpbar','Potential GDP growth', 'SS',          false, 'Trend GDP growth consistent with stable inflation and full employment.'],
   ];
-  document.getElementById('ptbody').innerHTML = rows.map(([sym,_,val,desc,blk,chg]) =>
+  document.getElementById('ptbody').innerHTML = rows.map(([sym,_,val,key,desc,blk,chg,tip]) =>
     `<tr><td><strong>${sym}</strong></td>
          <td class="${chg?'changed':''}"><strong>${val}</strong>${chg?' ★':''}</td>
-         <td>${desc} <span style="color:var(--text2);font-size:.65rem">[${blk}]</span></td></tr>`
+         <td>${t(key,desc)} <span class="ptip" data-tip="${tip}">i</span> <span style="color:var(--text2);font-size:.65rem">[${blk}]</span></td></tr>`
   ).join('');
 }
 
@@ -943,35 +944,316 @@ function qpmExportPNG() {
 function qpmExportPDF() {
   if (!lastIRF) { alert('Run the simulation first.'); return; }
   const { series, shock, sz, T } = lastIRF;
-  const shockName = SHOCK_NAMES[shock] || shock;
-  const kpis = [
-    { label: 'Peak Inflation (CPI YoY)', value: document.getElementById('kpi0')?.textContent || '—', note: document.getElementById('kpi0s')?.textContent || '' },
-    { label: 'Peak Output Gap',          value: document.getElementById('kpi1')?.textContent || '—', note: document.getElementById('kpi1s')?.textContent || '' },
-    { label: 'Peak Policy Rate',         value: document.getElementById('kpi2')?.textContent || '—', note: document.getElementById('kpi2s')?.textContent || '' },
-    { label: 'Peak NER Depreciation',    value: document.getElementById('kpi3')?.textContent || '—', note: document.getElementById('kpi3s')?.textContent || '' },
-  ];
-  const tableHeaders = ['Quarter', ...VAR_LABELS.slice(0, 4)];
-  const tableRows = [];
-  for (let q = 0; q <= Math.min(T, 20); q++) {
-    tableRows.push(['Q' + q, ...series.slice(0, 4).map(s => s[q] != null ? s[q].toFixed(3) : '')]);
+  const p = P();
+  const lang = document.documentElement.getAttribute('lang') || 'en';
+
+  const REPORT_LABELS = {
+    en: { title:'QPM Shock Analysis Report', subtitle:'Quarterly Projection Model — New-Keynesian DSGE — Uzbekistan', overview:'Scenario Overview', results:'Key Results', exec:'Executive Summary', findings:'Key Findings', risks:'Risk Flags', recs:'Policy Recommendations', appendix_charts:'Appendix A — Impulse Response Functions', appendix_table:'Appendix B — Full Results Table', shock_type:'Shock type', shock_size:'Shock size', horizon:'Horizon', model:'Model', param:'Parameters', target_label:'Target' },
+    ru: { title:'Отчёт по шоковому анализу КПМ', subtitle:'Квартальная проекционная модель — Новокейнсианская ДСГЭ — Узбекистан', overview:'Описание сценария', results:'Ключевые результаты', exec:'Краткое изложение', findings:'Основные выводы', risks:'Риски', recs:'Рекомендации', appendix_charts:'Приложение А — Функции импульсных откликов', appendix_table:'Приложение Б — Полная таблица результатов', shock_type:'Тип шока', shock_size:'Размер шока', horizon:'Горизонт', model:'Модель', param:'Параметры', target_label:'Цель' },
+    uz: { title:'CPM Shok Tahlili Hisoboti', subtitle:'Choraklik prognoz modeli — Yangi-Keynschi DSGE — O\'zbekiston', overview:'Stsenariy tavsifi', results:'Asosiy natijalar', exec:'Qisqacha xulosa', findings:'Asosiy topilmalar', risks:'Xavf omillari', recs:'Siyosat tavsiyalari', appendix_charts:'Ilova A — Impuls javob funksiyalari', appendix_table:'Ilova B — To\'liq natijalar jadvali', shock_type:'Shok turi', shock_size:'Shok hajmi', horizon:'Gorizont', model:'Model', param:'Parametrlar', target_label:'Maqsad' },
+  };
+  const RL = REPORT_LABELS[lang] || REPORT_LABELS.en;
+
+  const shockName = getShockName(shock);
+  const analysis = buildQPMExpertAnalysis();
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+
+  const pageW = 210, pageH = 297;
+  const marginL = 16, marginR = 16, contentW = pageW - marginL - marginR;
+  const navy   = [26,  58,  92];
+  const navy2  = [30,  90, 140];
+  const teal   = [20, 160, 160];
+  const red    = [192, 57,  43];
+  const amber  = [214,137,  16];
+  const blue   = [36, 113, 163];
+  const green  = [30, 132,  73];
+  const white  = [255,255,255];
+  const light  = [245,248,252];
+  const border = [210,220,235];
+
+  let y = 0;
+  let pageNum = 1;
+
+  function newPage() {
+    doc.addPage();
+    pageNum++;
+    y = 20;
+    // Footer
+    doc.setFontSize(8); doc.setTextColor(150,150,150);
+    doc.text(RL.title + ' · ' + new Date().toISOString().slice(0,10), marginL, pageH-8);
+    doc.text('p.' + pageNum, pageW - marginR, pageH-8, {align:'right'});
   }
-  ReportEngine.generatePDF({
-    title: 'QPM Shock Analysis — ' + shockName,
-    subtitle: 'Quarterly Projection Model — New-Keynesian DSGE — Uzbekistan',
-    date: new Date().toISOString().slice(0, 10),
-    modelInfo: 'QPM is a New-Keynesian DSGE model for Uzbekistan with IS/Phillips/Taylor/UIP equations. Gauss-Seidel solver, parameters a2=0.20, a3=0.65. Shock size: ' + sz.toFixed(2) + ' pp, Horizon: ' + T + ' quarters.',
-    assumptions: [
-      { name: 'Shock type', value: shockName },
-      { name: 'Shock size', value: sz.toFixed(2) + ' percentage points' },
-      { name: 'Horizon',    value: T + ' quarters' },
-      { name: 'Model',      value: 'QPM — New-Keynesian DSGE' },
-    ],
-    kpis,
-    tableHeaders,
-    tableRows,
-    chartCanvasId: 'ch0',
-    filename: 'qpm_shock_report.pdf'
+
+  function checkY(needed) {
+    if (y + needed > pageH - 16) newPage();
+  }
+
+  function sectionHeader(label) {
+    checkY(12);
+    doc.setFillColor(...navy2);
+    doc.rect(marginL, y, contentW, 8, 'F');
+    doc.setFontSize(10); doc.setFont('helvetica','bold');
+    doc.setTextColor(...white);
+    doc.text(label, marginL + 4, y + 5.5);
+    doc.setTextColor(0,0,0);
+    y += 12;
+  }
+
+  function bodyText(text, indent=0, maxW=contentW) {
+    doc.setFontSize(9); doc.setFont('helvetica','normal');
+    doc.setTextColor(50,50,50);
+    const lines = doc.splitTextToSize(text, maxW - indent);
+    lines.forEach(line => {
+      checkY(5);
+      doc.text(line, marginL + indent, y);
+      y += 5;
+    });
+  }
+
+  function bulletItem(text, indent=4) {
+    checkY(5);
+    doc.setFontSize(8.5); doc.setFont('helvetica','normal');
+    doc.setTextColor(50,50,50);
+    doc.setFillColor(...navy2);
+    doc.circle(marginL + indent + 1, y - 1.2, 1, 'F');
+    const lines = doc.splitTextToSize(text, contentW - indent - 6);
+    doc.text(lines[0], marginL + indent + 4, y);
+    y += 4.5;
+    for (let i = 1; i < lines.length; i++) {
+      checkY(4.5);
+      doc.text(lines[i], marginL + indent + 4, y);
+      y += 4.5;
+    }
+    y += 1;
+  }
+
+  // ══════════════════════════════════════════════
+  // COVER PAGE
+  // ══════════════════════════════════════════════
+  // Navy header block
+  doc.setFillColor(...navy);
+  doc.rect(0, 0, pageW, 60, 'F');
+  doc.setFillColor(...teal);
+  doc.rect(0, 60, pageW, 3, 'F');
+
+  doc.setFontSize(22); doc.setFont('helvetica','bold');
+  doc.setTextColor(...white);
+  doc.text(RL.title, pageW/2, 22, {align:'center'});
+
+  doc.setFontSize(11); doc.setFont('helvetica','normal');
+  doc.text(RL.subtitle, pageW/2, 32, {align:'center'});
+
+  doc.setFontSize(10);
+  doc.text(shockName, pageW/2, 44, {align:'center'});
+  doc.text(RL.shock_size + ': ' + sz.toFixed(2) + ' pp  ·  ' + RL.horizon + ': ' + T + ' Q', pageW/2, 52, {align:'center'});
+
+  // Date badge
+  doc.setFillColor(...teal);
+  doc.roundedRect(marginL, 70, 50, 10, 2, 2, 'F');
+  doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(...white);
+  doc.text(new Date().toISOString().slice(0,10), marginL + 25, 76.5, {align:'center'});
+
+  // Footer on cover
+  doc.setFontSize(8); doc.setFont('helvetica','normal'); doc.setTextColor(150,150,150);
+  doc.text(RL.title + ' · p.1', pageW/2, pageH-8, {align:'center'});
+
+  y = 90;
+
+  // ══════════════════════════════════════════════
+  // SCENARIO OVERVIEW
+  // ══════════════════════════════════════════════
+  sectionHeader(RL.overview);
+
+  const overviewRows = [
+    [RL.shock_type, shockName],
+    [RL.shock_size,  sz.toFixed(2) + ' pp'],
+    [RL.horizon,     T + ' Q'],
+    [RL.model,       'QPM — New-Keynesian DSGE'],
+    ['b₁ / b₂ / b₃ / b₄', `${p.b1.toFixed(2)} / ${p.b2.toFixed(2)} / ${p.b3.toFixed(2)} / ${p.b4.toFixed(2)}`],
+    ['a₁ / a₂ / a₃',       `${p.a1.toFixed(2)} / ${p.a2.toFixed(2)} / ${p.a3.toFixed(2)}`],
+    ['g₁ / g₂ / g₃',       `${p.g1.toFixed(2)} / ${p.g2.toFixed(2)} / ${p.g3.toFixed(2)}`],
+    ['e₁ / π* / r̄ / ȳ',    `${p.e1.toFixed(2)} / ${p.tar.toFixed(1)}% / ${p.rrbar.toFixed(1)}% / ${p.gdpbar.toFixed(1)}%`],
+  ];
+
+  overviewRows.forEach(([label, val], i) => {
+    checkY(7);
+    doc.setFillColor(i%2===0 ? 248 : 255, i%2===0 ? 250 : 255, i%2===0 ? 253 : 255);
+    doc.rect(marginL, y-4, contentW, 6.5, 'F');
+    doc.setFontSize(8.5); doc.setFont('helvetica','bold'); doc.setTextColor(...navy);
+    doc.text(label, marginL+3, y);
+    doc.setFont('helvetica','normal'); doc.setTextColor(50,50,50);
+    doc.text(val, marginL + contentW*0.45, y);
+    y += 6.5;
   });
+  y += 5;
+
+  // ══════════════════════════════════════════════
+  // KEY RESULTS (4 KPI cards 2×2)
+  // ══════════════════════════════════════════════
+  sectionHeader(RL.results);
+
+  const kpiColors = [red, navy, blue, amber];
+  const kpiIds    = ['kpi0','kpi1','kpi2','kpi3'];
+  const kpiLabels = [
+    t('qpm_kpi_inflation','Peak Inflation (D4L_CPI)'),
+    t('qpm_kpi_gap','Peak Output Gap (L_GDP_GAP)'),
+    t('qpm_kpi_rate','Peak Policy Rate (RS)'),
+    t('qpm_kpi_ner','Peak NER Depreciation (D4L_S)'),
+  ];
+
+  checkY(36);
+  const cw2 = (contentW - 6) / 2;
+  [[0,1],[2,3]].forEach(([i,j]) => {
+    [i,j].forEach((idx, col) => {
+      const cx = marginL + col*(cw2+6);
+      const val  = document.getElementById(kpiIds[idx])?.textContent  || '—';
+      const sub  = document.getElementById(kpiIds[idx]+'s')?.textContent || '';
+      doc.setFillColor(...light);
+      doc.roundedRect(cx, y, cw2, 16, 2, 2, 'F');
+      doc.setDrawColor(...border);
+      doc.roundedRect(cx, y, cw2, 16, 2, 2, 'S');
+      doc.setFontSize(7); doc.setFont('helvetica','normal'); doc.setTextColor(100,100,100);
+      doc.text(kpiLabels[idx], cx+4, y+5);
+      doc.setFontSize(13); doc.setFont('helvetica','bold'); doc.setTextColor(...kpiColors[idx]);
+      doc.text(val, cx+4, y+12);
+      doc.setFontSize(7); doc.setFont('helvetica','normal'); doc.setTextColor(130,130,130);
+      doc.text(sub, cx+4, y+15.5);
+    });
+    y += 20;
+  });
+  y += 4;
+
+  // ══════════════════════════════════════════════
+  // EXECUTIVE SUMMARY
+  // ══════════════════════════════════════════════
+  sectionHeader(RL.exec);
+  if (analysis && analysis.summary) {
+    bodyText(analysis.summary);
+  }
+  y += 4;
+
+  // ══════════════════════════════════════════════
+  // KEY FINDINGS
+  // ══════════════════════════════════════════════
+  sectionHeader(RL.findings);
+  if (analysis && analysis.findings) {
+    analysis.findings.forEach(f => bulletItem(f));
+  }
+  y += 4;
+
+  // ══════════════════════════════════════════════
+  // RISK FLAGS
+  // ══════════════════════════════════════════════
+  sectionHeader(RL.risks);
+  if (analysis && analysis.risks) {
+    doc.setTextColor(150, 40, 40);
+    analysis.risks.forEach(r => {
+      doc.setFontSize(8.5); doc.setFont('helvetica','normal');
+      checkY(5);
+      doc.setFillColor(200, 50, 50);
+      doc.circle(marginL + 5, y - 1.2, 1, 'F');
+      const lines = doc.splitTextToSize(r, contentW - 10);
+      doc.text(lines[0], marginL + 9, y);
+      y += 4.5;
+      for (let i = 1; i < lines.length; i++) {
+        checkY(4.5);
+        doc.text(lines[i], marginL + 9, y);
+        y += 4.5;
+      }
+      y += 1;
+    });
+    doc.setTextColor(0,0,0);
+  }
+  y += 4;
+
+  // ══════════════════════════════════════════════
+  // POLICY RECOMMENDATIONS
+  // ══════════════════════════════════════════════
+  sectionHeader(RL.recs);
+  if (analysis && analysis.recommendations) {
+    analysis.recommendations.forEach((rec, i) => {
+      checkY(6);
+      doc.setFillColor(...teal);
+      doc.setFont('helvetica','bold'); doc.setFontSize(8.5);
+      doc.setTextColor(...teal);
+      doc.text((i+1) + '.', marginL + 3, y);
+      doc.setFont('helvetica','normal'); doc.setTextColor(50,50,50);
+      const lines = doc.splitTextToSize(rec, contentW - 10);
+      doc.text(lines[0], marginL + 9, y);
+      y += 4.5;
+      for (let li = 1; li < lines.length; li++) {
+        checkY(4.5);
+        doc.text(lines[li], marginL + 9, y);
+        y += 4.5;
+      }
+      y += 2;
+    });
+  }
+
+  // ══════════════════════════════════════════════
+  // APPENDIX A — IRF CHARTS (2 per row)
+  // ══════════════════════════════════════════════
+  newPage();
+  sectionHeader(RL.appendix_charts);
+  y += 2;
+
+  const chartIds = ['ch0','ch1','ch2','ch3','ch4','ch5'];
+  const chartW = (contentW - 6) / 2;
+  const chartH = 50;
+
+  for (let ci = 0; ci < chartIds.length; ci += 2) {
+    checkY(chartH + 4);
+    [ci, ci+1].filter(idx => idx < chartIds.length).forEach((idx, col) => {
+      const canvas = document.getElementById(chartIds[idx]);
+      if (!canvas) return;
+      try {
+        const imgData = canvas.toDataURL('image/jpeg', 0.85);
+        const cx = marginL + col*(chartW+6);
+        doc.addImage(imgData, 'JPEG', cx, y, chartW, chartH);
+        doc.setDrawColor(...border);
+        doc.rect(cx, y, chartW, chartH, 'S');
+      } catch(e) {}
+    });
+    y += chartH + 6;
+  }
+
+  // ══════════════════════════════════════════════
+  // APPENDIX B — FULL DATA TABLE
+  // ══════════════════════════════════════════════
+  newPage();
+  sectionHeader(RL.appendix_table);
+  y += 2;
+
+  const tblHeaders = ['Q', 'CPI YoY', 'Output Gap', 'Policy Rate', 'NER Depr.', 'RER Gap', 'MCI'];
+  const colW = contentW / tblHeaders.length;
+
+  // Header row
+  checkY(8);
+  doc.setFillColor(...navy2);
+  doc.rect(marginL, y-5, contentW, 7, 'F');
+  doc.setFontSize(7.5); doc.setFont('helvetica','bold'); doc.setTextColor(...white);
+  tblHeaders.forEach((h, i) => {
+    doc.text(h, marginL + i*colW + colW/2, y-0.5, {align:'center'});
+  });
+  y += 2.5;
+  doc.setTextColor(0,0,0);
+
+  for (let q = 0; q <= T; q++) {
+    checkY(5.5);
+    doc.setFillColor(q%2===0 ? 248 : 255, q%2===0 ? 250 : 255, q%2===0 ? 253 : 255);
+    doc.rect(marginL, y-4, contentW, 5.5, 'F');
+    doc.setFontSize(7.5); doc.setFont('helvetica','normal'); doc.setTextColor(50,50,50);
+    const rowVals = ['Q'+q, ...series.map(s => s[q] != null ? (s[q] >= 0 ? '+' : '') + s[q].toFixed(3) : '—')];
+    rowVals.forEach((v, i) => {
+      doc.text(v, marginL + i*colW + colW/2, y, {align:'center'});
+    });
+    y += 5.5;
+  }
+
+  doc.save('qpm_shock_report_' + shock + '.pdf');
+  Toast.show('PDF report exported', 'success');
 }
 
 /* ── Save scenario ── */
@@ -1118,7 +1400,159 @@ function buildQPMExpertAnalysis() {
     },
   };
 
-  const C = CONTENT[shock] || CONTENT.demand;
+  // ── Russian content ──────────────────────────────────────
+  const CONTENT_RU = {
+    demand: {
+      summary: `Положительный шок совокупного спроса в ${sz.toFixed(2)} пп (фискальная экспансия, рост инвестиций) вызывает пик инфляции ИПЦ ${f3(pi)} пп в ${piQ}, разрыв выпуска ${f3(gap)} пп в ${gapQ} и требует повышения ключевой ставки ЦБ на ${f3(rs)} пп в ${rsQ}. Курс UZS ${ner >= 0 ? 'обесценивается' : 'укрепляется'} на ${abs(ner)} пп в ${nerQ}.`,
+      findings: [
+        `Разрыв выпуска достигает пика ${f3(gap)} пп (${gapQ}). При инерции IS b₁=${p.b1.toFixed(2)} экономика перегревается на ~${Math.round(T * p.b1)} кварталов.`,
+        `Инфляция превышает цель на ${f3(pi)} пп в ${piQ}. Высокая адаптивность a₁=${p.a1.toFixed(2)} означает устойчивые вторичные эффекты — необходимо длительное ужесточение ДКП.`,
+        `Реакция ставки по правилу Тейлора: пик ${f3(rs)} пп в ${rsQ}. При g₂=${p.g2.toFixed(2)} реальная ставка растёт на ~${((p.g2-1)*Math.abs(pi)).toFixed(3)} пп сверх инфляционного шока.`,
+      ],
+      risks: [
+        `Риск инфляционной инерции: a₁=${p.a1.toFixed(2)} означает, что ${(p.a1*100).toFixed(0)}% инфляции определяется прошлым периодом. Перегрев ${f3(pi)} пп может сохраняться ~${Math.round(Math.abs(pi)/0.3)} кварталов.`,
+        `Процикличный фискальный риск: дополнительный спрос при уже положительном разрыве выпуска ускоряет инфляцию и долговую нагрузку.`,
+      ],
+      recommendations: [
+        `Превентивное ужесточение: ЦБ должен начать нормализацию ставки до пика разрыва выпуска, чтобы предотвратить де-анкеровку инфляционных ожиданий.`,
+        `Фискальная координация: бюджетные органы должны сигнализировать о планах консолидации для стабилизации долгосрочных ожиданий.`,
+        `Коммуникационная стратегия: форвардные ориентиры ЦБ должны подчёркивать временный характер шока и приверженность цели 5%.`,
+      ],
+    },
+    inflation: {
+      summary: `Инфляционный шок издержек ${sz.toFixed(2)} пп (рост цен на энергоносители, нарушение поставок) поднимает ИПЦ до пика ${f3(pi)} пп в ${piQ}, сжимает разрыв выпуска до ${f3(gap)} пп в ${gapQ} (стагфляция), требует ставки ${f3(rs)} пп в ${rsQ}.`,
+      findings: [
+        `Стагфляция: рост инфляции (${f3(pi)} пп) при отрицательном выпуске (${f3(gap)} пп в ${gapQ}) создаёт классическую дилемму ЦБ.`,
+        `Инерция инфляции a₁=${p.a1.toFixed(2)}: временный шок предложения генерирует устойчивый рост ИПЦ выше цели даже после исчезновения первопричины.`,
+        `Доля внутренних издержек a₃=${p.a3.toFixed(2)}: ${(p.a3*100).toFixed(0)}% шока остаётся во внутренних ценах, ${((1-p.a3)*100).toFixed(0)}% поглощается через импортный канал.`,
+      ],
+      risks: [
+        `Риск стагфляционной ловушки: агрессивное ужесточение при уже отрицательном разрыве выпуска (${f3(gap)} пп) углубляет спад и замедляет восстановление.`,
+        `Спираль цены-заработные платы: высокая доля адаптивных ожиданий a₁=${p.a1.toFixed(2)} повышает риск закрепления временного ценового шока в постоянном росте заработных плат.`,
+      ],
+      recommendations: [
+        `Постепенное ужесточение: избегать полного ответа по правилу Тейлора при отрицательном разрыве выпуска — умеренный рост ставки плюс форвардные ориентиры.`,
+        `Меры на стороне предложения: целевые фискальные инструменты (топливные субсидии, стратегические резервы) прямо устраняют источник шока издержек.`,
+        `Якорение ожиданий: публикация обновлённых прогнозов инфляции ЦБ удерживает среднесрочные ожидания вблизи цели 5%.`,
+      ],
+    },
+    exchange: {
+      summary: `Шок обесценения UZS на ${sz.toFixed(2)} пп (отток капитала, снижение FX интервенций) вызывает пик инфляции ИПЦ ${f3(pi)} пп в ${piQ} (импортный переброс), эффект выпуска ${f3(gap)} пп в ${gapQ}, требует ставки ${f3(rs)} пп в ${rsQ}.`,
+      findings: [
+        `Импортный переброс: обесценение влияет на ИПЦ через канал (1−a₃)=${(1-p.a3).toFixed(2)}. При шоке ${sz.toFixed(2)} пп прямой импортный эффект составляет ~${(sz*(1-p.a3)*p.a2).toFixed(3)} пп инфляции.`,
+        `Обратный вес UIP e₁=${p.e1.toFixed(2)}: ${(p.e1*100).toFixed(0)}% ожиданий курса — адаптивные. Это делает обесценение самоподдерживающимся без вмешательства ставки.`,
+        `Ответ Тейлора (${f3(rs)} пп в ${rsQ}) — оборонительная реакция на инфляцию от слабого UZS, а не проактивная позиция.`,
+      ],
+      risks: [
+        `Спираль обесценения-инфляции: e₁=${p.e1.toFixed(2)} адаптивные ожидания + a₁=${p.a1.toFixed(2)} инерция инфляции создают самоусиливающийся цикл, требующий всё более высоких ставок.`,
+        `Риск долларизации: повторные эпизоды обесценения UZS повышают спрос на USD-сбережения, ослабляя трансмиссионный механизм ДКП.`,
+      ],
+      recommendations: [
+        `Защита ставкой с чёткой коммуникацией: повышение ключевой ставки до начала рыночной паники для остановки ожиданий обесценения.`,
+        `Контролируемые FX интервенции: сглаживание волатильности — не защита фиксированного курса — с предсказуемым путём обесценения.`,
+        `Управление потоками капитала: временные макропруденциальные инструменты для стабилизации краткосрочных оттоков без чрезмерного роста ставок.`,
+      ],
+    },
+    monetary: {
+      summary: `Шок ужесточения ДКП на ${sz.toFixed(2)} пп (повышение ставки сверх пути Тейлора) сокращает разрыв выпуска на ${f3(gap)} пп в ${gapQ}, снижает ИПЦ на ${f3(pi)} пп в ${piQ}, вызывает ${ner < 0 ? 'укрепление' : 'давление на'} UZS на ${abs(ner)} пп в ${nerQ}.`,
+      findings: [
+        `Передача через MCI: при b₂=${p.b2.toFixed(2)} и b₄=${p.b4.toFixed(2)} сила передачи ставки на выпуск b₂·b₄=${(p.b2*p.b4).toFixed(3)}, что даёт разрыв выпуска ${f3(gap)} пп в ${gapQ}.`,
+        `Дезинфляция: ставка снижает инфляцию на ${f3(pi)} пп в ${piQ}. Постепенность определяется a₁=${p.a1.toFixed(2)} — ЦБ должен удерживать ставки ~${Math.round(Math.abs(pi)/0.15)} кварталов.`,
+        `Канал UIP: рост ставки на ${sz.toFixed(2)} пп делает UZS-активы привлекательнее, вызывая ${ner < 0 ? 'укрепление курса ' + abs(ner) + ' пп' : 'давление ' + abs(ner) + ' пп'}. При e₁=${p.e1.toFixed(2)} реакция замедлена адаптивными ожиданиями.`,
+      ],
+      risks: [
+        `Риск рецессии: сокращение выпуска ${f3(gap)} пп в ${gapQ} создаёт давление на рынок труда. Излишне агрессивное ужесточение задерживает восстановление.`,
+        `Финансовая стабильность: рост ставок повышает расходы на обслуживание долга. При быстром кредитном росте (15–20% г/г) возможен скачок NPL в строительстве и рознице.`,
+      ],
+      recommendations: [
+        `Дозированная постепенность: ужесточение шагами по 50 бп (соответствует g₁=${p.g1.toFixed(2)}) с мониторингом инфляционных ожиданий в реальном времени.`,
+        `Макропруденциальные дополнения: ограничения роста кредита в высокорисковых сегментах снижают требуемый уровень ставки.`,
+        `Чёткие форвардные ориентиры: условия снижения ставки (например, «инфляция < 7% три месяца подряд») уменьшают неопределённость и долгосрочные доходности.`,
+      ],
+    },
+  };
+
+  // ── Uzbek content ──────────────────────────────────────
+  const CONTENT_UZ = {
+    demand: {
+      summary: `${sz.toFixed(2)} pp yalpi talab shoki (fiskal kengayish, investitsiyalar o'sishi) YoY inflyatsiyani ${f3(pi)} pp gacha ko'taradi (${piQ}), chiqarish tafovutini ${f3(gap)} pp ga yetkazadi (${gapQ}), MB stavkasini ${f3(rs)} pp ko'tarishni talab qiladi (${rsQ}). UZS ${ner >= 0 ? 'qadrsizlanadi' : 'kuchayadi'} ${abs(ner)} pp (${nerQ}).`,
+      findings: [
+        `Chiqarish tafovuti ${f3(gap)} pp (${gapQ}) — iqtisodiyot qizib ketdi. IS inersiyasi b₁=${p.b1.toFixed(2)} bilan tafovut yopilishi ~${Math.round(T * p.b1)} chorak davom etadi.`,
+        `Inflyatsiya ${f3(pi)} pp oshdi (${piQ}). a₁=${p.a1.toFixed(2)} adaptiv kutishlar ulushi yuqori — ikkilamchi ta'sirlar uzoq davom etadi, pul siyosatini mustahkam ushlab turish zarur.`,
+        `Teylor qoidasi bo'yicha stavka javobi: cho'qqi ${f3(rs)} pp (${rsQ}). g₂=${p.g2.toFixed(2)} bilan real stavka ~${((p.g2-1)*Math.abs(pi)).toFixed(3)} pp inflyatsiya shokidan yuqori ko'tariladi.`,
+      ],
+      risks: [
+        `Inflyatsiya inersiyasi xavfi: a₁=${p.a1.toFixed(2)} — ${(p.a1*100).toFixed(0)}% inflyatsiya o'tgan davrga bog'liq. ${f3(pi)} pp oshiqcha ~${Math.round(Math.abs(pi)/0.3)} chorak davom etishi mumkin.`,
+        `Protsiklik fiskal xavf: allaqachon ijobiy chiqarish tafovuti fonida qo'shimcha talab iqtisodiyotni yanada qizdiradi.`,
+      ],
+      recommendations: [
+        `Oldini oluvchi qattiqlashuv: MB chiqarish tafovutining cho'qqisidan oldin stavkani normallashtirishi kerak — inflyatsiya kutishlarini belgilangan darajada ushlab turish uchun.`,
+        `Fiskal muvofiqlashtirish: byudjet organlari o'rta muddatli konsolidatsiya rejalarini e'lon qilishi lozim.`,
+        `Kommunikatsiya strategiyasi: MB kelajakka yo'naltirilgan ko'rsatkichlari shok vaqtinchaligini va 5% maqsadga sodiqlikni ta'kidlashi kerak.`,
+      ],
+    },
+    inflation: {
+      summary: `${sz.toFixed(2)} pp xarajat inflyatsiyasi shoki (energiya narxlari o'sishi, ta'minot uzilishi) YoY inflyatsiyani ${f3(pi)} pp gacha ko'taradi (${piQ}), chiqarish tafovutini ${f3(gap)} pp ga qisqartiradi (${gapQ}, stagflyatsiya), ${f3(rs)} pp stavka javobini talab qiladi (${rsQ}).`,
+      findings: [
+        `Stagflyatsiya: bir vaqtda inflyatsiya o'sishi (${f3(pi)} pp) va chiqarish qisqarishi (${f3(gap)} pp, ${gapQ}) MB uchun klassik dilemma yaratadi.`,
+        `Inflyatsiya inersiyasi a₁=${p.a1.toFixed(2)}: vaqtinchalik taklif shoki maqsaddan yuqori inflyatsiyani boshlang'ich sababdan keyin ham saqlab turadi.`,
+        `Ichki xarajatlar ulushi a₃=${p.a3.toFixed(2)}: shokining ${(p.a3*100).toFixed(0)}% ichki narxlarda qoladi, ${((1-p.a3)*100).toFixed(0)}% import kanali orqali so'riladi.`,
+      ],
+      risks: [
+        `Stagflyatsiya tuzoq xavfi: salbiy chiqarish tafovuti (${f3(gap)} pp) fonida tajovuzkor qattiqlashuv retsessiyani chuqurlashtiradi.`,
+        `Narx-ish haqi spirali: yuqori a₁=${p.a1.toFixed(2)} vaqtinchalik narx shokini doimiy asosiy inflyatsiyaga aylantirish xavfini kuchaytiradi.`,
+      ],
+      recommendations: [
+        `Bosqichma-bosqich qattiqlashuv: salbiy chiqarish tafovutida to'liq Teylor javobidan qoching — mo''tadil stavka o'sishi va kuchli kelajakka yo'naltirish.`,
+        `Taklif tomoni choralari: maqsadli fiskal vositalar (yonilg'i subsidiyalari, strategik zaxiralar) xarajat shokining manbaini to'g'ridan-to'g'ri bartaraf etadi.`,
+        `Kutishlarni anchoring qilish: MB yangilangan inflyatsiya prognozlarini e'lon qilishi o'rta muddatli kutishlarni 5% maqsad yaqinida ushlab turadi.`,
+      ],
+    },
+    exchange: {
+      summary: `${sz.toFixed(2)} pp UZS qadrsizlanishi shoki (kapital chiqishi, chet el valutasi intervensiyasining kamaytirish) YoY inflyatsiyani ${f3(pi)} pp gacha ko'taradi (${piQ}), chiqarish tafovutini ${f3(gap)} pp ta'sir qiladi (${gapQ}), ${f3(rs)} pp stavka javobini talab qiladi (${rsQ}).`,
+      findings: [
+        `Import o'tish: qadrsizlanish ИПЦга (1−a₃)=${(1-p.a3).toFixed(2)} nisbatda ta'sir qiladi. ${sz.toFixed(2)} pp shokda to'g'ridan-to'g'ri import effekti ~${(sz*(1-p.a3)*p.a2).toFixed(3)} pp inflyatsiya.`,
+        `UIP orqaga og'irlik e₁=${p.e1.toFixed(2)}: kurs kutishlarining ${(p.e1*100).toFixed(0)}% adaptiv. Bu qadrsizlanishni MB aralashuvisiz o'z-o'zini qo'llab-quvvatlovchi qiladi.`,
+        `Teylor javobi (${f3(rs)} pp, ${rsQ}) — zaif UZS tug'dirgan inflyatsiyaga himoya munosabati, proaktiv emas.`,
+      ],
+      risks: [
+        `Qadrsizlanish-inflyatsiya spirali: e₁=${p.e1.toFixed(2)} adaptiv kutishlar + a₁=${p.a1.toFixed(2)} inersiya o'zini kuchaytiradigan tsiklni yaratadi.`,
+        `Dollarlashtirish xavfi: takroriy UZS qadrsizlanish epizodlari xonadonlarning dollar jamg'armasiga talabini oshiradi, MB o'tkazuvchanligini zaiflashadi.`,
+      ],
+      recommendations: [
+        `Aniq kommunikatsiya bilan stavka mudofaasi: bozor vahimasidan oldin kalit stavkani oshirish orqali qadrsizlanish kutishlarini to'xtatish.`,
+        `Nazorat ostidagi FX interventsiya: barqaror qadrsizlanish yo'lini ta'minlash — qat'iy kursni himoya qilmaslik — eksportchilar va qarz oluvchilar uchun noaniqlikni kamaytirish.`,
+        `Kapital oqimlarini boshqarish: qisqa muddatli kapital chiqishini barqarorlashtirish uchun vaqtinchalik makroihtiyo vositalari.`,
+      ],
+    },
+    monetary: {
+      summary: `${sz.toFixed(2)} pp pul siyosati qattiqlashuvi shoki (Teylor yo'lidan yuqori stavka ko'tarilishi) chiqarish tafovutini ${f3(gap)} pp kamaytiradi (${gapQ}), YoY inflyatsiyani ${f3(pi)} pp tushiradi (${piQ}), UZS ${ner < 0 ? 'kuchayishini' : 'bosimini'} ${abs(ner)} pp (${nerQ}) ta'minlaydi.`,
+      findings: [
+        `MCI orqali uzatish: b₂=${p.b2.toFixed(2)} va b₄=${p.b4.toFixed(2)} bilan stavka ta'sirining kuchi b₂·b₄=${(p.b2*p.b4).toFixed(3)}, bu chiqarish tafovutini ${f3(gap)} pp qiladi (${gapQ}).`,
+        `Inflyatsiyani pasaytirish: qattiqlashuv inflyatsiyani ${f3(pi)} pp kamaytiradi (${piQ}). a₁=${p.a1.toFixed(2)} tufayli MB ~${Math.round(Math.abs(pi)/0.15)} chorak boyunturuq ushlab turishi kerak.`,
+        `UIP kanali: ${sz.toFixed(2)} pp stavka o'sishi UZS aktivlarini jozibadorroq qiladi, ${ner < 0 ? abs(ner) + ' pp kuchayish' : abs(ner) + ' pp bosim'} vujudga keladi. e₁=${p.e1.toFixed(2)} bilan ta'sir sekinlashadi.`,
+      ],
+      risks: [
+        `Retsessiya xavfi: ${f3(gap)} pp chiqarish qisqarishi (${gapQ}) mehnat bozoriga bosim yaratadi. Haddan ortiq qattiqlashuv tiklanishni kechiktiradi.`,
+        `Moliyaviy barqarorlik: yuqori stavkalar korporativ va xonadon qarzlarini xizmat qilish xarajatlarini oshiradi; qurilish va chakana savdoda NPL o'sishi mumkin.`,
+      ],
+      recommendations: [
+        `Ma'lumotlarga asoslangan bosqichlilik: real vaqtdagi inflyatsiya kutishlarini kuzatgan holda 50 bp qadamlar bilan (g₁=${p.g1.toFixed(2)} bilan mos) qattiqlashish.`,
+        `Makroihtiyo choralari: eng xavfli kredit segmentlarida maqsadli kredit o'sish chegaralari talab qilinadigan stavka darajasini kamaytiradi.`,
+        `Aniq kelajakka yo'naltirish: stavka kamayishi shartlarini e'lon qilish (masalan, «uch oy ketma-ket asosiy inflyatsiya 7% dan past»).`,
+      ],
+    },
+  };
+
+  let C, langContent;
+  if (lang === 'ru') {
+    langContent = CONTENT_RU;
+  } else if (lang === 'uz') {
+    langContent = CONTENT_UZ;
+  } else {
+    langContent = CONTENT;
+  }
+  C = langContent[shock] || langContent.demand;
   return {
     summary: C.summary,
     findings: C.findings,
