@@ -602,15 +602,17 @@ function solveFPP(inputs) {
     r.y_gap = Math.max(-6, Math.min(6, r.y_gap));
     r.ner_dep = inp.ner_dep;
     r.NER = prev.NER * (1 + inp.ner_dep / 100);
+    // Guard: NER must stay positive (prevents GDP_USD division-by-zero)
+    if (r.NER <= 0) r.NER = prev.NER > 0 ? prev.NER : 1;
     r.us_inf = inp.us_inf;
     r.pi_imp = inp.ner_dep + inp.us_inf;  // imported inflation
     r.pi_exp = PC.omega * prev.pi + (1 - PC.omega) * BASE.pi_target; // expectations
     r.pi = PC.l2 * r.pi_imp + (1 - PC.l1 - PC.l2) * r.pi_exp + PC.l1 * prev.pi + PC.l3 * r.y_gap;
     r.pi = Math.max(1.0, r.pi);
     r.NGDP = prev.NGDP * (1 + inp.g / 100) * (1 + r.pi / 100);
-    r.GDP_USD = r.NGDP / r.NER; // mln USD (NGDP in bln UZS / NER → result in bln, × 1000 = mln)
-    // Actually: NGDP bln UZS / NER (UZS/USD) = bln USD. × 1000 = mln USD
-    r.GDP_USD = (r.NGDP / r.NER) * 1000; // mln USD
+    // Guard: NGDP must be positive before dividing
+    if (r.NGDP <= 0) r.NGDP = prev.NGDP > 0 ? prev.NGDP : 1;
+    r.GDP_USD = (r.NGDP / r.NER) * 1000; // mln USD (NGDP bln UZS / NER UZS/USD × 1000)
 
     // --- 2. External Sector ---
     r.CA_GDP = inp.ca;
@@ -620,7 +622,8 @@ function solveFPP(inputs) {
     r.delta_res = r.CA + r.FDI + r.OFA;  // overall balance ≈ ΔReserves
     r.reserves = Math.max(0, prev.reserves + r.delta_res);
     r.imports = IMPORT_SHARE * r.GDP_USD; // mln USD
-    r.import_cover = r.reserves / (r.imports / 12);
+    // Guard: avoid division-by-zero if imports somehow zero
+    r.import_cover = r.imports > 0 ? r.reserves / (r.imports / 12) : 0;
     r.ext_debt_GDP = 54.0; // simplified — from CAEM projection
     if (i === 0) r.ext_debt_GDP = 55.1;
     if (i === 1) r.ext_debt_GDP = 54.0;
@@ -634,22 +637,25 @@ function solveFPP(inputs) {
     r.pb_GDP = r.fb_GDP + r.interest_GDP;
     r.financing_need_GDP = -r.fb_GDP;
     r.debt_USD = prev.debt_USD + (r.financing_need_GDP / 100) * r.GDP_USD;
-    r.debt_GDP = (r.debt_USD / r.GDP_USD) * 100;
+    // Guard: avoid division-by-zero on debt/GDP ratio
+    r.debt_GDP = r.GDP_USD > 0 ? (r.debt_USD / r.GDP_USD) * 100 : 0;
 
     // --- 4. Monetary Sector ---
     r.velocity = inp.vel;
     r.policy_rate = inp.pr;
     // M2 from quantity equation (use avg NGDP)
     const NGDP_avg = (prev.NGDP + r.NGDP) / 2;
-    r.M2 = NGDP_avg / inp.vel; // bln UZS
+    r.M2 = NGDP_avg / inp.vel; // bln UZS (inp.vel is guaranteed > 0 by readInputs)
     r.delta_M2 = r.M2 - prev.M2;
-    r.M2_growth = (r.delta_M2 / prev.M2) * 100;
+    // Guard: avoid division-by-zero on M2 growth rate (prev.M2 could be 0 on first run)
+    r.M2_growth = prev.M2 > 0 ? (r.delta_M2 / prev.M2) * 100 : 0;
     // NFA in UZS from reserve change
     r.delta_NFA_uzs = (r.delta_res / 1000) * r.NER; // delta_res mln USD → bln USD → × NER → bln UZS
     r.NFA = prev.NFA + r.delta_NFA_uzs;
     r.delta_NDA_uzs = r.delta_M2 - r.delta_NFA_uzs;
-    r.NFA_GDP_pct = (r.NFA / r.NGDP) * 100;
-    r.NDA_GDP_pct = ((r.M2 - r.NFA) / r.NGDP) * 100; // simplified
+    // Guard: NGDP already validated positive above
+    r.NFA_GDP_pct = r.NGDP > 0 ? (r.NFA / r.NGDP) * 100 : 0;
+    r.NDA_GDP_pct = r.NGDP > 0 ? ((r.M2 - r.NFA) / r.NGDP) * 100 : 0; // simplified
     r.real_rate = inp.pr - r.pi;
 
     results.push(r);
@@ -664,18 +670,49 @@ function solveFPP(inputs) {
 // READ INPUTS
 // ======================================================
 function readInputs() {
-  return [0,1,2].map(i => ({
-    g:       parseFloat(document.getElementById(`g${i}`).value)   || G_POT,
-    ner_dep: parseFloat(document.getElementById(`ner${i}`).value) || 5.0,
-    us_inf:  parseFloat(document.getElementById(`us${i}`).value)  || 2.5,
-    ca:      parseFloat(document.getElementById(`ca${i}`).value)  || -4.0,
-    fdi:     parseFloat(document.getElementById(`fdi${i}`).value) || 2.0,
-    ofa:     parseFloat(document.getElementById(`fa${i}`).value)  || 3.0,
-    rev:     parseFloat(document.getElementById(`rev${i}`).value) || 26.0,
-    exp:     parseFloat(document.getElementById(`exp${i}`).value) || 30.0,
-    pr:      parseFloat(document.getElementById(`pr${i}`).value)  || 10.0,
-    vel:     parseFloat(document.getElementById(`vel${i}`).value) || 5.8
-  }));
+  const negGrowthYears = [];
+  const inputs = [0,1,2].map(i => {
+    const year = 2025 + i;
+    const g_raw   = parseFloat(document.getElementById(`g${i}`).value);
+    const vel_raw = parseFloat(document.getElementById(`vel${i}`).value);
+
+    // ── Validate: no negative growth rates ──
+    const g = isNaN(g_raw) ? G_POT : g_raw;
+    if (!isNaN(g_raw) && g_raw < 0) negGrowthYears.push(year);
+
+    // ── Validate: velocity must be > 0 (prevents division-by-zero in M2 equation) ──
+    let vel = isNaN(vel_raw) ? 5.8 : vel_raw;
+    if (vel <= 0) {
+      vel = 5.8;
+      Toast.show(`Velocity \u22640 in ${year} \u2014 reset to 5.8 to prevent division-by-zero`, 'warning');
+    }
+
+    // ── Warn on silent NaN fallbacks ──
+    const fields = ['ner','us','ca','fdi','fa','rev','exp','pr'];
+    const ids    = [`ner${i}`,`us${i}`,`ca${i}`,`fdi${i}`,`fa${i}`,`rev${i}`,`exp${i}`,`pr${i}`];
+    ids.forEach((id, fi) => {
+      const v = parseFloat(document.getElementById(id).value);
+      if (isNaN(v)) Toast.show(`Empty field "${fields[fi]}" for ${year} \u2014 using default value`, 'warning');
+    });
+
+    return {
+      g,
+      ner_dep: parseFloat(document.getElementById(`ner${i}`).value) || 5.0,
+      us_inf:  parseFloat(document.getElementById(`us${i}`).value)  || 2.5,
+      ca:      parseFloat(document.getElementById(`ca${i}`).value)  || -4.0,
+      fdi:     parseFloat(document.getElementById(`fdi${i}`).value) || 2.0,
+      ofa:     parseFloat(document.getElementById(`fa${i}`).value)  || 3.0,
+      rev:     parseFloat(document.getElementById(`rev${i}`).value) || 26.0,
+      exp:     parseFloat(document.getElementById(`exp${i}`).value) || 30.0,
+      pr:      parseFloat(document.getElementById(`pr${i}`).value)  || 10.0,
+      vel,
+    };
+  });
+
+  if (negGrowthYears.length > 0) {
+    Toast.show(`\u26a0 Negative GDP growth entered for ${negGrowthYears.join(', ')} \u2014 verify this is intentional`, 'warning');
+  }
+  return inputs;
 }
 
 // ======================================================
@@ -900,7 +937,7 @@ function mkChart(id, cfg) {
 // EXPORT
 // ======================================================
 function fppExportCSV() {
-  if(!lastResults){alert('Run projection first.');return;}
+  if(!lastResults){ Toast.show('Run the projection first', 'warning'); return; }
   const r=lastResults;
   const header=['Indicator','Base 2024','2025','2026','2027'];
   const rows=[
@@ -927,12 +964,12 @@ function fppExportCSV() {
 }
 
 function fppExportPNG() {
-  if(!charts['chart-real']){alert('Run projection first.');return;}
+  if(!charts['chart-real']){ Toast.show('Run the projection first', 'warning'); return; }
   ReportEngine.downloadChartPNG('chart-real','fpp_gdp_inflation.png');
 }
 
 function fppExportPDF() {
-  if(!lastResults){alert('Run projection first.');return;}
+  if(!lastResults){ Toast.show('Run the projection first', 'warning'); return; }
   const r=lastResults, rL=r[r.length-1];
   const avg=a=>r.reduce((s,x)=>s+x[a],0)/r.length;
   ReportEngine.generatePDF({

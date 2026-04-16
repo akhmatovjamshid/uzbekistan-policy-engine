@@ -715,7 +715,20 @@ function updateChapterFilter(){
 }
 
 function runSim(){
-  const cut = parseInt(document.getElementById('sim-cut').value);
+  let cut = parseInt(document.getElementById('sim-cut').value);
+
+  // ── Validate: tariff cut cannot exceed 100% or be negative ──
+  if (cut > 100) {
+    cut = 100;
+    document.getElementById('sim-cut').value = 100;
+    Toast.show('Tariff cut capped at 100% \u2014 cannot exceed full tariff removal', 'warning');
+  }
+  if (cut < 0) {
+    cut = 0;
+    document.getElementById('sim-cut').value = 0;
+    Toast.show('Tariff cut cannot be negative \u2014 reset to 0%', 'warning');
+  }
+
   document.getElementById('sim-cut-val').textContent = cut;
   const scale = cut / 20;
   const regime = document.getElementById('sim-regime').value;
@@ -893,8 +906,9 @@ function renderSectors(){
   document.getElementById('sec-thead').innerHTML = thRow;
 
   document.getElementById('sec-tbody').innerHTML = rows.map(r=>{
-    const maxImp = rows[0].imp;
-    const barW = Math.round(r.imp/maxImp*100);
+    // Guard: prevent division-by-zero if leading row has zero imports
+    const maxImp = (rows[0] && rows[0].imp > 0) ? rows[0].imp : 1;
+    const barW = Math.round(r.imp / maxImp * 100);
     const col2 = isSec ? `<td style="max-width:220px;">${(r.name||'').substring(0,40)}</td>`
                        : `<td><span class="badge badge-mfn" style="font-size:9px;">${r.sec||''}</span></td>`;
     return `<tr>
@@ -1026,10 +1040,10 @@ function sortTable(tableId, col){
 // INIT
 // ════════════════════════════════════════════════════════════
 function init(){
-  try{ renderOverview(); }catch(e){ console.error('Overview:',e); }
-  try{ populateSimFilters(); runSim(); }catch(e){ console.error('Sim:',e); }
-  try{ renderSectors(); }catch(e){ console.error('Sectors:',e); }
-  try{ renderPartners(); }catch(e){ console.error('Partners:',e); }
+  try{ renderOverview(); }catch(e){ console.error('PE Overview error:',e); Toast.show('Error rendering overview \u2014 check console for details', 'error'); }
+  try{ populateSimFilters(); runSim(); }catch(e){ console.error('PE Simulation error:',e); Toast.show('Error running simulation \u2014 check console for details', 'error'); }
+  try{ renderSectors(); }catch(e){ console.error('PE Sectors error:',e); Toast.show('Error rendering sector data \u2014 check console for details', 'error'); }
+  try{ renderPartners(); }catch(e){ console.error('PE Partners error:',e); Toast.show('Error rendering partner data \u2014 check console for details', 'error'); }
 }
 document.addEventListener('DOMContentLoaded', init);
 
