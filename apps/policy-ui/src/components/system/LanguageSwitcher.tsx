@@ -1,4 +1,5 @@
-import { useLanguage, type LanguageCode } from '../../state/language'
+import type { LanguageCode } from '../../state/language-context'
+import { useLanguage } from '../../state/useLanguage'
 
 const OPTIONS: { value: LanguageCode; label: string }[] = [
   { value: 'en', label: 'EN' },
