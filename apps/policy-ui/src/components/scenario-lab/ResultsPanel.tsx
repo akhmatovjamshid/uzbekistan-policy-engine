@@ -25,34 +25,54 @@ function formatMetricValue(metric: HeadlineMetric) {
   return new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format(metric.value)
 }
 
-function formatDelta(metric: HeadlineMetric) {
-  if (metric.delta_abs === null) {
+const DIRECTION_GLYPH = { up: '▲', down: '▼', flat: '—' } as const
+
+function formatSignedDelta(value: number | null, unit: string) {
+  if (value === null) {
     return 'n/a'
   }
-  const sign = metric.delta_abs > 0 ? '+' : ''
-  return `${sign}${metric.delta_abs.toFixed(1)}`
+  const sign = value > 0 ? '+' : value < 0 ? '−' : ''
+  const magnitude = Math.abs(value)
+  const precision = unit === 'UZS/USD' ? 0 : 1
+  return `${sign}${magnitude.toFixed(precision)}`
 }
 
+const BAR_AXIS_MAX = 6
+
 function ScenarioMainChart({ chart }: { chart: ChartSpec }) {
+  const titleId = `scenario-chart-title-${chart.chart_id}`
+
   if (chart.chart_type === 'bar') {
     const series = chart.series[0]
     return (
-      <div className="scenario-main-chart" aria-label={chart.title}>
+      <div className="scenario-main-chart" aria-labelledby={titleId}>
         <div className="scenario-main-chart__head">
-          <h3>{chart.title}</h3>
+          <h3 id={titleId}>{chart.title}</h3>
           <p>{chart.subtitle}</p>
         </div>
         <ul className="scenario-chart-bars">
           {chart.x.values.map((label, index) => {
             const value = series?.values[index] ?? 0
-            const width = Math.min(100, Math.abs(value) * 22 + 8)
+            const fillPercent = Math.min(50, (Math.abs(value) / BAR_AXIS_MAX) * 50)
+            const isNegative = value < 0
             return (
               <li key={label.toString()}>
-                <span>{label}</span>
-                <div>
-                  <i style={{ width: `${width}%` }} />
+                <span className="scenario-chart-bars__label">{label}</span>
+                <div className="scenario-chart-bars__track" aria-hidden="true">
+                  <span className="scenario-chart-bars__axis" />
+                  <span
+                    className={`scenario-chart-bars__fill ${
+                      isNegative
+                        ? 'scenario-chart-bars__fill--negative'
+                        : 'scenario-chart-bars__fill--positive'
+                    }`}
+                    style={{ width: `${fillPercent}%` }}
+                  />
                 </div>
-                <strong>{value.toFixed(1)}</strong>
+                <strong className="scenario-chart-bars__value">
+                  {formatSignedDelta(value, chart.y.unit)}
+                  <span aria-hidden="true"> {chart.y.unit}</span>
+                </strong>
               </li>
             )
           })}
@@ -63,9 +83,9 @@ function ScenarioMainChart({ chart }: { chart: ChartSpec }) {
   }
 
   return (
-    <div className="scenario-main-chart" aria-label={chart.title}>
+    <div className="scenario-main-chart" aria-labelledby={titleId}>
       <div className="scenario-main-chart__head">
-        <h3>{chart.title}</h3>
+        <h3 id={titleId}>{chart.title}</h3>
         <p>{chart.subtitle}</p>
       </div>
       <table className="scenario-chart-table">
@@ -105,34 +125,56 @@ export function ResultsPanel({ activeTab, onTabChange, results }: ResultsPanelPr
         <p>Review headline effects and transmission paths for the current assumptions.</p>
       </div>
 
-      <div className="scenario-headline-grid">
-        {results.headline_metrics.map((metric) => (
-          <article key={metric.metric_id} className="scenario-headline-card">
-            <p>{metric.label}</p>
-            <h3>
-              {formatMetricValue(metric)} <span>{metric.unit}</span>
-            </h3>
-            <small>vs baseline: {formatDelta(metric)}</small>
-          </article>
-        ))}
-      </div>
-
       <div className="scenario-tab-control" role="tablist" aria-label="Result views">
-        {(Object.keys(TAB_LABELS) as ScenarioLabResultTab[]).map((tab) => (
-          <button
-            key={tab}
-            type="button"
-            role="tab"
-            aria-selected={activeTab === tab}
-            className={activeTab === tab ? 'active' : ''}
-            onClick={() => onTabChange(tab)}
-          >
-            {TAB_LABELS[tab]}
-          </button>
-        ))}
+        {(Object.keys(TAB_LABELS) as ScenarioLabResultTab[]).map((tab) => {
+          const isActive = activeTab === tab
+          return (
+            <button
+              key={tab}
+              id={`scenario-tab-${tab}`}
+              type="button"
+              role="tab"
+              aria-selected={isActive}
+              aria-controls={`scenario-tabpanel-${tab}`}
+              tabIndex={isActive ? 0 : -1}
+              className={isActive ? 'active' : ''}
+              onClick={() => onTabChange(tab)}
+            >
+              {TAB_LABELS[tab]}
+            </button>
+          )
+        })}
       </div>
 
-      <ScenarioMainChart chart={activeChart} />
+      <div className="scenario-headline-grid">
+        {results.headline_metrics.map((metric) => {
+          const deltaText = formatSignedDelta(metric.delta_abs, metric.unit)
+          const glyph = DIRECTION_GLYPH[metric.direction]
+          return (
+            <article key={metric.metric_id} className="scenario-headline-card">
+              <p className="scenario-headline-card__label">{metric.label}</p>
+              <p className="scenario-headline-card__value">
+                {formatMetricValue(metric)} <span>{metric.unit}</span>
+              </p>
+              <span
+                className="scenario-headline-card__delta"
+                aria-label={`Change vs baseline: ${deltaText}`}
+              >
+                <span aria-hidden="true">{glyph}</span>
+                <span>{deltaText} vs baseline</span>
+              </span>
+            </article>
+          )
+        })}
+      </div>
+
+      <div
+        role="tabpanel"
+        id={`scenario-tabpanel-${activeTab}`}
+        aria-labelledby={`scenario-tab-${activeTab}`}
+      >
+        <ScenarioMainChart chart={activeChart} />
+      </div>
     </section>
   )
 }

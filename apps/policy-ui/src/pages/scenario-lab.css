@@ -55,8 +55,8 @@
 
 .scenario-session-controls label span {
   color: var(--color-text-muted);
-  font-size: 0.78rem;
-  text-transform: uppercase;
+  font-size: 0.85rem;
+  font-weight: 500;
 }
 
 .scenario-session-controls input,
@@ -122,12 +122,15 @@
 }
 
 .scenario-assumption-field {
-  background: var(--color-surface-muted);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
+  border-top: 1px solid var(--color-border);
   display: grid;
   gap: var(--space-xs);
-  padding: var(--space-sm);
+  padding: var(--space-sm) 0;
+}
+
+.scenario-assumption-list .scenario-assumption-field:first-child {
+  border-top: 0;
+  padding-top: 0;
 }
 
 .scenario-assumption-field__label {
@@ -191,29 +194,35 @@
   border-radius: var(--radius-sm);
   display: grid;
   gap: var(--space-xs);
-  padding: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
 }
 
-.scenario-headline-card p {
+.scenario-headline-card__label {
   color: var(--color-text-muted);
   font-size: 0.8rem;
   margin: 0;
 }
 
-.scenario-headline-card h3 {
-  font-size: 1.06rem;
+.scenario-headline-card__value {
+  font-size: 1.08rem;
+  font-weight: 680;
+  line-height: 1.15;
   margin: 0;
 }
 
-.scenario-headline-card h3 span {
+.scenario-headline-card__value span {
   color: var(--color-text-muted);
   font-size: 0.76rem;
   font-weight: 500;
 }
 
-.scenario-headline-card small {
+.scenario-headline-card__delta {
+  align-items: center;
   color: var(--color-text-muted);
+  display: inline-flex;
   font-size: 0.76rem;
+  font-variant-numeric: tabular-nums;
+  gap: 0.3rem;
 }
 
 .scenario-tab-control {
@@ -221,9 +230,11 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: var(--space-xs);
+  overflow-x: auto;
   padding: var(--space-xs);
+  scrollbar-width: thin;
 }
 
 .scenario-tab-control button {
@@ -232,11 +243,13 @@
   border-radius: var(--radius-sm);
   color: var(--color-text-muted);
   cursor: pointer;
+  flex: 0 0 auto;
   font: inherit;
   font-size: 0.82rem;
   font-weight: 600;
   min-height: 1.95rem;
-  padding: 0 var(--space-sm);
+  padding: 0 var(--space-md);
+  white-space: nowrap;
 }
 
 .scenario-tab-control button.active {
@@ -246,11 +259,8 @@
 }
 
 .scenario-main-chart {
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
   display: grid;
-  gap: var(--space-sm);
-  padding: var(--space-md);
+  gap: var(--space-md);
 }
 
 .scenario-main-chart__head {
@@ -303,7 +313,7 @@
 
 .scenario-chart-bars {
   display: grid;
-  gap: var(--space-xs);
+  gap: var(--space-sm);
   list-style: none;
   margin: 0;
   padding: 0;
@@ -313,31 +323,57 @@
   align-items: center;
   display: grid;
   gap: var(--space-sm);
-  grid-template-columns: 8.5rem 1fr auto;
+  grid-template-columns: 9rem 1fr 6rem;
 }
 
-.scenario-chart-bars li span {
+.scenario-chart-bars__label {
   color: var(--color-text-muted);
   font-size: 0.82rem;
 }
 
-.scenario-chart-bars li div {
+.scenario-chart-bars__track {
   background: var(--color-surface-muted);
-  border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   height: 0.75rem;
-  overflow: hidden;
+  position: relative;
 }
 
-.scenario-chart-bars li i {
-  background: var(--color-brand-soft);
-  display: block;
-  height: 100%;
+.scenario-chart-bars__axis {
+  background: var(--color-border-strong);
+  bottom: -0.15rem;
+  left: 50%;
+  position: absolute;
+  top: -0.15rem;
+  width: 1px;
 }
 
-.scenario-chart-bars li strong {
-  font-size: 0.82rem;
+.scenario-chart-bars__fill {
+  background: var(--color-brand);
+  border-radius: var(--radius-sm);
+  bottom: 0;
+  opacity: 0.75;
+  position: absolute;
+  top: 0;
+}
+
+.scenario-chart-bars__fill--positive {
+  left: 50%;
+}
+
+.scenario-chart-bars__fill--negative {
+  right: 50%;
+}
+
+.scenario-chart-bars__value {
+  font-size: 0.84rem;
+  font-variant-numeric: tabular-nums;
   font-weight: 600;
+  text-align: end;
+}
+
+.scenario-chart-bars__value span {
+  color: var(--color-text-muted);
+  font-weight: 500;
 }
 
 .scenario-main-chart__takeaway {
@@ -354,15 +390,22 @@
 }
 
 .scenario-interpretation-section {
-  border-top: 1px solid var(--color-border);
   display: grid;
   gap: var(--space-xs);
-  padding-top: var(--space-sm);
+}
+
+.scenario-interpretation-section + .scenario-interpretation-section {
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-md);
 }
 
 .scenario-interpretation-section h3 {
-  font-size: 0.86rem;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   margin: 0;
+  text-transform: uppercase;
 }
 
 .scenario-interpretation-section ul {

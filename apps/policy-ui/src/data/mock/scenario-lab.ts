@@ -528,5 +528,4 @@ export const scenarioLabWorkspaceMock: ScenarioLabWorkspace = {
   generated_at: '2026-04-17T11:00:00+05:00',
   assumptions: SCENARIO_ASSUMPTIONS.map((item) => ({ ...item })),
   presets: PRESETS,
-  baseline_results: buildScenarioLabResults(getDefaultAssumptionState()),
 }

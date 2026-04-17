@@ -196,7 +196,6 @@ export type ScenarioLabWorkspace = {
   generated_at: string
   assumptions: ScenarioLabAssumptionInput[]
   presets: ScenarioLabPreset[]
-  baseline_results: ScenarioLabResultsBundle
 }
 
 export type ScenarioResult = {
