@@ -43,39 +43,44 @@ export function NowcastForecastBlock({ chart }: NowcastForecastBlockProps) {
 
       {summary ? (
         <div className="overview-nowcast-summary">
-          <article>
+          <div>
             <p className="overview-panel-kicker">{summary.latestLabel}</p>
             <p className="overview-panel-value">{summary.latestValue.toFixed(1)}%</p>
-          </article>
-          <article>
+          </div>
+          <div>
             <p className="overview-panel-kicker">Prior estimate</p>
             <p className="overview-panel-value">{summary.priorValue.toFixed(1)}%</p>
-          </article>
-          <article>
+          </div>
+          <div>
             <p className="overview-panel-kicker">Revision</p>
             <p className="overview-panel-value">{valueWithSign(summary.revision)} pp</p>
-          </article>
+          </div>
         </div>
       ) : null}
 
-      <ul className="overview-nowcast-series" aria-label="Estimate path">
-        <li className="overview-nowcast-series__header" aria-hidden="true">
-          <span>Period</span>
-          <span>Latest</span>
-          <span>Prior</span>
-        </li>
-        {chart.x.values.map((period, index) => {
-          const latest = chart.series[0]?.values[index]
-          const prior = chart.series[1]?.values[index]
-          return (
-            <li key={period.toString()}>
-              <span>{period}</span>
-              <span>{latest?.toFixed(1)}%</span>
-              <span>{prior?.toFixed(1)}%</span>
-            </li>
-          )
-        })}
-      </ul>
+      <table className="overview-nowcast-series">
+        <caption>Estimate path (real GDP growth, %)</caption>
+        <thead>
+          <tr>
+            <th scope="col">Period</th>
+            <th scope="col">Latest</th>
+            <th scope="col">Prior</th>
+          </tr>
+        </thead>
+        <tbody>
+          {chart.x.values.map((period, index) => {
+            const latest = chart.series[0]?.values[index]
+            const prior = chart.series[1]?.values[index]
+            return (
+              <tr key={period.toString()}>
+                <th scope="row">{period}</th>
+                <td>{latest?.toFixed(1)}%</td>
+                <td>{prior?.toFixed(1)}%</td>
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
 
       <p className="overview-panel-takeaway">{chart.takeaway}</p>
     </section>

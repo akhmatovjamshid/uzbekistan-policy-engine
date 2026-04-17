@@ -8,34 +8,30 @@ import { PageHeader } from '../components/layout/PageHeader'
 import { overviewV1Data } from '../data/mock/overview'
 import './overview.css'
 
-function buildStateHeaderText() {
-  return overviewV1Data.scenario_result.narrative.summary
-}
-
 export function OverviewPage() {
   const { scenario_result, risks, quick_actions } = overviewV1Data
   const nowcastChart = scenario_result.charts[0]
 
   return (
     <PageContainer className="overview-page">
-      <section className="overview-hero">
-        <PageHeader
-          title="Overview"
-          description="Decision-first macro snapshot designed to show what changed, why it matters, and where to test next."
-        />
+      <PageHeader
+        title="Overview"
+        description="Decision-first macro snapshot designed to show what changed, why it matters, and where to test next."
+      />
 
-        <EconomicStateHeader
-          summary={buildStateHeaderText()}
-          updatedAt={scenario_result.narrative.generated_at}
-        />
-      </section>
+      <EconomicStateHeader
+        summary={scenario_result.narrative.summary}
+        updatedAt={scenario_result.narrative.generated_at}
+      />
 
       <KpiStrip metrics={scenario_result.headline_metrics} />
 
-      <div className="overview-two-column">
-        <NowcastForecastBlock chart={nowcastChart} />
-        <RiskPanel risks={risks} />
-      </div>
+      {nowcastChart ? (
+        <div className="overview-two-column">
+          <NowcastForecastBlock chart={nowcastChart} />
+          <RiskPanel risks={risks} />
+        </div>
+      ) : null}
 
       <QuickActions actions={quick_actions} />
     </PageContainer>

@@ -3,15 +3,6 @@
   gap: clamp(1.25rem, 2.2vw, 2rem);
 }
 
-.overview-hero {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  display: grid;
-  gap: var(--space-xl);
-  padding: clamp(1.25rem, 2.2vw, 2rem);
-}
-
 .overview-page .page-header {
   gap: var(--space-md);
 }
@@ -105,28 +96,23 @@
 }
 
 .overview-kpi-trend {
+  align-items: center;
+  background: var(--color-surface-muted);
   border: 1px solid var(--color-border);
   border-radius: 99px;
+  color: var(--color-text);
+  display: inline-flex;
   font-size: 0.73rem;
+  font-variant-numeric: tabular-nums;
   font-weight: 600;
+  gap: 0.25rem;
   line-height: 1;
-  padding: 0.24rem 0.48rem;
+  padding: 0.24rem 0.52rem;
   white-space: nowrap;
 }
 
-.overview-kpi-trend--up {
-  background: #eef6f0;
-  color: #23593a;
-}
-
-.overview-kpi-trend--down {
-  background: #f8efef;
-  color: #6a2d2d;
-}
-
-.overview-kpi-trend--flat {
-  background: #eef2f7;
-  color: #30465f;
+.overview-kpi-trend__glyph {
+  color: var(--color-text-muted);
 }
 
 .overview-kpi-card__value {
@@ -161,29 +147,27 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   min-width: 0;
-}
-
-.overview-panel--primary {
-  padding: clamp(1.1rem, 1.9vw, 1.75rem);
+  padding: clamp(1rem, 1.8vw, 1.5rem);
 }
 
 .overview-panel--companion {
   background: var(--color-surface-muted);
-  padding: clamp(1rem, 1.6vw, 1.4rem);
 }
 
 .overview-nowcast-summary {
   display: grid;
-  gap: var(--space-md);
+  gap: var(--space-xl);
   grid-template-columns: repeat(3, minmax(0, 1fr));
   margin-bottom: var(--space-lg);
 }
 
-.overview-nowcast-summary article {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  padding: var(--space-sm) var(--space-md);
+.overview-nowcast-summary > div {
+  border-left: 2px solid var(--color-border);
+  padding-left: var(--space-md);
+}
+
+.overview-nowcast-summary > div:first-child {
+  border-left-color: var(--color-border-strong);
 }
 
 .overview-panel-kicker {
@@ -200,39 +184,44 @@
 
 .overview-nowcast-series {
   border: 1px solid var(--color-border);
+  border-collapse: collapse;
   border-radius: var(--radius-sm);
-  list-style: none;
-  margin: 0;
+  font-size: 0.86rem;
   overflow: hidden;
-  padding: 0;
+  width: 100%;
 }
 
-.overview-nowcast-series li {
-  align-items: center;
-  display: grid;
-  gap: var(--space-md);
-  grid-template-columns: 1fr auto auto;
+.overview-nowcast-series caption {
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+  margin-bottom: var(--space-xs);
+  text-align: start;
+}
+
+.overview-nowcast-series th,
+.overview-nowcast-series td {
   padding: var(--space-sm) var(--space-md);
+  text-align: end;
 }
 
-.overview-nowcast-series li + li {
-  border-top: 1px solid var(--color-border);
-}
-
-.overview-nowcast-series__header {
+.overview-nowcast-series thead th {
   background: var(--color-surface-muted);
+  border-bottom: 1px solid var(--color-border);
   color: var(--color-text-muted);
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.02em;
 }
 
-.overview-nowcast-series li span {
-  font-size: 0.86rem;
+.overview-nowcast-series th:first-child,
+.overview-nowcast-series td:first-child {
+  color: var(--color-text-muted);
+  text-align: start;
 }
 
-.overview-nowcast-series li span:first-child {
-  color: var(--color-text-muted);
+.overview-nowcast-series tbody tr + tr th,
+.overview-nowcast-series tbody tr + tr td {
+  border-top: 1px solid var(--color-border);
 }
 
 .overview-panel-takeaway {
@@ -295,7 +284,7 @@
 .overview-actions-grid {
   display: grid;
   gap: var(--space-sm);
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
 }
 
 .overview-action-card {
@@ -331,12 +320,6 @@
   border-color: var(--color-border-strong);
 }
 
-@media (max-width: 1240px) {
-  .overview-actions-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
 @media (max-width: 1120px) {
   .overview-kpi-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -345,10 +328,6 @@
   .overview-two-column {
     grid-template-columns: 1fr;
   }
-
-  .overview-actions-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
 
 @media (max-width: 700px) {
@@ -356,7 +335,6 @@
     grid-template-columns: 1fr;
   }
 
-  .overview-actions-grid,
   .overview-kpi-grid {
     grid-template-columns: 1fr;
   }
