@@ -558,112 +558,168 @@
 .lit-item a { color: var(--blue); text-decoration: none; }
 .lit-item a:hover { text-decoration: underline; }
 
-/* ── Policy Tracker page ── */
-.tracker-content { padding: 32px 40px 60px; overflow-y: auto; flex: 1; }
-.tracker-grid-top {
-  display: grid; grid-template-columns: 1.05fr 1fr; gap: 16px; margin-bottom: 16px;
+/* ── Policy Tracker page (v0.2 — Intelligence Feed) ── */
+.tracker-content {
+  padding: 32px 40px 60px; overflow-y: auto; flex: 1;
+  max-width: 1100px; margin: 0 auto; width: 100%;
 }
-.tracker-kpi-grid {
-  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;
+.tracker-header { margin-bottom: 20px; }
+.tracker-header h2 {
+  font-size: 22px; font-weight: 800; letter-spacing: -.3px; color: var(--text);
+  margin: 0;
 }
-.tracker-kpi-card {
-  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 14px 16px; box-shadow: var(--shadow-sm);
-}
-.tracker-kpi-title { font-size: 11px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: .5px; }
-.tracker-kpi-value { font-size: 28px; font-weight: 800; color: var(--text); line-height: 1.1; margin-top: 4px; }
-.tracker-kpi-sub { font-size: 12px; color: var(--text2); margin-top: 6px; }
-.tracker-activity-card { margin-bottom: 0; }
+.tracker-header p { font-size: 13px; color: var(--text3); margin-top: 4px; }
 
-.tracker-map-domain {
-  display: grid; grid-template-columns: 1.15fr 1fr; gap: 16px; margin-bottom: 16px;
+/* KPI strip */
+.kpi-strip {
+  display: flex; gap: 12px; margin-bottom: 20px;
 }
-.tracker-map-card, .tracker-domain-wrap, .tracker-timeline-card {
-  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 16px; box-shadow: var(--shadow-sm);
+.kpi-item {
+  flex: 1; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 16px; box-shadow: var(--shadow-sm);
+  min-width: 0;
 }
-.tracker-panel-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
-.tracker-panel-sub { font-size: 12px; color: var(--text3); margin-bottom: 12px; }
-.tracker-map {
-  width: 100%; height: 310px; border: 1px solid var(--border); border-radius: 8px; background: #f8fafc;
+.kpi-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .5px; color: var(--text3);
 }
-.map-region {
-  fill: #dbe4ef; stroke: #94a3b8; stroke-width: 1.2; cursor: pointer; transition: fill .15s ease, stroke .15s ease;
+.kpi-row {
+  display: flex; align-items: baseline; gap: 8px; margin-top: 4px; flex-wrap: wrap;
 }
-.map-region:hover { fill: #bfdbfe; stroke: #2563eb; }
-.map-region.selected { fill: #2563eb; stroke: #1d4ed8; }
-.tracker-region-chip {
-  display: inline-flex; align-items: center; gap: 8px; margin-top: 10px;
-  border: 1px solid var(--border); border-radius: 999px; padding: 4px 10px;
-  font-size: 12px; color: var(--text2); background: var(--surface2);
+.kpi-value {
+  font-size: 26px; font-weight: 800; color: var(--text); line-height: 1;
 }
-.tracker-domain-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px;
+.kpi-delta { font-size: 11px; font-weight: 600; color: var(--green); }
+
+/* Filter bar */
+.filter-bar {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;
 }
-.tracker-domain-card {
-  border: 1px solid var(--border); border-radius: 8px; padding: 12px;
-  display: flex; flex-direction: column; gap: 8px; background: var(--surface);
+.filter-bar-label {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .4px; color: var(--text3); margin-right: 4px;
 }
-.tracker-domain-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-.tracker-domain-name { font-size: 13px; font-weight: 700; color: var(--text); }
-.tracker-domain-meta { font-size: 11px; color: var(--text3); line-height: 1.45; }
-.tracker-status-badge {
-  font-size: 10px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase;
-  padding: 2px 7px; border-radius: 999px;
+.tracker-tag-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.tracker-type-group, .status-group {
+  display: flex; gap: 0; border: 1.5px solid var(--border);
+  border-radius: 999px; overflow: hidden; background: var(--surface); flex-shrink: 0;
+}
+.tracker-type-group { margin-right: 4px; }
+.status-group { margin-left: auto; }
+.type-btn, .status-btn {
+  padding: 6px 12px; font-size: 12px; font-weight: 600; color: var(--text2);
+  border: none; background: transparent; cursor: pointer;
+  transition: all .15s ease; white-space: nowrap; font-family: inherit;
+}
+.type-btn:not(:last-child), .status-btn:not(:last-child) {
+  border-right: 1px solid var(--border);
+}
+.type-btn:hover, .status-btn:hover { background: var(--surface2); }
+.type-btn.active, .status-btn.active { background: var(--text); color: #fff; }
+
+.chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 600;
+  border: 1.5px solid var(--border); background: var(--surface); color: var(--text2);
+  cursor: pointer; transition: all .15s ease; user-select: none;
+  font-family: inherit;
+}
+.chip:hover { border-color: var(--blue); color: var(--blue); background: #eff6ff; }
+.chip.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+
+/* Search row */
+.search-row {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+}
+.search-input {
+  flex: 1; padding: 10px 14px 10px 36px;
+  border: 1.5px solid var(--border); border-radius: 10px;
+  font-size: 13px; font-family: inherit; color: var(--text);
+  background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2394a3b8' viewBox='0 0 24 24'%3E%3Cpath d='M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E") 12px center no-repeat;
+  transition: border-color .15s;
+}
+.search-input:focus { outline: none; border-color: var(--blue); }
+.result-count { font-size: 12px; color: var(--text3); white-space: nowrap; }
+
+/* Entry list */
+.tracker-list { display: flex; flex-direction: column; gap: 8px; }
+.tracker-card {
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: 10px; overflow: hidden;
+  transition: border-color .15s, box-shadow .15s;
+}
+.tracker-card:hover { border-color: #c7d2e0; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
+.tracker-card.highlight { border-color: var(--blue); box-shadow: 0 0 0 2px rgba(37, 99, 235, .18); }
+.tracker-summary {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; cursor: pointer; list-style: none;
+}
+.tracker-summary::-webkit-details-marker { display: none; }
+.tracker-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.tracker-org-icon { font-size: 16px; flex-shrink: 0; line-height: 1; }
+.tracker-info { flex: 1; min-width: 0; }
+.tracker-title {
+  font-size: 13.5px; font-weight: 700; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.tracker-meta {
+  display: flex; align-items: center; gap: 8px; margin-top: 3px;
+  font-size: 11.5px; color: var(--text3); flex-wrap: wrap;
+}
+.tracker-meta .sep { color: var(--border2); }
+.tracker-meta .doc-num { font-family: 'JetBrains Mono', monospace; color: var(--text2); font-weight: 600; }
+.tracker-badges { display: flex; gap: 6px; flex-shrink: 0; }
+.badge {
+  font-size: 10px; font-weight: 700; letter-spacing: .3px;
+  text-transform: uppercase; padding: 3px 9px; border-radius: 999px;
+  white-space: nowrap;
+}
+.tracker-chevron {
+  color: var(--text3); font-size: 14px;
+  transition: transform .2s; flex-shrink: 0;
+}
+details[open] > .tracker-summary .tracker-chevron { transform: rotate(90deg); }
+
+/* Expanded body */
+.tracker-body {
+  border-top: 1px solid var(--border); padding: 14px 16px 16px;
+}
+.tracker-desc {
+  font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 12px;
+}
+.tracker-pills {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; align-items: center;
+}
+.pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border: 1px solid var(--border); border-radius: 999px;
+  font-size: 11px; font-weight: 600; color: var(--text2); background: var(--surface2);
+}
+.tracker-link {
+  font-size: 12px; color: var(--blue); font-weight: 600;
+  text-decoration: none; display: inline-block; margin-right: 14px;
+}
+.tracker-link:hover { text-decoration: underline; }
+.model-chip {
+  font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px;
+  background: #eff6ff; color: var(--blue); border: 1px solid #bfdbfe;
+  text-transform: uppercase;
 }
 
-.tracker-filter-wrap {
-  display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-bottom: 12px;
+/* Parent-doc reference */
+.parent-doc-ref {
+  margin-top: 6px; font-size: 12px; color: var(--text3);
+  display: inline-flex; align-items: center; gap: 6px;
 }
-.tracker-filter {
-  display: flex; flex-direction: column; gap: 4px;
-}
-.tracker-filter label {
-  font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: .5px; font-weight: 700;
-}
-.tracker-filter select {
-  border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px;
-  font-size: 12px; background: var(--surface); color: var(--text);
-}
+.parent-doc-ref a { color: var(--blue); font-weight: 600; cursor: pointer; }
+.parent-doc-ref a:hover { text-decoration: underline; }
 
-.tracker-timeline {
-  display: flex; flex-direction: column; gap: 10px;
-}
-.tracker-entry {
-  border: 1px solid var(--border); border-radius: 8px; background: var(--surface);
-}
-.tracker-entry summary {
-  list-style: none; cursor: pointer; padding: 12px 12px 10px;
-}
-.tracker-entry summary::-webkit-details-marker { display: none; }
-.tracker-entry-title {
-  display: flex; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 5px;
-}
-.tracker-entry-left { display: flex; align-items: center; gap: 8px; min-width: 0; }
-.tracker-entry-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-.tracker-entry-name {
-  font-size: 13px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.tracker-entry-meta { font-size: 11px; color: var(--text3); display: flex; flex-wrap: wrap; gap: 6px; }
-.tracker-entry-body {
-  border-top: 1px solid var(--border); padding: 10px 12px 12px;
-}
-.tracker-entry-desc { font-size: 12px; color: var(--text2); line-height: 1.55; margin-bottom: 10px; }
-.tracker-pill-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
-.tracker-pill {
-  border: 1px solid var(--border); border-radius: 999px; padding: 2px 8px; font-size: 10px;
-  font-weight: 700; color: var(--text2); background: var(--surface2);
-}
-.tracker-pill-btn {
-  cursor: pointer; font-family: inherit; line-height: 1.4;
-}
-.tracker-pill-btn:hover { border-color: var(--blue); color: var(--blue); }
-.tracker-entry-source a { font-size: 11px; color: var(--blue); text-decoration: none; }
-.tracker-entry-source a:hover { text-decoration: underline; }
+/* Empty state */
 .tracker-empty {
-  text-align: center; color: var(--text3); font-size: 12px; border: 1px dashed var(--border2);
-  border-radius: 8px; padding: 20px;
+  text-align: center; padding: 48px 20px; color: var(--text3);
+  border: 1px dashed var(--border2); border-radius: 10px;
 }
+.tracker-empty-icon { font-size: 32px; margin-bottom: 10px; }
 
 /* ── Responsive ── */
 @media (max-width: 900px) {
@@ -676,8 +732,10 @@
   .home-content, .compare-content, .about-content, .explorer-content, .research-content, .literature-content, .tracker-content { padding: 20px; }
   .model-grid, .compare-grid { grid-template-columns: 1fr; }
   .explorer-controls, .research-toolbar, .literature-toolbar { grid-template-columns: 1fr; }
-  .tracker-grid-top, .tracker-map-domain { grid-template-columns: 1fr; }
-  .tracker-filter-wrap { grid-template-columns: 1fr 1fr; }
+  .kpi-strip { flex-wrap: wrap; }
+  .kpi-item { flex: 1 1 calc(50% - 6px); }
+  .filter-bar { flex-direction: column; align-items: stretch; }
+  .tracker-type-group, .status-group { margin-left: 0; align-self: flex-start; }
   .hero-stats { flex-wrap: wrap; gap: 20px; }
 }
 </style>
@@ -1550,82 +1608,28 @@
     <!-- ── POLICY TRACKER ── -->
     <div id="page-tracker" class="page">
       <div class="tracker-content">
-        <div class="section-header" style="margin-bottom:8px;">
-          <h2 data-i18n="tracker_title">Policy Reform Tracker</h2>
-          <span data-i18n="tracker_sub">Interactive map, timeline, and reform dashboard for Uzbekistan</span>
+        <div class="tracker-header">
+          <h2 data-i18n="tracker_title">Policy Intelligence Feed</h2>
+          <p data-i18n="tracker_sub">Government actions from lex.uz and assessments from international organizations</p>
         </div>
 
-        <div class="tracker-grid-top">
-          <div class="tracker-kpi-grid" id="tracker-kpi-grid"></div>
-          <div class="chart-card tracker-activity-card">
-            <div class="chart-card-header" style="margin-bottom:8px;">
-              <div>
-                <div class="chart-card-title" data-i18n="tracker_activity_title">Reform Activity by Domain</div>
-                <div class="chart-card-sub" data-i18n="tracker_activity_sub">Policy changes grouped by reform domain</div>
-              </div>
-            </div>
-            <div style="height:230px;position:relative;">
-              <canvas id="tracker-activity-chart"></canvas>
-            </div>
-          </div>
+        <div class="kpi-strip" id="tracker-kpi-strip"></div>
+
+        <div class="filter-bar">
+          <span class="filter-bar-label" data-i18n="tracker_filter_label">Filter</span>
+          <div class="tracker-type-group" id="tracker-type-group"></div>
+          <div class="tracker-tag-chips" id="tracker-tag-chips"></div>
+          <div class="status-group" id="tracker-status-group"></div>
         </div>
 
-        <div class="tracker-map-domain">
-          <div class="tracker-map-card">
-            <div class="tracker-panel-title" data-i18n="tracker_map_title">Interactive Uzbekistan Map</div>
-            <div class="tracker-panel-sub" data-i18n="tracker_map_sub">Select a region to filter reforms in the timeline</div>
-            <svg class="tracker-map" viewBox="0 0 520 320" aria-label="Uzbekistan regions map">
-              <path class="map-region" data-region="karakalpakstan" onclick="selectTrackerRegion('karakalpakstan')" d="M30 40 L170 30 L175 100 L120 120 L40 105 Z"></path>
-              <path class="map-region" data-region="khorezm" onclick="selectTrackerRegion('khorezm')" d="M40 120 L118 126 L112 182 L34 186 Z"></path>
-              <path class="map-region" data-region="bukhara" onclick="selectTrackerRegion('bukhara')" d="M120 120 L220 108 L230 172 L118 182 Z"></path>
-              <path class="map-region" data-region="navoi" onclick="selectTrackerRegion('navoi')" d="M175 58 L292 48 L300 124 L220 108 L175 102 Z"></path>
-              <path class="map-region" data-region="samarkand" onclick="selectTrackerRegion('samarkand')" d="M230 124 L306 118 L316 176 L230 172 Z"></path>
-              <path class="map-region" data-region="kashkadarya" onclick="selectTrackerRegion('kashkadarya')" d="M212 176 L304 176 L290 246 L200 234 Z"></path>
-              <path class="map-region" data-region="surkhandarya" onclick="selectTrackerRegion('surkhandarya')" d="M292 210 L350 214 L344 286 L272 280 Z"></path>
-              <path class="map-region" data-region="jizzakh" onclick="selectTrackerRegion('jizzakh')" d="M306 118 L364 116 L372 172 L316 176 Z"></path>
-              <path class="map-region" data-region="sirdarya" onclick="selectTrackerRegion('sirdarya')" d="M364 116 L408 120 L408 170 L372 172 Z"></path>
-              <path class="map-region" data-region="tashkent_region" onclick="selectTrackerRegion('tashkent_region')" d="M408 114 L468 106 L482 162 L408 170 Z"></path>
-              <path class="map-region" data-region="tashkent_city" onclick="selectTrackerRegion('tashkent_city')" d="M434 132 L448 132 L448 146 L434 146 Z"></path>
-              <path class="map-region" data-region="namangan" onclick="selectTrackerRegion('namangan')" d="M408 170 L448 168 L454 206 L414 210 Z"></path>
-              <path class="map-region" data-region="fergana" onclick="selectTrackerRegion('fergana')" d="M448 168 L496 170 L502 214 L454 208 Z"></path>
-              <path class="map-region" data-region="andijan" onclick="selectTrackerRegion('andijan')" d="M496 174 L518 178 L516 212 L500 214 Z"></path>
-            </svg>
-            <div class="tracker-region-chip" id="tracker-region-chip">Region: All</div>
-          </div>
-
-          <div class="tracker-domain-wrap">
-            <div class="tracker-panel-title" data-i18n="tracker_domains_title">Reform Domain Cards</div>
-            <div class="tracker-panel-sub" data-i18n="tracker_domains_sub">Counts, status, and source coverage by domain</div>
-            <div class="tracker-domain-grid" id="tracker-domain-grid"></div>
-          </div>
+        <div class="search-row">
+          <input id="tracker-search" class="search-input" type="text"
+                 placeholder="Search entries..." data-i18n-placeholder="tracker_search_ph"
+                 oninput="onTrackerSearch(this.value)">
+          <span class="result-count" id="tracker-result-count"></span>
         </div>
 
-        <div class="tracker-timeline-card">
-          <div class="tracker-panel-title" data-i18n="tracker_timeline_title">Reform Timeline</div>
-          <div class="tracker-filter-wrap">
-            <div class="tracker-filter">
-              <label data-i18n="tracker_filter_category">Category</label>
-              <select id="tracker-filter-category" onchange="filterTracker()"></select>
-            </div>
-            <div class="tracker-filter">
-              <label data-i18n="tracker_filter_status">Status</label>
-              <select id="tracker-filter-status" onchange="filterTracker()"></select>
-            </div>
-            <div class="tracker-filter">
-              <label data-i18n="tracker_filter_sector">Sector</label>
-              <select id="tracker-filter-sector" onchange="filterTracker()"></select>
-            </div>
-            <div class="tracker-filter">
-              <label data-i18n="tracker_filter_region">Region</label>
-              <select id="tracker-filter-region" onchange="filterTracker()"></select>
-            </div>
-            <div class="tracker-filter">
-              <label data-i18n="tracker_filter_doc">Document Type</label>
-              <select id="tracker-filter-doc" onchange="filterTracker()"></select>
-            </div>
-          </div>
-          <div id="tracker-timeline" class="tracker-timeline"></div>
-        </div>
+        <div id="tracker-list" class="tracker-list"></div>
       </div>
     </div>
 
@@ -1876,21 +1880,20 @@ const LANGS = {
     compare_presets_title:'Pre-Built Policy Packages',
     compare_presets_desc:'Click a preset to load it as a saved scenario with pre-configured parameters.',
     advisor_setup:'Configuration', advisor_run_title:'Run Analysis',
-    tracker_title:'Policy Reform Tracker',
-    tracker_sub:'Interactive map, timeline, and reform dashboard for Uzbekistan',
-    tracker_activity_title:'Reform Activity by Domain',
-    tracker_activity_sub:'Policy changes grouped by reform domain',
-    tracker_map_title:'Interactive Uzbekistan Map',
-    tracker_map_sub:'Select a region to filter reforms in the timeline',
-    tracker_domains_title:'Reform Domain Cards',
-    tracker_domains_sub:'Counts, status, and source coverage by domain',
-    tracker_timeline_title:'Reform Timeline',
-    tracker_filter_category:'Category', tracker_filter_status:'Status', tracker_filter_sector:'Sector',
-    tracker_filter_region:'Region', tracker_filter_doc:'Document Type',
-    tracker_all:'All', tracker_no_reforms:'No reforms found for selected filters',
-    tracker_kpi_total:'Total Reforms', tracker_kpi_completed:'Completed',
-    tracker_kpi_active:'In Progress', tracker_kpi_planned:'Planned',
-    tracker_sources:'sources', tracker_last_updated:'Last updated',
+    tracker_title:'Policy Intelligence Feed',
+    tracker_sub:'Government actions from lex.uz and assessments from international organizations',
+    tracker_filter_label:'Filter',
+    tracker_search_ph:'Search entries (title, doc number, tag)…',
+    tracker_all:'All',
+    tracker_type_government:'Government', tracker_type_international:'International',
+    tracker_status_active:'Active', tracker_status_completed:'Done', tracker_status_planned:'Planned',
+    tracker_kpi_total:'Total Entries', tracker_kpi_government:'Government Actions',
+    tracker_kpi_international:'International Reports', tracker_kpi_active:'Active Reforms',
+    tracker_in_progress:'in progress', tracker_filtered:'filtered',
+    tracker_showing:'Showing', tracker_entry_singular:'entry', tracker_entry_plural:'entries',
+    tracker_no_entries:'No entries match your filters',
+    tracker_view_source:'View source', tracker_read_report:'Read full report',
+    tracker_scope_national:'National', tracker_refers_to:'Refers to',
     explorer_title:'Model Parameter Explorer',
     explorer_sub:'Parameters, equations, data sources, and computation flows',
     explorer_intro:'Search and inspect model assumptions across QPM, DFM, CGE, IO, PE, and FPP.',
@@ -1958,21 +1961,20 @@ const LANGS = {
     compare_presets_title:'Готовые пакеты политик',
     compare_presets_desc:'Нажмите на пресет, чтобы загрузить его как сохранённый сценарий с настроенными параметрами.',
     advisor_setup:'Настройка', advisor_run_title:'Запустить анализ',
-    tracker_title:'Трекер экономических реформ',
-    tracker_sub:'Интерактивная карта, таймлайн и дашборд реформ Узбекистана',
-    tracker_activity_title:'Активность реформ по доменам',
-    tracker_activity_sub:'Изменения политики по основным доменам',
-    tracker_map_title:'Интерактивная карта Узбекистана',
-    tracker_map_sub:'Выберите регион для фильтрации таймлайна',
-    tracker_domains_title:'Карточки доменов реформ',
-    tracker_domains_sub:'Количество реформ, статус и охват источников',
-    tracker_timeline_title:'Таймлайн реформ',
-    tracker_filter_category:'Категория', tracker_filter_status:'Статус', tracker_filter_sector:'Сектор',
-    tracker_filter_region:'Регион', tracker_filter_doc:'Тип документа',
-    tracker_all:'Все', tracker_no_reforms:'По выбранным фильтрам реформы не найдены',
-    tracker_kpi_total:'Всего реформ', tracker_kpi_completed:'Завершено',
-    tracker_kpi_active:'В работе', tracker_kpi_planned:'Запланировано',
-    tracker_sources:'источников', tracker_last_updated:'Обновлено',
+    tracker_title:'Лента политической аналитики',
+    tracker_sub:'Решения правительства (lex.uz) и оценки международных организаций',
+    tracker_filter_label:'Фильтр',
+    tracker_search_ph:'Поиск (название, номер документа, тег)…',
+    tracker_all:'Все',
+    tracker_type_government:'Правительство', tracker_type_international:'Международные',
+    tracker_status_active:'В работе', tracker_status_completed:'Завершено', tracker_status_planned:'План',
+    tracker_kpi_total:'Всего записей', tracker_kpi_government:'Решения правительства',
+    tracker_kpi_international:'Международные отчёты', tracker_kpi_active:'Активные реформы',
+    tracker_in_progress:'в работе', tracker_filtered:'по фильтру',
+    tracker_showing:'Показано', tracker_entry_singular:'запись', tracker_entry_plural:'записей',
+    tracker_no_entries:'Нет записей, соответствующих фильтрам',
+    tracker_view_source:'Открыть источник', tracker_read_report:'Читать полный отчёт',
+    tracker_scope_national:'Национальный', tracker_refers_to:'Ссылается на',
     explorer_title:'Обозреватель параметров моделей',
     explorer_sub:'Параметры, уравнения, источники данных и вычислительные цепочки',
     explorer_intro:'Ищите и сравнивайте допущения в моделях QPM, DFM, CGE, МОБ, ЧР и ФПП.',
@@ -2040,21 +2042,20 @@ const LANGS = {
     compare_presets_title:"Tayyor siyosat paketlari",
     compare_presets_desc:"Oldindan sozlangan parametrlar bilan saqlangan stsenariy sifatida yuklash uchun presetni bosing.",
     advisor_setup:"Sozlamalar", advisor_run_title:"Tahlilni ishga tushirish",
-    tracker_title:"Siyosiy islohotlar trekeri",
-    tracker_sub:"O'zbekiston bo'yicha interaktiv xarita, vaqt jadvali va islohotlar paneli",
-    tracker_activity_title:"Yo'nalishlar bo'yicha islohotlar faolligi",
-    tracker_activity_sub:"Siyosat o'zgarishlari yo'nalishlar kesimida",
-    tracker_map_title:"O'zbekiston interaktiv xaritasi",
-    tracker_map_sub:"Vaqt jadvalini filtrlash uchun hududni tanlang",
-    tracker_domains_title:"Islohot yo'nalishlari kartalari",
-    tracker_domains_sub:"Yo'nalishlar bo'yicha soni, holati va manbalar qamrovi",
-    tracker_timeline_title:"Islohotlar vaqt jadvali",
-    tracker_filter_category:"Kategoriya", tracker_filter_status:"Holat", tracker_filter_sector:"Tarmoq",
-    tracker_filter_region:"Hudud", tracker_filter_doc:"Hujjat turi",
-    tracker_all:"Barchasi", tracker_no_reforms:"Tanlangan filtrlar bo'yicha islohotlar topilmadi",
-    tracker_kpi_total:"Jami islohotlar", tracker_kpi_completed:"Yakunlangan",
-    tracker_kpi_active:"Jarayonda", tracker_kpi_planned:"Rejalangan",
-    tracker_sources:"manba", tracker_last_updated:"So'nggi yangilanish",
+    tracker_title:"Siyosat aksidemasi tasmasi",
+    tracker_sub:"lex.uz'dagi davlat qarorlari va xalqaro tashkilotlar baholari",
+    tracker_filter_label:"Filtr",
+    tracker_search_ph:"Qidirish (sarlavha, hujjat raqami, teg)…",
+    tracker_all:"Barchasi",
+    tracker_type_government:"Davlat", tracker_type_international:"Xalqaro",
+    tracker_status_active:"Jarayonda", tracker_status_completed:"Yakunlangan", tracker_status_planned:"Rejalangan",
+    tracker_kpi_total:"Jami yozuvlar", tracker_kpi_government:"Davlat qarorlari",
+    tracker_kpi_international:"Xalqaro hisobotlar", tracker_kpi_active:"Faol islohotlar",
+    tracker_in_progress:"jarayonda", tracker_filtered:"filtrlangan",
+    tracker_showing:"Ko'rsatilmoqda", tracker_entry_singular:"yozuv", tracker_entry_plural:"yozuv",
+    tracker_no_entries:"Filtrlarga mos yozuvlar topilmadi",
+    tracker_view_source:"Manbani ochish", tracker_read_report:"To'liq hisobotni o'qish",
+    tracker_scope_national:"Milliy", tracker_refers_to:"Havola qiladi",
     explorer_title:"Model parametrlar eksploreri",
     explorer_sub:"Parametrlar, tenglamalar, ma'lumot manbalari va hisoblash oqimlari",
     explorer_intro:"QPM, DFM, CGE, TMB, QM va MDS modellari bo'yicha taxminlarni qidiring va solishtiring.",
@@ -2555,13 +2556,11 @@ window.publishAdvisorBriefFromPanel = publishAdvisorBriefFromPanel;
 
 // ── Policy Tracker state & rendering ─────────────────────
 const trackerState = {
-  category: 'all',
-  status: 'all',
-  sector: 'all',
-  region: 'all',
-  docType: 'all'
+  type: 'all',      // 'all' | 'government' | 'international'
+  tag: 'all',       // 'all' | any tag id
+  status: 'all',    // 'all' | 'active' | 'completed' | 'planned' (government only)
+  search: ''
 };
-let trackerActivityChart = null;
 
 function i18nText(key, fallback) {
   return (LANGS[currentLang] && LANGS[currentLang][key]) || fallback || key;
@@ -2581,34 +2580,11 @@ function escHtml(text) {
 
 function trackerData() {
   return window.POLICY_TRACKER_DATA || {
-    categories: {}, statuses: {}, documentTypes: {}, sectors: {}, domains: [], regions: [], reforms: []
+    tags: {}, statuses: {}, docTypes: {}, organizations: {}, reportTypes: {}, entries: []
   };
 }
 
-function trackerRegionName(regionId) {
-  const region = trackerData().regions.find(r => r.id === regionId);
-  return region ? localize(region.name) : regionId;
-}
-
-function getFilteredReforms() {
-  const data = trackerData();
-  return (data.reforms || [])
-    .filter(r => {
-      if (trackerState.category !== 'all' && r.category !== trackerState.category) return false;
-      if (trackerState.status !== 'all' && r.status !== trackerState.status) return false;
-      if (trackerState.sector !== 'all' && r.sector !== trackerState.sector) return false;
-      if (trackerState.docType !== 'all' && r.documentType !== trackerState.docType) return false;
-      if (trackerState.region !== 'all') {
-        if (trackerState.region === 'national') {
-          return r.region === 'national';
-        }
-        return r.region === trackerState.region || r.region === 'national';
-      }
-      return true;
-    })
-    .sort((a, b) => (b.startDate || '').localeCompare(a.startDate || ''));
-}
-
+// Shared helper used by explorer/research/literature pages — keep for compatibility
 function setSelectOptions(selectId, options, selectedValue) {
   const el = document.getElementById(selectId);
   if (!el) return;
@@ -2616,238 +2592,265 @@ function setSelectOptions(selectId, options, selectedValue) {
   el.value = selectedValue;
 }
 
-function renderTrackerFilters() {
+// ── Filtering ──
+function getFilteredEntries() {
+  const data = trackerData();
+  const q = (trackerState.search || '').trim().toLowerCase();
+  return (data.entries || [])
+    .filter(e => {
+      if (trackerState.type !== 'all' && e.type !== trackerState.type) return false;
+      if (trackerState.tag !== 'all' && !(e.tags || []).includes(trackerState.tag)) return false;
+      // Status filter only applies to government entries
+      if (trackerState.status !== 'all' && e.type === 'government' && e.status !== trackerState.status) return false;
+      if (q) {
+        const hay = (localize(e.title) + ' ' + localize(e.summary) + ' ' + (e.docNumber || '') + ' ' + (e.tags || []).join(' ')).toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    })
+    .sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+}
+
+// ── KPI strip ──
+function renderTrackerKPIs() {
+  const data = trackerData();
+  const all = data.entries || [];
+  const rows = getFilteredEntries();
+  const govCount = all.filter(e => e.type === 'government').length;
+  const intlCount = all.filter(e => e.type === 'international').length;
+  const activeCount = all.filter(e => e.type === 'government' && e.status === 'active').length;
+
+  const kpi = [
+    { label: i18nText('tracker_kpi_total', 'Total Entries'),          value: all.length,    sub: rows.length !== all.length ? `${rows.length} ${i18nText('tracker_filtered', 'filtered')}` : '' },
+    { label: i18nText('tracker_kpi_government', 'Government Actions'), value: govCount,      sub: 'lex.uz' },
+    { label: i18nText('tracker_kpi_international', 'International Reports'), value: intlCount, sub: 'IMF · WB · ADB · EBRD · UNDP' },
+    { label: i18nText('tracker_kpi_active', 'Active Reforms'),        value: activeCount,   sub: i18nText('tracker_in_progress', 'in progress') }
+  ];
+
+  const host = document.getElementById('tracker-kpi-strip');
+  if (!host) return;
+  host.innerHTML = kpi.map(card => `
+    <div class="kpi-item">
+      <div class="kpi-label">${escHtml(card.label)}</div>
+      <div class="kpi-row">
+        <div class="kpi-value">${card.value}</div>
+        ${card.sub ? `<div class="kpi-delta">${escHtml(card.sub)}</div>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── Filter bar (type toggle + tag chips + status toggle) ──
+function renderTrackerFilterBar() {
   const data = trackerData();
   const allLabel = i18nText('tracker_all', 'All');
 
-  setSelectOptions(
-    'tracker-filter-category',
-    [{ value: 'all', label: allLabel }].concat(Object.keys(data.categories).map(k => ({
-      value: k, label: `${data.categories[k].icon || ''} ${localize(data.categories[k].label)}`
-    }))),
-    trackerState.category
-  );
+  // Type toggle
+  const typeHost = document.getElementById('tracker-type-group');
+  if (typeHost) {
+    const types = [
+      { id: 'all', label: allLabel },
+      { id: 'government', label: i18nText('tracker_type_government', 'Government') },
+      { id: 'international', label: i18nText('tracker_type_international', 'International') }
+    ];
+    typeHost.innerHTML = types.map(t =>
+      `<button class="type-btn${trackerState.type === t.id ? ' active' : ''}" onclick="setTrackerType('${t.id}')">${escHtml(t.label)}</button>`
+    ).join('');
+  }
 
-  setSelectOptions(
-    'tracker-filter-status',
-    [{ value: 'all', label: allLabel }].concat(Object.keys(data.statuses).map(k => ({
-      value: k, label: localize(data.statuses[k].label)
-    }))),
-    trackerState.status
-  );
+  // Tag chips
+  const tagHost = document.getElementById('tracker-tag-chips');
+  if (tagHost) {
+    const tagEntries = Object.entries(data.tags || {});
+    const chips = [
+      `<button class="chip${trackerState.tag === 'all' ? ' active' : ''}" onclick="setTrackerTag('all')">${escHtml(allLabel)}</button>`
+    ].concat(tagEntries.map(([id, t]) =>
+      `<button class="chip${trackerState.tag === id ? ' active' : ''}" onclick="setTrackerTag('${id}')">${escHtml(t.icon || '')} ${escHtml(localize(t.label))}</button>`
+    ));
+    tagHost.innerHTML = chips.join('');
+  }
 
-  const sectors = data.sectors || {};
-  const sectorKeys = Object.keys(sectors).filter(k => k !== 'all');
-  setSelectOptions(
-    'tracker-filter-sector',
-    [{ value: 'all', label: allLabel }].concat(sectorKeys.map(k => ({
-      value: k, label: localize(sectors[k])
-    }))),
-    trackerState.sector
-  );
-
-  setSelectOptions(
-    'tracker-filter-region',
-    [{ value: 'all', label: allLabel }].concat((data.regions || []).map(r => ({
-      value: r.id, label: localize(r.name)
-    }))),
-    trackerState.region
-  );
-
-  setSelectOptions(
-    'tracker-filter-doc',
-    [{ value: 'all', label: allLabel }].concat(Object.keys(data.documentTypes).map(k => ({
-      value: k, label: localize(data.documentTypes[k].label)
-    }))),
-    trackerState.docType
-  );
-}
-
-function renderTrackerMapState() {
-  document.querySelectorAll('.map-region').forEach(el => {
-    el.classList.toggle('selected', trackerState.region !== 'all' && el.dataset.region === trackerState.region);
-  });
-  const chip = document.getElementById('tracker-region-chip');
-  if (chip) {
-    const regionLabel = trackerState.region === 'all' ? i18nText('tracker_all', 'All') : trackerRegionName(trackerState.region);
-    chip.textContent = `${i18nText('tracker_filter_region', 'Region')}: ${regionLabel}`;
+  // Status toggle
+  const statusHost = document.getElementById('tracker-status-group');
+  if (statusHost) {
+    const statuses = [
+      { id: 'all', label: allLabel },
+      { id: 'active', label: i18nText('tracker_status_active', 'Active') },
+      { id: 'completed', label: i18nText('tracker_status_completed', 'Done') },
+      { id: 'planned', label: i18nText('tracker_status_planned', 'Planned') }
+    ];
+    statusHost.innerHTML = statuses.map(s =>
+      `<button class="status-btn${trackerState.status === s.id ? ' active' : ''}" onclick="setTrackerStatus('${s.id}')">${escHtml(s.label)}</button>`
+    ).join('');
   }
 }
 
-function renderTrackerDashboard() {
-  const data = trackerData();
-  const rows = getFilteredReforms();
-  const statuses = rows.reduce((acc, r) => {
-    acc[r.status] = (acc[r.status] || 0) + 1;
-    return acc;
-  }, {});
-
-  const kpi = [
-    { id: 'total', label: i18nText('tracker_kpi_total', 'Total Reforms'), value: rows.length, sub: i18nText('tracker_filter_region', 'Region') + ': ' + (trackerState.region === 'all' ? i18nText('tracker_all', 'All') : trackerRegionName(trackerState.region)) },
-    { id: 'completed', label: i18nText('tracker_kpi_completed', 'Completed'), value: statuses.completed || 0, sub: localize((data.statuses.completed || {}).label || 'Completed') },
-    { id: 'active', label: i18nText('tracker_kpi_active', 'In Progress'), value: statuses.active || 0, sub: localize((data.statuses.active || {}).label || 'In Progress') },
-    { id: 'planned', label: i18nText('tracker_kpi_planned', 'Planned'), value: statuses.planned || 0, sub: localize((data.statuses.planned || {}).label || 'Planned') }
-  ];
-
-  const grid = document.getElementById('tracker-kpi-grid');
-  if (grid) {
-    grid.innerHTML = kpi.map(card => `
-      <div class="tracker-kpi-card">
-        <div class="tracker-kpi-title">${escHtml(card.label)}</div>
-        <div class="tracker-kpi-value">${card.value}</div>
-        <div class="tracker-kpi-sub">${escHtml(card.sub)}</div>
-      </div>
-    `).join('');
-  }
-
-  const byDomain = {};
-  rows.forEach(r => { byDomain[r.domain] = (byDomain[r.domain] || 0) + 1; });
-  const labels = (data.domains || []).map(d => localize(d.label));
-  const values = (data.domains || []).map(d => byDomain[d.id] || 0);
-  const colors = {
-    tax: '#0ea5e9', trade: '#14b8a6', banking: '#8b5cf6', energy: '#f59e0b',
-    digital: '#2563eb', agriculture: '#10b981', soe: '#64748b'
-  };
-  const bgs = (data.domains || []).map(d => colors[d.id] || '#94a3b8');
-
-  const c = document.getElementById('tracker-activity-chart');
-  if (c) {
-    if (trackerActivityChart) trackerActivityChart.destroy();
-    trackerActivityChart = new Chart(c, {
-      type: 'bar',
-      data: { labels, datasets: [{ data: values, backgroundColor: bgs, borderRadius: 5, borderSkipped: false }] },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: {
-          x: { ticks: { font: { size: 11 } }, grid: { display: false } },
-          y: { ticks: { precision: 0, font: { size: 11 } }, grid: { color: '#eef2f7' } }
-        }
-      }
-    });
-  }
+// ── Date formatting ──
+function formatTrackerDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (isNaN(d)) return iso;
+  const months = { en: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+                   ru: ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'],
+                   uz: ['yan','fev','mar','apr','may','iyn','iyl','avg','sen','okt','noy','dek'] };
+  const m = months[currentLang] || months.en;
+  return `${m[d.getMonth()]} ${d.getFullYear()}`;
 }
 
-function dominantStatus(items) {
-  const scores = { completed: 0, active: 0, planned: 0 };
-  items.forEach(i => { scores[i.status] = (scores[i.status] || 0) + 1; });
-  if (scores.completed >= scores.active && scores.completed >= scores.planned) return 'completed';
-  if (scores.active >= scores.planned) return 'active';
-  return 'planned';
+function trackerPeriod(e) {
+  const start = formatTrackerDate(e.date);
+  if (e.type === 'international' || !e.endDate) return start;
+  const end = formatTrackerDate(e.endDate);
+  return end ? `${start} — ${end}` : start;
 }
 
-function renderDomainCards() {
-  const data = trackerData();
-  const rows = getFilteredReforms();
-  const wrap = document.getElementById('tracker-domain-grid');
-  if (!wrap) return;
+// ── Entry card rendering ──
+function renderGovernmentCard(e, data) {
+  const status = data.statuses[e.status] || { color: '#94a3b8', label: e.status };
+  const docType = data.docTypes[e.docType] || { label: e.docType };
+  const period = trackerPeriod(e);
+  const scopeLabel = e.scope === 'national'
+    ? i18nText('tracker_scope_national', 'National')
+    : (e.scope || '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 
-  const cards = (data.domains || []).map(d => {
-    const items = rows.filter(r => r.domain === d.id);
-    const statusId = dominantStatus(items);
-    const status = data.statuses[statusId] || { color: '#64748b', label: statusId };
-    const sourceCount = items.reduce((sum, r) => sum + ((r.sources || []).length), 0);
-    const lastUpdated = items
-      .map(r => r.lastUpdated || r.startDate || '')
-      .filter(Boolean)
-      .sort()
-      .slice(-1)[0] || '—';
+  const tagPills = (e.tags || []).map(tagId => {
+    const t = data.tags[tagId] || { icon: '', label: tagId };
+    return `<span class="pill">${escHtml(t.icon || '')} ${escHtml(localize(t.label))}</span>`;
+  }).join('');
 
-    return `
-      <div class="tracker-domain-card">
-        <div class="tracker-domain-head">
-          <div class="tracker-domain-name">${escHtml((d.icon || '') + ' ' + localize(d.label))}</div>
-          <span class="tracker-status-badge" style="background:${status.color}1f;color:${status.color};">${escHtml(localize(status.label))}</span>
+  const modelChips = (e.linkedModels || []).map(m =>
+    `<a class="model-chip" onclick="navigate('${m}')" style="cursor:pointer;">${escHtml(m)}</a>`
+  ).join('');
+
+  const parentLink = e.parentDoc
+    ? `<div class="parent-doc-ref">↳ <span>${escHtml(i18nText('tracker_refers_to', 'Refers to'))}</span> <a onclick="focusTrackerEntry('${e.parentDoc}')">${escHtml(e.parentDoc)}</a></div>`
+    : '';
+
+  return `
+    <details class="tracker-card" id="entry-${escHtml(e.id)}">
+      <summary class="tracker-summary">
+        <span class="tracker-dot" style="background:${status.color};"></span>
+        <div class="tracker-info">
+          <div class="tracker-title">${escHtml(localize(e.title))}</div>
+          <div class="tracker-meta">
+            ${e.docNumber ? `<span class="doc-num">${escHtml(e.docNumber)}</span><span class="sep">·</span>` : ''}
+            <span>${escHtml(localize(docType.label))}</span>
+            <span class="sep">·</span>
+            <span>${escHtml(period)}</span>
+          </div>
         </div>
-        <div style="font-size:26px;font-weight:800;line-height:1;color:var(--text);">${items.length}</div>
-        <div class="tracker-domain-meta">
-          ${escHtml(i18nText('tracker_sources', 'sources'))}: ${sourceCount}<br>
-          ${escHtml(i18nText('tracker_last_updated', 'Last updated'))}: ${escHtml(lastUpdated)}
+        <div class="tracker-badges">
+          <span class="badge" style="background:${status.color}22;color:${status.color};">${escHtml(localize(status.label))}</span>
         </div>
+        <span class="tracker-chevron">›</span>
+      </summary>
+      <div class="tracker-body">
+        <p class="tracker-desc">${escHtml(localize(e.summary))}</p>
+        <div class="tracker-pills">
+          ${tagPills}
+          <span class="pill">📍 ${escHtml(scopeLabel)}</span>
+          ${modelChips}
+        </div>
+        <a class="tracker-link" href="${escHtml(e.sourceUrl || '#')}" target="_blank" rel="noopener noreferrer">${escHtml(i18nText('tracker_view_source', 'View source'))} →</a>
+        ${parentLink}
       </div>
-    `;
-  });
-  wrap.innerHTML = cards.join('');
+    </details>
+  `;
 }
 
-function renderTrackerTimeline() {
+function renderInternationalCard(e, data) {
+  const org = data.organizations[e.organization] || { icon: '🏛️', label: e.organization, color: '#2563eb' };
+  const report = data.reportTypes[e.reportType] || { label: e.reportType };
+  const dateStr = formatTrackerDate(e.date);
+
+  const tagPills = (e.tags || []).map(tagId => {
+    const t = data.tags[tagId] || { icon: '', label: tagId };
+    return `<span class="pill">${escHtml(t.icon || '')} ${escHtml(localize(t.label))}</span>`;
+  }).join('');
+
+  const modelChips = (e.linkedModels || []).map(m =>
+    `<a class="model-chip" onclick="navigate('${m}')" style="cursor:pointer;">${escHtml(m)}</a>`
+  ).join('');
+
+  return `
+    <details class="tracker-card" id="entry-${escHtml(e.id)}">
+      <summary class="tracker-summary">
+        <span class="tracker-org-icon" title="${escHtml(org.label)}">${escHtml(org.icon || '🏛️')}</span>
+        <div class="tracker-info">
+          <div class="tracker-title">${escHtml(localize(e.title))}</div>
+          <div class="tracker-meta">
+            <span style="color:${org.color};font-weight:700;">${escHtml(org.label)}</span>
+            <span class="sep">·</span>
+            <span>${escHtml(localize(report.label))}</span>
+            <span class="sep">·</span>
+            <span>${escHtml(dateStr)}</span>
+          </div>
+        </div>
+        <div class="tracker-badges">
+          <span class="badge" style="background:${org.color}22;color:${org.color};">${escHtml(i18nText('tracker_type_international', 'International'))}</span>
+        </div>
+        <span class="tracker-chevron">›</span>
+      </summary>
+      <div class="tracker-body">
+        <p class="tracker-desc">${escHtml(localize(e.summary))}</p>
+        <div class="tracker-pills">
+          ${tagPills}
+          ${modelChips}
+        </div>
+        <a class="tracker-link" href="${escHtml(e.sourceUrl || '#')}" target="_blank" rel="noopener noreferrer">${escHtml(i18nText('tracker_read_report', 'Read full report'))} →</a>
+      </div>
+    </details>
+  `;
+}
+
+function renderTrackerEntries() {
   const data = trackerData();
-  const rows = getFilteredReforms();
-  const host = document.getElementById('tracker-timeline');
+  const rows = getFilteredEntries();
+  const host = document.getElementById('tracker-list');
+  const countEl = document.getElementById('tracker-result-count');
+
+  if (countEl) {
+    const word = rows.length === 1
+      ? i18nText('tracker_entry_singular', 'entry')
+      : i18nText('tracker_entry_plural', 'entries');
+    countEl.textContent = `${i18nText('tracker_showing', 'Showing')} ${rows.length} ${word}`;
+  }
+
   if (!host) return;
   if (!rows.length) {
-    host.innerHTML = `<div class="tracker-empty">${escHtml(i18nText('tracker_no_reforms', 'No reforms found for selected filters'))}</div>`;
+    host.innerHTML = `<div class="tracker-empty">
+      <div class="tracker-empty-icon">🔍</div>
+      <div>${escHtml(i18nText('tracker_no_entries', 'No entries match your filters'))}</div>
+    </div>`;
     return;
   }
 
-  host.innerHTML = rows.map(r => {
-    const cat = data.categories[r.category] || { color: '#94a3b8', label: r.category };
-    const status = data.statuses[r.status] || { color: '#94a3b8', label: r.status };
-    const doc = data.documentTypes[r.documentType] || { label: r.documentType };
-    const regionName = trackerRegionName(r.region);
-    const period = r.endDate ? `${r.startDate} → ${r.endDate}` : r.startDate;
-    const modelPills = (r.linkedModels || []).map(m => `<button class="tracker-pill tracker-pill-btn" onclick="navigate('${m}')">${m.toUpperCase()}</button>`).join('');
-    const sourceHtml = (r.sources || []).map(s => {
-      const title = typeof s.title === 'object' ? localize(s.title) : s.title;
-      return `<div class="tracker-entry-source"><a href="${escHtml(s.url)}" target="_blank" rel="noopener noreferrer">${escHtml(title)}</a></div>`;
-    }).join('');
+  host.innerHTML = rows.map(e =>
+    e.type === 'international' ? renderInternationalCard(e, data) : renderGovernmentCard(e, data)
+  ).join('');
+}
 
-    return `
-      <details class="tracker-entry">
-        <summary>
-          <div class="tracker-entry-title">
-            <div class="tracker-entry-left">
-              <span class="tracker-entry-dot" style="background:${cat.color};"></span>
-              <span class="tracker-entry-name">${escHtml(localize(r.title))}</span>
-            </div>
-            <span class="tracker-status-badge" style="background:${status.color}1f;color:${status.color};">${escHtml(localize(status.label))}</span>
-          </div>
-          <div class="tracker-entry-meta">
-            <span>${escHtml(period)}</span>
-            <span>•</span>
-            <span>${escHtml(localize(doc.label))}</span>
-            <span>•</span>
-            <span>${escHtml(regionName)}</span>
-          </div>
-        </summary>
-        <div class="tracker-entry-body">
-          <div class="tracker-entry-desc">${escHtml(localize(r.summary))}</div>
-          <div class="tracker-pill-row">
-            <span class="tracker-pill">${escHtml((cat.icon || '') + ' ' + localize(cat.label))}</span>
-            <span class="tracker-pill">${escHtml(localize((data.sectors || {})[r.sector] || r.sector))}</span>
-            ${modelPills}
-          </div>
-          ${sourceHtml}
-        </div>
-      </details>
-    `;
-  }).join('');
+// ── Event handlers ──
+function setTrackerType(type)   { trackerState.type = type;     renderTrackerFilterBar(); renderTrackerKPIs(); renderTrackerEntries(); }
+function setTrackerTag(tag)     { trackerState.tag = tag;       renderTrackerFilterBar(); renderTrackerKPIs(); renderTrackerEntries(); }
+function setTrackerStatus(st)   { trackerState.status = st;     renderTrackerFilterBar(); renderTrackerKPIs(); renderTrackerEntries(); }
+function onTrackerSearch(val)   { trackerState.search = val;    renderTrackerKPIs(); renderTrackerEntries(); }
+
+// Scroll+highlight a parent document entry when user clicks a reference link
+function focusTrackerEntry(id) {
+  const el = document.getElementById('entry-' + id);
+  if (!el) return;
+  el.open = true;
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  el.classList.add('highlight');
+  setTimeout(() => el.classList.remove('highlight'), 1800);
 }
 
 function renderTracker() {
   if (!document.getElementById('page-tracker')) return;
-  renderTrackerFilters();
-  renderTrackerMapState();
-  renderTrackerDashboard();
-  renderDomainCards();
-  renderTrackerTimeline();
-}
-
-function filterTracker() {
-  trackerState.category = document.getElementById('tracker-filter-category')?.value || 'all';
-  trackerState.status = document.getElementById('tracker-filter-status')?.value || 'all';
-  trackerState.sector = document.getElementById('tracker-filter-sector')?.value || 'all';
-  trackerState.region = document.getElementById('tracker-filter-region')?.value || 'all';
-  trackerState.docType = document.getElementById('tracker-filter-doc')?.value || 'all';
-  renderTracker();
-}
-
-function selectTrackerRegion(regionId) {
-  trackerState.region = regionId;
-  const regionSel = document.getElementById('tracker-filter-region');
-  if (regionSel) regionSel.value = regionId;
-  renderTracker();
+  renderTrackerFilterBar();
+  renderTrackerKPIs();
+  renderTrackerEntries();
 }
 
 // ── Int'l Orgs charts ────────────────────────────────────
