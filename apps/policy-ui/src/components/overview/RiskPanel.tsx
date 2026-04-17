@@ -1,4 +1,4 @@
-import type { OverviewRisk } from '../../data/mock/overview'
+import type { OverviewRisk } from '../../contracts/data-contract'
 
 type RiskPanelProps = {
   risks: OverviewRisk[]

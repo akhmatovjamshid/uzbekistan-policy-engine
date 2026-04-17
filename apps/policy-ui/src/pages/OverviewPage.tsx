@@ -9,8 +9,15 @@ import { overviewV1Data } from '../data/mock/overview'
 import './overview.css'
 
 export function OverviewPage() {
-  const { scenario_result, risks, quick_actions } = overviewV1Data
-  const nowcastChart = scenario_result.charts[0]
+  const {
+    summary,
+    generated_at,
+    headline_metrics,
+    nowcast_forecast,
+    top_risks,
+    analysis_actions,
+    output_action,
+  } = overviewV1Data
 
   return (
     <PageContainer className="overview-page">
@@ -19,21 +26,18 @@ export function OverviewPage() {
         description="Decision-first macro snapshot designed to show what changed, why it matters, and where to test next."
       />
 
-      <EconomicStateHeader
-        summary={scenario_result.narrative.summary}
-        updatedAt={scenario_result.narrative.generated_at}
-      />
+      <EconomicStateHeader summary={summary} updatedAt={generated_at} outputAction={output_action} />
 
-      <KpiStrip metrics={scenario_result.headline_metrics} />
+      <KpiStrip metrics={headline_metrics} />
 
-      {nowcastChart ? (
+      {nowcast_forecast ? (
         <div className="overview-two-column">
-          <NowcastForecastBlock chart={nowcastChart} />
-          <RiskPanel risks={risks} />
+          <NowcastForecastBlock chart={nowcast_forecast} />
+          <RiskPanel risks={top_risks} />
         </div>
       ) : null}
 
-      <QuickActions actions={quick_actions} />
+      <QuickActions actions={analysis_actions} />
     </PageContainer>
   )
 }

@@ -111,6 +111,43 @@ export type Caveat = {
   affected_models: string[]
 }
 
+export type OverviewRisk = {
+  risk_id: string
+  title: string
+  why_it_matters: string
+  impact_channel: string
+  suggested_scenario: string
+}
+
+export type OverviewAnalysisAction = {
+  action_id: string
+  title: string
+  summary: string
+  scenario_query: string
+}
+
+export type OverviewOutputAction = {
+  action_id: string
+  title: string
+  summary: string
+  target_href: string
+}
+
+export type MacroSnapshot = {
+  snapshot_id: string
+  snapshot_name: string
+  generated_at: string
+  summary: string
+  model_ids: string[]
+  headline_metrics: HeadlineMetric[]
+  nowcast_forecast: ChartSpec
+  top_risks: OverviewRisk[]
+  analysis_actions: OverviewAnalysisAction[]
+  output_action: OverviewOutputAction
+  caveats: Caveat[]
+  references: string[]
+}
+
 export type ScenarioResult = {
   scenario: Scenario
   headline_metrics: HeadlineMetric[]

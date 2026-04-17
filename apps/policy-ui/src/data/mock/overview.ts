@@ -1,29 +1,4 @@
-import type {
-  ChartSpec,
-  HeadlineMetric,
-  ScenarioResult,
-} from '../../contracts/data-contract'
-
-export type OverviewRisk = {
-  risk_id: string
-  title: string
-  why_it_matters: string
-  impact_channel: string
-  suggested_scenario: string
-}
-
-export type OverviewQuickAction = {
-  action_id: string
-  title: string
-  summary: string
-  scenario_query: string
-}
-
-export type OverviewV1Data = {
-  scenario_result: ScenarioResult
-  risks: OverviewRisk[]
-  quick_actions: OverviewQuickAction[]
-}
+import type { ChartSpec, HeadlineMetric, MacroSnapshot } from '../../contracts/data-contract'
 
 const commonAttribution = {
   model_id: 'multi-model-overview',
@@ -186,61 +161,16 @@ const nowcastChart: ChartSpec = {
   model_attribution: [commonAttribution],
 }
 
-export const overviewV1Data: OverviewV1Data = {
-  scenario_result: {
-    scenario: {
-      scenario_id: 'overview-baseline-2026q1',
-      scenario_name: 'Current baseline snapshot',
-      scenario_type: 'baseline',
-      tags: ['overview', 'baseline', 'macro-snapshot'],
-      description: 'Baseline macroeconomic snapshot for decision-monitoring.',
-      created_at: '2026-04-17T09:05:00+05:00',
-      updated_at: '2026-04-17T09:05:00+05:00',
-      created_by: 'system',
-      assumptions: [],
-      model_ids: ['qpm_uzbekistan', 'dfm_nowcast', 'pe_model'],
-    },
-    headline_metrics: headlineMetrics,
-    charts: [nowcastChart],
-    tables: [],
-    narrative: {
-      summary:
-        'Growth remains resilient, inflation is easing but still above medium-term comfort levels, and external vulnerability has narrowed modestly.',
-      key_findings: [
-        'Services and remittance-backed consumption supported near-term growth.',
-        'Lower import pressure improved external indicators despite exchange-rate softness.',
-      ],
-      risks: [
-        'External demand slowdown could weaken exports in the next two quarters.',
-        'Food and administered price shocks could slow disinflation momentum.',
-        'Loose fiscal execution could delay monetary normalization.',
-      ],
-      policy_implications: [
-        'Maintain disinflation credibility while avoiding abrupt tightening.',
-        'Prioritize targeted fiscal efficiency over broad expansion.',
-      ],
-      recommendations: [
-        'Stress test exchange-rate depreciation with remittance downside.',
-        'Compare fiscal-neutral and fiscal-expansion alternatives before next briefing.',
-      ],
-      uncertainty_note:
-        'Near-term inflation and exchange-rate estimates carry moderate uncertainty due to global commodity volatility.',
-      generated_at: '2026-04-17T09:05:00+05:00',
-      generation_mode: 'template',
-    },
-    caveats: [
-      {
-        caveat_id: 'cav-001',
-        severity: 'warning',
-        message:
-          'Near-term external balances are sensitive to remittance assumptions not fully observed in real time.',
-        affected_metrics: ['current_account', 'exchange_rate'],
-        affected_models: ['dfm_nowcast'],
-      },
-    ],
-    references: ['Internal macro monitoring note, April 2026'],
-  },
-  risks: [
+export const overviewV1Data: MacroSnapshot = {
+  snapshot_id: 'macro-snapshot-2026q1',
+  snapshot_name: 'Current baseline snapshot',
+  generated_at: '2026-04-17T09:05:00+05:00',
+  summary:
+    'Growth remains resilient, inflation is easing but still above medium-term comfort levels, and external vulnerability has narrowed modestly.',
+  model_ids: ['qpm_uzbekistan', 'dfm_nowcast', 'pe_model'],
+  headline_metrics: headlineMetrics,
+  nowcast_forecast: nowcastChart,
+  top_risks: [
     {
       risk_id: 'risk-external-slowdown',
       title: 'External slowdown risk',
@@ -263,7 +193,7 @@ export const overviewV1Data: OverviewV1Data = {
       suggested_scenario: 'Fiscal discipline stress',
     },
   ],
-  quick_actions: [
+  analysis_actions: [
     {
       action_id: 'exchange-rate-shock',
       title: 'Run exchange-rate shock',
@@ -288,11 +218,22 @@ export const overviewV1Data: OverviewV1Data = {
       summary: 'Stress disinflation path under persistent price shocks.',
       scenario_query: 'preset=inflation-risk',
     },
+  ],
+  output_action: {
+    action_id: 'export-brief',
+    title: 'Prepare snapshot brief',
+    summary: 'Generate a concise note using current baseline headline metrics.',
+    target_href: '/scenario-lab?preset=snapshot-brief',
+  },
+  caveats: [
     {
-      action_id: 'export-brief',
-      title: 'Prepare snapshot brief',
-      summary: 'Generate a concise note using current baseline headline metrics.',
-      scenario_query: 'preset=snapshot-brief',
+      caveat_id: 'cav-001',
+      severity: 'warning',
+      message:
+        'Near-term external balances are sensitive to remittance assumptions not fully observed in real time.',
+      affected_metrics: ['current_account', 'exchange_rate'],
+      affected_models: ['dfm_nowcast'],
     },
   ],
+  references: ['Internal macro monitoring note, April 2026'],
 }

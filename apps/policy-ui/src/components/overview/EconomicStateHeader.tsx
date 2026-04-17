@@ -1,9 +1,12 @@
+import { Link } from 'react-router-dom'
+import type { OverviewOutputAction } from '../../contracts/data-contract'
 import type { LanguageCode } from '../../state/language-context'
 import { useLanguage } from '../../state/useLanguage'
 
 type EconomicStateHeaderProps = {
   summary: string
   updatedAt: string
+  outputAction: OverviewOutputAction
 }
 
 const LOCALE_BY_LANGUAGE: Record<LanguageCode, string> = {
@@ -23,7 +26,7 @@ function formatDateTime(value: string, locale: string) {
   }).format(date)
 }
 
-export function EconomicStateHeader({ summary, updatedAt }: EconomicStateHeaderProps) {
+export function EconomicStateHeader({ summary, updatedAt, outputAction }: EconomicStateHeaderProps) {
   const { language } = useLanguage()
   const locale = LOCALE_BY_LANGUAGE[language]
 
@@ -33,7 +36,12 @@ export function EconomicStateHeader({ summary, updatedAt }: EconomicStateHeaderP
         Economic State
       </p>
       <p className="overview-state-header__summary">{summary}</p>
-      <p className="overview-state-header__meta">Updated {formatDateTime(updatedAt, locale)}</p>
+      <div className="overview-state-header__footer">
+        <p className="overview-state-header__meta">Updated {formatDateTime(updatedAt, locale)}</p>
+        <Link className="overview-secondary-action" to={outputAction.target_href}>
+          {outputAction.title}
+        </Link>
+      </div>
     </section>
   )
 }

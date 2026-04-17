@@ -127,6 +127,45 @@
 - `caveats`: `Caveat[]`
 - `references`: string[]
 
+## Overview-Specific Shape (`MacroSnapshot`)
+
+Use this shape for `Overview` page data instead of `ScenarioResult` to keep monitoring and scenario workflows separated.
+
+- `snapshot_id`: string
+- `snapshot_name`: string
+- `generated_at`: ISO datetime string
+- `summary`: string
+- `model_ids`: string[]
+- `headline_metrics`: `HeadlineMetric[]`
+- `nowcast_forecast`: `ChartSpec`
+- `top_risks`: `OverviewRisk[]`
+- `analysis_actions`: `OverviewAnalysisAction[]`
+- `output_action`: `OverviewOutputAction`
+- `caveats`: `Caveat[]`
+- `references`: string[]
+
+## `OverviewRisk`
+
+- `risk_id`: string
+- `title`: string
+- `why_it_matters`: string
+- `impact_channel`: string
+- `suggested_scenario`: string
+
+## `OverviewAnalysisAction`
+
+- `action_id`: string
+- `title`: string
+- `summary`: string
+- `scenario_query`: string
+
+## `OverviewOutputAction`
+
+- `action_id`: string
+- `title`: string
+- `summary`: string
+- `target_href`: string
+
 ## `ApiError`
 
 - `error_code`: string

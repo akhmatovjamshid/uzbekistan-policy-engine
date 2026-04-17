@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
-import type { OverviewQuickAction } from '../../data/mock/overview'
+import type { OverviewAnalysisAction } from '../../contracts/data-contract'
 
 type QuickActionsProps = {
-  actions: OverviewQuickAction[]
+  actions: OverviewAnalysisAction[]
 }
 
 export function QuickActions({ actions }: QuickActionsProps) {
