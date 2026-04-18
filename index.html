@@ -2133,6 +2133,10 @@ function setLang(lang) {
   renderTracker();
   renderResearch();
   renderLiterature();
+  // Broadcast language change to all embedded model iframes
+  document.querySelectorAll('iframe').forEach(function(iframe) {
+    try { iframe.contentWindow.postMessage({ type: 'setLang', lang: lang }, '*'); } catch(e) {}
+  });
 }
 
 // ── Knowledge Hub helpers ─────────────────────────────────
