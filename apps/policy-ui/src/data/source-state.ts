@@ -19,10 +19,7 @@ export type IntegrationValidationIssue = {
   severity: 'error' | 'warning'
 }
 
-// Pre-integration policy: keep guard warnings internal (dev-only) until a shared UX surface is needed.
-const GUARD_WARNING_SURFACE = 'dev-only' as const
-
-export function resolveSourceRetryCapability(
+function resolveSourceRetryCapability(
   status: IntegrationSourceStatus,
   mode: 'mock' | 'live',
 ): boolean {
@@ -107,10 +104,6 @@ export function reportGuardWarningsDevOnly(
   sourceLabel: string,
   issues: IntegrationValidationIssue[],
 ): void {
-  if (GUARD_WARNING_SURFACE !== 'dev-only') {
-    return
-  }
-
   if (!isDevelopmentEnvironment()) {
     return
   }
