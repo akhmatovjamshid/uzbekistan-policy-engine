@@ -14,6 +14,8 @@
 <script src="../shared/scenario-engine.js"></script>
 <script src="../shared/ai-advisor.js"></script>
 <script src="../shared/i18n.js"></script>
+<script src="../shared/registry-loader.js"></script>
+<script>window.addEventListener('load', () => EPE?.ready(() => EPE.badge()));</script>
 <style>
 /* Tokens inherited from design-system.css */
 
@@ -198,6 +200,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
       <button class="sbtn" onclick="setShock('monetary',this)">
         <div class="ico">🏦</div><div class="lbl" data-i18n="qpm_shock_monetary">Monetary<br>Tightening</div>
       </button>
+      <button class="sbtn" onclick="setShock('risk',this)">
+        <div class="ico">⚠️</div><div class="lbl">Risk<br>Premium</div>
+      </button>
     </div>
     <div class="shk-size">
       <div class="shk-size-hd" data-i18n="qpm_sim_settings">Simulation Settings</div>
@@ -319,6 +324,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
           <button class="hbtn" onclick="setH(8)">2Y</button>
           <button class="hbtn on" onclick="setH(20)">5Y</button>
           <button class="hbtn" onclick="setH(32)">8Y</button>
+          <button class="hbtn" id="fanBtn" onclick="toggleFan(this)" title="Monte Carlo uncertainty bands (80 draws, 8% CV per parameter)">± Bands</button>
         </div>
         <button class="run-btn" style="width:auto;padding:7px 16px" onclick="run()">▶ Run</button>
       </div>
@@ -456,7 +462,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
         <div class="eq">IS:  gap_t = b₁·gap_{t-1} − b₂·MCI_t + b₃·gap*_t + ε_gap</div>
         <div class="eq">PC:  π_t  = a₁·π_{t-1} + (1−a₁)·Eπ_{t+1} + a₂·RMC_t + ε_π</div>
         <div class="eq">TR:  i_t  = g₁·i_{t-1} + (1−g₁)·[Eπ_{t+1} + g₂·π4_{t+4} + g₃·gap_t] + ε_i</div>
-        <div class="eq">UIP: s_t  = (1−e₁)·Es_{t+1} + e₁·s_{t-1} − i_t/4 + ε_s</div>
+        <div class="eq">UIP: s_t  = (1−e₁)·Es_{t+1} + e₁·s_{t-1} − (i_t−ρ_t)/4 + ε_s</div>
         <div class="eq">MCI  = b₄·RR_gap − (1−b₄)·Z_gap</div>
         <div class="eq">RMC  = a₃·gap + (1−a₃)·Z_gap</div>
         <div class="eq">RR_gap = RS − Eπ_{t+1} − RR_BAR</div>
@@ -516,6 +522,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 let activeShock = 'demand';
 let charts = {};
 let lastIRF = null;
+let fanVisible = false;
+let mcBands = null;
 const f2 = v => (+v).toFixed(2);
 
 // ── Slider helper ──
@@ -548,11 +556,11 @@ function P() {
 // ═══════════════════════════════════════════════════════════
 //  CORE QPM SOLVER — Bidirectional Gauss-Seidel
 // ═══════════════════════════════════════════════════════════
-function solveIRF(p, shockType, shockSize, T) {
-  // N = total array length; shock lands at index SHOCK_T = 1
-  // Chart shows indices [SHOCK_T .. SHOCK_T+T] as Q0..QT
-  const N = T + 8;          // buffer for t+4 lookups
-  const ST = 1;             // shock period index = Q0
+function solveIRF(p, shockType, shockSize, T, initConds) {
+  // initConds (optional) = {gap, pi, rs, d4ls} — deviation-form initial state for baseline runs
+  const hasInit = !!initConds;
+  const ST = hasInit ? 5 : 1;   // pre-history depth (5 quarters for baseline warmup)
+  const N  = T + ST + 10;       // buffer for t+4 lookups
 
   const z = () => new Float64Array(N);
   let gap    = z(), pi     = z(), pi4    = z();
@@ -560,11 +568,28 @@ function solveIRF(p, shockType, shockSize, T) {
   let rmc    = z(), s      = z(), l_cpi  = z();
   let l_z_gap= z(), d4l_s  = z();
 
-  const shk_gap = z(), shk_pi = z(), shk_s = z(), shk_rs = z();
+  // Pre-fill deviation-form initial conditions so baseline uses the same model as IRF
+  if (hasInit) {
+    const { gap: g0, pi: p0, rs: r0, d4ls: d0 } = initConds;
+    for (let t = 0; t < ST; t++) {
+      gap[t] = g0;
+      pi[t]  = p0;
+      rs[t]  = r0;
+      // Linear s ramp so that d4l_s[ST-1] = d0  (d4l_s[t] = s[t] - s[t-4])
+      s[t] = d0 * t / (ST - 1);
+    }
+    for (let t = 1; t < ST; t++) {
+      l_cpi[t]   = l_cpi[t-1] + pi[t-1] / 4;
+      l_z_gap[t] = s[t] - l_cpi[t];
+    }
+  }
+
+  const shk_gap = z(), shk_pi = z(), shk_s = z(), shk_rs = z(), shk_rho = z();
   if (shockType === 'demand')    shk_gap[ST] = shockSize;
   if (shockType === 'inflation') shk_pi[ST]  = shockSize;
   if (shockType === 'exchange')  shk_s[ST]   = shockSize;
   if (shockType === 'monetary')  shk_rs[ST]  = shockSize;
+  if (shockType === 'risk')      shk_rho[ST] = shockSize;
 
   const { b1, b2, b3, b4, a1, a2, a3, g1, g2, g3, e1 } = p;
 
@@ -580,10 +605,11 @@ function solveIRF(p, shockType, shockSize, T) {
     const gap0 = gap.slice();
 
     // ── PASS 1: Backward sweep for UIP (exchange rate) ──────
-    // UIP: s[t] = (1-e1)*s[t+1] + e1*s[t-1] - rs[t]/4 + shk_s[t]
+    // UIP: s[t] = (1-e1)*s[t+1] + e1*s[t-1] - (rs[t]-ρ[t])/4 + shk_s[t]
+    // ρ[t] = shk_rho[t]: risk premium wedge (capital flight, sovereign downgrade)
     // Sweep T→ST so that s[t+1] is already updated this pass
     for (let t = N - 2; t >= ST; t--) {
-      s[t] = (1-e1)*G(s,t+1) + e1*G(s,t-1) - rs[t]/4 + shk_s[t];
+      s[t] = (1-e1)*G(s,t+1) + e1*G(s,t-1) - (rs[t] - shk_rho[t])/4 + shk_s[t];
     }
 
     // ── PASS 2: Forward sweep for IS/PC/Taylor ───────────────
@@ -648,9 +674,9 @@ function solveIRF(p, shockType, shockSize, T) {
       d4l_s[t] = G(s,t) - G(s,t-4);
     }
 
-    // ── Convergence check ────────────────────────────────────
+    // ── Convergence check (forecast period only; pre-history is fixed) ──
     let diff = 0;
-    for (let t = 0; t < N; t++) {
+    for (let t = ST; t < N; t++) {
       diff = Math.max(diff,
         Math.abs(pi[t]  - pi0[t]),
         Math.abs(s[t]   - s0[t]),
@@ -679,6 +705,82 @@ function solveIRF(p, shockType, shockSize, T) {
 }
 
 // ═══════════════════════════════════════════════════════════
+//  MONTE CARLO UNCERTAINTY BANDS
+//  Perturbs each parameter with Normal(0, 8% CV) noise,
+//  runs nDraws solves, and returns {p5,p25,p75,p95} bands.
+// ═══════════════════════════════════════════════════════════
+const MC_SERIES_KEYS = ['pi4','gap','rs','d4l_s','l_z_gap','mci'];
+
+function computeMCBands(p, shockType, shockSize, T, nDraws = 80) {
+  // Box-Muller normal sample
+  const randn = () => {
+    const u1 = Math.random() + 1e-12, u2 = Math.random();
+    return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+  };
+  const paramKeys = ['b1','b2','b3','b4','a1','a2','a3','g1','g2','g3','e1'];
+  const draws = [];
+
+  for (let d = 0; d < nDraws; d++) {
+    const pp = { tar: p.tar, rrbar: p.rrbar, gdpbar: p.gdpbar };
+    paramKeys.forEach(k => {
+      pp[k] = Math.max(0.01, p[k] * (1 + 0.08 * randn()));
+    });
+    if (pp.g2 < 1.05) pp.g2 = 1.05;  // enforce Taylor principle
+    try { draws.push(solveIRF(pp, shockType, shockSize, T)); } catch(e) {}
+  }
+  if (draws.length < 10) return null;
+
+  const result = {};
+  MC_SERIES_KEYS.forEach(key => {
+    const p5 = [], p25 = [], p75 = [], p95 = [];
+    for (let t = 0; t <= T; t++) {
+      const vals = draws.map(r => r[key][t]).sort((a, b) => a - b);
+      const n = vals.length;
+      p5.push(vals[Math.floor(0.05 * n)]);
+      p25.push(vals[Math.floor(0.25 * n)]);
+      p75.push(vals[Math.floor(0.75 * n)]);
+      p95.push(vals[Math.floor(0.95 * n)]);
+    }
+    result[key] = { p5, p25, p75, p95 };
+  });
+  return result;
+}
+
+function toggleFan(btn) {
+  fanVisible = !fanVisible;
+  btn.classList.toggle('on', fanVisible);
+  mcBands = null;  // recompute on next run()
+  run();
+}
+
+// Build Chart.js datasets for one IRF panel (with optional MC bands)
+function buildIRFDatasets(data, clr, seriesIdx, zero) {
+  const fillClr = clr.slice(0, -2) + '0.12)';
+  const ds = [
+    { label: t('qpm_deviation', 'Deviation'), data, borderColor: clr, backgroundColor: fillClr,
+      borderWidth: 2.5, pointRadius: 2.5, fill: true, tension: 0.3 },
+    { label: t('qpm_baseline', 'Baseline'), data: zero, borderColor: 'rgba(0,0,0,.2)',
+      borderWidth: 1, borderDash: [5, 4], pointRadius: 0, fill: false },
+  ];
+  if (fanVisible && mcBands) {
+    const b = mcBands[MC_SERIES_KEYS[seriesIdx]];
+    const c90 = clr.slice(0, -2) + '0.07)';
+    const c50 = clr.slice(0, -2) + '0.17)';
+    ds.push(
+      { label: '90% CI', data: b.p95, borderColor: 'transparent', backgroundColor: c90,
+        pointRadius: 0, fill: '+1', tension: 0.3, borderWidth: 0 },
+      { label: '',        data: b.p5,  borderColor: 'transparent', backgroundColor: 'transparent',
+        pointRadius: 0, fill: false,  tension: 0.3, borderWidth: 0 },
+      { label: '50% CI', data: b.p75, borderColor: 'transparent', backgroundColor: c50,
+        pointRadius: 0, fill: '+1', tension: 0.3, borderWidth: 0 },
+      { label: '',        data: b.p25, borderColor: 'transparent', backgroundColor: 'transparent',
+        pointRadius: 0, fill: false,  tension: 0.3, borderWidth: 0 },
+    );
+  }
+  return ds;
+}
+
+// ═══════════════════════════════════════════════════════════
 //  IRF RUNNER
 // ═══════════════════════════════════════════════════════════
 const SHOCK_NAMES = {
@@ -686,6 +788,7 @@ const SHOCK_NAMES = {
   inflation: 'Cost-Push Inflation Shock',
   exchange:  'UZS Depreciation Shock',
   monetary:  'Monetary Policy Tightening Shock',
+  risk:      'Risk Premium Shock',
 };
 // Localised helpers: pull from window.MODEL_LANGS if available
 function t(key, fallback) {
@@ -733,6 +836,9 @@ function run() {
   lastIRF = { series, shock: activeShock, sz, T };
   const ids    = ['ch0','ch1','ch2','ch3','ch4','ch5'];
 
+  // Compute MC bands when fan chart is toggled on
+  if (fanVisible) mcBands = computeMCBands(p, activeShock, sz, T);
+
   // Peak KPIs (4 top cards)
   const kpiSeries = [r.pi4, r.gap, r.rs, r.d4l_s];
   const atQ = t('qpm_at_quarter', 'at quarter');
@@ -746,23 +852,11 @@ function run() {
 
   // Draw charts
   const zero = new Array(T+1).fill(0);
-  const lbl_dev  = t('qpm_deviation', 'Deviation');
-  const lbl_base = t('qpm_baseline',  'Baseline');
   series.forEach((data, i) => {
-    const clr = CHART_COLORS[i];
-    const fill_clr = clr.replace('1)', '0.12)');
     if (charts[i]) charts[i].destroy();
     charts[i] = new Chart(document.getElementById(ids[i]).getContext('2d'), {
       type: 'line',
-      data: {
-        labels: lbls,
-        datasets: [
-          { label: lbl_dev, data, borderColor: clr, backgroundColor: fill_clr,
-            borderWidth: 2.5, pointRadius: 2.5, fill: true, tension: 0.3 },
-          { label: lbl_base, data: zero, borderColor: 'rgba(0,0,0,.2)',
-            borderWidth: 1, borderDash: [5,4], pointRadius: 0, fill: false },
-        ]
-      },
+      data: { labels: lbls, datasets: buildIRFDatasets(data, CHART_COLORS[i], i, zero) },
       options: chartOpts(),
     });
   });
@@ -772,71 +866,63 @@ function run() {
 //  BASELINE FORECAST
 // ═══════════════════════════════════════════════════════════
 function runBL() {
-  const p   = P();
-  const T   = 16;
-  const pi0 = +document.getElementById('bl_pi').value;
-  const rs0 = +document.getElementById('bl_rs').value;
-  const g0  = +document.getElementById('bl_gap').value;
-  const d0  = +document.getElementById('bl_d4ls').value;
-  const tar = p.tar;
-  const neutral_nominal = p.rrbar + tar;
+  const p       = P();
+  const T       = 16;
+  const tar     = p.tar;
+  const neutral = p.rrbar + tar;
 
-  let pi  = new Float64Array(T+2);
-  let rs  = new Float64Array(T+2);
-  let gap = new Float64Array(T+2);
-  let dep = new Float64Array(T+2);
+  const bl_pi   = +document.getElementById('bl_pi').value;
+  const bl_rs   = +document.getElementById('bl_rs').value;
+  const bl_gap  = +document.getElementById('bl_gap').value;
+  const bl_d4ls = +document.getElementById('bl_d4ls').value;
 
-  pi[0] = pi0; rs[0] = rs0; gap[0] = g0; dep[0] = d0;
+  // Run the same Gauss-Seidel solver as IRF — no more separate model universe.
+  // Convert level inputs to deviation form (SS: π=tar, RS=rrbar+tar, gap=0, dep≈tar).
+  const r = solveIRF(p, null, 0, T, {
+    pi:   bl_pi   - tar,
+    rs:   bl_rs   - neutral,
+    gap:  bl_gap,
+    d4ls: bl_d4ls - tar,
+  });
 
-  for (let t = 1; t <= T; t++) {
-    const pi_f = pi[t-1] * 0.75 + tar * 0.25;
-    const pi_gap = pi[t-1] - tar;
-
-    rs[t]  = p.g1 * rs[t-1] + (1-p.g1) * (neutral_nominal + p.g2 * pi_gap + p.g3 * gap[t-1]);
-    const rr = rs[t-1] - pi[t-1];
-    gap[t] = p.b1 * gap[t-1] - p.b2 * Math.max(0, rr - p.rrbar) * 0.4;
-    const rmc = p.a3 * gap[t];
-    pi[t]  = p.a1 * pi[t-1] + (1-p.a1) * pi_f + p.a2 * rmc * 3;
-    dep[t] = Math.max(0, dep[t-1] * 0.65 + Math.max(0, pi[t-1] - tar) * 0.6);
-  }
+  // Convert deviations back to levels for display
+  const slPi  = r.pi4.map(v  => v + tar);
+  const slRS  = r.rs.map(v   => v + neutral);
+  const slGap = Array.from(r.gap);
+  const slDep = r.d4l_s.map(v => v + tar);
 
   const lbls = [];
-  for (let t = 0; t < T; t++) {
-    lbls.push(['Q1','Q2','Q3','Q4'][t%4] + ' ' + (2024 + Math.floor(t/4)));
+  for (let t = 0; t <= T; t++) {
+    lbls.push(['Q1','Q2','Q3','Q4'][t % 4] + ' ' + (2024 + Math.floor(t / 4)));
   }
 
-  const slPi  = Array.from(pi.slice(0,T));
-  const slRS  = Array.from(rs.slice(0,T));
-  const slGap = Array.from(gap.slice(0,T));
-  const slDep = Array.from(dep.slice(0,T));
-
-  const avg2025 = slPi.slice(4,8).reduce((a,b)=>a+b,0)/4;
-  document.getElementById('bk0').textContent = avg2025.toFixed(1)+'%';
-  document.getElementById('bk1').textContent = slRS[Math.min(7,T-1)].toFixed(2)+'%';
-  document.getElementById('bk2').textContent = (p.gdpbar + slGap[Math.min(7,T-1)]).toFixed(1)+'%';
-  document.getElementById('bk3').textContent = slDep[Math.min(7,T-1)].toFixed(1)+'%';
+  const avg2025 = slPi.slice(4, 8).reduce((a, b) => a + b, 0) / 4;
+  document.getElementById('bk0').textContent = avg2025.toFixed(1) + '%';
+  document.getElementById('bk1').textContent = slRS[Math.min(7, T)].toFixed(2) + '%';
+  document.getElementById('bk2').textContent = (p.gdpbar + slGap[Math.min(7, T)]).toFixed(1) + '%';
+  document.getElementById('bk3').textContent = slDep[Math.min(7, T)].toFixed(1) + '%';
 
   const blDefs = [
-    { id:'blc0', data:slPi,  lbl:t('qpm_bl_pi_lbl','Inflation YoY (%)'),  clr:'rgba(192,57,43,.9)',  tar: tar },
-    { id:'blc1', data:slRS,  lbl:t('qpm_bl_rs_lbl','Policy Rate (%)'),    clr:'rgba(26,58,92,.9)',   tar: null },
-    { id:'blc2', data:slGap, lbl:t('qpm_bl_gap_lbl','Output Gap (%)'),    clr:'rgba(36,113,163,.9)', tar: 0 },
-    { id:'blc3', data:slDep, lbl:t('qpm_bl_ner_lbl','NER Deprec. (%)'),   clr:'rgba(214,137,16,.9)', tar: null },
+    { id: 'blc0', data: slPi,  lbl: t('qpm_bl_pi_lbl', 'Inflation YoY (%)'), clr: 'rgba(192,57,43,.9)',  tar: tar },
+    { id: 'blc1', data: slRS,  lbl: t('qpm_bl_rs_lbl', 'Policy Rate (%)'),   clr: 'rgba(26,58,92,.9)',   tar: null },
+    { id: 'blc2', data: slGap, lbl: t('qpm_bl_gap_lbl', 'Output Gap (%)'),   clr: 'rgba(36,113,163,.9)', tar: 0 },
+    { id: 'blc3', data: slDep, lbl: t('qpm_bl_ner_lbl', 'NER Deprec. (%)'),  clr: 'rgba(214,137,16,.9)', tar: null },
   ];
 
   blDefs.forEach(d => {
-    const k = 'bl_'+d.id;
+    const k = 'bl_' + d.id;
     if (charts[k]) charts[k].destroy();
     const ds = [{
       label: d.lbl, data: d.data, borderColor: d.clr,
-      backgroundColor: d.clr.replace('.9)','.1)'),
+      backgroundColor: d.clr.replace('.9)', '.1)'),
       borderWidth: 2.5, pointRadius: 2, fill: true, tension: 0.3,
     }];
     if (d.tar !== null) ds.push({
-      label: t('qpm_target_lbl','Target'), data: new Array(T).fill(d.tar),
-      borderColor:'rgba(0,0,0,.25)', borderWidth:1.2, borderDash:[5,4], pointRadius:0,
+      label: t('qpm_target_lbl', 'Target'), data: new Array(T + 1).fill(d.tar),
+      borderColor: 'rgba(0,0,0,.25)', borderWidth: 1.2, borderDash: [5, 4], pointRadius: 0,
     });
     charts[k] = new Chart(document.getElementById(d.id).getContext('2d'), {
-      type:'line', data:{labels:lbls, datasets:ds}, options:chartOpts(),
+      type: 'line', data: { labels: lbls, datasets: ds }, options: chartOpts(),
     });
   });
 }
@@ -963,7 +1049,28 @@ function fillParamTable() {
 }
 
 // ── Init ──
-run();
+function applyQpmRegistryOverrides() {
+  if (!window.EPE || !EPE.registry) return;
+  const pairs = [
+    ['g2', EPE.get('qpm_structural.taylor_inflation',  null), 'vg2', v => v.toFixed(2)],
+    ['g3', EPE.get('qpm_structural.taylor_output_gap', null), 'vg3', v => v.toFixed(2)],
+    ['a2', EPE.get('qpm_structural.phillips_slope',    null), 'va2', v => v.toFixed(2)],
+  ];
+  pairs.forEach(([id, val, label, fmt]) => {
+    if (val == null) return;
+    const el = document.getElementById(id);
+    const lb = document.getElementById(label);
+    if (el) {
+      el.value = val;
+      const pct = ((val - +el.min) / (+el.max - +el.min) * 100).toFixed(1) + '%';
+      el.style.setProperty('--pct', pct);
+    }
+    if (lb) lb.textContent = fmt(val);
+  });
+  console.log('[QPM] Registry overrides applied (Taylor + Phillips).');
+}
+if (window.EPE) EPE.ready(() => { applyQpmRegistryOverrides(); run(); });
+else run();
 
 /* ── Export functions ── */
 const VAR_LABELS = ['CPI Inflation YoY','Output Gap','Policy Rate','NER Depreciation YoY','Real Exchange Rate Gap','Monetary Conditions Index'];
