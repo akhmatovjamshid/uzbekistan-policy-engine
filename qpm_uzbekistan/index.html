@@ -544,17 +544,33 @@ function P() {
 // ═══════════════════════════════════════════════════════════
 //  CORE QPM SOLVER — Bidirectional Gauss-Seidel
 // ═══════════════════════════════════════════════════════════
-function solveIRF(p, shockType, shockSize, T) {
-  // N = total array length; shock lands at index SHOCK_T = 1
-  // Chart shows indices [SHOCK_T .. SHOCK_T+T] as Q0..QT
-  const N = T + 8;          // buffer for t+4 lookups
-  const ST = 1;             // shock period index = Q0
+function solveIRF(p, shockType, shockSize, T, initConds) {
+  // initConds (optional) = {gap, pi, rs, d4ls} — deviation-form initial state for baseline runs
+  const hasInit = !!initConds;
+  const ST = hasInit ? 5 : 1;   // pre-history depth (5 quarters for baseline warmup)
+  const N  = T + ST + 10;       // buffer for t+4 lookups
 
   const z = () => new Float64Array(N);
   let gap    = z(), pi     = z(), pi4    = z();
   let rs     = z(), rr_gap = z(), mci    = z();
   let rmc    = z(), s      = z(), l_cpi  = z();
   let l_z_gap= z(), d4l_s  = z();
+
+  // Pre-fill deviation-form initial conditions so baseline uses the same model as IRF
+  if (hasInit) {
+    const { gap: g0, pi: p0, rs: r0, d4ls: d0 } = initConds;
+    for (let t = 0; t < ST; t++) {
+      gap[t] = g0;
+      pi[t]  = p0;
+      rs[t]  = r0;
+      // Linear s ramp so that d4l_s[ST-1] = d0  (d4l_s[t] = s[t] - s[t-4])
+      s[t] = d0 * t / (ST - 1);
+    }
+    for (let t = 1; t < ST; t++) {
+      l_cpi[t]   = l_cpi[t-1] + pi[t-1] / 4;
+      l_z_gap[t] = s[t] - l_cpi[t];
+    }
+  }
 
   const shk_gap = z(), shk_pi = z(), shk_s = z(), shk_rs = z(), shk_rho = z();
   if (shockType === 'demand')    shk_gap[ST] = shockSize;
@@ -646,9 +662,9 @@ function solveIRF(p, shockType, shockSize, T) {
       d4l_s[t] = G(s,t) - G(s,t-4);
     }
 
-    // ── Convergence check ────────────────────────────────────
+    // ── Convergence check (forecast period only; pre-history is fixed) ──
     let diff = 0;
-    for (let t = 0; t < N; t++) {
+    for (let t = ST; t < N; t++) {
       diff = Math.max(diff,
         Math.abs(pi[t]  - pi0[t]),
         Math.abs(s[t]   - s0[t]),
@@ -823,71 +839,63 @@ function run() {
 //  BASELINE FORECAST
 // ═══════════════════════════════════════════════════════════
 function runBL() {
-  const p   = P();
-  const T   = 16;
-  const pi0 = +document.getElementById('bl_pi').value;
-  const rs0 = +document.getElementById('bl_rs').value;
-  const g0  = +document.getElementById('bl_gap').value;
-  const d0  = +document.getElementById('bl_d4ls').value;
-  const tar = p.tar;
-  const neutral_nominal = p.rrbar + tar;
+  const p       = P();
+  const T       = 16;
+  const tar     = p.tar;
+  const neutral = p.rrbar + tar;
 
-  let pi  = new Float64Array(T+2);
-  let rs  = new Float64Array(T+2);
-  let gap = new Float64Array(T+2);
-  let dep = new Float64Array(T+2);
+  const bl_pi   = +document.getElementById('bl_pi').value;
+  const bl_rs   = +document.getElementById('bl_rs').value;
+  const bl_gap  = +document.getElementById('bl_gap').value;
+  const bl_d4ls = +document.getElementById('bl_d4ls').value;
 
-  pi[0] = pi0; rs[0] = rs0; gap[0] = g0; dep[0] = d0;
+  // Run the same Gauss-Seidel solver as IRF — no more separate model universe.
+  // Convert level inputs to deviation form (SS: π=tar, RS=rrbar+tar, gap=0, dep≈tar).
+  const r = solveIRF(p, null, 0, T, {
+    pi:   bl_pi   - tar,
+    rs:   bl_rs   - neutral,
+    gap:  bl_gap,
+    d4ls: bl_d4ls - tar,
+  });
 
-  for (let t = 1; t <= T; t++) {
-    const pi_f = pi[t-1] * 0.75 + tar * 0.25;
-    const pi_gap = pi[t-1] - tar;
-
-    rs[t]  = p.g1 * rs[t-1] + (1-p.g1) * (neutral_nominal + p.g2 * pi_gap + p.g3 * gap[t-1]);
-    const rr = rs[t-1] - pi[t-1];
-    gap[t] = p.b1 * gap[t-1] - p.b2 * Math.max(0, rr - p.rrbar) * 0.4;
-    const rmc = p.a3 * gap[t];
-    pi[t]  = p.a1 * pi[t-1] + (1-p.a1) * pi_f + p.a2 * rmc * 3;
-    dep[t] = Math.max(0, dep[t-1] * 0.65 + Math.max(0, pi[t-1] - tar) * 0.6);
-  }
+  // Convert deviations back to levels for display
+  const slPi  = r.pi4.map(v  => v + tar);
+  const slRS  = r.rs.map(v   => v + neutral);
+  const slGap = Array.from(r.gap);
+  const slDep = r.d4l_s.map(v => v + tar);
 
   const lbls = [];
-  for (let t = 0; t < T; t++) {
-    lbls.push(['Q1','Q2','Q3','Q4'][t%4] + ' ' + (2024 + Math.floor(t/4)));
+  for (let t = 0; t <= T; t++) {
+    lbls.push(['Q1','Q2','Q3','Q4'][t % 4] + ' ' + (2024 + Math.floor(t / 4)));
   }
 
-  const slPi  = Array.from(pi.slice(0,T));
-  const slRS  = Array.from(rs.slice(0,T));
-  const slGap = Array.from(gap.slice(0,T));
-  const slDep = Array.from(dep.slice(0,T));
-
-  const avg2025 = slPi.slice(4,8).reduce((a,b)=>a+b,0)/4;
-  document.getElementById('bk0').textContent = avg2025.toFixed(1)+'%';
-  document.getElementById('bk1').textContent = slRS[Math.min(7,T-1)].toFixed(2)+'%';
-  document.getElementById('bk2').textContent = (p.gdpbar + slGap[Math.min(7,T-1)]).toFixed(1)+'%';
-  document.getElementById('bk3').textContent = slDep[Math.min(7,T-1)].toFixed(1)+'%';
+  const avg2025 = slPi.slice(4, 8).reduce((a, b) => a + b, 0) / 4;
+  document.getElementById('bk0').textContent = avg2025.toFixed(1) + '%';
+  document.getElementById('bk1').textContent = slRS[Math.min(7, T)].toFixed(2) + '%';
+  document.getElementById('bk2').textContent = (p.gdpbar + slGap[Math.min(7, T)]).toFixed(1) + '%';
+  document.getElementById('bk3').textContent = slDep[Math.min(7, T)].toFixed(1) + '%';
 
   const blDefs = [
-    { id:'blc0', data:slPi,  lbl:'Inflation YoY (%)', clr:'rgba(192,57,43,.9)',  tar: tar },
-    { id:'blc1', data:slRS,  lbl:'Policy Rate (%)',   clr:'rgba(26,58,92,.9)',   tar: null },
-    { id:'blc2', data:slGap, lbl:'Output Gap (%)',    clr:'rgba(36,113,163,.9)', tar: 0 },
-    { id:'blc3', data:slDep, lbl:'NER Deprec. (%)',   clr:'rgba(214,137,16,.9)', tar: null },
+    { id: 'blc0', data: slPi,  lbl: 'Inflation YoY (%)', clr: 'rgba(192,57,43,.9)',  tar: tar },
+    { id: 'blc1', data: slRS,  lbl: 'Policy Rate (%)',   clr: 'rgba(26,58,92,.9)',   tar: null },
+    { id: 'blc2', data: slGap, lbl: 'Output Gap (%)',    clr: 'rgba(36,113,163,.9)', tar: 0 },
+    { id: 'blc3', data: slDep, lbl: 'NER Deprec. (%)',   clr: 'rgba(214,137,16,.9)', tar: null },
   ];
 
   blDefs.forEach(d => {
-    const k = 'bl_'+d.id;
+    const k = 'bl_' + d.id;
     if (charts[k]) charts[k].destroy();
     const ds = [{
       label: d.lbl, data: d.data, borderColor: d.clr,
-      backgroundColor: d.clr.replace('.9)','.1)'),
+      backgroundColor: d.clr.replace('.9)', '.1)'),
       borderWidth: 2.5, pointRadius: 2, fill: true, tension: 0.3,
     }];
     if (d.tar !== null) ds.push({
-      label: 'Target', data: new Array(T).fill(d.tar),
-      borderColor:'rgba(0,0,0,.25)', borderWidth:1.2, borderDash:[5,4], pointRadius:0,
+      label: 'Target', data: new Array(T + 1).fill(d.tar),
+      borderColor: 'rgba(0,0,0,.25)', borderWidth: 1.2, borderDash: [5, 4], pointRadius: 0,
     });
     charts[k] = new Chart(document.getElementById(d.id).getContext('2d'), {
-      type:'line', data:{labels:lbls, datasets:ds}, options:chartOpts(),
+      type: 'line', data: { labels: lbls, datasets: ds }, options: chartOpts(),
     });
   });
 }
