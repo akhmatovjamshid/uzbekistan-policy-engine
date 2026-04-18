@@ -5,10 +5,12 @@ import { QuickActions } from '../components/overview/QuickActions'
 import { RiskPanel } from '../components/overview/RiskPanel'
 import { PageContainer } from '../components/layout/PageContainer'
 import { PageHeader } from '../components/layout/PageHeader'
-import { overviewV1Data } from '../data/mock/overview'
+import { getOverviewSnapshot } from '../data/overview/source'
 import './overview.css'
 
 export function OverviewPage() {
+  const overviewData = getOverviewSnapshot()
+
   const {
     summary,
     generated_at,
@@ -17,7 +19,7 @@ export function OverviewPage() {
     top_risks,
     analysis_actions,
     output_action,
-  } = overviewV1Data
+  } = overviewData
 
   return (
     <PageContainer className="overview-page">
