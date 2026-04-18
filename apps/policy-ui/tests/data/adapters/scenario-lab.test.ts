@@ -111,6 +111,79 @@ describe('scenario lab adapter', () => {
     assert.equal(adapted.results.charts_by_tab.macro_path.chart_type, 'line')
     assert.equal(adapted.results.charts_by_tab.external_balance.chart_id.length > 0, true)
   })
+
+  it('uses live chart primitives when valid primitive payload is present', () => {
+    const raw: RawScenarioLabRunPayload = {
+      run: {
+        chartsByTab: {
+          macro_path: {
+            chartId: 'macro_path_live',
+            chartType: 'line',
+            x: {
+              label: 'Quarter',
+              unit: '',
+              values: ['2026 Q1', '2026 Q2', '2026 Q3', '2026 Q4'],
+            },
+            y: {
+              label: 'GDP growth',
+              unit: '%',
+              values: [5.7, 5.6, 5.5, 5.4],
+            },
+            series: [
+              {
+                seriesId: 'baseline_path',
+                label: 'Baseline',
+                semanticRole: 'baseline',
+                values: [5.8, 5.8, 5.8, 5.8],
+              },
+              {
+                seriesId: 'scenario_path',
+                label: 'Scenario',
+                semanticRole: 'alternative',
+                values: [5.7, 5.6, 5.5, 5.4],
+              },
+            ],
+            takeaway: 'Live macro path from backend primitives.',
+          },
+        },
+      },
+    }
+
+    const adapted = toScenarioLabData(raw)
+    const chart = adapted.results.charts_by_tab.macro_path
+    assert.equal(chart.chart_id, 'macro_path_live')
+    assert.deepEqual(chart.x.values, ['2026 Q1', '2026 Q2', '2026 Q3', '2026 Q4'])
+    assert.deepEqual(chart.series[1]?.values, [5.7, 5.6, 5.5, 5.4])
+    assert.equal(chart.takeaway, 'Live macro path from backend primitives.')
+  })
+
+  it('applies safe fallback when primitive payload is partial', () => {
+    const adapted = toScenarioLabData({
+      run: {
+        chartsByTab: {
+          macro_path: {
+            chartId: 'macro_path_partial',
+            x: {
+              label: 'Period',
+              values: ['2026 Q1', '2026 Q2', '2026 Q3', '2026 Q4'],
+            },
+            series: [
+              {
+                seriesId: 'scenario_path',
+              },
+            ],
+          },
+        },
+      },
+    })
+
+    const chart = adapted.results.charts_by_tab.macro_path
+    assert.equal(chart.chart_id, 'macro_path_partial')
+    assert.deepEqual(chart.x.values, ['2026 Q1', '2026 Q2', '2026 Q3', '2026 Q4'])
+    assert.equal(chart.series[0]?.series_id, 'scenario_path')
+    assert.equal(chart.series[0]?.values.length > 0, true)
+    assert.equal(chart.y.values.length > 0, true)
+  })
 })
 
 describe('scenario lab runtime guard', () => {
@@ -136,5 +209,44 @@ describe('scenario lab runtime guard', () => {
     assert.ok(result.issues.length > 0)
     assert.equal(Array.isArray(result.value.run?.interpretation?.whatChanged), true)
     assert.equal(result.value.run?.interpretation?.whatChanged?.[0], 'ok')
+  })
+
+  it('warns and strips invalid chart primitives while preserving valid portions', () => {
+    const validation = validateRawScenarioLabPayload({
+      run: {
+        chartsByTab: {
+          headline_impact: {
+            x: 'bad',
+            y: {
+              label: 'Delta',
+              values: [1, 'bad', 2],
+            },
+            series: [
+              {
+                seriesId: 'delta',
+                values: [0.2, Number.NaN, 0.1],
+              },
+              'bad-entry',
+            ],
+          },
+        },
+      },
+    })
+
+    assert.equal(validation.ok, true)
+    assert.equal(
+      validation.issues.some((issue) => issue.path === 'run.chartsByTab.headline_impact.x'),
+      true,
+    )
+    assert.equal(
+      validation.issues.some((issue) => issue.path === 'run.chartsByTab.headline_impact.series[1]'),
+      true,
+    )
+
+    const adapted = toScenarioLabData(validation.value)
+    const chart = adapted.results.charts_by_tab.headline_impact
+    assert.equal(chart.x.values.length > 0, true)
+    assert.deepEqual(chart.y.values, [1, 2])
+    assert.deepEqual(chart.series[0]?.values, [0.2, 0.1])
   })
 })

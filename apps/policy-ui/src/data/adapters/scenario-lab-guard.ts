@@ -57,6 +57,48 @@ function asStringArray(
   return value.filter((entry): entry is string => typeof entry === 'string')
 }
 
+function asStringOrNumberArray(
+  value: unknown,
+  issues: ScenarioLabValidationIssue[],
+  path: string,
+): Array<string | number> | undefined {
+  if (value === undefined) {
+    return undefined
+  }
+
+  if (!Array.isArray(value)) {
+    issues.push({ path, message: 'Expected an array of strings or numbers.', severity: 'warning' })
+    return undefined
+  }
+
+  return value.filter((entry): entry is string | number => {
+    if (typeof entry === 'string') {
+      return true
+    }
+    if (typeof entry === 'number' && Number.isFinite(entry)) {
+      return true
+    }
+    return false
+  })
+}
+
+function asFiniteNumberArray(
+  value: unknown,
+  issues: ScenarioLabValidationIssue[],
+  path: string,
+): number[] | undefined {
+  if (value === undefined) {
+    return undefined
+  }
+
+  if (!Array.isArray(value)) {
+    issues.push({ path, message: 'Expected an array of numbers.', severity: 'warning' })
+    return undefined
+  }
+
+  return value.filter((entry): entry is number => typeof entry === 'number' && Number.isFinite(entry))
+}
+
 function asNumberMap(
   value: unknown,
   issues: ScenarioLabValidationIssue[],
@@ -169,8 +211,15 @@ function asRun(value: unknown, issues: ScenarioLabValidationIssue[]): RawScenari
   }
 
   const RESULT_TAB_KEYS = ['headline_impact', 'macro_path', 'external_balance', 'fiscal_effects'] as const
-  const toRawChart = (raw: unknown) => {
+  const toRawChart = (raw: unknown, tab: (typeof RESULT_TAB_KEYS)[number]) => {
     if (!isRecord(raw)) {
+      if (raw !== undefined) {
+        issues.push({
+          path: `run.chartsByTab.${tab}`,
+          message: 'Expected an object for chart payload.',
+          severity: 'warning',
+        })
+      }
       return undefined
     }
     return {
@@ -178,6 +227,26 @@ function asRun(value: unknown, issues: ScenarioLabValidationIssue[]): RawScenari
       title: asString(raw.title),
       subtitle: asString(raw.subtitle),
       chartType: asString(raw.chartType),
+      x: isRecord(raw.x)
+        ? {
+            label: asString(raw.x.label),
+            unit: asString(raw.x.unit),
+            values: asStringOrNumberArray(raw.x.values, issues, `run.chartsByTab.${tab}.x.values`),
+          }
+        : undefined,
+      y: isRecord(raw.y)
+        ? {
+            label: asString(raw.y.label),
+            unit: asString(raw.y.unit),
+            values: asFiniteNumberArray(raw.y.values, issues, `run.chartsByTab.${tab}.y.values`),
+          }
+        : undefined,
+      series: asObjectArray(raw.series, issues, `run.chartsByTab.${tab}.series`, (series) => ({
+        seriesId: asString(series.seriesId),
+        label: asString(series.label),
+        semanticRole: asString(series.semanticRole),
+        values: asFiniteNumberArray(series.values, issues, `run.chartsByTab.${tab}.series[].values`),
+      })),
       viewMode: asStringOrNull(raw.viewMode),
       takeaway: asString(raw.takeaway),
     }
@@ -185,7 +254,7 @@ function asRun(value: unknown, issues: ScenarioLabValidationIssue[]): RawScenari
   const chartsByTab = isRecord(value.chartsByTab)
     ? RESULT_TAB_KEYS.reduce<NonNullable<NonNullable<RawScenarioLabRunPayload['run']>['chartsByTab']>>(
         (acc, tab) => {
-          acc[tab] = toRawChart((value.chartsByTab as Record<string, unknown>)[tab])
+          acc[tab] = toRawChart((value.chartsByTab as Record<string, unknown>)[tab], tab)
           return acc
         },
         {},
@@ -198,6 +267,29 @@ function asRun(value: unknown, issues: ScenarioLabValidationIssue[]): RawScenari
       message: 'Expected an object keyed by result tab id.',
       severity: 'warning',
     })
+  }
+
+  if (isRecord(value.chartsByTab)) {
+    for (const tab of RESULT_TAB_KEYS) {
+      const rawTab = (value.chartsByTab as Record<string, unknown>)[tab]
+      if (!isRecord(rawTab)) {
+        continue
+      }
+      if (rawTab.x !== undefined && !isRecord(rawTab.x)) {
+        issues.push({
+          path: `run.chartsByTab.${tab}.x`,
+          message: 'Expected an object.',
+          severity: 'warning',
+        })
+      }
+      if (rawTab.y !== undefined && !isRecord(rawTab.y)) {
+        issues.push({
+          path: `run.chartsByTab.${tab}.y`,
+          message: 'Expected an object.',
+          severity: 'warning',
+        })
+      }
+    }
   }
 
   const interpretation = isRecord(value.interpretation)

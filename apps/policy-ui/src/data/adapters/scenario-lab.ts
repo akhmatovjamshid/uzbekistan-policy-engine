@@ -59,7 +59,7 @@ type RawScenarioLabChart = {
   y?: {
     label?: string
     unit?: string
-    values?: Array<string | number>
+    values?: number[]
   }
   series?: Array<{
     seriesId?: string
@@ -119,10 +119,39 @@ function isAllowedChartType(value: string | undefined): value is ChartType {
   return value === 'line' || value === 'bar' || value === 'area' || value === 'combo'
 }
 
+function hasNonEmptyAxisValues(values: Array<string | number> | undefined): values is Array<string | number> {
+  return Array.isArray(values) && values.length > 0
+}
+
+function hasNonEmptyNumericValues(values: number[] | undefined): values is number[] {
+  return Array.isArray(values) && values.length > 0
+}
+
 function toChart(rawChart: RawScenarioLabChart | undefined, fallback: ChartSpec): ChartSpec {
   if (!rawChart) {
     return fallback
   }
+
+  const mergedSeries =
+    rawChart.series && rawChart.series.length > 0
+      ? rawChart.series.map((series, index) => ({
+          series_id: series.seriesId ?? fallback.series[index]?.series_id ?? `series-${index + 1}`,
+          label: series.label ?? fallback.series[index]?.label ?? `Series ${index + 1}`,
+          semantic_role:
+            series.semanticRole === 'baseline' ||
+            series.semanticRole === 'alternative' ||
+            series.semanticRole === 'downside' ||
+            series.semanticRole === 'upside' ||
+            series.semanticRole === 'other'
+              ? series.semanticRole
+              : fallback.series[index]?.semantic_role ?? 'other',
+          values: hasNonEmptyNumericValues(series.values)
+            ? series.values
+            : fallback.series[index]?.values ?? [],
+        }))
+      : fallback.series
+
+  const yValuesFromSeries = mergedSeries[0]?.values
 
   return {
     chart_id: rawChart.chartId ?? fallback.chart_id,
@@ -132,27 +161,18 @@ function toChart(rawChart: RawScenarioLabChart | undefined, fallback: ChartSpec)
     x: {
       label: rawChart.x?.label ?? fallback.x.label,
       unit: rawChart.x?.unit ?? fallback.x.unit,
-      values: rawChart.x?.values ?? fallback.x.values,
+      values: hasNonEmptyAxisValues(rawChart.x?.values) ? rawChart.x.values : fallback.x.values,
     },
     y: {
       label: rawChart.y?.label ?? fallback.y.label,
       unit: rawChart.y?.unit ?? fallback.y.unit,
-      values: (rawChart.y?.values as number[] | undefined) ?? fallback.y.values,
+      values: hasNonEmptyAxisValues(rawChart.y?.values)
+        ? rawChart.y.values
+        : hasNonEmptyNumericValues(yValuesFromSeries)
+          ? yValuesFromSeries
+          : fallback.y.values,
     },
-    series:
-      rawChart.series?.map((series, index) => ({
-        series_id: series.seriesId ?? fallback.series[index]?.series_id ?? `series-${index + 1}`,
-        label: series.label ?? fallback.series[index]?.label ?? `Series ${index + 1}`,
-        semantic_role:
-          series.semanticRole === 'baseline' ||
-          series.semanticRole === 'alternative' ||
-          series.semanticRole === 'downside' ||
-          series.semanticRole === 'upside' ||
-          series.semanticRole === 'other'
-            ? series.semanticRole
-            : fallback.series[index]?.semantic_role ?? 'other',
-        values: series.values ?? fallback.series[index]?.values ?? [],
-      })) ?? fallback.series,
+    series: mergedSeries,
     view_mode:
       rawChart.viewMode === 'level' || rawChart.viewMode === 'delta' || rawChart.viewMode === 'risk'
         ? rawChart.viewMode
