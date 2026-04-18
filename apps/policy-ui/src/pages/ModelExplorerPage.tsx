@@ -1,7 +1,11 @@
 import { useMemo, useState } from 'react'
 import { PageContainer } from '../components/layout/PageContainer'
 import { PageHeader } from '../components/layout/PageHeader'
-import type { ModelExplorerModelDetail, ModelExplorerTabId } from '../contracts/data-contract'
+import type {
+  ModelExplorerModelDetail,
+  ModelExplorerTabId,
+  ModelRunStatus,
+} from '../contracts/data-contract'
 import { modelExplorerWorkspaceMock } from '../data/mock/model-explorer'
 import './model-explorer.css'
 
@@ -14,6 +18,12 @@ const TAB_LABELS: Record<ModelExplorerTabId, string> = {
 
 function formatSeverityLabel(value: string) {
   return `${value.charAt(0).toUpperCase()}${value.slice(1)}`
+}
+
+const STATUS_LABELS: Record<ModelRunStatus, string> = {
+  active: 'Active',
+  staging: 'Staging',
+  paused: 'Paused',
 }
 
 function DetailPanelContent({ tab, detail }: { tab: ModelExplorerTabId; detail: ModelExplorerModelDetail }) {
@@ -115,7 +125,7 @@ export function ModelExplorerPage() {
         <div className="model-explorer-layout">
           <section className="model-explorer-panel" aria-labelledby="model-catalog-title">
             <div className="page-section-head">
-              <h2 id="model-catalog-title">Model Catalog</h2>
+              <h2 id="model-catalog-title">Model catalog</h2>
               <p>Select one model to inspect technical assumptions and caveats.</p>
             </div>
 
@@ -134,10 +144,10 @@ export function ModelExplorerPage() {
                   >
                     <div className="model-explorer-model-button__head">
                       <strong>{model.model_name}</strong>
-                      <span className="ui-chip ui-chip--neutral">v{model.version}</span>
+                      <span className="ui-chip ui-chip--neutral">{STATUS_LABELS[model.status]}</span>
                     </div>
                     <p className="model-explorer-model-button__meta">
-                      {model.module} · {model.role}
+                      {model.model_type} · {model.frequency}
                     </p>
                     <p>{model.summary}</p>
                   </button>
