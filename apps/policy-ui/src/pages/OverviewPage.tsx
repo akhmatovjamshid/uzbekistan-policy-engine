@@ -61,7 +61,7 @@ export function OverviewPage() {
         </p>
         {sourceState.canRetry ? (
           <div>
-            <button type="button" onClick={handleRetry}>
+            <button type="button" className="overview-secondary-action" onClick={handleRetry}>
               Retry
             </button>
           </div>
