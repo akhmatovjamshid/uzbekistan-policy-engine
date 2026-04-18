@@ -50,7 +50,7 @@ export function HeadlineComparisonTable({
     return (
       <section className="comparison-panel" aria-labelledby="comparison-headline-title">
         <div className="comparison-panel__head page-section-head">
-          <h2 id="comparison-headline-title">Headline Comparison</h2>
+          <h2 id="comparison-headline-title">Headline comparison</h2>
           <p>Side-by-side values and scenario deltas relative to the selected baseline.</p>
         </div>
         <p className="empty-state">Select a baseline scenario to view comparison metrics.</p>
@@ -63,7 +63,7 @@ export function HeadlineComparisonTable({
   return (
     <section className="comparison-panel" aria-labelledby="comparison-headline-title">
       <div className="comparison-panel__head page-section-head">
-        <h2 id="comparison-headline-title">Headline Comparison</h2>
+        <h2 id="comparison-headline-title">Headline comparison</h2>
         <p>Side-by-side values and scenario deltas relative to the selected baseline.</p>
       </div>
 
@@ -73,6 +73,9 @@ export function HeadlineComparisonTable({
 
       <div className="comparison-headline-table-wrap">
         <table className="comparison-headline-table">
+          <caption className="sr-only">
+            Headline metric values and deltas against the selected baseline scenario.
+          </caption>
           <thead>
             <tr>
               <th scope="col">Metric</th>

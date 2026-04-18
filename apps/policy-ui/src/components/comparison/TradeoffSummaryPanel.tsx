@@ -36,7 +36,7 @@ export function TradeoffSummaryPanel({
     return (
       <section className="comparison-panel comparison-panel--summary" aria-labelledby="comparison-summary-title">
         <div className="comparison-panel__head page-section-head">
-          <h2 id="comparison-summary-title">Trade-off Summary</h2>
+          <h2 id="comparison-summary-title">Trade-off summary</h2>
           <p>Quick decision framing from selected scenarios.</p>
         </div>
         <p className="empty-state">Select at least one scenario to generate a summary.</p>
@@ -86,7 +86,7 @@ export function TradeoffSummaryPanel({
   return (
     <section className="comparison-panel comparison-panel--summary" aria-labelledby="comparison-summary-title">
       <div className="comparison-panel__head page-section-head">
-        <h2 id="comparison-summary-title">Trade-off Summary</h2>
+        <h2 id="comparison-summary-title">Trade-off summary</h2>
         <p>Quick decision framing from selected scenarios.</p>
       </div>
 

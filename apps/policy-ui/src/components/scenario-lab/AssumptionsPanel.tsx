@@ -123,9 +123,13 @@ export function AssumptionsPanel({
 
         <div className="scenario-session-controls__actions">
           <button type="button" onClick={onSaveScenario}>
-            Save Draft
+            Save draft
           </button>
-          {saveStatus ? <p>{saveStatus}</p> : null}
+          {saveStatus ? (
+            <p role="status" aria-live="polite">
+              {saveStatus}
+            </p>
+          ) : null}
         </div>
       </div>
 

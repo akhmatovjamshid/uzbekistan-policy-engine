@@ -12,6 +12,10 @@ const TAB_LABELS: Record<ModelExplorerTabId, string> = {
   data_sources: 'Data sources',
 }
 
+function formatSeverityLabel(value: string) {
+  return `${value.charAt(0).toUpperCase()}${value.slice(1)}`
+}
+
 function DetailPanelContent({ tab, detail }: { tab: ModelExplorerTabId; detail: ModelExplorerModelDetail }) {
   if (tab === 'assumptions') {
     if (detail.assumptions.length === 0) {
@@ -58,7 +62,7 @@ function DetailPanelContent({ tab, detail }: { tab: ModelExplorerTabId; detail: 
         {detail.caveats.map((caveat) => (
           <article key={caveat.caveat_id} className="model-explorer-item">
             <h3>
-              <span className="ui-chip ui-chip--neutral">{caveat.severity}</span>
+              <span className="ui-chip ui-chip--neutral">{formatSeverityLabel(caveat.severity)}</span>
             </h3>
             <p>{caveat.message}</p>
             <p className="model-explorer-item__value">Implication: {caveat.implication}</p>
