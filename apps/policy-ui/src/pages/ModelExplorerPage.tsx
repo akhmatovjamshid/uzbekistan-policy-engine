@@ -158,7 +158,7 @@ export function ModelExplorerPage() {
           title="Model Explorer"
           description="Basic model catalog and technical reference for assumptions, equations, caveats, and sources."
         />
-        <p className="empty-state" role="status" aria-live="polite">
+        <p className="empty-state" role="alert">
           {sourceState.error ?? 'Model metadata is currently unavailable.'}
         </p>
         {sourceState.canRetry ? (

@@ -110,7 +110,7 @@ export function ComparisonPage() {
           title="Comparison"
           description="Compare baseline and alternative scenarios side by side to surface trade-offs and decision framing."
         />
-        <p className="empty-state" role="status" aria-live="polite">
+        <p className="empty-state" role="alert">
           {sourceState.error ?? 'Comparison data is currently unavailable.'}
         </p>
         {sourceState.canRetry ? (

@@ -26,10 +26,6 @@ function resolveOverviewDataMode(): OverviewDataMode {
   return envMode === 'live' || processMode === 'live' ? 'live' : 'mock'
 }
 
-export function getOverviewDataMode(): OverviewDataMode {
-  return resolveOverviewDataMode()
-}
-
 function buildReadyState(
   mode: OverviewDataMode,
   snapshot: MacroSnapshot,

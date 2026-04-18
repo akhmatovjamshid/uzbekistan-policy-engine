@@ -56,7 +56,7 @@ export function OverviewPage() {
           title="Overview"
           description="Decision-first macro snapshot designed to show what changed, why it matters, and where to test next."
         />
-        <p className="empty-state" role="status" aria-live="polite">
+        <p className="empty-state" role="alert">
           {sourceState.error ?? 'Overview data is currently unavailable.'}
         </p>
         {sourceState.canRetry ? (
