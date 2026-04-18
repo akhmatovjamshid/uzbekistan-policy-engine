@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "es2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": ["node"],
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": false,
+    "outDir": "./.test-dist",
+    "rootDir": "."
+  },
+  "include": ["tests/**/*.ts", "src/data/adapters/**/*.ts", "src/contracts/**/*.ts"]
+}

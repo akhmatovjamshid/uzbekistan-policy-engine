@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { EconomicStateHeader } from '../components/overview/EconomicStateHeader'
 import { KpiStrip } from '../components/overview/KpiStrip'
 import { NowcastForecastBlock } from '../components/overview/NowcastForecastBlock'
@@ -5,11 +6,67 @@ import { QuickActions } from '../components/overview/QuickActions'
 import { RiskPanel } from '../components/overview/RiskPanel'
 import { PageContainer } from '../components/layout/PageContainer'
 import { PageHeader } from '../components/layout/PageHeader'
-import { getOverviewSnapshot } from '../data/overview/source'
+import {
+  getInitialOverviewSourceState,
+  loadOverviewSourceState,
+  retryOverviewSourceState,
+} from '../data/overview/source'
 import './overview.css'
 
 export function OverviewPage() {
-  const overviewData = getOverviewSnapshot()
+  const [sourceState, setSourceState] = useState(getInitialOverviewSourceState)
+
+  useEffect(() => {
+    let cancelled = false
+    loadOverviewSourceState().then((state) => {
+      if (!cancelled) {
+        setSourceState(state)
+      }
+    })
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  async function handleRetry() {
+    setSourceState((prev) => ({ ...prev, status: 'loading', error: null }))
+    const nextState = await retryOverviewSourceState()
+    setSourceState(nextState)
+  }
+
+  if (sourceState.status === 'loading') {
+    return (
+      <PageContainer className="overview-page">
+        <PageHeader
+          title="Overview"
+          description="Decision-first macro snapshot designed to show what changed, why it matters, and where to test next."
+        />
+        <p className="empty-state">Loading latest overview snapshot...</p>
+      </PageContainer>
+    )
+  }
+
+  if (sourceState.status === 'error' || !sourceState.snapshot) {
+    return (
+      <PageContainer className="overview-page">
+        <PageHeader
+          title="Overview"
+          description="Decision-first macro snapshot designed to show what changed, why it matters, and where to test next."
+        />
+        <p className="empty-state">{sourceState.error ?? 'Overview data is currently unavailable.'}</p>
+        {sourceState.canRetry ? (
+          <div>
+            <button type="button" onClick={handleRetry}>
+              Retry
+            </button>
+          </div>
+        ) : null}
+      </PageContainer>
+    )
+  }
+
+  const overviewData = sourceState.snapshot
 
   const {
     summary,
