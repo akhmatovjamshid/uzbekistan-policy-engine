@@ -1,14 +1,184 @@
+import { useMemo, useState } from 'react'
 import { PageContainer } from '../components/layout/PageContainer'
 import { PageHeader } from '../components/layout/PageHeader'
+import type { ModelExplorerModelDetail, ModelExplorerTabId } from '../contracts/data-contract'
+import { modelExplorerWorkspaceMock } from '../data/mock/model-explorer'
+import './model-explorer.css'
+
+const TAB_LABELS: Record<ModelExplorerTabId, string> = {
+  assumptions: 'Assumptions',
+  equations: 'Equations',
+  caveats: 'Caveats',
+  data_sources: 'Data sources',
+}
+
+function DetailPanelContent({ tab, detail }: { tab: ModelExplorerTabId; detail: ModelExplorerModelDetail }) {
+  if (tab === 'assumptions') {
+    if (detail.assumptions.length === 0) {
+      return <p className="empty-state">No assumptions are documented for this model.</p>
+    }
+    return (
+      <div className="model-explorer-list">
+        {detail.assumptions.map((assumption) => (
+          <article key={assumption.assumption_id} className="model-explorer-item">
+            <h3>{assumption.label}</h3>
+            <p className="model-explorer-item__value">{assumption.value}</p>
+            <p>{assumption.rationale}</p>
+          </article>
+        ))}
+      </div>
+    )
+  }
+
+  if (tab === 'equations') {
+    if (detail.equations.length === 0) {
+      return <p className="empty-state">No equations are documented for this model.</p>
+    }
+    return (
+      <div className="model-explorer-list">
+        {detail.equations.map((equation) => (
+          <article key={equation.equation_id} className="model-explorer-item">
+            <h3>{equation.title}</h3>
+            <pre className="model-explorer-equation">
+              <code>{equation.expression}</code>
+            </pre>
+            <p>{equation.explanation}</p>
+          </article>
+        ))}
+      </div>
+    )
+  }
+
+  if (tab === 'caveats') {
+    if (detail.caveats.length === 0) {
+      return <p className="empty-state">No caveats are documented for this model.</p>
+    }
+    return (
+      <div className="model-explorer-list">
+        {detail.caveats.map((caveat) => (
+          <article key={caveat.caveat_id} className="model-explorer-item">
+            <h3>
+              <span className="ui-chip ui-chip--neutral">{caveat.severity}</span>
+            </h3>
+            <p>{caveat.message}</p>
+            <p className="model-explorer-item__value">Implication: {caveat.implication}</p>
+          </article>
+        ))}
+      </div>
+    )
+  }
+
+  if (detail.data_sources.length === 0) {
+    return <p className="empty-state">No data sources are documented for this model.</p>
+  }
+
+  return (
+    <div className="model-explorer-list">
+      {detail.data_sources.map((source) => (
+        <article key={source.source_id} className="model-explorer-item">
+          <h3>{source.name}</h3>
+          <p className="model-explorer-item__value">
+            {source.provider} · {source.frequency} · {source.vintage}
+          </p>
+          <p>{source.note}</p>
+        </article>
+      ))}
+    </div>
+  )
+}
 
 export function ModelExplorerPage() {
+  const { models, default_model_id, details_by_model_id } = modelExplorerWorkspaceMock
+  const [selectedModelId, setSelectedModelId] = useState(default_model_id)
+  const [activeTab, setActiveTab] = useState<ModelExplorerTabId>('assumptions')
+
+  const selectedModel = useMemo(
+    () => models.find((model) => model.model_id === selectedModelId) ?? models[0],
+    [models, selectedModelId],
+  )
+  const selectedDetail = selectedModel ? details_by_model_id[selectedModel.model_id] : undefined
+
   return (
-    <PageContainer>
+    <PageContainer className="model-explorer-page">
       <PageHeader
         title="Model Explorer"
-        description="Technical model assumptions, equations, parameters, and caveats scaffold."
+        description="Basic model catalog and technical reference for assumptions, equations, caveats, and sources."
       />
-      <div className="placeholder-card">Model Explorer v1 scaffold</div>
+
+      {models.length === 0 || !selectedModel || !selectedDetail ? (
+        <p className="empty-state">No model metadata is available in this workspace.</p>
+      ) : (
+        <div className="model-explorer-layout">
+          <section className="model-explorer-panel" aria-labelledby="model-catalog-title">
+            <div className="page-section-head">
+              <h2 id="model-catalog-title">Model Catalog</h2>
+              <p>Select one model to inspect technical assumptions and caveats.</p>
+            </div>
+
+            <div className="model-explorer-catalog">
+              {models.map((model) => {
+                const isActive = model.model_id === selectedModel.model_id
+                return (
+                  <button
+                    key={model.model_id}
+                    type="button"
+                    className={`model-explorer-model-button${isActive ? ' active' : ''}`}
+                    onClick={() => {
+                      setSelectedModelId(model.model_id)
+                      setActiveTab('assumptions')
+                    }}
+                  >
+                    <div className="model-explorer-model-button__head">
+                      <strong>{model.model_name}</strong>
+                      <span className="ui-chip ui-chip--neutral">v{model.version}</span>
+                    </div>
+                    <p className="model-explorer-model-button__meta">
+                      {model.module} · {model.role}
+                    </p>
+                    <p>{model.summary}</p>
+                  </button>
+                )
+              })}
+            </div>
+          </section>
+
+          <section className="model-explorer-panel" aria-labelledby="model-detail-title">
+            <div className="page-section-head">
+              <h2 id="model-detail-title">{selectedModel.model_name}</h2>
+              <p>{selectedDetail.overview}</p>
+            </div>
+
+            <div className="segmented-control" role="tablist" aria-label="Model detail tabs">
+              {(Object.keys(TAB_LABELS) as ModelExplorerTabId[]).map((tab) => {
+                const isActive = tab === activeTab
+                return (
+                  <button
+                    key={tab}
+                    id={`model-explorer-tab-${tab}`}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    aria-controls={`model-explorer-tabpanel-${tab}`}
+                    tabIndex={isActive ? 0 : -1}
+                    className={isActive ? 'active' : ''}
+                    onClick={() => setActiveTab(tab)}
+                  >
+                    {TAB_LABELS[tab]}
+                  </button>
+                )
+              })}
+            </div>
+
+            <div
+              id={`model-explorer-tabpanel-${activeTab}`}
+              role="tabpanel"
+              aria-labelledby={`model-explorer-tab-${activeTab}`}
+            >
+              <DetailPanelContent tab={activeTab} detail={selectedDetail} />
+            </div>
+          </section>
+        </div>
+      )}
     </PageContainer>
   )
 }

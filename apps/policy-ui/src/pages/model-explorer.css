@@ -1,0 +1,120 @@
+.model-explorer-page.page-container {
+  width: min(100%, 90rem);
+  gap: var(--space-lg);
+}
+
+.model-explorer-layout {
+  align-items: start;
+  display: grid;
+  gap: var(--space-lg);
+  grid-template-columns: 0.95fr 1.45fr;
+}
+
+.model-explorer-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  display: grid;
+  gap: var(--space-md);
+  min-width: 0;
+  padding: var(--space-lg);
+}
+
+.model-explorer-catalog {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.model-explorer-model-button {
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  cursor: pointer;
+  display: grid;
+  gap: var(--space-xs);
+  min-width: 0;
+  padding: var(--space-sm);
+  text-align: start;
+}
+
+.model-explorer-model-button.active {
+  background: var(--color-brand-soft);
+  border-color: var(--color-border-strong);
+}
+
+.model-explorer-model-button__head {
+  align-items: center;
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: space-between;
+}
+
+.model-explorer-model-button__head strong {
+  font-size: 0.93rem;
+}
+
+.model-explorer-model-button__meta {
+  color: var(--color-text-muted);
+  font-size: 0.79rem;
+  margin: 0;
+}
+
+.model-explorer-model-button p {
+  font-size: 0.82rem;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.model-explorer-list {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.model-explorer-item {
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  display: grid;
+  gap: var(--space-xs);
+  padding: var(--space-sm);
+}
+
+.model-explorer-item h3 {
+  align-items: center;
+  display: flex;
+  font-size: 0.9rem;
+  gap: var(--space-sm);
+  margin: 0;
+}
+
+.model-explorer-item p {
+  color: var(--color-text-muted);
+  font-size: 0.83rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.model-explorer-item__value {
+  color: var(--color-text);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.model-explorer-equation {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-family: 'Courier New', Consolas, monospace;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  margin: 0;
+  overflow-x: auto;
+  padding: var(--space-sm);
+}
+
+@media (max-width: 1080px) {
+  .model-explorer-layout {
+    grid-template-columns: 1fr;
+  }
+}

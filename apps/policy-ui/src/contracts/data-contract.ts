@@ -176,6 +176,64 @@ export type ComparisonWorkspace = {
   default_selected_ids: string[]
 }
 
+export type ModelExplorerTabId = 'assumptions' | 'equations' | 'caveats' | 'data_sources'
+
+export type ModelExplorerModelEntry = {
+  model_id: string
+  model_name: string
+  module: string
+  version: string
+  role: string
+  summary: string
+}
+
+export type ModelExplorerAssumption = {
+  assumption_id: string
+  label: string
+  value: string
+  rationale: string
+}
+
+export type ModelExplorerEquation = {
+  equation_id: string
+  title: string
+  expression: string
+  explanation: string
+}
+
+export type ModelExplorerCaveat = {
+  caveat_id: string
+  severity: CaveatSeverity
+  message: string
+  implication: string
+}
+
+export type ModelExplorerDataSource = {
+  source_id: string
+  name: string
+  provider: string
+  frequency: string
+  vintage: string
+  note: string
+}
+
+export type ModelExplorerModelDetail = {
+  model_id: string
+  overview: string
+  assumptions: ModelExplorerAssumption[]
+  equations: ModelExplorerEquation[]
+  caveats: ModelExplorerCaveat[]
+  data_sources: ModelExplorerDataSource[]
+}
+
+export type ModelExplorerWorkspace = {
+  workspace_id: string
+  generated_at: string
+  models: ModelExplorerModelEntry[]
+  default_model_id: string
+  details_by_model_id: Record<string, ModelExplorerModelDetail>
+}
+
 export type ScenarioLabResultTab =
   | 'headline_impact'
   | 'macro_path'
