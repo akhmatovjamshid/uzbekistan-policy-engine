@@ -9,7 +9,7 @@ export function QuickActions({ actions }: QuickActionsProps) {
   return (
     <section className="overview-actions-section" aria-labelledby="overview-actions-title">
       <div className="overview-section-head page-section-head">
-        <h2 id="overview-actions-title">Quick Actions</h2>
+        <h2 id="overview-actions-title">Quick actions</h2>
         <p>Direct entry points from monitoring to scenario analysis.</p>
       </div>
 

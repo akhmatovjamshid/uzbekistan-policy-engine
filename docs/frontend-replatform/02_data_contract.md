@@ -255,6 +255,72 @@ Use this shape for the `Comparison` page so side-by-side decision analysis remai
 - `macro_path`: number[]
 - `risk_index`: number
 
+## Model Explorer Basic Shape (`ModelExplorerWorkspace`)
+
+Use this shape for the `Model Explorer` basic page with typed mock metadata only.
+
+- `workspace_id`: string
+- `generated_at`: ISO datetime string
+- `models`: `ModelExplorerModelEntry[]`
+- `default_model_id`: string
+- `details_by_model_id`: `Record<string, ModelExplorerModelDetail>`
+
+## `ModelRunStatus`
+
+- enum: `active` | `staging` | `paused`
+
+## `ModelExplorerTabId`
+
+- enum: `assumptions` | `equations` | `caveats` | `data_sources`
+
+## `ModelExplorerModelEntry`
+
+- `model_id`: string
+- `model_name`: string
+- `model_type`: string
+- `frequency`: string
+- `status`: `ModelRunStatus`
+- `summary`: string
+
+## `ModelExplorerModelDetail`
+
+- `model_id`: string
+- `overview`: string
+- `assumptions`: `ModelExplorerAssumption[]`
+- `equations`: `ModelExplorerEquation[]`
+- `caveats`: `ModelExplorerCaveat[]`
+- `data_sources`: `ModelExplorerDataSource[]`
+
+## `ModelExplorerAssumption`
+
+- `assumption_id`: string
+- `label`: string
+- `value`: string
+- `rationale`: string
+
+## `ModelExplorerEquation`
+
+- `equation_id`: string
+- `title`: string
+- `expression`: string
+- `explanation`: string
+
+## `ModelExplorerCaveat`
+
+- `caveat_id`: string
+- `severity`: enum (`info` | `warning` | `critical`)
+- `message`: string
+- `implication`: string
+
+## `ModelExplorerDataSource`
+
+- `source_id`: string
+- `name`: string
+- `provider`: string
+- `frequency`: string
+- `vintage`: string
+- `note`: string
+
 ## `ApiError`
 
 - `error_code`: string

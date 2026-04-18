@@ -177,13 +177,14 @@ export type ComparisonWorkspace = {
 }
 
 export type ModelExplorerTabId = 'assumptions' | 'equations' | 'caveats' | 'data_sources'
+export type ModelRunStatus = 'active' | 'staging' | 'paused'
 
 export type ModelExplorerModelEntry = {
   model_id: string
   model_name: string
-  module: string
-  version: string
-  role: string
+  model_type: string
+  frequency: string
+  status: ModelRunStatus
   summary: string
 }
 

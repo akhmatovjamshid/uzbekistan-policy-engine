@@ -8,27 +8,27 @@ export const modelExplorerWorkspaceMock: ModelExplorerWorkspace = {
     {
       model_id: 'qpm-uzbekistan',
       model_name: 'QPM Uzbekistan',
-      module: 'Monetary',
-      version: '0.4.2',
-      role: 'Core policy-rate and inflation dynamics',
+      model_type: 'Semi-structural macro',
+      frequency: 'Quarterly',
+      status: 'active',
       summary:
         'Semi-structural quarterly model used for policy-rate transmission and inflation path scenarios.',
     },
     {
       model_id: 'dfm-nowcast',
       model_name: 'DFM Nowcast',
-      module: 'Nowcasting',
-      version: '0.3.7',
-      role: 'Near-term growth signal extraction',
+      model_type: 'Dynamic factor nowcast',
+      frequency: 'Monthly',
+      status: 'active',
       summary:
         'Dynamic-factor nowcast that combines high-frequency indicators to update current-quarter growth.',
     },
     {
       model_id: 'fpp-fiscal',
       model_name: 'FPP Fiscal Block',
-      module: 'Fiscal',
-      version: '0.2.9',
-      role: 'Fiscal balance and financing pressure path',
+      model_type: 'Fiscal projection block',
+      frequency: 'Quarterly',
+      status: 'staging',
       summary:
         'Accounting-style fiscal projection block linking spending, revenue effort, and deficit dynamics.',
     },

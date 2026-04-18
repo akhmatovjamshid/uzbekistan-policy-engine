@@ -293,6 +293,35 @@ body {
   padding: var(--space-md);
 }
 
+/* Shared secondary action pattern (legacy overview-specific naming removed). */
+.ui-secondary-action {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  font-size: 0.83rem;
+  font-weight: 600;
+  padding: 0.42rem 0.68rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.ui-secondary-action:hover {
+  background: var(--color-brand-soft);
+  border-color: var(--color-border-strong);
+}
+
+.sr-only {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
 .placeholder-card {
   background: var(--color-surface);
   border: 1px dashed var(--color-border);

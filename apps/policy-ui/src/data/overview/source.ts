@@ -1,23 +1,88 @@
 import type { MacroSnapshot } from '../../contracts/data-contract'
-import { toMacroSnapshot } from '../adapters'
-import { overviewV1Data } from '../mock/overview'
-import { overviewLiveRawMock } from '../raw/overview-live'
+import {
+  createErrorSourceCore,
+  createLoadingSourceCore,
+  createReadySourceCore,
+  mapTransportErrorToUserMessage,
+  reportGuardWarningsDevOnly,
+  type IntegrationSourceCore,
+} from '../source-state.js'
+import { toMacroSnapshot } from '../adapters/overview.js'
+import { validateRawOverviewPayload, type OverviewValidationIssue } from '../adapters/overview-guard.js'
+import { overviewV1Data } from '../mock/overview.js'
+import { fetchOverviewLiveRawPayload, OverviewTransportError } from './live-client.js'
 
 export type OverviewDataMode = 'mock' | 'live'
 
+export type OverviewSourceState = IntegrationSourceCore<OverviewDataMode, OverviewValidationIssue> & {
+  snapshot: MacroSnapshot | null
+}
+
 function resolveOverviewDataMode(): OverviewDataMode {
-  return import.meta.env.VITE_OVERVIEW_DATA_MODE === 'live' ? 'live' : 'mock'
+  const envMode = (import.meta as ImportMeta & { env?: Record<string, string | undefined> }).env
+    ?.VITE_OVERVIEW_DATA_MODE
+  const processMode = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process
+    ?.env?.VITE_OVERVIEW_DATA_MODE
+  return envMode === 'live' || processMode === 'live' ? 'live' : 'mock'
 }
 
-export function getOverviewDataMode(): OverviewDataMode {
-  return resolveOverviewDataMode()
+function buildReadyState(
+  mode: OverviewDataMode,
+  snapshot: MacroSnapshot,
+  warnings: OverviewValidationIssue[] = [],
+): OverviewSourceState {
+  return {
+    ...createReadySourceCore<OverviewDataMode, OverviewValidationIssue>(mode, warnings),
+    snapshot,
+  }
 }
 
-export function getOverviewSnapshot(): MacroSnapshot {
-  if (resolveOverviewDataMode() === 'live') {
-    return toMacroSnapshot(overviewLiveRawMock)
+function buildErrorState(
+  mode: OverviewDataMode,
+  error: string,
+  warnings: OverviewValidationIssue[] = [],
+): OverviewSourceState {
+  return {
+    ...createErrorSourceCore<OverviewDataMode, OverviewValidationIssue>(mode, error, warnings),
+    snapshot: null,
+  }
+}
+
+export function getInitialOverviewSourceState(): OverviewSourceState {
+  const mode = resolveOverviewDataMode()
+  return {
+    ...createLoadingSourceCore<OverviewDataMode, OverviewValidationIssue>(mode),
+    snapshot: null,
+  }
+}
+
+async function getRawOverviewPayload(): Promise<unknown> {
+  return fetchOverviewLiveRawPayload()
+}
+
+export async function loadOverviewSourceState(): Promise<OverviewSourceState> {
+  const mode = resolveOverviewDataMode()
+  if (mode === 'mock') {
+    return buildReadyState(mode, overviewV1Data)
   }
 
-  return overviewV1Data
-}
+  try {
+    const rawPayload = await getRawOverviewPayload()
+    const validation = validateRawOverviewPayload(rawPayload)
+    reportGuardWarningsDevOnly('Overview', validation.issues)
+    if (!validation.ok) {
+      const firstError = validation.issues.find((issue) => issue.severity === 'error')
+      return buildErrorState(mode, firstError?.message ?? 'Invalid overview payload.', validation.issues)
+    }
 
+    const snapshot = toMacroSnapshot(validation.value)
+    return buildReadyState(mode, snapshot, validation.issues)
+  } catch (error) {
+    if (error instanceof OverviewTransportError) {
+      return buildErrorState(mode, mapTransportErrorToUserMessage('Overview', error))
+    }
+
+    const message = error instanceof Error ? error.message : 'Failed to load overview payload.'
+    return buildErrorState(mode, message)
+  }
+}

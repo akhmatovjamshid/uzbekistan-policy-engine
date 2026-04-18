@@ -45,7 +45,7 @@ export function ScenarioSelectorPanel({
     return (
       <section className="comparison-panel comparison-panel--selector" aria-labelledby="comparison-selector-title">
         <div className="comparison-panel__head page-section-head">
-          <h2 id="comparison-selector-title">Scenario Selector</h2>
+          <h2 id="comparison-selector-title">Scenario selector</h2>
           <p>Select 2-4 scenarios and define one baseline for delta interpretation.</p>
         </div>
         <p className="empty-state">No scenarios are available to compare.</p>
@@ -56,7 +56,7 @@ export function ScenarioSelectorPanel({
   return (
     <section className="comparison-panel comparison-panel--selector" aria-labelledby="comparison-selector-title">
       <div className="comparison-panel__head page-section-head">
-        <h2 id="comparison-selector-title">Scenario Selector</h2>
+        <h2 id="comparison-selector-title">Scenario selector</h2>
         <p>Select 2-4 scenarios and define one baseline for delta interpretation.</p>
       </div>
 
@@ -102,7 +102,7 @@ export function ScenarioSelectorPanel({
 
               {isSelected ? (
                 <label className="comparison-scenario-row__tag">
-                  <span>Scenario Tag</span>
+                  <span>Scenario tag</span>
                   <select
                     value={tagsByScenarioId[scenario.scenario_id] ?? 'balanced'}
                     onChange={(event) =>

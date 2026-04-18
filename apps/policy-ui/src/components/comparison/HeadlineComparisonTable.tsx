@@ -50,7 +50,7 @@ export function HeadlineComparisonTable({
     return (
       <section className="comparison-panel" aria-labelledby="comparison-headline-title">
         <div className="comparison-panel__head page-section-head">
-          <h2 id="comparison-headline-title">Headline Comparison</h2>
+          <h2 id="comparison-headline-title">Headline comparison</h2>
           <p>Side-by-side values and scenario deltas relative to the selected baseline.</p>
         </div>
         <p className="empty-state">Select a baseline scenario to view comparison metrics.</p>
@@ -63,7 +63,7 @@ export function HeadlineComparisonTable({
   return (
     <section className="comparison-panel" aria-labelledby="comparison-headline-title">
       <div className="comparison-panel__head page-section-head">
-        <h2 id="comparison-headline-title">Headline Comparison</h2>
+        <h2 id="comparison-headline-title">Headline comparison</h2>
         <p>Side-by-side values and scenario deltas relative to the selected baseline.</p>
       </div>
 
@@ -73,6 +73,9 @@ export function HeadlineComparisonTable({
 
       <div className="comparison-headline-table-wrap">
         <table className="comparison-headline-table">
+          <caption className="sr-only">
+            Headline metric values and deltas against the selected baseline scenario.
+          </caption>
           <thead>
             <tr>
               <th scope="col">Metric</th>
@@ -92,7 +95,8 @@ export function HeadlineComparisonTable({
           </thead>
           <tbody>
             {metrics.map((metric) => {
-              const baselineValue = baseline.values[metric.metric_id] ?? 0
+              const baselineValue = baseline.values[metric.metric_id]
+              const baselineHasValue = typeof baselineValue === 'number'
               return (
                 <tr key={metric.metric_id}>
                   <th scope="row">
@@ -100,10 +104,36 @@ export function HeadlineComparisonTable({
                     <span className="comparison-headline-table__unit">{metric.unit}</span>
                   </th>
                   <td className="comparison-headline-table__baseline-col">
-                    {formatValue(baselineValue, metric.unit)}
+                    {baselineHasValue ? formatValue(baselineValue, metric.unit) : '—'}
                   </td>
                   {alternatives.map((scenario) => {
-                    const value = scenario.values[metric.metric_id] ?? 0
+                    const value = scenario.values[metric.metric_id]
+                    const scenarioHasValue = typeof value === 'number'
+                    if (!scenarioHasValue) {
+                      return (
+                        <td key={scenario.scenario_id}>
+                          <span className="comparison-headline-table__value" aria-label="Not available">
+                            —
+                          </span>
+                        </td>
+                      )
+                    }
+                    if (!baselineHasValue) {
+                      return (
+                        <td key={scenario.scenario_id}>
+                          <span className="comparison-headline-table__value">
+                            {formatValue(value, metric.unit)}
+                          </span>
+                          <span
+                            className="comparison-headline-table__delta"
+                            aria-label="Baseline value unavailable; no delta computed"
+                          >
+                            <span aria-hidden="true">—</span>
+                            <span>n/a</span>
+                          </span>
+                        </td>
+                      )
+                    }
                     const delta = value - baselineValue
                     const deltaText = formatDelta(delta, metric.unit)
                     return (

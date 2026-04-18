@@ -41,7 +41,7 @@ export function KpiStrip({ metrics }: KpiStripProps) {
   return (
     <section aria-labelledby="overview-kpi-title">
       <div className="overview-section-head page-section-head">
-        <h2 id="overview-kpi-title">Core Indicators</h2>
+        <h2 id="overview-kpi-title">Core indicators</h2>
         <p>Current values and period-over-period change. Interpretation depends on the metric.</p>
       </div>
 
