@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { PageContainer } from '../components/layout/PageContainer'
 import { PageHeader } from '../components/layout/PageHeader'
 import type {
@@ -6,7 +6,11 @@ import type {
   ModelExplorerTabId,
   ModelRunStatus,
 } from '../contracts/data-contract'
-import { modelExplorerWorkspaceMock } from '../data/mock/model-explorer'
+import {
+  getInitialModelExplorerSourceState,
+  loadModelExplorerSourceState,
+  retryModelExplorerSourceState,
+} from '../data/model-explorer/source'
 import './model-explorer.css'
 
 const TAB_LABELS: Record<ModelExplorerTabId, string> = {
@@ -102,14 +106,75 @@ function DetailPanelContent({ tab, detail }: { tab: ModelExplorerTabId; detail: 
 }
 
 export function ModelExplorerPage() {
-  const { models, default_model_id, details_by_model_id } = modelExplorerWorkspaceMock
-  const [selectedModelId, setSelectedModelId] = useState(default_model_id)
+  const [sourceState, setSourceState] = useState(getInitialModelExplorerSourceState)
+  const [selectedModelId, setSelectedModelId] = useState('')
   const [activeTab, setActiveTab] = useState<ModelExplorerTabId>('assumptions')
 
-  const selectedModel = useMemo(
-    () => models.find((model) => model.model_id === selectedModelId) ?? models[0],
-    [models, selectedModelId],
-  )
+  useEffect(() => {
+    let cancelled = false
+    loadModelExplorerSourceState().then((state) => {
+      if (!cancelled) {
+        setSourceState(state)
+        if (state.status === 'ready' && state.workspace) {
+          const fallbackModelId = state.workspace.models[0]?.model_id ?? ''
+          setSelectedModelId(state.workspace.default_model_id || fallbackModelId)
+        }
+      }
+    })
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  async function handleRetry() {
+    setSourceState((prev) => ({ ...prev, status: 'loading', error: null }))
+    const nextState = await retryModelExplorerSourceState()
+    setSourceState(nextState)
+    if (nextState.status === 'ready' && nextState.workspace) {
+      const fallbackModelId = nextState.workspace.models[0]?.model_id ?? ''
+      setSelectedModelId(nextState.workspace.default_model_id || fallbackModelId)
+    }
+  }
+
+  if (sourceState.status === 'loading') {
+    return (
+      <PageContainer className="model-explorer-page">
+        <PageHeader
+          title="Model Explorer"
+          description="Basic model catalog and technical reference for assumptions, equations, caveats, and sources."
+        />
+        <p className="empty-state" role="status" aria-live="polite">
+          Loading model metadata...
+        </p>
+      </PageContainer>
+    )
+  }
+
+  if (sourceState.status === 'error' || !sourceState.workspace) {
+    return (
+      <PageContainer className="model-explorer-page">
+        <PageHeader
+          title="Model Explorer"
+          description="Basic model catalog and technical reference for assumptions, equations, caveats, and sources."
+        />
+        <p className="empty-state" role="status" aria-live="polite">
+          {sourceState.error ?? 'Model metadata is currently unavailable.'}
+        </p>
+        {sourceState.canRetry ? (
+          <div>
+            <button type="button" className="overview-secondary-action" onClick={handleRetry}>
+              Retry
+            </button>
+          </div>
+        ) : null}
+      </PageContainer>
+    )
+  }
+
+  const { models, default_model_id, details_by_model_id } = sourceState.workspace
+  const effectiveSelectedModelId = selectedModelId || default_model_id
+  const selectedModel = models.find((model) => model.model_id === effectiveSelectedModelId) ?? models[0]
   const selectedDetail = selectedModel ? details_by_model_id[selectedModel.model_id] : undefined
 
   return (
