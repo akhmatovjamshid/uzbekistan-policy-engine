@@ -42,6 +42,16 @@ function getPresetValuesFromWorkspace(workspace: ScenarioLabWorkspace, presetId:
   return { ...baseState, ...preset.assumption_overrides }
 }
 
+function assumptionsEqual(a: ScenarioLabAssumptionState, b: ScenarioLabAssumptionState): boolean {
+  const keys = new Set([...Object.keys(a), ...Object.keys(b)])
+  for (const key of keys) {
+    if (a[key] !== b[key]) {
+      return false
+    }
+  }
+  return true
+}
+
 export function ScenarioLabPage() {
   const [sourceState, setSourceState] = useState(getInitialScenarioLabSourceState)
   const [selectedPresetId, setSelectedPresetId] = useState(scenarioLabWorkspaceMock.presets[0]?.preset_id ?? '')
@@ -51,19 +61,47 @@ export function ScenarioLabPage() {
   )
   const [activeTab, setActiveTab] = useState<ScenarioLabResultTab>('headline_impact')
   const [saveStatus, setSaveStatus] = useState<string | null>(null)
+  const [lastRunAssumptions, setLastRunAssumptions] = useState<ScenarioLabAssumptionState>(assumptionValues)
   const latestRunParamsRef = useRef<ScenarioRunParams>({
     assumptions: assumptionValues,
     selectedPresetId,
     scenarioName,
   })
   const activeRunIdRef = useRef(0)
+  const reconciledWorkspaceRef = useRef<ScenarioLabWorkspace | null>(null)
 
   const workspace = sourceState.workspace ?? scenarioLabWorkspaceMock
   const fallbackResults = useMemo(() => buildScenarioLabResults(assumptionValues), [assumptionValues])
   const currentResults = sourceState.results ?? fallbackResults
 
+  useEffect(() => {
+    if (reconciledWorkspaceRef.current === workspace) {
+      return
+    }
+    reconciledWorkspaceRef.current = workspace
+    const knownKeys = new Set(workspace.assumptions.map((assumption) => assumption.key))
+    setAssumptionValues((prev) => {
+      const next: ScenarioLabAssumptionState = {}
+      for (const assumption of workspace.assumptions) {
+        next[assumption.key] = prev[assumption.key] ?? assumption.default_value
+      }
+      for (const [key, value] of Object.entries(prev)) {
+        if (knownKeys.has(key)) {
+          next[key] = value
+        }
+      }
+      return next
+    })
+    setSelectedPresetId((prev) =>
+      workspace.presets.some((preset) => preset.preset_id === prev)
+        ? prev
+        : workspace.presets[0]?.preset_id ?? '',
+    )
+  }, [workspace])
+
   async function runScenario(nextParams: ScenarioRunParams) {
     latestRunParamsRef.current = nextParams
+    setLastRunAssumptions(nextParams.assumptions)
     const runId = activeRunIdRef.current + 1
     activeRunIdRef.current = runId
     setSourceState((prev) => beginRetry(prev))
@@ -127,6 +165,10 @@ export function ScenarioLabPage() {
   }
 
   const hasReadyRun = sourceState.status === 'ready' || sourceState.results !== null
+  const hasPendingEdits =
+    hasReadyRun &&
+    sourceState.status !== 'loading' &&
+    !assumptionsEqual(assumptionValues, lastRunAssumptions)
 
   return (
     <PageContainer className="scenario-lab-page">
@@ -159,12 +201,22 @@ export function ScenarioLabPage() {
           ) : null}
 
           {sourceState.status === 'error' ? (
-            <div className="scenario-run-state scenario-run-state--error" role="status" aria-live="polite">
+            <div className="scenario-run-state scenario-run-state--error" role="alert">
               <p>{sourceState.error ?? 'Scenario run failed. Please retry.'}</p>
               <button type="button" className="ui-secondary-action" onClick={handleRetryScenarioRun}>
                 Retry run
               </button>
             </div>
+          ) : null}
+
+          {hasPendingEdits ? (
+            <p
+              className="scenario-run-state scenario-run-state--stale"
+              role="status"
+              aria-live="polite"
+            >
+              Results reflect the previous run. Run scenario to update with current assumptions.
+            </p>
           ) : null}
 
           {hasReadyRun ? (

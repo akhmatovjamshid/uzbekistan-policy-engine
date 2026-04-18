@@ -48,6 +48,12 @@
   gap: var(--space-sm);
 }
 
+.scenario-run-state--stale {
+  background: var(--color-surface-muted);
+  border-style: dashed;
+  color: var(--color-text-muted);
+}
+
 .scenario-run-state--error p {
   margin: 0;
 }
