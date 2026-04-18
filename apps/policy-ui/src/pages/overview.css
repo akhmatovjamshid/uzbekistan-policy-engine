@@ -1,20 +1,6 @@
 .overview-page.page-container {
-  width: min(100%, 88rem);
+  width: min(100%, 90rem);
   gap: clamp(1.25rem, 2.2vw, 2rem);
-}
-
-.overview-page .page-header {
-  gap: var(--space-md);
-}
-
-.overview-page .page-header h1 {
-  font-size: clamp(1.65rem, 3.2vw, 2.25rem);
-  letter-spacing: -0.01em;
-}
-
-.overview-page .page-header p {
-  font-size: 1rem;
-  max-width: 78ch;
 }
 
 .overview-section-kicker {
@@ -73,21 +59,7 @@
 }
 
 .overview-section-head {
-  display: grid;
-  gap: var(--space-xs);
   margin-bottom: var(--space-md);
-}
-
-.overview-section-head h2 {
-  font-size: 1.14rem;
-  font-weight: 650;
-  margin: 0;
-}
-
-.overview-section-head p {
-  color: var(--color-text-muted);
-  font-size: 0.92rem;
-  margin: 0;
 }
 
 .overview-kpi-grid {
@@ -120,19 +92,7 @@
 }
 
 .overview-kpi-trend {
-  align-items: center;
-  background: var(--color-surface-muted);
-  border: 1px solid var(--color-border);
-  border-radius: 99px;
-  color: var(--color-text);
-  display: inline-flex;
-  font-size: 0.73rem;
-  font-variant-numeric: tabular-nums;
-  font-weight: 600;
-  gap: 0.25rem;
-  line-height: 1;
-  padding: 0.24rem 0.52rem;
-  white-space: nowrap;
+  min-height: 1.5rem;
 }
 
 .overview-kpi-trend__glyph {

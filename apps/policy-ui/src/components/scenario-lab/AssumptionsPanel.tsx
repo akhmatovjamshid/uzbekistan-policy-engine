@@ -94,7 +94,7 @@ export function AssumptionsPanel({
 
   return (
     <section className="scenario-panel scenario-panel--assumptions" aria-labelledby="scenario-assumptions-title">
-      <div className="scenario-panel__head">
+      <div className="scenario-panel__head page-section-head">
         <h2 id="scenario-assumptions-title">Assumptions</h2>
         <p>Define policy and shock assumptions in plain language.</p>
       </div>
@@ -123,7 +123,7 @@ export function AssumptionsPanel({
 
         <div className="scenario-session-controls__actions">
           <button type="button" onClick={onSaveScenario}>
-            Save scenario
+            Save Draft
           </button>
           {saveStatus ? <p>{saveStatus}</p> : null}
         </div>
@@ -141,8 +141,31 @@ export function AssumptionsPanel({
       {MAIN_CATEGORIES.map((category) => (
         <section key={category} className="scenario-assumption-group">
           <h3>{CATEGORY_TITLES[category]}</h3>
+          {grouped[category].length === 0 ? (
+            <p className="empty-state">No assumptions available in this category.</p>
+          ) : (
+            <div className="scenario-assumption-list">
+              {grouped[category].map((item) => (
+                <AssumptionField
+                  key={item.key}
+                  item={item}
+                  value={values[item.key] ?? item.default_value}
+                  showTechnical={showTechnical}
+                  onChange={(nextValue) => onAssumptionChange(item.key, nextValue)}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+      ))}
+
+      <details className="scenario-assumption-advanced">
+        <summary>{CATEGORY_TITLES.advanced}</summary>
+        {grouped.advanced.length === 0 ? (
+          <p className="empty-state">No advanced assumptions are currently configured.</p>
+        ) : (
           <div className="scenario-assumption-list">
-            {grouped[category].map((item) => (
+            {grouped.advanced.map((item) => (
               <AssumptionField
                 key={item.key}
                 item={item}
@@ -152,22 +175,7 @@ export function AssumptionsPanel({
               />
             ))}
           </div>
-        </section>
-      ))}
-
-      <details className="scenario-assumption-advanced">
-        <summary>{CATEGORY_TITLES.advanced}</summary>
-        <div className="scenario-assumption-list">
-          {grouped.advanced.map((item) => (
-            <AssumptionField
-              key={item.key}
-              item={item}
-              value={values[item.key] ?? item.default_value}
-              showTechnical={showTechnical}
-              onChange={(nextValue) => onAssumptionChange(item.key, nextValue)}
-            />
-          ))}
-        </div>
+        )}
       </details>
     </section>
   )

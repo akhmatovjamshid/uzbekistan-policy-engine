@@ -47,17 +47,29 @@ export function HeadlineComparisonTable({
 }: HeadlineComparisonTableProps) {
   const baseline = selectedScenarios.find((scenario) => scenario.scenario_id === baselineId)
   if (!baseline) {
-    return null
+    return (
+      <section className="comparison-panel" aria-labelledby="comparison-headline-title">
+        <div className="comparison-panel__head page-section-head">
+          <h2 id="comparison-headline-title">Headline Comparison</h2>
+          <p>Side-by-side values and scenario deltas relative to the selected baseline.</p>
+        </div>
+        <p className="empty-state">Select a baseline scenario to view comparison metrics.</p>
+      </section>
+    )
   }
 
   const alternatives = selectedScenarios.filter((scenario) => scenario.scenario_id !== baselineId)
 
   return (
     <section className="comparison-panel" aria-labelledby="comparison-headline-title">
-      <div className="comparison-panel__head">
-        <h2 id="comparison-headline-title">Headline comparison</h2>
+      <div className="comparison-panel__head page-section-head">
+        <h2 id="comparison-headline-title">Headline Comparison</h2>
         <p>Side-by-side values and scenario deltas relative to the selected baseline.</p>
       </div>
+
+      {alternatives.length === 0 ? (
+        <p className="empty-state">Add at least one alternative scenario to compare against baseline.</p>
+      ) : null}
 
       <div className="comparison-headline-table-wrap">
         <table className="comparison-headline-table">

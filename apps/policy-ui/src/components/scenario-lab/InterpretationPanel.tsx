@@ -23,7 +23,7 @@ export function InterpretationPanel({ interpretation }: InterpretationPanelProps
       className="scenario-panel scenario-panel--interpretation"
       aria-labelledby="scenario-interpretation-title"
     >
-      <div className="scenario-panel__head">
+      <div className="scenario-panel__head page-section-head">
         <h2 id="scenario-interpretation-title">Interpretation</h2>
         <p>Translate model outputs into decision language.</p>
       </div>

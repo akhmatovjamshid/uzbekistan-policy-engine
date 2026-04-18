@@ -149,7 +149,7 @@ export type MacroSnapshot = {
 }
 
 export type ComparisonScenarioTag = 'preferred' | 'balanced' | 'aggressive' | 'downside_stress'
-export type ComparisonViewMode = 'level' | 'delta' | 'risk'
+export type ComparisonViewMode = ChartViewMode
 
 export type ComparisonMetricDefinition = {
   metric_id: string

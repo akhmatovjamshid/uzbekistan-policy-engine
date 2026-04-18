@@ -54,7 +54,15 @@ export function ComparisonChartPanel({
 }: ComparisonChartPanelProps) {
   const baseline = selectedScenarios.find((scenario) => scenario.scenario_id === baselineId)
   if (!baseline) {
-    return null
+    return (
+      <section className="comparison-panel comparison-panel--chart" aria-labelledby="comparison-chart-title">
+        <div className="comparison-panel__head page-section-head">
+          <h2 id="comparison-chart-title">Comparison Chart · GDP Growth</h2>
+          <p>{descriptionForMode(viewMode)}</p>
+        </div>
+        <p className="empty-state">Select a baseline scenario to populate chart values.</p>
+      </section>
+    )
   }
 
   const rows = selectedScenarios.map((scenario) => ({
@@ -67,12 +75,12 @@ export function ComparisonChartPanel({
 
   return (
     <section className="comparison-panel comparison-panel--chart" aria-labelledby="comparison-chart-title">
-      <div className="comparison-panel__head">
-        <h2 id="comparison-chart-title">Comparison chart · GDP growth</h2>
+      <div className="comparison-panel__head page-section-head">
+        <h2 id="comparison-chart-title">Comparison Chart · GDP Growth</h2>
         <p>{descriptionForMode(viewMode)}</p>
       </div>
 
-      <div className="comparison-view-toggle" role="tablist" aria-label="Comparison view">
+      <div className="comparison-view-toggle segmented-control" role="tablist" aria-label="Comparison view">
         {(Object.keys(VIEW_LABELS) as ComparisonViewMode[]).map((mode) => {
           const isActive = viewMode === mode
           return (

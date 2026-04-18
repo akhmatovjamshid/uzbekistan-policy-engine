@@ -41,10 +41,22 @@ export function ScenarioSelectorPanel({
 }: ScenarioSelectorPanelProps) {
   const selectedScenarios = scenarios.filter((scenario) => selectedIds.includes(scenario.scenario_id))
 
+  if (scenarios.length === 0) {
+    return (
+      <section className="comparison-panel comparison-panel--selector" aria-labelledby="comparison-selector-title">
+        <div className="comparison-panel__head page-section-head">
+          <h2 id="comparison-selector-title">Scenario Selector</h2>
+          <p>Select 2-4 scenarios and define one baseline for delta interpretation.</p>
+        </div>
+        <p className="empty-state">No scenarios are available to compare.</p>
+      </section>
+    )
+  }
+
   return (
     <section className="comparison-panel comparison-panel--selector" aria-labelledby="comparison-selector-title">
-      <div className="comparison-panel__head">
-        <h2 id="comparison-selector-title">Scenario selector</h2>
+      <div className="comparison-panel__head page-section-head">
+        <h2 id="comparison-selector-title">Scenario Selector</h2>
         <p>Select 2-4 scenarios and define one baseline for delta interpretation.</p>
       </div>
 
@@ -78,15 +90,19 @@ export function ScenarioSelectorPanel({
               </label>
 
               <div className="comparison-scenario-row__meta">
-                <span>{scenarioTypeLabel(scenario.scenario_type)}</span>
-                {isBaseline ? <span className="comparison-baseline-badge">Baseline</span> : null}
+                <span className="comparison-scenario-row__type ui-chip ui-chip--neutral">
+                  {scenarioTypeLabel(scenario.scenario_type)}
+                </span>
+                {isBaseline ? (
+                  <span className="comparison-baseline-badge ui-chip ui-chip--accent">Baseline</span>
+                ) : null}
               </div>
 
               <p>{scenario.summary}</p>
 
               {isSelected ? (
                 <label className="comparison-scenario-row__tag">
-                  <span>Classification</span>
+                  <span>Scenario Tag</span>
                   <select
                     value={tagsByScenarioId[scenario.scenario_id] ?? 'balanced'}
                     onChange={(event) =>

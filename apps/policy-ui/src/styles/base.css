@@ -207,6 +207,92 @@ body {
   max-width: 68ch;
 }
 
+.page-section-head {
+  display: grid;
+  gap: var(--space-xs);
+}
+
+.page-section-head h2 {
+  font-size: 1.08rem;
+  font-weight: 650;
+  margin: 0;
+}
+
+.page-section-head p {
+  color: var(--color-text-muted);
+  font-size: 0.89rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.ui-chip {
+  align-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 99px;
+  color: var(--color-text);
+  display: inline-flex;
+  font-size: 0.73rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  gap: 0.25rem;
+  line-height: 1;
+  padding: 0.24rem 0.52rem;
+  white-space: nowrap;
+}
+
+.ui-chip--neutral {
+  background: var(--color-surface-muted);
+}
+
+.ui-chip--accent {
+  background: var(--color-brand-soft);
+  border-color: var(--color-border-strong);
+  color: var(--color-brand);
+}
+
+.segmented-control {
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--space-xs);
+  overflow-x: auto;
+  padding: var(--space-xs);
+  scrollbar-width: thin;
+}
+
+.segmented-control button {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  flex: 0 0 auto;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  min-height: 1.95rem;
+  padding: 0 var(--space-md);
+  white-space: nowrap;
+}
+
+.segmented-control button.active {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+.empty-state {
+  background: var(--color-surface-muted);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  font-size: 0.84rem;
+  margin: 0;
+  padding: var(--space-md);
+}
+
 .placeholder-card {
   background: var(--color-surface);
   border: 1px dashed var(--color-border);

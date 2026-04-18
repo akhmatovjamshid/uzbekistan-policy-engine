@@ -120,12 +120,12 @@ export function ResultsPanel({ activeTab, onTabChange, results }: ResultsPanelPr
 
   return (
     <section className="scenario-panel scenario-panel--results" aria-labelledby="scenario-results-title">
-      <div className="scenario-panel__head">
+      <div className="scenario-panel__head page-section-head">
         <h2 id="scenario-results-title">Results</h2>
         <p>Review headline effects and transmission paths for the current assumptions.</p>
       </div>
 
-      <div className="scenario-tab-control" role="tablist" aria-label="Result views">
+      <div className="scenario-tab-control segmented-control" role="tablist" aria-label="Result views">
         {(Object.keys(TAB_LABELS) as ScenarioLabResultTab[]).map((tab) => {
           const isActive = activeTab === tab
           return (

@@ -13,21 +13,7 @@
 }
 
 .comparison-panel__head {
-  display: grid;
-  gap: var(--space-xs);
-}
-
-.comparison-panel__head h2 {
-  font-size: 1.08rem;
-  font-weight: 650;
-  margin: 0;
-}
-
-.comparison-panel__head p {
-  color: var(--color-text-muted);
-  font-size: 0.89rem;
-  line-height: 1.4;
-  margin: 0;
+  margin-bottom: var(--space-xs);
 }
 
 .comparison-selector-meta {
@@ -98,17 +84,11 @@
   gap: var(--space-sm);
 }
 
-.comparison-scenario-row__meta span {
-  color: var(--color-text-muted);
-  font-size: 0.78rem;
+.comparison-scenario-row__type {
+  text-transform: none;
 }
 
 .comparison-scenario-row__meta .comparison-baseline-badge {
-  background: var(--color-brand-soft);
-  border: 1px solid var(--color-border-strong);
-  border-radius: 99px;
-  color: var(--color-brand);
-  padding: 0.1rem 0.5rem;
   text-transform: none;
 }
 
@@ -221,36 +201,6 @@
 
 .comparison-view-toggle {
   align-self: start;
-  background: var(--color-surface-muted);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  display: flex;
-  flex-wrap: nowrap;
-  gap: var(--space-xs);
-  overflow-x: auto;
-  padding: var(--space-xs);
-  scrollbar-width: thin;
-}
-
-.comparison-view-toggle button {
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: var(--radius-sm);
-  color: var(--color-text-muted);
-  cursor: pointer;
-  flex: 0 0 auto;
-  font: inherit;
-  font-size: 0.82rem;
-  font-weight: 600;
-  min-height: 1.9rem;
-  padding: 0 var(--space-md);
-  white-space: nowrap;
-}
-
-.comparison-view-toggle button.active {
-  background: var(--color-surface);
-  border-color: var(--color-border);
-  color: var(--color-text);
 }
 
 .comparison-chart-bars {

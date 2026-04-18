@@ -34,10 +34,14 @@ function formatDelta(metric: HeadlineMetric) {
 }
 
 export function KpiStrip({ metrics }: KpiStripProps) {
+  if (metrics.length === 0) {
+    return <p className="empty-state">No headline indicators are available for this snapshot.</p>
+  }
+
   return (
     <section aria-labelledby="overview-kpi-title">
-      <div className="overview-section-head">
-        <h2 id="overview-kpi-title">Core indicators</h2>
+      <div className="overview-section-head page-section-head">
+        <h2 id="overview-kpi-title">Core Indicators</h2>
         <p>Current values and period-over-period change. Interpretation depends on the metric.</p>
       </div>
 
@@ -51,7 +55,7 @@ export function KpiStrip({ metrics }: KpiStripProps) {
             <article key={metric.metric_id} className="overview-kpi-card">
               <div className="overview-kpi-card__top">
                 <p className="overview-kpi-card__label">{metric.label}</p>
-                <span className="overview-kpi-trend" aria-label={srLabel}>
+                <span className="overview-kpi-trend ui-chip ui-chip--neutral" aria-label={srLabel}>
                   <span className="overview-kpi-trend__glyph" aria-hidden="true">
                     {DIRECTION_GLYPH[metric.direction]}
                   </span>
