@@ -24,20 +24,20 @@ Move from mock data to safe live data/model integration without expanding UI sco
 - Integration scope: `MacroSnapshot` subset first, then full Overview shape.
 - Primary risk: inconsistent metric units/timestamps and missing prior values for deltas.
 
-2. **Comparison (Medium risk, second)**
-- Why second: Still read-heavy, but requires consistent cross-scenario metric alignment and baseline logic.
-- Integration scope: `ComparisonWorkspace` with baseline + selected scenarios + metric dictionary.
-- Primary risk: sparse `values` maps, missing metrics, and inconsistent risk-index scaling.
-
-3. **Model Explorer (Medium risk, third)**
-- Why third: Read-only, but metadata often comes from heterogeneous sources with uneven structure.
+2. **Model Explorer (Medium risk, second)**
+- Why second: Read-only, but metadata often comes from heterogeneous sources with uneven structure.
 - Integration scope: `ModelExplorerWorkspace` catalog + details tabs.
 - Primary risk: incomplete model detail sections and inconsistent caveat/severity vocabularies.
 
-4. **Scenario Lab (High risk, last)**
-- Why last: Most stateful workflow (assumptions, presets, simulation runs, result refresh).
+3. **Scenario Lab (High risk, third)**
+- Why third: Most stateful workflow (assumptions, presets, simulation runs, result refresh), and it defines normalized scenario-result objects that downstream pages should reuse.
 - Integration scope: assumptions/presets first, then run-result binding, then save/retrieve scenario.
 - Primary risk: latency, run lifecycle handling, and assumption-range/schema drift across models.
+
+4. **Comparison (Medium-High risk, last)**
+- Why last: Should consume the same normalized scenario outputs produced by Scenario Lab rather than introducing a separate comparison-specific integration path.
+- Integration scope: `ComparisonWorkspace` composed from normalized scenario-result objects + selection/baseline metadata.
+- Primary risk: accidental duplication of normalization logic if Comparison bypasses Scenario Lab adapters.
 
 ## Recommended First Live Integration Target (Overview)
 
@@ -86,6 +86,7 @@ src/data/
 - Date normalization: output ISO timestamps consistently.
 - Derived fallback fields: compute `delta_abs`, `delta_pct`, `direction` when backend omits them.
 - Contract guards: return typed `Result<T>` with warnings for dropped/filled fields.
+- Shared scenario normalization: produce one canonical normalized scenario-result object reused by Scenario Lab and Comparison.
 
 ## Keep React Components Stable
 
@@ -139,15 +140,7 @@ Exit gate:
 Exit gate:
 - Overview loads with mixed live/mock seamlessly, no UI regressions.
 
-## Phase 2: Comparison Live
-
-- Replace mock `ComparisonWorkspace` with adapted live payload.
-- Validate baseline existence, selected id validity, metric coverage.
-
-Exit gate:
-- baseline switching and delta/risk views remain stable with real data.
-
-## Phase 3: Model Explorer Live
+## Phase 2: Model Explorer Live
 
 - Integrate model catalog + details payloads through adapter.
 - Normalize severity labels and absent sections.
@@ -155,14 +148,23 @@ Exit gate:
 Exit gate:
 - all tabs render safely for every model (including partial metadata).
 
-## Phase 4: Scenario Lab Live
+## Phase 3: Scenario Lab Live
 
 - Integrate assumptions/presets endpoint first.
 - Integrate run-result endpoint second.
 - Integrate save/retrieve scenario third.
 
 Exit gate:
-- deterministic run lifecycle and resilient error states with real outputs.
+- deterministic run lifecycle and resilient error states with real outputs, plus stable canonical normalized scenario-result shape.
+
+## Phase 4: Comparison Live
+
+- Build `ComparisonWorkspace` from Scenario Lab normalized scenario outputs.
+- Reuse shared metric normalization/delta logic; avoid page-specific re-derivations.
+- Validate baseline existence, selected id validity, metric coverage.
+
+Exit gate:
+- baseline switching and delta/risk views remain stable with real data and no duplicate adapter path.
 
 ## Main Integration Risks to Watch
 
@@ -171,9 +173,10 @@ Exit gate:
 - **Partial payloads** that can silently degrade decision quality if normalized incorrectly.
 - **Latency/timeouts** in Scenario Lab run loop affecting user trust.
 - **Cross-page contract coupling** (e.g., scenario ids/metric ids diverging across Overview, Comparison, and Scenario Lab).
+- **Duplicate data paths** where Comparison reimplements normalization instead of reusing Scenario Lab normalized outputs.
 
 ## Summary
 
-- Proposed sequence: **Overview -> Comparison -> Model Explorer -> Scenario Lab** (low to high risk).
+- Proposed sequence: **Overview -> Model Explorer -> Scenario Lab -> Comparison** (risk-aware and dependency-aware).
 - Adapter in simple terms: a small translation layer that cleans and reshapes backend/model data into the exact structures the current UI already expects.
 - Highest risks: schema drift, unit inconsistency, partial/missing fields, and Scenario Lab runtime lifecycle complexity.
