@@ -15,6 +15,7 @@
 <script src="../shared/ai-advisor.js"></script>
 <script src="../shared/registry-loader.js"></script>
 <script>window.addEventListener('load', () => EPE?.ready(() => EPE.badge()));</script>
+<script src="../shared/i18n.js"></script>
 <style>
 /* Tokens inherited from design-system.css */
 
@@ -53,10 +54,21 @@ nav{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;displ
 
 /* Sliders */
 .prow{margin-bottom:12px}
-.plabel{display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:3px}
-.pname{font-weight:500}
+.plabel{display:flex;justify-content:space-between;align-items:center;font-size:.78rem;margin-bottom:3px}
+.pname{font-weight:500;display:flex;align-items:center;gap:4px}
 .pval{color:var(--blue);font-weight:700;min-width:34px;text-align:right}
 .pdesc{font-size:.65rem;color:var(--text2);margin-bottom:3px}
+
+/* ── Parameter info tooltip ── */
+.ptip{position:relative;display:inline-flex;align-items:center;justify-content:center;
+      width:13px;height:13px;background:var(--text2);color:#fff;border-radius:50%;
+      font-size:8px;font-weight:800;cursor:help;flex-shrink:0;margin-left:2px;line-height:1}
+.ptip::after{content:attr(data-tip);position:absolute;bottom:130%;left:50%;transform:translateX(-50%);
+             background:#1e293b;color:#f1f5f9;padding:7px 10px;border-radius:8px;font-size:11px;
+             line-height:1.55;white-space:normal;width:210px;max-width:260px;opacity:0;
+             pointer-events:none;z-index:9999;transition:opacity .15s;
+             box-shadow:0 6px 20px rgba(0,0,0,.35);font-weight:400}
+.ptip:hover::after{opacity:1}
 input[type=range]{width:100%;height:4px;border-radius:2px;outline:none;-webkit-appearance:none;cursor:pointer;
   background:linear-gradient(to right,var(--blue) 0%,var(--blue) var(--pct,50%),#d0dce9 var(--pct,50%),#d0dce9 100%)}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;
@@ -157,14 +169,14 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
       </svg>
     </div>
     <div>
-      <div class="brand-title">QPM Uzbekistan</div>
-      <div class="brand-sub">CERR Macroeconomic Simulator</div>
+      <div class="brand-title" data-i18n="qpm_title">QPM Uzbekistan</div>
+      <div class="brand-sub" data-i18n="qpm_sub">CERR Macroeconomic Simulator</div>
     </div>
   </div>
   <div class="nav-tabs">
-    <button class="ntab on" onclick="showPage('irf',this)">Shock Analysis <span class="badge">IRF</span></button>
-    <button class="ntab" onclick="showPage('baseline',this)">Baseline Forecast</button>
-    <button class="ntab" onclick="showPage('about',this)">Model</button>
+    <button class="ntab on" onclick="showPage('irf',this)"><span data-i18n="qpm_tab_irf">Shock Analysis</span> <span class="badge">IRF</span></button>
+    <button class="ntab" onclick="showPage('baseline',this)" data-i18n="qpm_tab_baseline">Baseline Forecast</button>
+    <button class="ntab" onclick="showPage('about',this)" data-i18n="qpm_tab_model">Model</button>
   </div>
 </nav>
 
@@ -174,33 +186,33 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 <aside class="sidebar">
 
   <div class="sec">
-    <div class="sec-hd">Shock Type</div>
+    <div class="sec-hd" data-i18n="qpm_shock_type">Shock Type</div>
     <div class="shock-grid">
       <button class="sbtn on" onclick="setShock('demand',this)">
-        <div class="ico">📊</div><div class="lbl">Aggregate<br>Demand</div>
+        <div class="ico">📊</div><div class="lbl" data-i18n="qpm_shock_demand">Aggregate<br>Demand</div>
       </button>
       <button class="sbtn" onclick="setShock('inflation',this)">
-        <div class="ico">🔥</div><div class="lbl">Cost-Push<br>Inflation</div>
+        <div class="ico">🔥</div><div class="lbl" data-i18n="qpm_shock_inflation">Cost-Push<br>Inflation</div>
       </button>
       <button class="sbtn" onclick="setShock('exchange',this)">
-        <div class="ico">💱</div><div class="lbl">UZS<br>Depreciation</div>
+        <div class="ico">💱</div><div class="lbl" data-i18n="qpm_shock_exchange">UZS<br>Depreciation</div>
       </button>
       <button class="sbtn" onclick="setShock('monetary',this)">
-        <div class="ico">🏦</div><div class="lbl">Monetary<br>Tightening</div>
+        <div class="ico">🏦</div><div class="lbl" data-i18n="qpm_shock_monetary">Monetary<br>Tightening</div>
       </button>
       <button class="sbtn" onclick="setShock('risk',this)">
-        <div class="ico">⚠️</div><div class="lbl">Risk<br>Premium</div>
+        <div class="ico">⚠️</div><div class="lbl" data-i18n="qpm_shock_risk">Risk<br>Premium</div>
       </button>
     </div>
     <div class="shk-size">
-      <div class="shk-size-hd">Simulation Settings</div>
+      <div class="shk-size-hd" data-i18n="qpm_sim_settings">Simulation Settings</div>
       <div class="prow">
-        <div class="plabel"><span class="pname">Shock size</span><span class="pval" id="vShkSz">1.0 pp</span></div>
+        <div class="plabel"><span class="pname" data-i18n="qpm_shock_size">Shock size</span><span class="pval" id="vShkSz">1.0 pp</span></div>
         <input type="range" id="shkSz" min="0.25" max="5" step="0.25" value="1"
                oninput="sl(this,'vShkSz',v=>v.toFixed(2)+' pp');run()">
       </div>
       <div class="prow">
-        <div class="plabel"><span class="pname">Horizon</span><span class="pval" id="vHorizon">20 Q</span></div>
+        <div class="plabel"><span class="pname" data-i18n="qpm_horizon">Horizon</span><span class="pval" id="vHorizon">20 Q</span></div>
         <input type="range" id="horizon" min="8" max="32" step="4" value="20"
                oninput="sl(this,'vHorizon',v=>v+' Q');run()">
       </div>
@@ -208,84 +220,84 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   </div>
 
   <div class="sec">
-    <div class="sec-hd">IS Curve — Aggregate Demand</div>
+    <div class="sec-hd" data-i18n="qpm_is_hd">IS Curve — Aggregate Demand</div>
     <div class="prow">
-      <div class="plabel"><span class="pname">b₁ — Gap persistence</span><span class="pval" id="vb1">0.70</span></div>
-      <div class="pdesc">Inertia in output gap dynamics</div>
+      <div class="plabel"><span class="pname" data-i18n="qpm_b1">b₁ — Gap persistence<span class="ptip" data-tip="Controls how quickly the GDP gap closes. Higher b₁ = more inertia, slower recovery from shocks." data-tip-ru="Контролирует скорость закрытия разрыва ВВП. Высокий b₁ = больше инерции, медленнее восстановление после шоков." data-tip-uz="YaIM bo'shlig'i qanchalik tez yopilishini boshqaradi. Yuqori b₁ = ko'proq inersiya, sekinroq tiklanish.">i</span></span><span class="pval" id="vb1">0.70</span></div>
+      <div class="pdesc" data-i18n="qpm_b1_desc">Inertia in output gap dynamics</div>
       <input type="range" id="b1" min="0.3" max="0.95" step="0.05" value="0.7" oninput="sl(this,'vb1',f2)">
     </div>
     <div class="prow">
-      <div class="plabel"><span class="pname">b₂ — MCI sensitivity</span><span class="pval" id="vb2">0.20</span></div>
-      <div class="pdesc">Monetary policy transmission to demand</div>
+      <div class="plabel"><span class="pname" data-i18n="qpm_b2">b₂ — MCI sensitivity<span class="ptip" data-tip="How strongly monetary conditions (interest rate + exchange rate) affect output gap. Key monetary transmission parameter." data-tip-ru="Насколько денежные условия (ставка + курс) влияют на разрыв выпуска. Ключевой параметр денежной трансмиссии." data-tip-uz="Pul-kredit shartlari chiqarish bo'shlig'iga ta'sir kuchi. Asosiy monetar transmissiya parametri.">i</span></span><span class="pval" id="vb2">0.20</span></div>
+      <div class="pdesc" data-i18n="qpm_b2_desc">Monetary policy transmission to demand</div>
       <input type="range" id="b2" min="0.05" max="0.6" step="0.05" value="0.2" oninput="sl(this,'vb2',f2)">
     </div>
     <div class="prow">
-      <div class="plabel"><span class="pname">b₃ — External demand</span><span class="pval" id="vb3">0.30</span></div>
-      <div class="pdesc">Foreign output gap spillover</div>
+      <div class="plabel"><span class="pname" data-i18n="qpm_b3">b₃ — External demand<span class="ptip" data-tip="Sensitivity of domestic output gap to foreign output gap. Reflects Uzbekistan's trade openness and remittance channels." data-tip-ru="Чувствительность внутреннего разрыва выпуска к внешнему. Отражает открытость экономики Узбекистана и каналы ремиттансов." data-tip-uz="Ichki chiqarish bo'shlig'ining tashqi bo'shliqqqa sezgirligi. O'zbekiston savdo ochiqligi va pul o'tkazmalari kanallarini aks ettiradi.">i</span></span><span class="pval" id="vb3">0.30</span></div>
+      <div class="pdesc" data-i18n="qpm_b3_desc">Foreign output gap spillover</div>
       <input type="range" id="b3" min="0.05" max="0.6" step="0.05" value="0.3" oninput="sl(this,'vb3',f2)">
     </div>
     <div class="prow">
-      <div class="plabel"><span class="pname">b₄ — IR weight in MCI</span><span class="pval" id="vb4">0.60</span></div>
-      <div class="pdesc">Interest rate vs exchange rate (1-b₄) in MCI</div>
+      <div class="plabel"><span class="pname" data-i18n="qpm_b4">b₄ — IR weight in MCI<span class="ptip" data-tip="Share of interest rate (vs exchange rate) in the Monetary Conditions Index. Higher b₄ = more weight on rate channel." data-tip-ru="Доля процентной ставки (vs курс) в индексе монетарных условий. Высокий b₄ = больший вес канала ставки." data-tip-uz="Valyuta kursiga nisbatan foiz stavkasining Pul Sharoitlari Indeksidagi ulushi. Yuqori b₄ = stavka kanaliga ko'proq og'irlik.">i</span></span><span class="pval" id="vb4">0.60</span></div>
+      <div class="pdesc" data-i18n="qpm_b4_desc">Interest rate vs exchange rate (1-b₄) in MCI</div>
       <input type="range" id="b4" min="0.1" max="0.9" step="0.1" value="0.6" oninput="sl(this,'vb4',f2)">
     </div>
   </div>
 
   <div class="sec">
-    <div class="sec-hd">Phillips Curve — Inflation</div>
+    <div class="sec-hd" data-i18n="qpm_pc_hd">Phillips Curve — Inflation</div>
     <div class="prow">
-      <div class="plabel"><span class="pname">a₁ — Inflation persistence</span><span class="pval" id="va1">0.60</span></div>
-      <div class="pdesc">Backward-looking share of expectations</div>
+      <div class="plabel"><span class="pname" data-i18n="qpm_a1">a₁ — Inflation persistence<span class="ptip" data-tip="Backward-looking weight in inflation expectations. High a₁ means inflation is sticky and slow to respond to policy." data-tip-ru="Доля прошлых ожиданий в инфляции. Высокий a₁ означает инертную инфляцию, слабо реагирующую на политику." data-tip-uz="Inflyatsiya kutilmalarida orqaga nazar ulushi. Yuqori a₁ = inflyatsiya qattiq va siyosatga sekin ta'sir ko'rsatadi.">i</span></span><span class="pval" id="va1">0.60</span></div>
+      <div class="pdesc" data-i18n="qpm_a1_desc">Backward-looking share of expectations</div>
       <input type="range" id="a1" min="0.3" max="0.9" step="0.05" value="0.6" oninput="sl(this,'va1',f2)">
     </div>
     <div class="prow">
-      <div class="plabel"><span class="pname">a₂ — Marginal cost pass-through</span><span class="pval" id="va2">0.20</span></div>
-      <div class="pdesc">RMC impact on inflation ★ updated</div>
+      <div class="plabel"><span class="pname" data-i18n="qpm_a2">a₂ — Marginal cost pass-through<span class="ptip" data-tip="How strongly real marginal cost (output gap) feeds into inflation. Core demand-pull parameter." data-tip-ru="Насколько реальные предельные издержки (разрыв выпуска) влияют на инфляцию. Ключевой параметр инфляции спроса." data-tip-uz="Haqiqiy chegaraviy xarajatlar (chiqarish bo'shlig'i) inflyatsiyaga qanchalik ta'sir qiladi. Talab inflyatsiyasining asosiy parametri.">i</span></span><span class="pval" id="va2">0.20</span></div>
+      <div class="pdesc" data-i18n="qpm_a2_desc">RMC impact on inflation</div>
       <input type="range" id="a2" min="0.05" max="0.5" step="0.05" value="0.20" oninput="sl(this,'va2',f2)">
     </div>
     <div class="prow">
-      <div class="plabel"><span class="pname">a₃ — Domestic cost share</span><span class="pval" id="va3">0.65</span></div>
-      <div class="pdesc">Domestic vs imported inflation ★ updated</div>
+      <div class="plabel"><span class="pname" data-i18n="qpm_a3">a₃ — Domestic cost share<span class="ptip" data-tip="Split between domestic and imported inflation. Lower a₃ = more import-driven inflation (relevant for open economies)." data-tip-ru="Соотношение внутренней и импортной инфляции. Низкий a₃ = больше инфляция от импорта (актуально для открытых экономик)." data-tip-uz="Ichki va import inflyatsiyasi o'rtasidagi nisbat. Past a₃ = ko'proq import tomonidan yetaklanuvchi inflyatsiya.">i</span></span><span class="pval" id="va3">0.65</span></div>
+      <div class="pdesc" data-i18n="qpm_a3_desc">Domestic vs imported inflation</div>
       <input type="range" id="a3" min="0.2" max="0.9" step="0.05" value="0.65" oninput="sl(this,'va3',f2)">
     </div>
   </div>
 
   <div class="sec">
-    <div class="sec-hd">Taylor Rule — Monetary Policy</div>
+    <div class="sec-hd" data-i18n="qpm_tr_hd">Taylor Rule — Monetary Policy</div>
     <div class="prow">
-      <div class="plabel"><span class="pname">g₁ — Rate smoothing</span><span class="pval" id="vg1">0.80</span></div>
-      <div class="pdesc">CBU gradualism in rate adjustments</div>
+      <div class="plabel"><span class="pname" data-i18n="qpm_g1">g₁ — Rate smoothing<span class="ptip" data-tip="Interest rate smoothing (inertia) in CBU's reaction function. High g₁ = gradual rate changes, avoiding market volatility." data-tip-ru="Сглаживание ставки в функции реакции ЦБ. Высокий g₁ = постепенные изменения ставки, меньше волатильности." data-tip-uz="CBning reaktsiya funktsiyasida stavkani silliqlashtirish. Yuqori g₁ = asta-sekin o'zgarishlar, kam o'zgaruvchanlik.">i</span></span><span class="pval" id="vg1">0.80</span></div>
+      <div class="pdesc" data-i18n="qpm_g1_desc">CBU gradualism in rate adjustments</div>
       <input type="range" id="g1" min="0.3" max="0.95" step="0.05" value="0.8" oninput="sl(this,'vg1',f2)">
     </div>
     <div class="prow">
-      <div class="plabel"><span class="pname">g₂ — Inflation response</span><span class="pval" id="vg2">1.50</span></div>
-      <div class="pdesc">Taylor principle: must be &gt; 1 for stability</div>
+      <div class="plabel"><span class="pname" data-i18n="qpm_g2">g₂ — Inflation response<span class="ptip" data-tip="Taylor principle coefficient. Must exceed 1 for inflation stabilisation. Higher g₂ = more aggressive inflation fighting." data-tip-ru="Коэффициент принципа Тейлора. Должен быть больше 1 для стабилизации инфляции. Высокий g₂ = активнее борьба с инфляцией." data-tip-uz="Teylor tamoyili koeffitsienti. Inflyatsiyani barqarorlashtirish uchun 1 dan katta bo'lishi shart.">i</span></span><span class="pval" id="vg2">1.50</span></div>
+      <div class="pdesc" data-i18n="qpm_g2_desc">Taylor principle: must be &gt; 1 for stability</div>
       <input type="range" id="g2" min="1.0" max="3.0" step="0.1" value="1.5" oninput="sl(this,'vg2',f2)">
     </div>
     <div class="prow">
-      <div class="plabel"><span class="pname">g₃ — Output gap response</span><span class="pval" id="vg3">0.50</span></div>
-      <div class="pdesc">Weight on economic activity</div>
+      <div class="plabel"><span class="pname" data-i18n="qpm_g3">g₃ — Output gap response<span class="ptip" data-tip="Weight on output stabilisation in the Taylor rule. Reflects CBU's dual mandate: price stability and economic growth." data-tip-ru="Вес стабилизации выпуска в правиле Тейлора. Отражает двойной мандат ЦБ: стабильность цен и рост экономики." data-tip-uz="Teylor qoidasida chiqarishni barqarorlashtirish og'irligi. CBning ikki mandatini aks ettiradi: narx barqarorligi va o'sish.">i</span></span><span class="pval" id="vg3">0.50</span></div>
+      <div class="pdesc" data-i18n="qpm_g3_desc">Weight on economic activity</div>
       <input type="range" id="g3" min="0.1" max="1.5" step="0.1" value="0.5" oninput="sl(this,'vg3',f2)">
     </div>
     <div class="prow">
-      <div class="plabel"><span class="pname">e₁ — UIP backward weight</span><span class="pval" id="ve1">0.70</span></div>
-      <div class="pdesc">Exchange rate backward-looking share</div>
+      <div class="plabel"><span class="pname" data-i18n="qpm_e1">e₁ — UIP backward weight<span class="ptip" data-tip="Backward-looking share in exchange rate (UIP) equation. High e₁ = exchange rate driven more by past trends than expectations." data-tip-ru="Доля прошлого в уравнении UIP. Высокий e₁ = курс больше определяется прошлыми тенденциями, чем ожиданиями." data-tip-uz="UIP tenglamasida orqaga nazar ulushi. Yuqori e₁ = kurs ko'proq o'tgan tendentsiyalar bilan belgilanadi.">i</span></span><span class="pval" id="ve1">0.70</span></div>
+      <div class="pdesc" data-i18n="qpm_e1_desc">Exchange rate backward-looking share</div>
       <input type="range" id="e1" min="0.1" max="0.9" step="0.1" value="0.7" oninput="sl(this,'ve1',f2)">
     </div>
   </div>
 
   <div class="sec">
-    <div class="sec-hd">Steady-State Values</div>
+    <div class="sec-hd" data-i18n="qpm_ss_hd">Steady-State Values</div>
     <div class="prow">
-      <div class="plabel"><span class="pname">Inflation Target π* (%)</span><span class="pval" id="vtar">5.0</span></div>
+      <div class="plabel"><span class="pname" data-i18n="qpm_target">Inflation Target π* (%)</span><span class="pval" id="vtar">5.0</span></div>
       <input type="range" id="ssTar" min="3" max="12" step="0.5" value="5" oninput="sl(this,'vtar',v=>v.toFixed(1))">
     </div>
     <div class="prow">
-      <div class="plabel"><span class="pname">Neutral Real Rate r̄ (%)</span><span class="pval" id="vrrbar">3.5</span></div>
+      <div class="plabel"><span class="pname" data-i18n="qpm_rrbar">Neutral Real Rate r̄ (%)</span><span class="pval" id="vrrbar">3.5</span></div>
       <input type="range" id="ssRRbar" min="1" max="8" step="0.5" value="3.5" oninput="sl(this,'vrrbar',v=>v.toFixed(1))">
     </div>
     <div class="prow">
-      <div class="plabel"><span class="pname">Potential Growth ȳ (%)</span><span class="pval" id="vgdpbar">6.0</span></div>
+      <div class="plabel"><span class="pname" data-i18n="qpm_gdpbar">Potential Growth ȳ (%)</span><span class="pval" id="vgdpbar">6.0</span></div>
       <input type="range" id="ssGdpbar" min="2" max="10" step="0.5" value="6" oninput="sl(this,'vgdpbar',v=>v.toFixed(1))">
     </div>
   </div>
