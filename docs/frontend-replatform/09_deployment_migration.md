@@ -11,7 +11,7 @@
 Candidates:
 - Vercel (recommended — zero config for Vite, password-protect via env)
 - Netlify
-- GitHub Pages on subpath \/preview/\
+- GitHub Pages on subpath `/preview/`
 
 Preview URL will be password-protected until public rollout criterion is met.
 
@@ -31,7 +31,7 @@ Current leaning: (b) + (d) combined.
 
 **Decision:** [TBD — propose 2026-05-31]
 
-Past this date, no new reforms, data refreshes, or research briefs land on the legacy static site at \cerr-uzbekistan.github.io\. Everything new goes into \pps/policy-ui\.
+Past this date, no new reforms, data refreshes, or research briefs land on the legacy static site at `cerr-uzbekistan.github.io`. Everything new goes into `apps/policy-ui`.
 
 ## Sign-off
 
