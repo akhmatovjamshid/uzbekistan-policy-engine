@@ -1,0 +1,106 @@
+{
+  "shell": {
+    "skipToMainContent": "Asosiy kontentga o'tish",
+    "workspaceNavigationAria": "Ish maydoni navigatsiyasi",
+    "primaryNavigationAria": "Asosiy navigatsiya",
+    "workspaceLabel": "Ish maydoni",
+    "brandEyebrow": "Uzbekistan Economic Policy Engine",
+    "brandTitle": "Policy Analysis Workspace"
+  },
+  "languageSwitcher": {
+    "label": "Til",
+    "ariaLabel": "Interfeys tilini tanlang"
+  },
+  "nav": {
+    "overview": "Umumiy ko'rinish",
+    "scenarioLab": "Stsenariy simulyatori",
+    "comparison": "Stsenariylarni solishtirish",
+    "modelExplorer": "Model eksploreri",
+    "knowledgeHub": "Bilimlar markazi"
+  },
+  "pages": {
+    "overview": {
+      "title": "Umumiy ko'rinish",
+      "description": "Asosiy ko'rsatkichlar · So'nggi ma'lumotlar"
+    },
+    "scenarioLab": {
+      "title": "Stsenariy simulyatori",
+      "description": "Siyosat ta'sirini baholash uchun taxminlarni moslab, stsenariyni ishga tushiring."
+    },
+    "comparison": {
+      "title": "Stsenariylarni solishtirish",
+      "description": "Simulyatsiyalarni saqlang va natijalarni yonma-yon solishtiring"
+    },
+    "modelExplorer": {
+      "title": "Model eksploreri",
+      "description": "Parametrlar, tenglamalar, ma'lumot manbalari va hisoblash oqimlari",
+      "catalogTitle": "Model katalogi",
+      "catalogHint": "Texnik taxminlar va cheklovlarni ko'rish uchun bitta modelni tanlang.",
+      "emptyState": "Ushbu ish maydonida model metama'lumotlari mavjud emas.",
+      "detailTabsAria": "Model tafsilotlari tablari",
+      "tabs": {
+        "assumptions": "Taxminlar",
+        "equations": "Tenglamalar",
+        "caveats": "Cheklovlar",
+        "dataSources": "Ma'lumot manbalari"
+      },
+      "status": {
+        "active": "Faol",
+        "staging": "Sinov",
+        "paused": "To'xtatilgan"
+      },
+      "severity": {
+        "low": "Past",
+        "medium": "O'rta",
+        "high": "Yuqori"
+      },
+      "detail": {
+        "empty": {
+          "assumptions": "Ushbu model uchun taxminlar hujjatlashtirilmagan.",
+          "equations": "Ushbu model uchun tenglamalar hujjatlashtirilmagan.",
+          "caveats": "Ushbu model uchun cheklovlar hujjatlashtirilmagan.",
+          "dataSources": "Ushbu model uchun ma'lumot manbalari hujjatlashtirilmagan."
+        },
+        "implicationPrefix": "Ta'sir"
+      }
+    },
+    "knowledgeHub": {
+      "title": "Bilimlar markazi",
+      "description": "lex.uz'dagi davlat qarorlari va xalqaro tashkilotlar baholari",
+      "placeholder": "Knowledge Hub v1 karkasi"
+    }
+  },
+  "buttons": {
+    "save": "Saqlash",
+    "run": "Simulyatsiyani ishga tushirish",
+    "retry": "Qayta urinish",
+    "cancel": "Bekor qilish",
+    "saveDraft": "Qoralamani saqlash",
+    "runScenario": "Stsenariyni ishga tushirish",
+    "retryRun": "Qayta ishga tushirish"
+  },
+  "states": {
+    "loading": {
+      "overview": "So'nggi sharh holati yuklanmoqda...",
+      "comparison": "Solishtirish ish maydoni yuklanmoqda...",
+      "modelExplorer": "Model metama'lumotlari yuklanmoqda...",
+      "scenarioLabRun": "Joriy taxminlar bilan stsenariy ishga tushirilmoqda..."
+    },
+    "error": {
+      "overviewUnavailable": "Sharh ma'lumotlari hozircha mavjud emas.",
+      "comparisonUnavailable": "Solishtirish ma'lumotlari hozircha mavjud emas.",
+      "modelExplorerUnavailable": "Model metama'lumotlari hozircha mavjud emas.",
+      "scenarioRunFailed": "Stsenariy ishga tushmadi. Iltimos, qayta urinib ko'ring."
+    },
+    "stale": {
+      "scenarioResults": "Natijalar oldingi ishga tushirishga tegishli. Joriy taxminlar bilan yangilash uchun stsenariyni qayta ishga tushiring."
+    },
+    "empty": {
+      "scenarioRunToView": "Natijalarni ko'rish uchun stsenariyni ishga tushiring.",
+      "scenarioInterpretationAfterRun": "Talqin muvaffaqiyatli ishga tushirishdan keyin ko'rinadi."
+    },
+    "success": {
+      "savedToLocalSessionAt": "Mahalliy sessiyaga {{timestamp}} da saqlandi."
+    }
+  }
+}

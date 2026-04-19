@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { EconomicStateHeader } from '../components/overview/EconomicStateHeader'
 import { KpiStrip } from '../components/overview/KpiStrip'
 import { NowcastForecastBlock } from '../components/overview/NowcastForecastBlock'
@@ -14,6 +15,7 @@ import { beginRetry } from '../data/source-state'
 import './overview.css'
 
 export function OverviewPage() {
+  const { t } = useTranslation()
   const [sourceState, setSourceState] = useState(getInitialOverviewSourceState)
 
   useEffect(() => {
@@ -38,12 +40,9 @@ export function OverviewPage() {
   if (sourceState.status === 'loading') {
     return (
       <PageContainer className="overview-page">
-        <PageHeader
-          title="Overview"
-          description="Decision-first macro snapshot designed to show what changed, why it matters, and where to test next."
-        />
+        <PageHeader title={t('pages.overview.title')} description={t('pages.overview.description')} />
         <p className="empty-state" role="status" aria-live="polite">
-          Loading latest overview snapshot...
+          {t('states.loading.overview')}
         </p>
       </PageContainer>
     )
@@ -52,17 +51,14 @@ export function OverviewPage() {
   if (sourceState.status === 'error' || !sourceState.snapshot) {
     return (
       <PageContainer className="overview-page">
-        <PageHeader
-          title="Overview"
-          description="Decision-first macro snapshot designed to show what changed, why it matters, and where to test next."
-        />
+        <PageHeader title={t('pages.overview.title')} description={t('pages.overview.description')} />
         <p className="empty-state" role="alert">
-          {sourceState.error ?? 'Overview data is currently unavailable.'}
+          {sourceState.error ?? t('states.error.overviewUnavailable')}
         </p>
         {sourceState.canRetry ? (
           <div>
             <button type="button" className="ui-secondary-action" onClick={handleRetry}>
-              Retry
+              {t('buttons.retry')}
             </button>
           </div>
         ) : null}
@@ -84,10 +80,7 @@ export function OverviewPage() {
 
   return (
     <PageContainer className="overview-page">
-      <PageHeader
-        title="Overview"
-        description="Decision-first macro snapshot designed to show what changed, why it matters, and where to test next."
-      />
+      <PageHeader title={t('pages.overview.title')} description={t('pages.overview.description')} />
 
       <EconomicStateHeader summary={summary} updatedAt={generated_at} outputAction={output_action} />
 

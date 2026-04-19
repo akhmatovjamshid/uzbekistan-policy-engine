@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { AssumptionsPanel } from '../components/scenario-lab/AssumptionsPanel'
 import { InterpretationPanel } from '../components/scenario-lab/InterpretationPanel'
 import { ResultsPanel } from '../components/scenario-lab/ResultsPanel'
@@ -53,6 +54,7 @@ function assumptionsEqual(a: ScenarioLabAssumptionState, b: ScenarioLabAssumptio
 }
 
 export function ScenarioLabPage() {
+  const { t, i18n } = useTranslation()
   const [sourceState, setSourceState] = useState(getInitialScenarioLabSourceState)
   const [selectedPresetId, setSelectedPresetId] = useState(scenarioLabWorkspaceMock.presets[0]?.preset_id ?? '')
   const [scenarioName, setScenarioName] = useState('Scenario 1')
@@ -168,13 +170,13 @@ export function ScenarioLabPage() {
   }
 
   function handleSaveScenario() {
-    const timestamp = new Intl.DateTimeFormat('en-GB', {
+    const timestamp = new Intl.DateTimeFormat(i18n.resolvedLanguage ?? 'en', {
       hour: '2-digit',
       minute: '2-digit',
       day: '2-digit',
       month: 'short',
     }).format(new Date())
-    setSaveStatus(`Saved to local session at ${timestamp}.`)
+    setSaveStatus(t('states.success.savedToLocalSessionAt', { timestamp }))
   }
 
   function handleRunScenario() {
@@ -197,10 +199,7 @@ export function ScenarioLabPage() {
 
   return (
     <PageContainer className="scenario-lab-page">
-      <PageHeader
-        title="Scenario Lab"
-        description="Build policy scenarios by adjusting assumptions, then review impacts and interpretation in one operational workspace."
-      />
+      <PageHeader title={t('pages.scenarioLab.title')} description={t('pages.scenarioLab.description')} />
 
       <div className="scenario-lab-grid">
         <AssumptionsPanel
@@ -221,15 +220,15 @@ export function ScenarioLabPage() {
         <div className="scenario-panel-stack">
           {sourceState.status === 'loading' ? (
             <p className="scenario-run-state scenario-run-state--loading" role="status" aria-live="polite">
-              Running scenario with current assumptions...
+              {t('states.loading.scenarioLabRun')}
             </p>
           ) : null}
 
           {sourceState.status === 'error' ? (
             <div className="scenario-run-state scenario-run-state--error" role="alert">
-              <p>{sourceState.error ?? 'Scenario run failed. Please retry.'}</p>
+              <p>{sourceState.error ?? t('states.error.scenarioRunFailed')}</p>
               <button type="button" className="ui-secondary-action" onClick={handleRetryScenarioRun}>
-                Retry run
+                {t('buttons.retryRun')}
               </button>
             </div>
           ) : null}
@@ -240,7 +239,7 @@ export function ScenarioLabPage() {
               role="status"
               aria-live="polite"
             >
-              Results reflect the previous run. Run scenario to update with current assumptions.
+              {t('states.stale.scenarioResults')}
             </p>
           ) : null}
 
@@ -252,10 +251,10 @@ export function ScenarioLabPage() {
           ) : (
             <>
               <section className="scenario-panel scenario-panel--results">
-                <p className="empty-state">Run a scenario to view results.</p>
+                <p className="empty-state">{t('states.empty.scenarioRunToView')}</p>
               </section>
               <section className="scenario-panel scenario-panel--interpretation">
-                <p className="empty-state">Interpretation appears after a successful scenario run.</p>
+                <p className="empty-state">{t('states.empty.scenarioInterpretationAfterRun')}</p>
               </section>
             </>
           )}
