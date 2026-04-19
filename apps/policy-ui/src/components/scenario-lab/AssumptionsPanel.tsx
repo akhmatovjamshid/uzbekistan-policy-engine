@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import type {
   AssumptionCategory,
   ScenarioLabAssumptionInput,
@@ -78,6 +79,7 @@ export function AssumptionsPanel({
   onSaveScenario,
   saveStatus,
 }: AssumptionsPanelProps) {
+  const { t } = useTranslation()
   const [showTechnical, setShowTechnical] = useState(false)
 
   const grouped = useMemo(() => {
@@ -127,10 +129,10 @@ export function AssumptionsPanel({
 
         <div className="scenario-session-controls__actions">
           <button type="button" onClick={onSaveScenario}>
-            Save draft
+            {t('buttons.saveDraft')}
           </button>
           <button type="button" onClick={onRunScenario} disabled={isRunPending}>
-            {isRunPending ? 'Running...' : 'Run scenario'}
+            {isRunPending ? `${t('buttons.run')}...` : t('buttons.runScenario')}
           </button>
           {saveStatus ? (
             <p role="status" aria-live="polite">

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { PageContainer } from '../components/layout/PageContainer'
 import { PageHeader } from '../components/layout/PageHeader'
 import type {
@@ -106,6 +107,7 @@ function DetailPanelContent({ tab, detail }: { tab: ModelExplorerTabId; detail: 
 }
 
 export function ModelExplorerPage() {
+  const { t } = useTranslation()
   const [sourceState, setSourceState] = useState(getInitialModelExplorerSourceState)
   const [selectedModelId, setSelectedModelId] = useState('')
   const [activeTab, setActiveTab] = useState<ModelExplorerTabId>('assumptions')
@@ -141,11 +143,11 @@ export function ModelExplorerPage() {
     return (
       <PageContainer className="model-explorer-page">
         <PageHeader
-          title="Model Explorer"
-          description="Basic model catalog and technical reference for assumptions, equations, caveats, and sources."
+          title={t('pages.modelExplorer.title')}
+          description={t('pages.modelExplorer.description')}
         />
         <p className="empty-state" role="status" aria-live="polite">
-          Loading model metadata...
+          {t('states.loading.modelExplorer')}
         </p>
       </PageContainer>
     )
@@ -155,16 +157,16 @@ export function ModelExplorerPage() {
     return (
       <PageContainer className="model-explorer-page">
         <PageHeader
-          title="Model Explorer"
-          description="Basic model catalog and technical reference for assumptions, equations, caveats, and sources."
+          title={t('pages.modelExplorer.title')}
+          description={t('pages.modelExplorer.description')}
         />
         <p className="empty-state" role="alert">
-          {sourceState.error ?? 'Model metadata is currently unavailable.'}
+          {sourceState.error ?? t('states.error.modelExplorerUnavailable')}
         </p>
         {sourceState.canRetry ? (
           <div>
             <button type="button" className="ui-secondary-action" onClick={handleRetry}>
-              Retry
+              {t('buttons.retry')}
             </button>
           </div>
         ) : null}
@@ -180,8 +182,8 @@ export function ModelExplorerPage() {
   return (
     <PageContainer className="model-explorer-page">
       <PageHeader
-        title="Model Explorer"
-        description="Basic model catalog and technical reference for assumptions, equations, caveats, and sources."
+        title={t('pages.modelExplorer.title')}
+        description={t('pages.modelExplorer.description')}
       />
 
       {models.length === 0 || !selectedModel || !selectedDetail ? (

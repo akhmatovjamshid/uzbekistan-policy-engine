@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ComparisonChartPanel } from '../components/comparison/ComparisonChartPanel'
 import { HeadlineComparisonTable } from '../components/comparison/HeadlineComparisonTable'
 import { ScenarioSelectorPanel } from '../components/comparison/ScenarioSelectorPanel'
@@ -33,6 +34,7 @@ function buildInitialTags(workspace: ComparisonWorkspace): Record<string, Compar
 }
 
 export function ComparisonPage() {
+  const { t } = useTranslation()
   const [sourceState, setSourceState] = useState(getInitialComparisonSourceState)
   const [selectedIdsOverride, setSelectedIdsOverride] = useState<string[] | null>(null)
   const [baselineIdOverride, setBaselineIdOverride] = useState<string | null>(null)
@@ -140,12 +142,9 @@ export function ComparisonPage() {
   if (sourceState.status === 'loading') {
     return (
       <PageContainer className="comparison-page">
-        <PageHeader
-          title="Comparison"
-          description="Compare baseline and alternative scenarios side by side to surface trade-offs and decision framing."
-        />
+        <PageHeader title={t('pages.comparison.title')} description={t('pages.comparison.description')} />
         <p className="empty-state" role="status" aria-live="polite">
-          Loading comparison workspace...
+          {t('states.loading.comparison')}
         </p>
       </PageContainer>
     )
@@ -154,17 +153,14 @@ export function ComparisonPage() {
   if (sourceState.status === 'error' || !workspace) {
     return (
       <PageContainer className="comparison-page">
-        <PageHeader
-          title="Comparison"
-          description="Compare baseline and alternative scenarios side by side to surface trade-offs and decision framing."
-        />
+        <PageHeader title={t('pages.comparison.title')} description={t('pages.comparison.description')} />
         <p className="empty-state" role="alert">
-          {sourceState.error ?? 'Comparison data is currently unavailable.'}
+          {sourceState.error ?? t('states.error.comparisonUnavailable')}
         </p>
         {sourceState.canRetry ? (
           <div>
             <button type="button" className="ui-secondary-action" onClick={handleRetry}>
-              Retry
+              {t('buttons.retry')}
             </button>
           </div>
         ) : null}
@@ -219,10 +215,7 @@ export function ComparisonPage() {
 
   return (
     <PageContainer className="comparison-page">
-      <PageHeader
-        title="Comparison"
-        description="Compare baseline and alternative scenarios side by side to surface trade-offs and decision framing."
-      />
+      <PageHeader title={t('pages.comparison.title')} description={t('pages.comparison.description')} />
 
       <ScenarioSelectorPanel
         scenarios={scenarios}
