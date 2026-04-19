@@ -302,3 +302,66 @@ The workflow then runs per `10_execution_plan.md` §4 calendar.
 ---
 
 *Readiness check protocol v1. Expected to run once per sprint branch; can be re-run if the plan is materially revised mid-sprint.*
+
+---
+
+## Readiness pass output
+
+**Date run:** 2026-04-19
+**Commit verified against:** `c65eacc770f510d62f923f15206fbc6776364ed4` (branch `chore/phase0-readiness`)
+**Live app URL:** `http://localhost:5180/` (vite dev server, `apps/policy-ui`)
+**Duration:** ~2h (within the §8 four-hour box)
+
+### Summary
+
+- Total TA items checked: **9**
+  - Already satisfied (item-level): **0**
+  - Correct as written: **9** (TA-1a, TA-1b, TA-2, TA-3, TA-4, TA-5, TA-6, TA-7, TA-8, TA-9)
+  - Needs correction (criteria-level): **0** — one scope-clarification note added to TA-4 (see below); no acceptance criterion is wrong as written.
+- Total TB items checked: **4**
+  - TB-P1 — **unstarted**; doc absent; no infra; no owner named.
+  - TB-P2 — **unstarted**; memo absent; minor naming concern (use `12_model_bridge.md` to avoid collision with `11_phase0_readiness.md`).
+  - TB-P3 — **unstarted**; `docs/ai-governance.md` absent; six questions unanswered.
+  - TB-P4 — **unstarted**; no names, no dates, no observations doc; plan's `[YYYY-MM-DD to YYYY-MM-DD]` placeholder still unfilled.
+
+### Corrections needed before Sprint 1 opens
+
+**Blockers** (must be resolved before Day 1 Codex thread opens — these are the approval-gate items in plan §8, not plan rewrites):
+
+- **TB-P1**: Commit `docs/frontend-replatform/09_deployment_migration.md` with specific preview URL, specific rollout criterion, specific legacy-freeze calendar date, and named owner. Stand up the preview URL itself. Plan §8 gate #4 cannot close without this.
+- **TB-P2**: Commit a `docs/frontend-replatform/12_model_bridge.md` (renamed from `11_*` per plan's own note to avoid collision with this readiness doc) picking one of Options A/B/C with rationale, timeline, and a named engineering owner.
+- **TB-P3**: Commit `docs/ai-governance.md` answering all six questions; draft EN disclaimer wording; require analytical-lead sign-off (not engineering-only). Hard blocker for TA-5 (Interpretation panel must branch on `NarrativeBlock.generation_mode` before panel enrichment lands) and TA-9.
+- **TB-P4**: Record three named pilot users and three specific session dates (replace the `[YYYY-MM-DD to YYYY-MM-DD]` placeholder in plan §2); create blank `docs/frontend-replatform/12_pilot_observations.md`. Owner is product lead.
+- **Owner assignment** (plan §8 gate #3): every TA-* and TB-* item still reads `Owner. TBD.`. Assign before Day 1.
+
+**Soft corrections** (can be fixed during Sprint 1 without blocking):
+
+- **TA-4 scope clarification**: existing live note said "nothing routes to Scenario Lab." Live verification refines this — Overview risk-rail anchors and Quick Actions anchors already emit `href="/scenario-lab?preset=<id>"`; the actual gap is that `ScenarioLabPage` does not yet read the `preset` query param and hydrate the assumption set. TA-4 criterion #3 ("Risk rail 'Test →' buttons route to Scenario Lab with working preset query params") therefore implies reciprocal Scenario-Lab-side consumption work; consider making that explicit when the Codex thread for TA-4 opens. Appended to TA-4's Live verification notes.
+- **TB-P2 doc name**: plan already flags the collision; confirm `12_model_bridge.md` at the time the memo lands.
+
+### Items already satisfied — scope removal
+
+No TA items are *fully* satisfied at the item level. However, a number of criteria inside items are already met in the live app and should be converted to regression guards (the plan already does this in many places — listing here for Codex-thread bookkeeping):
+
+- **TA-4 · neutral KPI delta coding**: `KpiStrip` computed color `rgb(23, 37, 59)`, bg `rgb(242, 244, 247)`, class `ui-chip--neutral`. Keep as regression guard.
+- **TA-4 · Overview-side preset anchors**: risk rail + Quick Actions already route to `/scenario-lab?preset=*`. Only Scenario-Lab-side consumption is missing.
+- **TA-5 · state-honesty regression guards**: `activeRunIdRef`, separate `assumptionValues` vs `lastRunAssumptions`, `beginRetry`, five interpretation subsections, tabbed results, `<details>` Advanced assumptions — all present in source and rendering. Keep as regression guards; criteria already list them as such.
+- **TA-6 · selector 2–4 enforcement + delta table arrows**: `ScenarioSelectorPanel` + `HeadlineComparisonTable` already render per existing live note. Keep as regression guard.
+- **TA-7 · tabs ARIA**: `role="tablist"` / `role="tab"` / `aria-selected` / `aria-controls` present in `ModelExplorerPage.tsx`. Keep as regression guard.
+
+### New issues observed in live app (not in current plan)
+
+Per plan §8 ("Do not propose new items"), these are flagged-only:
+
+- Quick Actions block on Overview links to four preset scenarios (`snapshot-brief`, `tariff-change`, `fiscal-comparison`, `inflation-risk`) that the current ScenarioLab `<select>` does not enumerate; consumer side is the same issue as the TA-4 scope clarification above. Not proposing a new item — triage after Sprint 1.
+- Comparison page renders a `Comparison Chart · GDP Growth` header above the hand-rolled bar panel; this is spec-consistent with TA-6 scope, calling out only because any change to the heading label during TA-6 chart-renderer migration should be an explicit decision.
+- Console during a five-route sweep produced zero warnings or errors beyond the standard React DevTools info line — no hidden runtime issues to fold into scope.
+
+### Overall verdict
+
+- [ ] PASS — Sprint 1 may open
+- [x] **PASS WITH CORRECTIONS** — Sprint 1 may open after blockers fixed
+- [ ] FAIL — plan needs rewrite before Sprint 1 opens
+
+**Rationale.** Zero acceptance criteria in `10_execution_plan.md` are wrong as written; the live app state matches the plan's assessment for all 9 TA items and all 4 TB items. The readiness-pass blockers are exactly the approval-gate items already listed in plan §8 (owners assigned, TB-P1/TB-P2/TB-P3 docs committed) plus TB-P4 session scheduling. None of them require revising the plan itself. Sprint 1 may open as soon as §8 gates #3 and #4 close and TB-P4's date placeholder is filled.
+

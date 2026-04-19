@@ -86,6 +86,7 @@ _Live verification notes:_
 - `nav.ts` ships hardcoded English label strings; `PageHeader` accepts hardcoded `title`/`description` props; loading/error strings (`'Loading latest overview snapshot…'`, `'Scenario data is currently unavailable.'`, etc.) are inline literals across all five pages. Inventory of strings to lift is sizeable but mechanical.
 - No regression risk to call out — there is currently no translation behavior to preserve.
 - Sequencing OK as written: TA-1a is genuinely Day-1 work and remains a blocker for TA-5 text volume.
+- **Phase 0 readiness pass (2026-04-19, commit c65eacc):** Re-confirmed via live app on port 5180. Switched `LanguageSwitcher` select to `ru` — nav labels (`Overview`, `Scenario Lab`, `Comparison`, `Model Explorer`, `Knowledge Hub`), h1, page descriptions, and `<html lang>` all stayed English. Criterion #3 and #5 remain unsatisfied; criteria as written are correct and testable. Outcome: **Correct as written.**
 
 ---
 
@@ -113,6 +114,7 @@ _Live verification notes:_
 - `src/components/system/` currently contains only `LanguageSwitcher.tsx`. No `AttributionBadge` exists; grep confirms zero references repo-wide.
 - `PageHeader.tsx` accepts only `title` and `description` props. There is no `meta` slot, no monospaced treatment, no children passthrough — so adding `meta` is a typed signature change rather than a CSS-only tweak.
 - Note for TA-7 sequencing: the Model Explorer catalog already renders a status chip via `ui-chip ui-chip--neutral` plus model name — when AttributionBadge lands, decide whether it replaces or complements the existing model-name strong element.
+- **Phase 0 readiness pass (2026-04-19, commit c65eacc):** Live inspect of `<h1 class="ui-page-title">` confirms `font-family: "Source Sans 3", "Noto Sans", "Helvetica Neue", sans-serif` and `font-weight: 650` on both h1 and h2. Grep for `AttributionBadge` repo-wide returns zero matches. `PageHeader` exports only `title`/`description` props. All three acceptance criteria unsatisfied as expected. Outcome: **Correct as written.**
 
 ---
 
@@ -152,6 +154,7 @@ _Live verification notes:_
 - Confirmed against rendered Comparison: `ComparisonChartPanel` is still a hand-rolled CSS-bar list, which is why Comparison should adopt the shared renderer after the first proof point, not as the first proof point.
 - Tokens for `baseline` slate `#17253b` and brand `#1f3658` already exist in `tokens.css` — semantic-role mapping can reuse them; only `downside`, `upside`, `other` need new tokens.
 - Recommend Recharts for the same reason the source-only review gave: the `ScenarioLab` and `Overview` pages already pass a `ChartSpec` shape to renderers, so a declarative React mapping fits.
+- **Phase 0 readiness pass (2026-04-19, commit c65eacc):** Live DOM check — `document.querySelector('svg.recharts-surface, canvas')` returns `null` on Overview, Scenario Lab, and Comparison. `NowcastForecastBlock` renders the tabular "Estimate path (real GDP growth, %)" caption + `<table>`; Comparison's chart slot renders the hand-rolled bar panel with headings like `Comparison Chart · GDP Growth` but no SVG. Acceptance criteria are all correct as written. Outcome: **Correct as written.**
 
 ---
 
@@ -185,6 +188,7 @@ _Live verification notes:_
 - `ComparisonPage.tsx` reads scenarios from `loadComparisonSourceState()` → mock workspace, not from any user-saved store. The Lab → Comparison loop is not wired at all today.
 - The `Scenario` contract (`data-contract.ts:21-32`) already declares `created_by`, `data_version`-bearing `model_ids` etc. as required strings — so the no-nulls constraint is already type-enforced; the work is filling them honestly.
 - `overview-live.ts` already includes example `dataVersion` fields, so TA-3 can proceed before TB-P2 is finalized.
+- **Phase 0 readiness pass (2026-04-19, commit c65eacc):** Clicked Save draft in the running app; before/after `Object.keys(localStorage)` both returned `[]`. UI message "Saved to local session at HH:MM, DD MMM" appears but does not persist — reload clears it. Confirms TA-3 greenfield status. Acceptance criteria are testable as written. Outcome: **Correct as written.**
 
 ---
 
@@ -223,6 +227,7 @@ _Live verification notes:_
 - **Already satisfied — KPI neutral coding.** Confirmed via live inspection on `.overview-kpi-trend`: computed `color: rgb(23, 37, 59)` and muted-surface background; classes `ui-chip ui-chip--neutral`. `KpiStrip.tsx` exposes direction glyph + word, no green/red semantic branching.
 - RiskPanel currently renders risks but nothing routes to Scenario Lab; the page also has no query-param reading. Criterion #3 needs reciprocal wiring on both pages.
 - `headline_metrics[i].model_attribution[].data_version` is already populated in the live mock payload — data-refresh feed can be assembled today without TB-P2 closing first.
+- **Phase 0 readiness pass (2026-04-19, commit c65eacc):** Risk rail **is already partially wired** — Overview risks render as anchors with `href="/scenario-lab?preset=external-slowdown"`, `.../preset=tariff-change`, `.../preset=inflation-risk`, etc., plus Quick Actions anchors with the same shape. Navigating to `/scenario-lab?preset=exchange-rate-shock` directly, however, leaves the preset `<select>` on "Balanced baseline" — **ScenarioLabPage does not yet read the URL query param**. So the existing note "nothing routes to Scenario Lab" should be narrowed: Overview-side links exist; Scenario Lab-side query-param consumption is the actual gap. Flagging as scope clarification, not a rewrite. Acceptance criterion #3 remains valid. Outcome: **Correct as written (with scope clarification above).**
 
 ---
 
@@ -273,6 +278,7 @@ _Live verification notes:_
 - **Not satisfied — preset chips.** `AssumptionsPanel.tsx` is still a native `<select>` dropdown; live render confirms this.
 - `generation_mode` is not checked anywhere in the current Interpretation panel. Today this is harmless because all mock content is effectively template content, but the branch needs to become explicit before later AI-adjacent work lands.
 - Keyboard nav for chip-row presets will be net-new and should be manually tested.
+- **Phase 0 readiness pass (2026-04-19, commit c65eacc):** Confirmed in live DOM — `<select>` with four options (`Balanced baseline`, `External slowdown`, `Fiscal consolidation`, `Inflation persistence`), `<details><summary>Advanced assumptions</summary>`, `Save draft` and `Run scenario` buttons, `Show technical variable names` toggle, and all five interpretation headings (`What changed`, `Why it changed`, `Key risks`, `Policy implications`, `Suggested next scenarios`) all present. Source grep confirms stale banner copy "Results reflect the previous run. Run scenario to update with current assumptions." exists at `ScenarioLabPage.tsx:243` behind `hasPendingEdits`. Criteria as written remain correct. Outcome: **Correct as written.**
 
 ---
 
@@ -306,6 +312,7 @@ _Live verification notes:_
 - **Not satisfied — best-on-metric tooltip.** No star indicator or tooltip exists in the live render.
 - **Not satisfied — missing-data tooltip.** Current rendering does not yet surface `—` + explanation consistently.
 - Trade-off summary panel exists today (`TradeoffSummaryPanel`) and produces generated text; this is acceptable for now as long as the summary remains explicit and honest.
+- **Phase 0 readiness pass (2026-04-19, commit c65eacc):** Live `/comparison` renders headings `Scenario selector`, `Headline comparison`, `Comparison Chart · GDP Growth`, `Trade-off summary` (with `Strongest growth`, `Strongest stability`, `Main compromise` subsections). Scenario chip labels include `Baseline`, `Alternative`, `Stress`. View toggles `Level view / Delta view / Risk view` render. No SVG chart, no `—` dash cells, no star/best-on-metric indicator, no tooltip content. Criteria as written remain correct. Outcome: **Correct as written.**
 
 ---
 
@@ -346,6 +353,7 @@ _Live verification notes:_
 - **Not satisfied — parameter presentation.** Current "Assumptions" tab renders a flat list of blocks, not a richer symbol/range-driven presentation. Verify contract support before committing to a specific table layout.
 - **Not satisfied — caveat severity styling.** Severity exists in the data but is not currently visualized.
 - **Not satisfied — vintage in monospace.** Vintage is still plain body text.
+- **Phase 0 readiness pass (2026-04-19, commit c65eacc):** Live `/model-explorer` renders three catalog entries: `QPM Uzbekistan` (Active), `DFM Nowcast` (Active), `FPP Fiscal Block` (Staging). Tab list present with `Assumptions`, `Equations`, `Caveats`, `Data sources`. No `.attribution-badge` anywhere; no `<pre>`/`<code>` equation blocks visible on default catalog pane. Criteria as written remain correct; six-model parity is correctly scoped as an "optional stretch." Outcome: **Correct as written.**
 
 ---
 
@@ -377,6 +385,7 @@ _Live verification notes:_
 - Confirmed greenfield. Live `/knowledge-hub` renders only the placeholder div ("Knowledge Hub v1 scaffold"). `KnowledgeHubPage.tsx` is minimal; no data fetching, no source-state plumbing, no contract type for it.
 - `src/data/mock/` contains `comparison.ts`, `model-explorer.ts`, `overview.ts`, `scenario-lab.ts`. No `knowledge-hub.ts`. No adapter, no guard, no live mock.
 - Explorer does not currently support deep-link to a specific model + tab via URL. If cross-links need that precision in this sprint, wire it in TA-7.
+- **Phase 0 readiness pass (2026-04-19, commit c65eacc):** Live `/knowledge-hub` body text confirmed as literal: `"Knowledge HubPolicy context and references scaffold (post-MVP expansion area).Knowledge Hub v1 scaffold"`. Only `h1` renders. Confirms full-scope port per TA-8. Outcome: **Correct as written.**
 
 ---
 
@@ -412,6 +421,7 @@ _Live verification notes:_
 - No export pipeline exists yet; export-gating should not be treated as in-scope implementation for this step.
 - No audit log infrastructure exists. If TB-P3 requires one, keep it minimal and local in this sprint.
 - Sequencing remains correct: do not start TA-9 until TB-P3 is signed off and TB-P4 returns evidence pilot users want AI-assisted narrative at all.
+- **Phase 0 readiness pass (2026-04-19, commit c65eacc):** Nothing new verifiable in the live app because TB-P3 is still unstarted (no `docs/ai-governance.md`). Per readiness-doc §4 guidance this is expected. Criteria as written are correct; entry condition (TB-P3 signed off) is not met. Outcome: **Correct as written.**
 
 ---
 
@@ -444,6 +454,7 @@ _Live verification notes:_
 - `docs/frontend-replatform/` currently contains 00–08; no `09_deployment_migration.md` exists. Item is unstarted.
 - Repo root still has the legacy static site (`index.html`, per-model directories) committed alongside `apps/policy-ui` — confirms the dual-maintenance risk the item flags is live.
 - No CI/CD or deploy config visible at repo root (no `vercel.json`, `netlify.toml`, GitHub Pages workflow). Decision needs to come with the infra wiring, not just the doc.
+- **Phase 0 readiness pass (2026-04-19, commit c65eacc):** Re-confirmed `ls docs/frontend-replatform/` shows `00_mvp_scope.md` through `08_release_readiness.md`, then `10_execution_plan.md` and `11_phase0_readiness.md`. No `09_deployment_migration.md`. All three decisions (preview URL, rollout criterion, legacy freeze date) still outstanding; no named owner. Blocker for Sprint 1 per plan §8 gate #4. Outcome: **Correct as written.**
 
 ---
 
@@ -478,6 +489,7 @@ _Live verification notes:_
 - No `11_model_bridge.md` in `docs/frontend-replatform/`. Item is unstarted.
 - Confirmed `shared/synth-engines.js` exists in the repo root's `shared/` directory — the plan's claim that Option C work is already underway lines up with the file system.
 - The React app's `*-live.ts` raw payloads are TS-typed mocks; none currently fetch a real endpoint. So the bridge decision affects near-term architecture, but not any currently working data path.
+- **Phase 0 readiness pass (2026-04-19, commit c65eacc):** `docs/frontend-replatform/` contains no model-bridge doc at any number. The numbering collision flagged by the readiness doc (§5 / TB-P2 note: `11_*` would collide with this readiness file) is real — recommend `12_model_bridge.md` when the memo lands. Flagged as unclear in plan, not rewriting. Outcome: **Correct as written (minor naming clarification in readiness doc note).**
 
 ---
 
@@ -512,6 +524,7 @@ Not a big doc. Half a day of product-lead work. Non-negotiable because the repo'
 _Live verification notes:_
 - `docs/ai-governance.md` does not exist anywhere under `docs/`. Item is unstarted.
 - Confirmed `NarrativeGenerationMode = 'template' | 'assisted'` is already in `data-contract.ts`, which makes the missing governance doc a real risk — type-level promise without operational rules. Plan sequencing is correct.
+- **Phase 0 readiness pass (2026-04-19, commit c65eacc):** Re-confirmed `docs/ai-governance.md` does not exist under `docs/`. All six questions still unanswered; disclaimer wording not drafted; no analytical-lead sign-off. Hard blocker for TA-5 (Interpretation panel must branch on `generation_mode`) and TA-9. Outcome: **Correct as written.**
 
 ---
 
@@ -538,6 +551,7 @@ This is the highest-leverage item in the whole plan and also the easiest to let 
 _Live verification notes:_
 - `docs/frontend-replatform/12_pilot_observations.md` does not exist. Item is unstarted.
 - Recommend pairing each pilot session with lightweight route/console capture around the session window so the team can see which areas were actually exercised.
+- **Phase 0 readiness pass (2026-04-19, commit c65eacc):** Re-confirmed `docs/frontend-replatform/12_pilot_observations.md` does not exist. No three names / three dates recorded anywhere in the repo. Plan's §2 week-of placeholder `[YYYY-MM-DD to YYYY-MM-DD]` still unfilled — flagging as unclear (needs a concrete session week before Sprint 1 opens), not proposing a rewrite. Outcome: **Correct as written (dates to be filled by product lead).**
 
 ---
 
