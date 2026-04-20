@@ -491,6 +491,23 @@ _Live verification notes:_
 - No CI/CD or deploy config visible at repo root (no `vercel.json`, `netlify.toml`, GitHub Pages workflow). Decision needs to come with the infra wiring, not just the doc.
 - **Phase 0 readiness pass (2026-04-19, commit c65eacc):** Re-confirmed `ls docs/frontend-replatform/` shows `00_mvp_scope.md` through `08_release_readiness.md`, then `10_execution_plan.md` and `11_phase0_readiness.md`. No `09_deployment_migration.md`. All three decisions (preview URL, rollout criterion, legacy freeze date) still outstanding; no named owner. Blocker for Sprint 1 per plan §8 gate #4. Outcome: **Correct as written.**
 
+
+**Decision — 2026-04-20 (solo-run phase):** DEFERRED. No preview URL
+provisioned for Sprint 1. Rationale: with TB-P4 deferred and no external
+audience, a preview URL has no consumer. Development continues on
+localhost. When a consumer emerges (opportunistic reviewer, future
+pilot, presentation), deploy as a GitHub Pages subpath (e.g.
+`cerr-uzbekistan.github.io/policy-ui/` or `cerr-uzbekistan.github.io/v2/`)
+to preserve all existing legacy model URLs. Vercel deferred pending
+actual need.
+
+**Constraint carried forward:** the existing legacy site
+(`cerr-uzbekistan.github.io`, models in `qpm_uzbekistan/`, `dfm_nowcast/`,
+`fpp_model/`, `cge_model/`, `pe_model/`, `io_model/`) must remain live
+and reachable at current URLs during the entire replatform. Any
+deployment change that breaks those URLs is out of scope until a formal
+migration plan is adopted.
+
 ---
 
 ### TB-P2 · Model bridge decision + memo
@@ -588,6 +605,17 @@ _Live verification notes:_
 - Recommend pairing each pilot session with lightweight route/console capture around the session window so the team can see which areas were actually exercised.
 - **Phase 0 readiness pass (2026-04-19, commit c65eacc):** Re-confirmed `docs/frontend-replatform/12_pilot_observations.md` does not exist. No three names / three dates recorded anywhere in the repo. Plan's §2 week-of placeholder `[YYYY-MM-DD to YYYY-MM-DD]` still unfilled — flagging as unclear (needs a concrete session week before Sprint 1 opens), not proposing a rewrite. Outcome: **Correct as written (dates to be filled by product lead).**
 
+
+**Decision — 2026-04-20 (solo-run phase):** DEFERRED to Sprint 3 or later.
+Rationale: in the current solo-run phase (one person holds engineering,
+analytical, and product lead roles), pilot-user feedback cannot be
+meaningfully substituted and external outreach has not been prioritized
+for Sprint 1. The cost of deferral is acknowledged: TA-4 through TA-8
+ship without outside-eye feedback, raising rework probability for
+Sprint 3+. Mitigation: opportunistic informal review with one trusted
+economist before Sprint 2 closes (target: one 10-minute informal
+walkthrough, no structured session required). Formal three-user pilot
+scheduled for when the project has additional headcount.
 ---
 
 ## 4. Suggested sprint calendar
