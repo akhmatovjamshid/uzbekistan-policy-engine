@@ -237,6 +237,7 @@ export function ComparisonPage() {
       <div className="comparison-bottom-grid">
         <ComparisonChartPanel
           selectedScenarios={selectedScenarios}
+          metricDefinitions={metricDefinitions}
           baselineId={baselineId}
           viewMode={viewMode}
           onViewModeChange={setViewMode}
