@@ -4,7 +4,8 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "esnext",
     "moduleResolution": "bundler",
-    "types": ["node"],
+    "types": ["node", "react"],
+    "jsx": "react-jsx",
     "skipLibCheck": true,
     "strict": true,
     "noEmit": false,
@@ -13,6 +14,8 @@
   },
   "include": [
     "tests/**/*.ts",
+    "tests/**/*.tsx",
+    "src/components/system/**/*.tsx",
     "src/data/adapters/**/*.ts",
     "src/data/mock/**/*.ts",
     "src/data/overview/**/*.ts",

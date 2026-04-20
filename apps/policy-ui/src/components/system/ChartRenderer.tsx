@@ -1,10 +1,11 @@
+import type { JSX } from 'react'
 import type {
   ChartSemanticRole,
   ChartSeries,
   ChartSpec,
   UncertaintyBand,
-} from '../../contracts/data-contract'
-import { AttributionBadge } from './AttributionBadge'
+} from '../../contracts/data-contract.js'
+import { AttributionBadge } from './AttributionBadge.js'
 import {
   Area,
   Bar,
