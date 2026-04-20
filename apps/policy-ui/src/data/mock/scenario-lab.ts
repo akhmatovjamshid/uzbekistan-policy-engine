@@ -26,50 +26,42 @@ const PERIODS = ['2026 Q1', '2026 Q2', '2026 Q3', '2026 Q4']
 
 const PRESETS: ScenarioLabPreset[] = [
   {
-    preset_id: 'balanced-baseline',
-    title: 'Balanced baseline',
-    summary: 'No additional shocks; use as anchor for alternative scenarios.',
+    preset_id: 'baseline',
+    title: 'Baseline',
+    summary: 'All shocks zero; economy follows the baseline calibration path from Q1 2026 initial conditions toward steady state.',
     assumption_overrides: {},
   },
   {
-    preset_id: 'external-slowdown',
-    title: 'External slowdown',
-    summary: 'Lower remittances and export demand with mild exchange-rate pressure.',
+    preset_id: 'rate-cut-100bp',
+    title: 'Policy rate cut (−100 bp)',
+    summary: 'CBU cuts the policy rate by 100 bp below the Taylor-rule path; expect higher output gap and temporarily faster disinflation response.',
     assumption_overrides: {
-      remittance_change: -12,
-      export_demand_change: -8,
-      exchange_rate_change: 4,
+      policy_rate_change: -1.0,
     },
   },
   {
-    preset_id: 'fiscal-consolidation',
-    title: 'Fiscal consolidation',
-    summary: 'Lower discretionary spending with improved revenue effort.',
+    preset_id: 'rate-hike-100bp',
+    title: 'Policy rate hike (+100 bp)',
+    summary: 'CBU hikes the policy rate by 100 bp above the Taylor-rule path; expect lower output gap and stronger UZS via the UIP channel.',
     assumption_overrides: {
-      gov_spending_change: -2,
-      tax_revenue_change: 1.2,
+      policy_rate_change: 1.0,
     },
   },
   {
     preset_id: 'exchange-rate-shock',
-    title: 'Exchange-rate shock',
-    summary: 'Sharper depreciation stress to test inflation and external-balance sensitivity.',
+    title: 'UZS depreciation (+10%)',
+    summary: 'One-off 10% UZS depreciation against USD; expect inflation spike via direct pass-through (a4) and RER gap, plus policy-rate response.',
     assumption_overrides: {
       exchange_rate_change: 10,
       pass_through_adjustment: 0.2,
     },
   },
-  // TA-5 mock: 'assisted' mode seeded here for visual verification
-  // of the TB-P3 attribution block. Real AI output will replace
-  // this in TA-9.
   {
-    preset_id: 'inflation-persistence',
-    title: 'Inflation persistence',
-    summary: 'Commodity and pass-through pressure despite policy tightening.',
+    preset_id: 'remittance-downside',
+    title: 'Remittance downside (proxy)',
+    summary: 'Proxy for Russia-slowdown remittance decline using a −0.5 pp aggregate demand shock; implemented via gap_shock while the b3 external-demand channel remains inactive (ROADMAP Phase 1B, QPM item 1).',
     assumption_overrides: {
-      commodity_price_change: 10,
-      pass_through_adjustment: 0.3,
-      policy_rate_change: 1,
+      export_demand_change: -8,
     },
   },
 ]
@@ -477,8 +469,11 @@ function buildInterpretationCore(values: ScenarioLabAssumptionState): Interpreta
   }
 }
 
-function resolveInterpretationGenerationMode(presetId: string | undefined): NarrativeGenerationMode {
-  return presetId === 'inflation-persistence' ? 'assisted' : 'template'
+function resolveInterpretationGenerationMode(): NarrativeGenerationMode {
+  // No preset currently seeds 'assisted' mode. TA-9 will introduce
+  // assisted narratives from the AI advisor; for now all preset
+  // outputs are template-mode.
+  return 'template'
 }
 
 export function buildScenarioLabResults(
@@ -489,7 +484,8 @@ export function buildScenarioLabResults(
   const scenarioCore = getMetricCore(values)
   const headlineMetrics = buildHeadlineMetrics(values)
   const interpretation = buildInterpretation(values) as InterpretationWithGenerationMode
-  interpretation.generation_mode = resolveInterpretationGenerationMode(options?.selectedPresetId)
+  void options
+  interpretation.generation_mode = resolveInterpretationGenerationMode()
 
   return {
     headline_metrics: headlineMetrics,
