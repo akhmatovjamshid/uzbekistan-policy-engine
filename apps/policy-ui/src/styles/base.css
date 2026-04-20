@@ -129,7 +129,7 @@ h2 {
 
 .app-shell__main {
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto 1fr auto;
   min-width: 0;
 }
 
@@ -179,6 +179,32 @@ h2 {
 
 .app-shell__content {
   min-width: 0;
+}
+
+.app-shell__footer {
+  border-top: 1px solid var(--color-border);
+  display: grid;
+  gap: 0.15rem;
+  padding-block: 0.65rem 0.8rem;
+}
+
+.app-shell__footer-line-1,
+.app-shell__footer-line-2 {
+  margin: 0 auto;
+  width: min(100%, var(--content-max-width));
+  padding-inline: clamp(1rem, 2.8vw, 2.5rem);
+}
+
+.app-shell__footer-line-1 {
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+}
+
+.app-shell__footer-line-2 {
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
 }
 
 .language-switcher {

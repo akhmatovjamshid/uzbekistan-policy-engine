@@ -5,7 +5,11 @@
     "primaryNavigationAria": "Primary",
     "workspaceLabel": "Workspace",
     "brandEyebrow": "Uzbekistan Economic Policy Engine",
-    "brandTitle": "Policy Analysis Workspace"
+    "brandTitle": "Policy Analysis Workspace",
+    "footer": {
+      "line1": "Center for Economic Research and Reforms (CERR) · Tashkent",
+      "line2": "v0.1-preview · 2026-04-18"
+    }
   },
   "languageSwitcher": {
     "label": "Language",
@@ -78,7 +82,7 @@
       "freshness": "Data · {{days}}d ago"
     },
     "meta": {
-      "eyebrow": "Overview metadata",
+      "eyebrow": "Macroeconomic situation · April 2026",
       "vintageLabel": "Vintage",
       "modelsLabel": "Models",
       "modelsLive": "{{count}} live",
@@ -98,6 +102,12 @@
       "noPrior": "No prior value",
       "notAvailable": "n/a",
       "freshness": "Updated {{date}}",
+      "confidence": {
+        "high": "High confidence",
+        "medium": "Medium confidence",
+        "low": "Low confidence",
+        "unknown": "Confidence not available"
+      },
       "direction": {
         "up": "higher",
         "down": "lower",

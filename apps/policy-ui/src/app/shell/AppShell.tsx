@@ -56,6 +56,10 @@ export function AppShell() {
         <main id="main-content" tabIndex={-1} className="app-shell__content">
           <Outlet />
         </main>
+        <footer className="app-shell__footer">
+          <p className="app-shell__footer-line-1">{t('shell.footer.line1')}</p>
+          <p className="app-shell__footer-line-2">{t('shell.footer.line2')}</p>
+        </footer>
       </div>
     </div>
   )

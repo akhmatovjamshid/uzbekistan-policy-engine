@@ -5,7 +5,11 @@
     "primaryNavigationAria": "Asosiy navigatsiya",
     "workspaceLabel": "Ish maydoni",
     "brandEyebrow": "Uzbekistan Economic Policy Engine",
-    "brandTitle": "Policy Analysis Workspace"
+    "brandTitle": "Policy Analysis Workspace",
+    "footer": {
+      "line1": "Iqtisodiy tadqiqotlar va islohotlar markazi (CERR) · Toshkent",
+      "line2": "v0.1-preview · 2026-04-18"
+    }
   },
   "languageSwitcher": {
     "label": "Til",
@@ -78,7 +82,7 @@
       "freshness": "Ma'lumotlar · {{days}} kun oldin"
     },
     "meta": {
-      "eyebrow": "Umumiy ko'rinish metama'lumoti",
+      "eyebrow": "Makroiqtisodiy holat · 2026-yil aprel",
       "vintageLabel": "Vintaj",
       "modelsLabel": "Modellar",
       "modelsLive": "{{count}} ta faol",
@@ -98,6 +102,12 @@
       "noPrior": "Oldingi qiymat yo'q",
       "notAvailable": "mavjud emas",
       "freshness": "Yangilangan: {{date}}",
+      "confidence": {
+        "high": "Yuqori ishonchlilik",
+        "medium": "O'rta ishonchlilik",
+        "low": "Past ishonchlilik",
+        "unknown": "Ishonchlilik ko'rsatilmagan"
+      },
       "direction": {
         "up": "yuqoriroq",
         "down": "pastroq",

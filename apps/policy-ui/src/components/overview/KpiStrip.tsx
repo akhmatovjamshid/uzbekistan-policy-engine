@@ -63,6 +63,9 @@ export function KpiStrip({ metrics }: KpiStripProps) {
             : t('overview.kpi.noPrior')
           const freshness = formatFreshness(metric.last_updated, locale)
           const deltaText = delta ?? t('overview.kpi.notAvailable')
+          const confidenceText = metric.confidence
+            ? t(`overview.kpi.confidence.${metric.confidence}`)
+            : t('overview.kpi.confidence.unknown')
 
           return (
             <article key={metric.metric_id} className="kpi overview-kpi-card">
@@ -80,6 +83,7 @@ export function KpiStrip({ metrics }: KpiStripProps) {
                 <span>{deltaText}</span>
               </span>
               <div className="kpi__context overview-kpi-card__meta">
+                <span>{confidenceText}</span>
                 <span>{metric.period}</span>
               </div>
             </article>

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import type { OverviewOutputAction } from '../../contracts/data-contract.js'
 import type { LanguageCode } from '../../state/language-context.js'
 import { useLanguage } from '../../state/useLanguage.js'
+import { toModelCode } from '../system/modelCode.js'
 
 type EconomicStateHeaderProps = {
   summary: string
@@ -27,19 +28,6 @@ function formatDateTime(value: string, locale: string) {
     hour: '2-digit',
     minute: '2-digit',
   }).format(date)
-}
-
-function toModelCode(modelId: string): string {
-  const normalized = modelId.trim()
-  if (!normalized) {
-    return ''
-  }
-  const compact = normalized.toUpperCase()
-  if (/^[A-Z0-9]{2,8}$/.test(compact)) {
-    return compact
-  }
-  const head = normalized.split(/[_-\s]+/).find(Boolean) ?? normalized
-  return head.replace(/[^a-zA-Z0-9]/g, '').toUpperCase()
 }
 
 export function EconomicStateHeader({

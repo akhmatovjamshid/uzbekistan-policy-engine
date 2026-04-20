@@ -1,3 +1,5 @@
+import { toModelCode } from './modelCode.js'
+
 type AttributionBadgeProps = {
   modelId: string
   active?: boolean
@@ -5,7 +7,7 @@ type AttributionBadgeProps = {
 }
 
 export function AttributionBadge({ modelId, active = false, title }: AttributionBadgeProps) {
-  const normalizedModelId = modelId.trim().toUpperCase()
+  const normalizedModelId = toModelCode(modelId)
   const className = active ? 'attribution-badge attribution-badge--active' : 'attribution-badge'
 
   return (
