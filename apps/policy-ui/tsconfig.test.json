@@ -20,6 +20,7 @@
     "src/data/mock/**/*.ts",
     "src/data/overview/**/*.ts",
     "src/data/raw/**/*.ts",
-    "src/contracts/**/*.ts"
+    "src/contracts/**/*.ts",
+    "src/state/**/*.ts"
   ]
 }
