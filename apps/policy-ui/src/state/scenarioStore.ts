@@ -3,6 +3,9 @@ import type { Assumption, Scenario, ScenarioType } from '../contracts/data-contr
 const SCENARIO_KEY_PREFIX = 'policy-ui:scenario:'
 const SESSION_ID_KEY = 'policy-ui:session-id'
 const STORE_EVENT = 'policy-ui:scenario-store-updated'
+let cachedSnapshot: SavedScenarioRecord[] = []
+let snapshotVersion = 0
+let cachedSnapshotVersion = -1
 
 type ScenarioWithDataVersion = Scenario & {
   data_version: string
@@ -85,7 +88,12 @@ function getAllScenarioKeys(storage: StorageLike): string[] {
   return keys
 }
 
+function invalidateSnapshot() {
+  snapshotVersion += 1
+}
+
 function emitScenarioStoreChange() {
+  invalidateSnapshot()
   if (typeof window === 'undefined') {
     return
   }
@@ -164,9 +172,15 @@ export function loadScenario(scenarioId: string): SavedScenarioRecord | null {
 }
 
 export function listScenarios(): SavedScenarioRecord[] {
+  if (cachedSnapshotVersion === snapshotVersion) {
+    return cachedSnapshot
+  }
+
   const storage = getStorage()
   if (!storage) {
-    return []
+    cachedSnapshot = []
+    cachedSnapshotVersion = snapshotVersion
+    return cachedSnapshot
   }
   const keys = getAllScenarioKeys(storage)
   const records: SavedScenarioRecord[] = []
@@ -181,7 +195,10 @@ export function listScenarios(): SavedScenarioRecord[] {
       records.push(parsed)
     }
   }
-  return records.sort((a, b) => b.updated_at.localeCompare(a.updated_at))
+  records.sort((a, b) => b.updated_at.localeCompare(a.updated_at))
+  cachedSnapshot = records
+  cachedSnapshotVersion = snapshotVersion
+  return cachedSnapshot
 }
 
 export function deleteScenario(scenarioId: string): boolean {
@@ -217,9 +234,13 @@ export function subscribeScenarioStore(onStoreChange: () => void): () => void {
     return () => {}
   }
 
-  const handleCustomStoreEvent = () => onStoreChange()
+  const handleCustomStoreEvent = () => {
+    invalidateSnapshot()
+    onStoreChange()
+  }
   const handleStorageEvent = (event: StorageEvent) => {
     if (!event.key || event.key.startsWith(SCENARIO_KEY_PREFIX) || event.key === SESSION_ID_KEY) {
+      invalidateSnapshot()
       onStoreChange()
     }
   }

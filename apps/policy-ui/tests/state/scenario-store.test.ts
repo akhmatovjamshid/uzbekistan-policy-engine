@@ -132,6 +132,25 @@ describe('scenarioStore', () => {
     assert.equal(listScenarios().length, 1)
   })
 
+  it('listScenarios returns the same reference on repeated calls when store is unchanged', () => {
+    saveScenario(buildScenarioInput('stable-ref-1', 'Stable Ref 1'))
+    const first = listScenarios()
+    const second = listScenarios()
+    assert.equal(
+      first,
+      second,
+      'listScenarios must return a stable reference when nothing changed',
+    )
+  })
+
+  it('listScenarios returns a new reference after a mutation', () => {
+    saveScenario(buildScenarioInput('stable-ref-a', 'Stable Ref A'))
+    const before = listScenarios()
+    saveScenario(buildScenarioInput('stable-ref-b', 'Stable Ref B'))
+    const after = listScenarios()
+    assert.notEqual(before, after, 'listScenarios must return a new reference after a save')
+  })
+
   it('clearAllScenarios removes persisted scenario records', () => {
     saveScenario(buildScenarioInput('scenario-d1', 'Scenario D1'))
     saveScenario(buildScenarioInput('scenario-d2', 'Scenario D2'))
