@@ -38,6 +38,7 @@ type BandMeta = {
   lowerKey: string
   rangeKey: string
   name: string
+  patternId: string
 }
 
 const X_KEY = '__x'
@@ -106,7 +107,10 @@ function toBandMeta(spec: ChartSpec): BandMeta[] {
     band,
     lowerKey: `band__${band.series_id}__lower`,
     rangeKey: `band__${band.series_id}__range`,
-    name: `${band.confidence_level}% ${band.methodology_label}`,
+    name: band.is_illustrative
+      ? `(illustrative) ${band.confidence_level}% ${band.methodology_label}`
+      : `${band.confidence_level}% ${band.methodology_label}`,
+    patternId: `band__${spec.chart_id}__${band.series_id}__illustrative`,
   }))
 }
 
@@ -190,6 +194,7 @@ export function ChartRenderer({ spec, height = 280, ariaLabel }: ChartRendererPr
   const data = buildChartData(spec, seriesMeta, bandMeta)
   const yUnit = spec.y.unit
   const screenReaderSummary = buildScreenReaderSummary(spec)
+  const hasIllustrativeBand = bandMeta.some((item) => item.band.is_illustrative)
 
   const commonChartChildren = (
     <>
@@ -256,12 +261,13 @@ export function ChartRenderer({ spec, height = 280, ariaLabel }: ChartRendererPr
         <Area
           key={`${item.band.series_id}-range`}
           dataKey={item.rangeKey}
-          fill="var(--color-uncertainty)"
-          fillOpacity={0.35}
+          fill={item.band.is_illustrative ? `url(#${item.patternId})` : 'var(--color-uncertainty)'}
+          fillOpacity={item.band.is_illustrative ? 1 : 0.35}
           isAnimationActive={false}
           name={item.name}
           stackId={item.band.series_id}
           stroke="var(--color-border-strong)"
+          strokeDasharray={item.band.is_illustrative ? '5 3' : undefined}
           strokeWidth={1}
           type="monotone"
         />
@@ -271,6 +277,25 @@ export function ChartRenderer({ spec, height = 280, ariaLabel }: ChartRendererPr
 
   const lineChartBody = (
     <LineChart data={data} margin={{ top: 8, right: 8, bottom: 6, left: 6 }}>
+      {hasIllustrativeBand ? (
+        <defs>
+          {bandMeta
+            .filter((item) => item.band.is_illustrative)
+            .map((item) => (
+              <pattern
+                id={item.patternId}
+                key={item.patternId}
+                width={8}
+                height={8}
+                patternUnits="userSpaceOnUse"
+                patternTransform="rotate(35)"
+              >
+                <rect width={8} height={8} fill="rgba(77, 93, 116, 0.14)" />
+                <line x1={0} y1={0} x2={0} y2={8} stroke="rgba(77, 93, 116, 0.55)" strokeWidth={2} />
+              </pattern>
+            ))}
+        </defs>
+      ) : null}
       {commonChartChildren}
       {seriesMeta.map((item) => (
         <Line
@@ -289,6 +314,25 @@ export function ChartRenderer({ spec, height = 280, ariaLabel }: ChartRendererPr
 
   const barChartBody = (
     <BarChart data={data} margin={{ top: 8, right: 8, bottom: 6, left: 6 }}>
+      {hasIllustrativeBand ? (
+        <defs>
+          {bandMeta
+            .filter((item) => item.band.is_illustrative)
+            .map((item) => (
+              <pattern
+                id={item.patternId}
+                key={item.patternId}
+                width={8}
+                height={8}
+                patternUnits="userSpaceOnUse"
+                patternTransform="rotate(35)"
+              >
+                <rect width={8} height={8} fill="rgba(77, 93, 116, 0.14)" />
+                <line x1={0} y1={0} x2={0} y2={8} stroke="rgba(77, 93, 116, 0.55)" strokeWidth={2} />
+              </pattern>
+            ))}
+        </defs>
+      ) : null}
       {commonChartChildren}
       {seriesMeta.map((item) => (
         <Bar
@@ -328,6 +372,9 @@ export function ChartRenderer({ spec, height = 280, ariaLabel }: ChartRendererPr
           {chartBody}
         </ResponsiveContainer>
       </div>
+      {hasIllustrativeBand ? (
+        <p className="chart-renderer__illustrative-note">Illustrative uncertainty band (hatched).</p>
+      ) : null}
 
       {spec.takeaway.trim() ? (
         <p className="chart-renderer__takeaway">
