@@ -9,13 +9,13 @@ import type { ScenarioLabPreset } from '../../../src/contracts/data-contract.js'
 
 const presets: ScenarioLabPreset[] = [
   {
-    preset_id: 'balanced-baseline',
+    preset_id: 'baseline',
     title: 'Balanced baseline',
     summary: 'Baseline',
     assumption_overrides: {},
   },
   {
-    preset_id: 'external-slowdown',
+    preset_id: 'remittance-downside',
     title: 'External slowdown',
     summary: 'Slowdown',
     assumption_overrides: { export_demand_change: -8 },
@@ -137,13 +137,13 @@ function renderPanelMarkup(selectedPresetId: string) {
 
 describe('preset chips', () => {
   it('renders active aria-pressed state for the selected preset chip', async () => {
-    const baselineMarkup = await renderPanelMarkup('balanced-baseline')
+    const baselineMarkup = await renderPanelMarkup('baseline')
     assert.match(
       baselineMarkup,
       /<button type="button" class="preset-chip active" aria-pressed="true">Balanced baseline<\/button>/,
     )
 
-    const slowdownMarkup = await renderPanelMarkup('external-slowdown')
+    const slowdownMarkup = await renderPanelMarkup('remittance-downside')
     assert.match(
       slowdownMarkup,
       /<button type="button" class="preset-chip active" aria-pressed="true">External slowdown<\/button>/,
@@ -152,7 +152,7 @@ describe('preset chips', () => {
 
   it('invokes preset handler on click and keyboard activation', () => {
     const calls: string[] = []
-    const presentation = buildPresetChipPresentation('balanced-baseline', 'external-slowdown', (presetId) =>
+    const presentation = buildPresetChipPresentation('baseline', 'remittance-downside', (presetId) =>
       calls.push(presetId),
     )
 
@@ -162,7 +162,7 @@ describe('preset chips', () => {
       preventDefault: () => {},
     } as unknown as Parameters<typeof presentation.onKeyDown>[0])
 
-    assert.deepEqual(calls, ['external-slowdown', 'external-slowdown'])
+    assert.deepEqual(calls, ['remittance-downside', 'remittance-downside'])
     assert.equal(presentation.ariaPressed, false)
   })
 })
