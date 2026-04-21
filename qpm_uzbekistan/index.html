@@ -188,6 +188,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
       <button class="sbtn" onclick="setShock('monetary',this)">
         <div class="ico">🏦</div><div class="lbl">Monetary<br>Tightening</div>
       </button>
+      <button class="sbtn" onclick="setShock('external',this)">
+        <div class="ico">🌍</div><div class="lbl">External<br>Demand</div>
+      </button>
     </div>
     <div class="shk-size">
       <div class="shk-size-hd">Simulation Settings</div>
@@ -559,6 +562,11 @@ function solveIRF(p, shockType, shockSize, T) {
   if (shockType === 'exchange')  shk_s[ST]   = shockSize;
   if (shockType === 'monetary')  shk_rs[ST]  = shockSize;
 
+  // Foreign output gap: AR(1) process with persistence 0.75
+  const gap_star = z();
+  if (shockType === 'external') gap_star[ST] = shockSize;
+  for (let t = ST + 1; t < N; t++) gap_star[t] = 0.75 * gap_star[t - 1];
+
   const { b1, b2, b3, b4, a1, a2, a3, g1, g2, g3, e1 } = p;
 
   // Safe array accessor (zero outside bounds)
@@ -619,8 +627,8 @@ function solveIRF(p, shockType, shockSize, T) {
       // MCI = b4*RR_GAP + (1-b4)*(-Z_GAP)
       mci[t] = b4 * rr_gap[t] - (1-b4) * l_z_gap[t];
 
-      // IS curve: gap_t = b1*gap_{t-1} - b2*MCI + shk
-      gap[t] = b1*G(gap,t-1) - b2*mci[t] + shk_gap[t];
+      // IS curve: gap_t = b1*gap_{t-1} - b2*MCI + b3*gap* + shk
+      gap[t] = b1*G(gap,t-1) - b2*mci[t] + b3*gap_star[t] + shk_gap[t];
 
       // Final refresh: update RMC and Phillips with realised gap
       rmc[t]     = a3*gap[t] + (1-a3)*l_z_gap[t];
@@ -755,6 +763,7 @@ const SHOCK_NAMES = {
   inflation: 'Cost-Push Inflation Shock',
   exchange:  'UZS Depreciation Shock',
   monetary:  'Monetary Policy Tightening Shock',
+  external:  'External Demand Shock',
 };
 const CHART_COLORS = [
   'rgba(192,57,43,1)',   // red   — inflation
