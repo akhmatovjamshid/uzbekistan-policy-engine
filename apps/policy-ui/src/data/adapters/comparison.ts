@@ -297,6 +297,31 @@ const SCENARIO_ROLE_LABEL: Record<ScenarioRole, string> = {
   upside: 'Upside',
 }
 
+const SHOT1_COMPARISON_METRICS: ComparisonMetricDefinition[] = [
+  { metric_id: 'gdp_growth', label: 'GDP growth · 3y avg', unit: '%' },
+  { metric_id: 'inflation', label: 'Inflation · terminal', unit: '%' },
+  { metric_id: 'current_account', label: 'Current account · %GDP', unit: '% GDP' },
+  { metric_id: 'fiscal_balance', label: 'Fiscal balance · %GDP', unit: '% GDP' },
+  { metric_id: 'reserves_end', label: 'Reserves · end', unit: 'USD bn' },
+  { metric_id: 'unemployment_avg', label: 'Unemployment · avg', unit: '%' },
+  { metric_id: 'real_wages_cumulative', label: 'Real wages · cumulative', unit: '%' },
+]
+
+function toShot1MetricDefinitions(workspace: ComparisonWorkspace): ComparisonMetricDefinition[] {
+  const liveDefinitionsById = new Map(
+    workspace.metric_definitions.map((metric) => [metric.metric_id, metric]),
+  )
+
+  return SHOT1_COMPARISON_METRICS.map((metric) => {
+    const liveDefinition = liveDefinitionsById.get(metric.metric_id)
+    return {
+      metric_id: metric.metric_id,
+      label: metric.label,
+      unit: liveDefinition?.unit || metric.unit,
+    }
+  })
+}
+
 function formatMetricValue(value: number, unit: string): string {
   if (!Number.isFinite(value)) {
     return '—'
@@ -432,7 +457,7 @@ export function composeComparisonContent(
 
   const scenarios = selectedScenarios.map(toScenarioMeta)
 
-  const metrics: ComparisonMetricRow[] = workspace.metric_definitions.map((metric) => {
+  const metrics: ComparisonMetricRow[] = toShot1MetricDefinitions(workspace).map((metric) => {
     const values: Record<string, string> = {}
     const deltas: Record<string, string> = {}
     const baselineRaw = baselineScenario ? baselineScenario.values[metric.metric_id] : undefined

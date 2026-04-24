@@ -1,9 +1,8 @@
 import type { ComparisonContent } from '../../contracts/data-contract.js'
 
 // Content seeded verbatim from docs/alignment/spec_prototype.html:1915–2049.
-// Shot-1 uses this hard-coded mock for the new UI; the composition layer in
-// data/adapters/comparison.ts can swap in workspace-derived values as Shot 2
-// wires live metrics (unemployment + real-wages paths are still mock-only).
+// Test-only fixture for the Shot-1 presentation shape. Production Comparison UI
+// composes this shape from ComparisonWorkspace in data/adapters/comparison.ts.
 
 export const comparisonContentMock: ComparisonContent = {
   baseline_scenario_id: 'baseline',

@@ -24,6 +24,72 @@ describe('composeComparisonContent', () => {
     ])
   })
 
+  it('keeps the Shot-1 7-row table when live QPM supplies only core metrics', () => {
+    const qpmWorkspace: ComparisonWorkspace = {
+      workspace_id: 'comparison-qpm-test',
+      generated_at: '2026-04-17T12:20:00+05:00',
+      metric_definitions: [
+        { metric_id: 'gdp_growth', label: 'GDP growth', unit: '%' },
+        { metric_id: 'inflation', label: 'Inflation', unit: '%' },
+        { metric_id: 'policy_rate', label: 'Policy rate', unit: '%' },
+        { metric_id: 'exchange_rate', label: 'Exchange rate', unit: 'UZS/USD' },
+      ],
+      scenarios: [
+        {
+          scenario_id: 'baseline',
+          scenario_name: 'Baseline',
+          scenario_type: 'baseline',
+          summary: 'Baseline QPM path.',
+          initial_tag: 'balanced',
+          values: {
+            gdp_growth: 4.1,
+            inflation: 5.1,
+            policy_rate: 7.7,
+            exchange_rate: 13033,
+          },
+          risk_index: 42,
+        },
+        {
+          scenario_id: 'rate-cut-100bp',
+          scenario_name: 'Policy rate cut (-100 bp)',
+          scenario_type: 'alternative',
+          summary: 'Lower policy-rate path.',
+          initial_tag: 'balanced',
+          values: {
+            gdp_growth: 4.3,
+            inflation: 5.4,
+            policy_rate: 7.7,
+            exchange_rate: 13088,
+          },
+          risk_index: 47,
+        },
+      ],
+      default_baseline_id: 'baseline',
+      default_selected_ids: ['baseline', 'rate-cut-100bp'],
+    }
+
+    const content = composeComparisonContent(
+      qpmWorkspace,
+      ['baseline', 'rate-cut-100bp'],
+      'baseline',
+    )
+
+    assert.equal(content.metrics.length, 7)
+    assert.deepEqual(content.metrics.map((metric) => metric.id), [
+      'gdp_growth',
+      'inflation',
+      'current_account',
+      'fiscal_balance',
+      'reserves_end',
+      'unemployment_avg',
+      'real_wages_cumulative',
+    ])
+    assert.equal(content.metrics.find((metric) => metric.id === 'gdp_growth')?.values.baseline, '+4.1%')
+    assert.equal(content.metrics.find((metric) => metric.id === 'gdp_growth')?.deltas['rate-cut-100bp'], '+0.2 pp')
+    assert.equal(content.metrics.find((metric) => metric.id === 'current_account')?.values.baseline, '—')
+    assert.equal(content.metrics.find((metric) => metric.id === 'current_account')?.deltas['rate-cut-100bp'], '—')
+  })
+
   it('computes highest_scenario and lowest_scenario from numeric values in the selection', () => {
     const content = composeComparisonContent(
       comparisonWorkspaceMock,
