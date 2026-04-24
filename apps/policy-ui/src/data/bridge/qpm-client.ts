@@ -1,10 +1,17 @@
 import { type QpmValidationIssue, validateQpmBridgePayload } from './qpm-guard.js'
 import type { QpmBridgePayload } from './qpm-types.js'
+import {
+  BridgeFetchError,
+  fetchBridgeJson,
+  resolveBridgeTimeoutMs,
+  type BridgeTransportErrorKind,
+  type FetchLike,
+} from './bridge-fetch.js'
 
 const DEFAULT_QPM_TIMEOUT_MS = 10_000
 const DEFAULT_QPM_DATA_URL = '/data/qpm.json'
 
-export type QpmTransportErrorKind = 'http' | 'timeout' | 'network'
+export type QpmTransportErrorKind = BridgeTransportErrorKind
 
 export class QpmTransportError extends Error {
   kind: QpmTransportErrorKind
@@ -32,8 +39,6 @@ export class QpmValidationError extends Error {
     this.issues = issues
   }
 }
-
-type FetchLike = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>
 
 function readImportMetaEnv(): {
   dataUrl?: string
@@ -67,41 +72,19 @@ export function resolveQpmTimeoutMs(): number {
   const metaEnv = readImportMetaEnv()
   const processEnv = readProcessEnv()
   const rawTimeout = metaEnv.timeoutMs ?? processEnv.timeoutMs
-  const parsed = Number(rawTimeout)
-  if (!Number.isFinite(parsed) || parsed <= 0) {
-    return DEFAULT_QPM_TIMEOUT_MS
-  }
-  return parsed
-}
-
-function isAbortError(error: unknown): boolean {
-  if (error instanceof DOMException && error.name === 'AbortError') {
-    return true
-  }
-  return error instanceof Error && error.name === 'AbortError'
+  return resolveBridgeTimeoutMs(rawTimeout, DEFAULT_QPM_TIMEOUT_MS)
 }
 
 export async function fetchQpmBridgePayload(fetchImpl: FetchLike = fetch): Promise<QpmBridgePayload> {
-  const controller = new AbortController()
   const timeoutMs = resolveQpmTimeoutMs()
-  const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
 
   try {
-    const response = await fetchImpl(resolveQpmDataUrl(), {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-      },
-      signal: controller.signal,
+    const rawPayload = await fetchBridgeJson({
+      dataUrl: resolveQpmDataUrl(),
+      timeoutMs,
+      bridgeLabel: 'QPM',
+      fetchImpl,
     })
-
-    if (!response.ok) {
-      throw new QpmTransportError('http', `QPM bridge request failed with HTTP ${response.status}.`, {
-        status: response.status,
-      })
-    }
-
-    const rawPayload = await response.json()
     const validation = validateQpmBridgePayload(rawPayload)
     if (!validation.ok || !validation.value) {
       throw new QpmValidationError(validation.issues)
@@ -112,8 +95,9 @@ export async function fetchQpmBridgePayload(fetchImpl: FetchLike = fetch): Promi
       throw error
     }
 
-    if (isAbortError(error)) {
-      throw new QpmTransportError('timeout', `QPM bridge request timed out after ${timeoutMs}ms.`, {
+    if (error instanceof BridgeFetchError) {
+      throw new QpmTransportError(error.kind, error.message, {
+        status: error.status,
         cause: error,
       })
     }
@@ -121,7 +105,5 @@ export async function fetchQpmBridgePayload(fetchImpl: FetchLike = fetch): Promi
     throw new QpmTransportError('network', 'QPM bridge request failed due to a network error.', {
       cause: error,
     })
-  } finally {
-    clearTimeout(timeoutId)
   }
 }
