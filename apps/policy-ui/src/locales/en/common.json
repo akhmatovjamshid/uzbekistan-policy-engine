@@ -301,11 +301,6 @@
       "lowestTitle": "Numerically lowest",
       "footnote": "★ indicates numerically lowest or highest value. Policy judgment is separate and not encoded."
     },
-    "tradeoff": {
-      "title": "Trade-off summary",
-      "smePendingChip": "SME content pending",
-      "smePendingAria": "Trade-off summary — SME content pending"
-    },
     "selector": {
       "inView": "In view",
       "addSaved": "+ Add saved scenario",
@@ -351,6 +346,8 @@
     },
     "tradeoff": {
       "title": "Trade-off summary",
+      "smePendingChip": "SME content pending",
+      "smePendingAria": "Trade-off summary — SME content pending",
       "description": "Template-based comparison sentences for each alternative scenario.",
       "empty": "Select a baseline and at least one alternative scenario to generate a trade-off summary.",
       "shifts": "shifts",

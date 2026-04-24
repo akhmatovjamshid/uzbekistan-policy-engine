@@ -301,11 +301,6 @@
       "lowestTitle": "Raqamli eng past",
       "footnote": "★ raqamli eng past yoki eng yuqori qiymatni bildiradi. Siyosiy mulohaza alohida va kod ichida emas."
     },
-    "tradeoff": {
-      "title": "Murosalar xulosasi",
-      "smePendingChip": "SME kontenti kutilmoqda",
-      "smePendingAria": "Murosalar xulosasi — SME kontenti kutilmoqda"
-    },
     "selector": {
       "inView": "Ko'rinishda",
       "addSaved": "+ Saqlangan stsenariy qo'shish",
@@ -351,6 +346,8 @@
     },
     "tradeoff": {
       "title": "Trade-off xulosasi",
+      "smePendingChip": "SME kontenti kutilmoqda",
+      "smePendingAria": "Murosalar xulosasi — SME kontenti kutilmoqda",
       "description": "Har bir muqobil stsenariy uchun shablon asosidagi qiyosiy jumlalar.",
       "empty": "Xulosani yaratish uchun bazaviy va kamida bitta muqobil stsenariyni tanlang.",
       "shifts": "siljitadi",
