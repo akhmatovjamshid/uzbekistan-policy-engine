@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import { afterEach, describe, it } from 'node:test'
 import { loadModelExplorerSourceState } from '../../../src/data/model-explorer/source.js'
+import { modelCatalogEntries } from '../../../src/data/mock/model-catalog.js'
 import { modelExplorerLiveRawMock } from '../../../src/data/raw/model-explorer-live.js'
 
 const originalFetch = globalThis.fetch
@@ -16,6 +17,22 @@ afterEach(() => {
 })
 
 describe('model explorer source live integration flow', () => {
+  it('serves the Shot 1 catalog through mock source state', async () => {
+    process.env.VITE_MODEL_EXPLORER_DATA_MODE = 'mock'
+
+    const readyState = await loadModelExplorerSourceState()
+    const catalogEntries = Object.values(readyState.workspace?.catalog_entries_by_model_id ?? {})
+
+    assert.equal(readyState.status, 'ready')
+    assert.equal(readyState.mode, 'mock')
+    assert.equal(catalogEntries.length, modelCatalogEntries.length)
+    assert.deepEqual(
+      catalogEntries.map((entry) => entry.id),
+      modelCatalogEntries.map((entry) => entry.id),
+    )
+    assert.equal(readyState.workspace?.meta?.models_live, 6)
+  })
+
   it('maps transport and payload outcomes into UI-safe source states', async () => {
     process.env.VITE_MODEL_EXPLORER_DATA_MODE = 'live'
     const calls: string[] = []
@@ -45,6 +62,7 @@ describe('model explorer source live integration flow', () => {
     assert.equal(readyState.status, 'ready')
     assert.equal(readyState.mode, 'live')
     assert.equal(readyState.workspace?.workspace_id, modelExplorerLiveRawMock.workspaceId)
+    assert.ok(readyState.workspace?.catalog_entries_by_model_id?.['qpm-uzbekistan'])
 
     const httpErrorState = await loadModelExplorerSourceState()
     assert.equal(httpErrorState.status, 'error')
