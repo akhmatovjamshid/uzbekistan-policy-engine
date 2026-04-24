@@ -55,7 +55,11 @@ export type { ScenarioWithDataVersion }
 type StorageLike = Pick<Storage, 'getItem' | 'setItem' | 'removeItem' | 'key' | 'length'>
 
 function getStorage(): StorageLike | null {
-  return typeof globalThis.localStorage === 'undefined' ? null : globalThis.localStorage
+  try {
+    return typeof globalThis.localStorage === 'undefined' ? null : globalThis.localStorage
+  } catch {
+    return null
+  }
 }
 
 function isScenarioType(value: unknown): value is ScenarioType {
@@ -382,7 +386,12 @@ export function loadScenario(scenarioId: string): SavedScenarioRecord | null {
   if (!storage) {
     return null
   }
-  const rawValue = storage.getItem(buildScenarioKey(scenarioId))
+  let rawValue: string | null
+  try {
+    rawValue = storage.getItem(buildScenarioKey(scenarioId))
+  } catch {
+    return null
+  }
   if (!rawValue) {
     return null
   }
@@ -400,10 +409,22 @@ export function listScenarios(): SavedScenarioRecord[] {
     cachedSnapshotVersion = snapshotVersion
     return cachedSnapshot
   }
-  const keys = getAllScenarioKeys(storage)
+  let keys: string[]
+  try {
+    keys = getAllScenarioKeys(storage)
+  } catch {
+    cachedSnapshot = []
+    cachedSnapshotVersion = snapshotVersion
+    return cachedSnapshot
+  }
   const records: SavedScenarioRecord[] = []
   for (const key of keys) {
-    const rawValue = storage.getItem(key)
+    let rawValue: string | null
+    try {
+      rawValue = storage.getItem(key)
+    } catch {
+      continue
+    }
     if (!rawValue) {
       continue
     }
@@ -425,11 +446,20 @@ export function deleteScenario(scenarioId: string): boolean {
     return false
   }
   const key = buildScenarioKey(scenarioId)
-  const existed = storage.getItem(key) !== null
+  let existed = false
+  try {
+    existed = storage.getItem(key) !== null
+  } catch {
+    return false
+  }
   if (!existed) {
     return false
   }
-  storage.removeItem(key)
+  try {
+    storage.removeItem(key)
+  } catch {
+    return false
+  }
   emitScenarioStoreChange()
   return true
 }
@@ -439,11 +469,24 @@ export function clearAllScenarios(): void {
   if (!storage) {
     return
   }
-  const keys = getAllScenarioKeys(storage)
-  for (const key of keys) {
-    storage.removeItem(key)
+  let keys: string[]
+  try {
+    keys = getAllScenarioKeys(storage)
+  } catch {
+    return
   }
-  storage.removeItem(SESSION_ID_KEY)
+  for (const key of keys) {
+    try {
+      storage.removeItem(key)
+    } catch {
+      // Continue clearing other scenario keys if one key cannot be removed.
+    }
+  }
+  try {
+    storage.removeItem(SESSION_ID_KEY)
+  } catch {
+    // Ignore unavailable session-key removal; scenario keys have already been attempted.
+  }
   emitScenarioStoreChange()
 }
 

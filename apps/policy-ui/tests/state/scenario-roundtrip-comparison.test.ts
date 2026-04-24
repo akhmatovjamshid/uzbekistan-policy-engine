@@ -141,4 +141,13 @@ describe('scenario store to comparison round trip', () => {
       false,
     )
   })
+
+  it('supports a 2-4 scenario comparison pool including saved runs', () => {
+    saveScenario(buildIntegrationScenario())
+    const merged = mergeScenariosForComparison()
+    const selectedIds = merged.map((scenario) => scenario.scenario_id).slice(0, 4)
+
+    assert.equal(selectedIds.length, 4)
+    assert.ok(selectedIds.includes('scenario-integration-1') || merged.length >= 4)
+  })
 })

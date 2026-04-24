@@ -5,12 +5,28 @@ import {
   type RawModelExplorerPayload,
 } from '../../../src/data/adapters/model-explorer.js'
 import { validateRawModelExplorerPayload } from '../../../src/data/adapters/model-explorer-guard.js'
+import { modelExplorerWorkspaceMock } from '../../../src/data/mock/model-explorer.js'
 
 function isIsoDateString(value: string): boolean {
   return !Number.isNaN(new Date(value).getTime())
 }
 
 describe('model explorer adapter', () => {
+  it('ships MVP metadata for all six model families', () => {
+    const modelNames = modelExplorerWorkspaceMock.models.map((model) => model.model_name).sort()
+
+    assert.deepEqual(modelNames, ['CGE', 'DFM', 'FPP', 'IO', 'PE', 'QPM'])
+    for (const model of modelExplorerWorkspaceMock.models) {
+      const detail = modelExplorerWorkspaceMock.details_by_model_id[model.model_id]
+      assert.ok(detail, `${model.model_name} detail missing`)
+      assert.ok(detail.overview.length > 0)
+      assert.ok(detail.assumptions.length > 0)
+      assert.ok(detail.equations.length > 0)
+      assert.ok(detail.caveats.length > 0)
+      assert.ok(detail.data_sources.length > 0)
+    }
+  })
+
   it('maps metadata payload into the Model Explorer workspace contract', () => {
     const raw: RawModelExplorerPayload = {
       workspaceId: 'mx-1',

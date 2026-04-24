@@ -1,6 +1,9 @@
-# Policy UI (Replatform Shell)
+# Policy UI (Replatform MVP)
 
-This app is the new frontend shell for the Uzbekistan Economic Policy Engine replatform.
+This app is the React/Vite policy workspace for the Uzbekistan Economic Policy Engine replatform.
+It follows the in-repo `spec.html` and `uzbekistan_policy_engine_frontend_reimagining_spec.md`
+direction: task-first navigation, calm institutional UI, visible model attribution, interpretation
+alongside charts, caveats, and comparison as a central workflow.
 
 ## Current scope
 
@@ -12,8 +15,12 @@ This app is the new frontend shell for the Uzbekistan Economic Policy Engine rep
 - Per-page raw → guard → adapter → source → client data pipeline with `VITE_*_DATA_MODE=mock|live` switching
 - QPM live-data bridge consuming `public/data/qpm.json` (refreshed nightly via GitHub Actions)
 - localStorage-backed scenario store (`policy-ui:scenario.v2:*`) with full run-snapshot persistence including TB-P3 governance metadata
+- Scenario Lab run/save/load flow with deterministic fallback results, stale-edit save protection, guarded localStorage reads, and preset hydration from URL query parameters
+- Comparison workflow for 2-4 scenarios with baseline deltas, KPI cards, comparative charts, trade-off summary, and empty-state guidance for saved scenarios
+- Model Explorer metadata for all six MVP model families: QPM, DFM, PE, IO, CGE, FPP
+- Knowledge Hub MVP with reform tracker, research briefs, reference index, model/reform tags, and EN/RU/UZ translation keys
 - Accessibility defaults: skip-link, aria-live on loading/error states, aria-labelledby on sections, `:focus-visible` rings
-- Test harness: Node test runner, 59 tests covering adapters, guards, store round-trip, governance metadata round-trip, migration safety
+- Test harness: Node test runner, 116 tests covering adapters, guards, store round-trip, governance metadata round-trip, comparison mapping, localStorage failure handling, preset hydration, and model metadata coverage
 
 ## Structure
 
@@ -28,12 +35,20 @@ This app is the new frontend shell for the Uzbekistan Economic Policy Engine rep
 ## Run
 
 ```bash
-npm install
+npm ci
 npm run dev
+```
+
+## Verify
+
+```bash
+npm run lint
+npm run build
+npm run test
 ```
 
 ## Notes
 
 - The old frontend is intentionally untouched.
-- QPM is the first model live via the bridge. DFM/PE/IO/CGE/FPP follow the same pattern (R solver → nightly JSON → consumer contract → frontend alignment); targets in `docs/frontend-replatform/12_model_bridge.md`.
-- Knowledge Hub route is a placeholder pending content port from the legacy site (TA-8).
+- QPM and DFM have selective live bridge coverage. PE/IO/CGE/FPP are represented in the MVP metadata layer and should follow the same bridge pattern (R solver → nightly JSON → consumer contract → frontend alignment).
+- Knowledge Hub content is seed research/reference content for the MVP. It is deliberately tagged and filterable, but it is not yet a live policy-document ingestion pipeline.

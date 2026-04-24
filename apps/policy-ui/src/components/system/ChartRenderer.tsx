@@ -3,10 +3,9 @@ import type {
   ChartSemanticRole,
   ChartSeries,
   ChartSpec,
-  UncertaintyBand,
 } from '../../contracts/data-contract.js'
 import { AttributionBadge } from './AttributionBadge.js'
-import { prettyPrintMethodologyLabel } from './chart-label-utils.js'
+import { toBandMeta, type BandMeta } from './chart-label-utils.js'
 import {
   Area,
   Bar,
@@ -34,14 +33,6 @@ type SeriesMeta = {
   series: ChartSeries
   key: string
   color: string
-}
-
-type BandMeta = {
-  band: UncertaintyBand
-  lowerKey: string
-  upperKey: string
-  name: string
-  patternId: string
 }
 
 const X_KEY = '__x'
@@ -103,21 +94,6 @@ function toSeriesMeta(spec: ChartSpec): SeriesMeta[] {
     key: `series__${series.series_id}`,
     color: colorForSemanticRole(series.semantic_role),
   }))
-}
-
-export function toBandMeta(spec: ChartSpec): BandMeta[] {
-  return spec.uncertainty.map((band) => {
-    const prettyLabel = prettyPrintMethodologyLabel(band.methodology_label)
-    return {
-      band,
-      lowerKey: `band__${band.series_id}__${band.confidence_level}__lower`,
-      upperKey: `band__${band.series_id}__${band.confidence_level}__upper`,
-      name: band.is_illustrative
-        ? `(illustrative) ${band.confidence_level}% ${prettyLabel}`
-        : `${band.confidence_level}% ${prettyLabel}`,
-      patternId: `band__${spec.chart_id}__${band.series_id}__illustrative`,
-    }
-  })
 }
 
 function hasUsableSeriesData(spec: ChartSpec): boolean {

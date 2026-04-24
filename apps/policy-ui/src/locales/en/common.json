@@ -66,8 +66,7 @@
     },
     "knowledgeHub": {
       "title": "Knowledge Hub",
-      "description": "Policy context and references scaffold (post-MVP expansion area).",
-      "placeholder": "Knowledge Hub v1 scaffold"
+      "description": "Reforms, briefs, and references connected to scenarios and model evidence."
     }
   },
   "overview": {
@@ -249,10 +248,114 @@
       "confirmDelete": "Delete saved scenario \"{{scenarioName}}\"?"
     }
   },
+  "knowledgeHub": {
+    "pulse": {
+      "title": "Policy knowledge pulse",
+      "description": "Seed research content for the MVP, organized around reforms, model evidence, and reusable references.",
+      "metrics": {
+        "reformsTracked": { "label": "Tracked reforms", "value": "3" },
+        "researchBriefs": { "label": "Research briefs", "value": "2" },
+        "references": { "label": "Reference notes", "value": "3" },
+        "modelTags": { "label": "Model tags", "value": "6" }
+      }
+    },
+    "index": {
+      "title": "Research and reform index",
+      "description": "Filter internal notes by model and policy tag before moving back into scenario analysis."
+    },
+    "filters": {
+      "model": "Model",
+      "tag": "Tag",
+      "allModels": "All models",
+      "allTags": "All tags"
+    },
+    "tabs": {
+      "aria": "Knowledge Hub sections",
+      "reforms": "Reform tracker",
+      "briefs": "Research briefs",
+      "literature": "Reference index"
+    },
+    "empty": "No Knowledge Hub items match the selected filters.",
+    "tags": {
+      "trade": "Trade",
+      "structural": "Structural",
+      "monetary": "Monetary",
+      "inflation": "Inflation",
+      "fiscal": "Fiscal",
+      "external": "External",
+      "growth": "Growth",
+      "prices": "Prices",
+      "methodology": "Methodology",
+      "nowcast": "Nowcast"
+    },
+    "content": {
+      "reforms": {
+        "wto": {
+          "title": "WTO accession package",
+          "summary": "Tracks tariff, customs, and market-access reforms that should be tested through PE, CGE, and IO channels.",
+          "meta": "Reform tracker · Trade and structural"
+        },
+        "inflationTargeting": {
+          "title": "Inflation targeting transition",
+          "summary": "Connects CBU communication, policy-rate path, and inflation expectations to QPM and nowcast evidence.",
+          "meta": "Reform tracker · Monetary"
+        },
+        "energy": {
+          "title": "Energy tariff reform",
+          "summary": "Flags fiscal savings, price pass-through, and household exposure for scenario testing.",
+          "meta": "Reform tracker · Fiscal and structural"
+        }
+      },
+      "briefs": {
+        "remittance": {
+          "title": "External remittance risk note",
+          "summary": "Brief template for testing remittance and external-demand downside risks against growth, FX, and fiscal metrics.",
+          "meta": "Research brief · Scenario-ready"
+        },
+        "tariff": {
+          "title": "Tariff liberalization briefing",
+          "summary": "Decision note linking tariff cuts to import prices, trade diversion, fiscal revenue, and welfare caveats.",
+          "meta": "Research brief · Trade package"
+        }
+      },
+      "literature": {
+        "qpm": {
+          "title": "QPM methodology note",
+          "summary": "Reference index for semi-structural macro models, Phillips curves, policy rules, and open-economy transmission.",
+          "meta": "Reference index · QPM"
+        },
+        "dfm": {
+          "title": "Dynamic factor nowcasting note",
+          "summary": "Reference index for mixed-frequency factor models, Kalman filtering, and nowcast revision practice.",
+          "meta": "Reference index · DFM"
+        },
+        "ioCge": {
+          "title": "IO and CGE reform modeling note",
+          "summary": "Reference index for multiplier analysis, SAM calibration, Armington assumptions, and closure rules.",
+          "meta": "Reference index · IO / CGE"
+        }
+      }
+    }
+  },
   "comparison": {
+    "headline": {
+      "title": "Headline comparison",
+      "description": "Side-by-side values, KPI deltas, and scenario differences relative to the selected baseline.",
+      "emptyBaseline": "Select a baseline scenario to view comparison metrics.",
+      "emptyAlternative": "Add at least one alternative scenario to compare against baseline.",
+      "caption": "Headline metric values and deltas against the selected baseline scenario.",
+      "metricColumn": "Metric",
+      "notAvailable": "Not available",
+      "notAvailableShort": "n/a",
+      "baselineUnavailable": "Baseline value unavailable; no delta computed",
+      "deltaAria": "Change vs baseline: {{delta}}",
+      "kpiGridAria": "Comparison KPI cards",
+      "avgDelta": "Average alternative delta {{delta}}",
+      "noDelta": "No alternative delta"
+    },
     "selector": {
       "title": "Scenario selector",
-      "description": "Select 2-3 scenarios and define one baseline for delta interpretation.",
+      "description": "Select 2-4 scenarios and define one baseline for delta interpretation.",
       "empty": "No scenarios are available to compare.",
       "selectedCount": "Selected: {{count}} / {{max}}",
       "baselineLabel": "Baseline",

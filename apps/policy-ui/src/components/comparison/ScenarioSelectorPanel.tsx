@@ -15,7 +15,7 @@ type ScenarioSelectorPanelProps = {
   onTagChange: (scenarioId: string, tag: ComparisonScenarioTag) => void
 }
 
-const SLOT_LIMIT = 3
+const SLOT_LIMIT = 4
 
 function scenarioTypeKey(type: ComparisonScenario['scenario_type']) {
   if (type === 'baseline') {

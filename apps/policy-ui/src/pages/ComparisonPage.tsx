@@ -24,7 +24,7 @@ import {
 } from '../state/scenarioStore'
 import './comparison.css'
 
-const COMPARISON_SLOT_LIMIT = 3
+const COMPARISON_SLOT_LIMIT = 4
 
 function buildScenarioMap(scenarios: ComparisonScenario[]) {
   return scenarios.reduce<Record<string, ComparisonScenario>>((acc, scenario) => {

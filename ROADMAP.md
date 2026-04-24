@@ -34,7 +34,7 @@ No government or central bank in Central Asia has a **web-native, AI-enhanced, m
 - [ ] Keyboard navigation (Tab, Enter, Arrow keys) for all controls
 - [ ] Enlarge slider thumbs to 44px for touch targets
 - [ ] Color contrast check (WCAG 2.1 AA)
-- [ ] `lang` attribute updates when switching language
+- [x] `lang` attribute updates when switching language
 
 ### 1.2 Input Validation & Error Handling (P1)
 - [ ] Validate parameter bounds (no negative growth in FPP, no >100% tariffs in PE)
@@ -95,10 +95,10 @@ No government or central bank in Central Asia has a **web-native, AI-enhanced, m
 **Goal:** Transform from 6 isolated models into an integrated policy analysis platform.
 
 ### 2.1 Scenario Comparison Dashboard
-- [ ] Save simulation snapshots (parameters + results) to localStorage
-- [ ] Name and tag scenarios (e.g., "WTO Baseline", "Aggressive Fiscal")
-- [ ] Side-by-side chart comparison (2-4 scenarios)
-- [ ] Difference tables (Scenario A vs B: delta values)
+- [x] Save simulation snapshots (parameters + results) to localStorage
+- [x] Name and tag scenarios (e.g., "WTO Baseline", "Aggressive Fiscal")
+- [x] Side-by-side chart comparison (2-4 scenarios)
+- [x] Difference tables (Scenario A vs B: delta values)
 - [ ] Export comparison as PDF report
 - [ ] Scenario library with pre-built policy packages:
   - WTO accession (PE + CGE combined)

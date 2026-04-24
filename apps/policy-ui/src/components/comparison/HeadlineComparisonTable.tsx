@@ -3,6 +3,7 @@ import type {
   ComparisonScenario,
   ComparisonScenarioTag,
 } from '../../contracts/data-contract'
+import { useTranslation } from 'react-i18next'
 
 type HeadlineComparisonTableProps = {
   metrics: ComparisonMetricDefinition[]
@@ -34,11 +35,11 @@ function directionGlyph(delta: number) {
   return '—'
 }
 
-function toTagLabel(tag: ComparisonScenarioTag) {
-  if (tag === 'downside_stress') {
-    return 'Downside stress'
-  }
-  return `${tag.charAt(0).toUpperCase()}${tag.slice(1)}`
+function toTagLabelKey(tag: ComparisonScenarioTag) {
+  if (tag === 'preferred') return 'comparison.selector.tag.preferred'
+  if (tag === 'balanced') return 'comparison.selector.tag.balanced'
+  if (tag === 'aggressive') return 'comparison.selector.tag.aggressive'
+  return 'comparison.selector.tag.downside_stress'
 }
 
 function isLowerBetterMetric(metricId: string): boolean {
@@ -73,49 +74,83 @@ export function HeadlineComparisonTable({
   baselineId,
   tagsByScenarioId,
 }: HeadlineComparisonTableProps) {
+  const { t } = useTranslation()
   const baseline = selectedScenarios.find((scenario) => scenario.scenario_id === baselineId)
   if (!baseline) {
     return (
       <section className="comparison-panel" aria-labelledby="comparison-headline-title">
         <div className="comparison-panel__head page-section-head">
-          <h2 id="comparison-headline-title">Headline comparison</h2>
-          <p>Side-by-side values and scenario deltas relative to the selected baseline.</p>
+          <h2 id="comparison-headline-title">{t('comparison.headline.title')}</h2>
+          <p>{t('comparison.headline.description')}</p>
         </div>
-        <p className="empty-state">Select a baseline scenario to view comparison metrics.</p>
+        <p className="empty-state">{t('comparison.headline.emptyBaseline')}</p>
       </section>
     )
   }
 
   const alternatives = selectedScenarios.filter((scenario) => scenario.scenario_id !== baselineId)
+  const kpiMetrics = metrics.slice(0, 4)
 
   return (
     <section className="comparison-panel" aria-labelledby="comparison-headline-title">
       <div className="comparison-panel__head page-section-head">
-        <h2 id="comparison-headline-title">Headline comparison</h2>
-        <p>Side-by-side values and scenario deltas relative to the selected baseline.</p>
+        <h2 id="comparison-headline-title">{t('comparison.headline.title')}</h2>
+        <p>{t('comparison.headline.description')}</p>
       </div>
 
       {alternatives.length === 0 ? (
-        <p className="empty-state">Add at least one alternative scenario to compare against baseline.</p>
+        <p className="empty-state">{t('comparison.headline.emptyAlternative')}</p>
       ) : null}
+
+      <div className="comparison-kpi-grid" aria-label={t('comparison.headline.kpiGridAria')}>
+        {kpiMetrics.map((metric) => {
+          const baselineValue = baseline.values[metric.metric_id]
+          const alternativeValues = alternatives
+            .map((scenario) => scenario.values[metric.metric_id])
+            .filter((value): value is number => Number.isFinite(value))
+          const averageAlternative =
+            alternativeValues.length > 0
+              ? alternativeValues.reduce((sum, value) => sum + value, 0) / alternativeValues.length
+              : null
+          const delta =
+            typeof baselineValue === 'number' && averageAlternative !== null
+              ? averageAlternative - baselineValue
+              : null
+          return (
+            <article key={metric.metric_id} className="comparison-kpi-card">
+              <span>{metric.label}</span>
+              <strong>
+                {typeof baselineValue === 'number' ? formatValue(baselineValue, metric.unit) : '—'}
+              </strong>
+              <small>
+                {delta === null
+                  ? t('comparison.headline.noDelta')
+                  : t('comparison.headline.avgDelta', { delta: formatDelta(delta, metric.unit) })}
+              </small>
+            </article>
+          )
+        })}
+      </div>
 
       <div className="comparison-headline-table-wrap">
         <table className="comparison-headline-table">
           <caption className="sr-only">
-            Headline metric values and deltas against the selected baseline scenario.
+            {t('comparison.headline.caption')}
           </caption>
           <thead>
             <tr>
-              <th scope="col">Metric</th>
+              <th scope="col">{t('comparison.headline.metricColumn')}</th>
               <th scope="col" className="comparison-headline-table__baseline-col">
                 {baseline.scenario_name}
-                <span className="comparison-headline-table__subhead">Baseline</span>
+                <span className="comparison-headline-table__subhead">
+                  {t('comparison.selector.baselineBadge')}
+                </span>
               </th>
               {alternatives.map((scenario) => (
                 <th key={scenario.scenario_id} scope="col">
                   {scenario.scenario_name}
                   <span className="comparison-headline-table__subhead">
-                    {toTagLabel(tagsByScenarioId[scenario.scenario_id] ?? scenario.initial_tag)}
+                    {t(toTagLabelKey(tagsByScenarioId[scenario.scenario_id] ?? scenario.initial_tag))}
                   </span>
                 </th>
               ))}
@@ -152,7 +187,10 @@ export function HeadlineComparisonTable({
                     if (!scenarioHasValue) {
                       return (
                         <td key={scenario.scenario_id}>
-                          <span className="comparison-headline-table__value" aria-label="Not available">
+                          <span
+                            className="comparison-headline-table__value"
+                            aria-label={t('comparison.headline.notAvailable')}
+                          >
                             —
                           </span>
                         </td>
@@ -166,10 +204,10 @@ export function HeadlineComparisonTable({
                           </span>
                           <span
                             className="comparison-headline-table__delta"
-                            aria-label="Baseline value unavailable; no delta computed"
+                            aria-label={t('comparison.headline.baselineUnavailable')}
                           >
                             <span aria-hidden="true">—</span>
-                            <span>n/a</span>
+                            <span>{t('comparison.headline.notAvailableShort')}</span>
                           </span>
                         </td>
                       )
@@ -188,7 +226,7 @@ export function HeadlineComparisonTable({
                         </span>
                         <span
                           className="comparison-headline-table__delta"
-                          aria-label={`Change vs baseline: ${deltaText}`}
+                          aria-label={t('comparison.headline.deltaAria', { delta: deltaText })}
                         >
                           <span aria-hidden="true">{directionGlyph(delta)}</span>
                           <span>{deltaText}</span>
