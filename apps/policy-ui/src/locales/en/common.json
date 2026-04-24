@@ -281,7 +281,34 @@
     }
   },
   "comparison": {
+    "header": {
+      "eyebrow": "Scenario trade-offs",
+      "meta": {
+        "comparing": "Comparing",
+        "scenarioCount": "{{count}} scenarios",
+        "horizon": "Horizon",
+        "mode": "Mode",
+        "deltasVsBaseline": "Deltas vs. Baseline"
+      }
+    },
+    "chip": {
+      "remove": "Remove {{name}} from comparison"
+    },
+    "table": {
+      "indicator": "Indicator",
+      "baselineFallback": "Baseline",
+      "highestTitle": "Numerically highest",
+      "lowestTitle": "Numerically lowest",
+      "footnote": "★ indicates numerically lowest or highest value. Policy judgment is separate and not encoded."
+    },
+    "tradeoff": {
+      "title": "Trade-off summary",
+      "smePendingChip": "SME content pending",
+      "smePendingAria": "Trade-off summary — SME content pending"
+    },
     "selector": {
+      "inView": "In view",
+      "addSaved": "+ Add saved scenario",
       "title": "Scenario selector",
       "description": "Select 2-3 scenarios and define one baseline for delta interpretation.",
       "empty": "No scenarios are available to compare.",

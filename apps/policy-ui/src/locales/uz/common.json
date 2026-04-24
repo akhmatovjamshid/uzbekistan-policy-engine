@@ -281,7 +281,34 @@
     }
   },
   "comparison": {
+    "header": {
+      "eyebrow": "Stsenariy murosalari",
+      "meta": {
+        "comparing": "Taqqoslanmoqda",
+        "scenarioCount": "{{count}} stsenariy",
+        "horizon": "Gorizont",
+        "mode": "Rejim",
+        "deltasVsBaseline": "Bazaviyga nisbatan dellalar"
+      }
+    },
+    "chip": {
+      "remove": "{{name}} ni taqqoslashdan olib tashlash"
+    },
+    "table": {
+      "indicator": "Ko'rsatkich",
+      "baselineFallback": "Bazaviy",
+      "highestTitle": "Raqamli eng yuqori",
+      "lowestTitle": "Raqamli eng past",
+      "footnote": "★ raqamli eng past yoki eng yuqori qiymatni bildiradi. Siyosiy mulohaza alohida va kod ichida emas."
+    },
+    "tradeoff": {
+      "title": "Murosalar xulosasi",
+      "smePendingChip": "SME kontenti kutilmoqda",
+      "smePendingAria": "Murosalar xulosasi — SME kontenti kutilmoqda"
+    },
     "selector": {
+      "inView": "Ko'rinishda",
+      "addSaved": "+ Saqlangan stsenariy qo'shish",
       "title": "Stsenariy tanlagich",
       "description": "2-3 ta stsenariyni tanlang va deltalarni talqin qilish uchun bitta bazaviy stsenariyni belgilang.",
       "empty": "Solishtirish uchun stsenariylar mavjud emas.",
