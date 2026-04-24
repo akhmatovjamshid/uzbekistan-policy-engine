@@ -1,10 +1,17 @@
 import { type DfmValidationIssue, validateDfmBridgePayload } from './dfm-guard.js'
 import type { DfmBridgePayload } from './dfm-types.js'
+import {
+  BridgeFetchError,
+  fetchBridgeJson,
+  resolveBridgeTimeoutMs,
+  type BridgeTransportErrorKind,
+  type FetchLike,
+} from './bridge-fetch.js'
 
 const DEFAULT_DFM_TIMEOUT_MS = 10_000
 const DEFAULT_DFM_DATA_URL = '/data/dfm.json'
 
-export type DfmTransportErrorKind = 'http' | 'timeout' | 'network'
+export type DfmTransportErrorKind = BridgeTransportErrorKind
 
 export class DfmTransportError extends Error {
   kind: DfmTransportErrorKind
@@ -32,8 +39,6 @@ export class DfmValidationError extends Error {
     this.issues = issues
   }
 }
-
-type FetchLike = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>
 
 function readImportMetaEnv(): {
   dataUrl?: string
@@ -67,41 +72,19 @@ export function resolveDfmTimeoutMs(): number {
   const metaEnv = readImportMetaEnv()
   const processEnv = readProcessEnv()
   const rawTimeout = metaEnv.timeoutMs ?? processEnv.timeoutMs
-  const parsed = Number(rawTimeout)
-  if (!Number.isFinite(parsed) || parsed <= 0) {
-    return DEFAULT_DFM_TIMEOUT_MS
-  }
-  return parsed
-}
-
-function isAbortError(error: unknown): boolean {
-  if (error instanceof DOMException && error.name === 'AbortError') {
-    return true
-  }
-  return error instanceof Error && error.name === 'AbortError'
+  return resolveBridgeTimeoutMs(rawTimeout, DEFAULT_DFM_TIMEOUT_MS)
 }
 
 export async function fetchDfmBridgePayload(fetchImpl: FetchLike = fetch): Promise<DfmBridgePayload> {
-  const controller = new AbortController()
   const timeoutMs = resolveDfmTimeoutMs()
-  const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
 
   try {
-    const response = await fetchImpl(resolveDfmDataUrl(), {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-      },
-      signal: controller.signal,
+    const rawPayload = await fetchBridgeJson({
+      dataUrl: resolveDfmDataUrl(),
+      timeoutMs,
+      bridgeLabel: 'DFM',
+      fetchImpl,
     })
-
-    if (!response.ok) {
-      throw new DfmTransportError('http', `DFM bridge request failed with HTTP ${response.status}.`, {
-        status: response.status,
-      })
-    }
-
-    const rawPayload = await response.json()
     const validation = validateDfmBridgePayload(rawPayload)
     if (!validation.ok || !validation.value) {
       throw new DfmValidationError(validation.issues)
@@ -112,8 +95,9 @@ export async function fetchDfmBridgePayload(fetchImpl: FetchLike = fetch): Promi
       throw error
     }
 
-    if (isAbortError(error)) {
-      throw new DfmTransportError('timeout', `DFM bridge request timed out after ${timeoutMs}ms.`, {
+    if (error instanceof BridgeFetchError) {
+      throw new DfmTransportError(error.kind, error.message, {
+        status: error.status,
         cause: error,
       })
     }
@@ -121,7 +105,5 @@ export async function fetchDfmBridgePayload(fetchImpl: FetchLike = fetch): Promi
     throw new DfmTransportError('network', 'DFM bridge request failed due to a network error.', {
       cause: error,
     })
-  } finally {
-    clearTimeout(timeoutId)
   }
 }

@@ -17,6 +17,8 @@ interface ImportMetaEnv {
   readonly VITE_QPM_TIMEOUT_MS?: string
   readonly VITE_DFM_DATA_URL?: string
   readonly VITE_DFM_TIMEOUT_MS?: string
+  readonly VITE_IO_DATA_URL?: string
+  readonly VITE_IO_TIMEOUT_MS?: string
 }
 
 interface ImportMeta {
