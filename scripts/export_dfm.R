@@ -355,7 +355,7 @@ main <- function() {
       cq$uncertainty$bands[[3L]]$upper_pct
     ))
   }
-  cat("[export_dfm] forecast h>1:   ", length(output$forecast_horizon %||% list()), "\n", sep = "")
+  cat("[export_dfm] forecast h>1:   ", length(output$nowcast$forecast_horizon %||% list()), "\n", sep = "")
   cat("[export_dfm] history points: ", length(output$nowcast$history), "\n", sep = "")
   cat("[export_dfm] indicators:     ", length(output$indicators), "\n", sep = "")
   cat("[export_dfm] caveats:        ", length(output$caveats), "\n", sep = "")
