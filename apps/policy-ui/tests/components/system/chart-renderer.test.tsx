@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import { renderToStaticMarkup } from 'react-dom/server'
-import { ChartRenderer, toBandMeta } from '../../../src/components/system/ChartRenderer.js'
+import { ChartRenderer } from '../../../src/components/system/ChartRenderer.js'
+import { toBandMeta } from '../../../src/components/system/chart-label-utils.js'
 import type { ChartSpec } from '../../../src/contracts/data-contract.js'
 
 const modelAttribution = {

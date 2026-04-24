@@ -66,8 +66,7 @@
     },
     "knowledgeHub": {
       "title": "Bilimlar markazi",
-      "description": "lex.uz'dagi davlat qarorlari va xalqaro tashkilotlar baholari",
-      "placeholder": "Knowledge Hub v1 karkasi"
+      "description": "Stsenariylar va model dalillari bilan bog'langan islohotlar, tahliliy yozuvlar va manbalar."
     }
   },
   "overview": {
@@ -249,10 +248,114 @@
       "confirmDelete": "\"{{scenarioName}}\" saqlangan stsenariyini o'chirasizmi?"
     }
   },
+  "knowledgeHub": {
+    "pulse": {
+      "title": "Siyosiy bilimlar pulsi",
+      "description": "MVP uchun boshlang'ich tadqiqot kontenti: islohotlar, model dalillari va qayta ishlatiladigan manbalar bo'yicha.",
+      "metrics": {
+        "reformsTracked": { "label": "Kuzatilgan islohotlar", "value": "3" },
+        "researchBriefs": { "label": "Tahliliy yozuvlar", "value": "2" },
+        "references": { "label": "Ma'lumotnoma yozuvlari", "value": "3" },
+        "modelTags": { "label": "Model teglari", "value": "6" }
+      }
+    },
+    "index": {
+      "title": "Tadqiqot va islohotlar indeksi",
+      "description": "Stsenariy tahliliga qaytishdan oldin ichki materiallarni model va siyosat tegi bo'yicha filtrlang."
+    },
+    "filters": {
+      "model": "Model",
+      "tag": "Teg",
+      "allModels": "Barcha modellar",
+      "allTags": "Barcha teglar"
+    },
+    "tabs": {
+      "aria": "Bilimlar markazi bo'limlari",
+      "reforms": "Islohotlar trekeri",
+      "briefs": "Tahliliy yozuvlar",
+      "literature": "Manbalar indeksi"
+    },
+    "empty": "Tanlangan filtrlarga mos Bilimlar markazi materiali yo'q.",
+    "tags": {
+      "trade": "Savdo",
+      "structural": "Strukturaviy",
+      "monetary": "Pul-kredit",
+      "inflation": "Inflyatsiya",
+      "fiscal": "Fiskal",
+      "external": "Tashqi sektor",
+      "growth": "O'sish",
+      "prices": "Narxlar",
+      "methodology": "Metodologiya",
+      "nowcast": "Tezkor baholash"
+    },
+    "content": {
+      "reforms": {
+        "wto": {
+          "title": "JSTga qo'shilish paketi",
+          "summary": "PE, CGE va IO kanallari orqali tekshirilishi kerak bo'lgan tarif, bojxona va bozorga kirish islohotlarini kuzatadi.",
+          "meta": "Islohotlar trekeri · Savdo va strukturaviy"
+        },
+        "inflationTargeting": {
+          "title": "Inflyatsion targetlashga o'tish",
+          "summary": "MB kommunikatsiyasi, siyosat stavkasi yo'li va inflyatsion kutilmalarni QPM va nowcast dalillari bilan bog'laydi.",
+          "meta": "Islohotlar trekeri · Pul-kredit"
+        },
+        "energy": {
+          "title": "Energiya tariflari islohoti",
+          "summary": "Stsenariy sinovi uchun fiskal tejash, narxlarga o'tish va uy xo'jaliklari ta'sirini ajratadi.",
+          "meta": "Islohotlar trekeri · Fiskal va strukturaviy"
+        }
+      },
+      "briefs": {
+        "remittance": {
+          "title": "Pul o'tkazmalari riski yozuvi",
+          "summary": "Pul o'tkazmalari va tashqi talab pasayishi risklarini o'sish, kurs va fiskal metrikalar bo'yicha tekshirish shabloni.",
+          "meta": "Tahliliy yozuv · Stsenariyga tayyor"
+        },
+        "tariff": {
+          "title": "Tarif liberallashuvi brifi",
+          "summary": "Tarif pasayishini import narxlari, savdo yo'nalishi, fiskal tushum va farovonlik izohlari bilan bog'laydi.",
+          "meta": "Tahliliy yozuv · Savdo paketi"
+        }
+      },
+      "literature": {
+        "qpm": {
+          "title": "QPM metodologiya yozuvi",
+          "summary": "Yarim strukturaviy makromodellar, Fillips egri chiziqlari, siyosat qoidalari va ochiq iqtisodiyot uzatmalari bo'yicha indeks.",
+          "meta": "Manbalar indeksi · QPM"
+        },
+        "dfm": {
+          "title": "DFM nowcasting yozuvi",
+          "summary": "Aralash chastotali faktor modellari, Kalman filtri va nowcast qayta ko'rib chiqish amaliyoti bo'yicha indeks.",
+          "meta": "Manbalar indeksi · DFM"
+        },
+        "ioCge": {
+          "title": "IO va CGE model yozuvi",
+          "summary": "Multiplikator tahlili, SAM kalibrlash, Armington taxminlari va closure qoidalari bo'yicha indeks.",
+          "meta": "Manbalar indeksi · IO / CGE"
+        }
+      }
+    }
+  },
   "comparison": {
+    "headline": {
+      "title": "Asosiy solishtirish",
+      "description": "Tanlangan bazaviy stsenariyga nisbatan qiymatlar, KPI deltalari va stsenariy farqlari.",
+      "emptyBaseline": "Solishtirish metrikalarini ko'rish uchun bazaviy stsenariyni tanlang.",
+      "emptyAlternative": "Bazaviyga qarshi solishtirish uchun kamida bitta muqobil stsenariy qo'shing.",
+      "caption": "Tanlangan bazaviy stsenariyga nisbatan asosiy metrikalar va deltalar.",
+      "metricColumn": "Metrika",
+      "notAvailable": "Mavjud emas",
+      "notAvailableShort": "n/a",
+      "baselineUnavailable": "Bazaviy qiymat mavjud emas; delta hisoblanmadi",
+      "deltaAria": "Bazaviyga nisbatan o'zgarish: {{delta}}",
+      "kpiGridAria": "Solishtirish KPI kartalari",
+      "avgDelta": "Muqobil stsenariylar o'rtacha deltasi {{delta}}",
+      "noDelta": "Muqobil delta yo'q"
+    },
     "selector": {
       "title": "Stsenariy tanlagich",
-      "description": "2-3 ta stsenariyni tanlang va deltalarni talqin qilish uchun bitta bazaviy stsenariyni belgilang.",
+      "description": "2-4 ta stsenariyni tanlang va deltalarni talqin qilish uchun bitta bazaviy stsenariyni belgilang.",
       "empty": "Solishtirish uchun stsenariylar mavjud emas.",
       "selectedCount": "Tanlangan: {{count}} / {{max}}",
       "baselineLabel": "Bazaviy",

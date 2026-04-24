@@ -474,4 +474,38 @@ describe('scenarioStore', () => {
     assert.equal(loaded.run_interpretation, undefined)
     assert.equal(loaded.run_attribution, undefined)
   })
+
+  it('returns empty reads when localStorage access throws', () => {
+    localStorageHandle?.restore()
+    localStorageHandle = null
+    Object.defineProperty(globalThis, 'localStorage', {
+      configurable: true,
+      get() {
+        throw new Error('storage blocked')
+      },
+    })
+
+    assert.deepEqual(listScenarios(), [])
+    assert.equal(loadScenario('blocked'), null)
+    assert.equal(deleteScenario('blocked'), false)
+
+    Reflect.deleteProperty(globalThis, 'localStorage')
+  })
+
+  it('ignores per-key localStorage read failures while listing scenarios', () => {
+    const saved = saveScenario(buildScenarioInput('scenario-readable', 'Scenario Readable'))
+    const storage = globalThis.localStorage
+    const originalGetItem = storage.getItem.bind(storage)
+    storage.getItem = ((key: string) => {
+      if (key.includes('scenario-readable')) {
+        throw new Error('read blocked')
+      }
+      return originalGetItem(key)
+    }) as Storage['getItem']
+
+    assert.deepEqual(listScenarios(), [])
+
+    storage.getItem = originalGetItem as Storage['getItem']
+    assert.equal(loadScenario(saved.scenario_id)?.scenario_id, saved.scenario_id)
+  })
 })
