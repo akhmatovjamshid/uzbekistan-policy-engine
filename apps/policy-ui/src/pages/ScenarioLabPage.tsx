@@ -731,7 +731,14 @@ export function ScenarioLabPage() {
           saveStatus={ioSaveStatus}
         />
       ) : activeModelTab === 'saved_runs' ? (
-        <ScenarioLabSavedRunsPanel savedScenarios={savedScenarios} />
+        <ScenarioLabSavedRunsPanel
+          savedScenarios={savedScenarios}
+          onLoadScenario={(scenarioId) => {
+            handleLoadSavedScenario(scenarioId)
+            setActiveModelTab('macro_qpm')
+          }}
+          onDeleteScenario={handleDeleteSavedScenario}
+        />
       ) : (
         <ScenarioLabTabShell tab={activeModelTab} savedRunCount={savedScenarios.length} />
       )}

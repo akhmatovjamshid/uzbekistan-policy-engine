@@ -178,7 +178,9 @@
     "saveDraft": "Qoralamani saqlash",
     "runScenario": "Stsenariyni ishga tushirish",
     "retryRun": "Qayta ishga tushirish",
-    "close": "Yopish"
+    "close": "Yopish",
+    "load": "Yuklash",
+    "delete": "O'chirish"
   },
   "scenarioLab": {
     "header": {
@@ -200,6 +202,9 @@
       "tabsAria": "Stsenariy simulyatori model tablari",
       "macroQpm": "Makro / QPM",
       "ioSectorShock": "I-O sektor shoki",
+      "peTradeShock": "PE savdo shoki",
+      "cgeReformShock": "CGE islohot shoki",
+      "fppFiscalPath": "FPP fiskal trayektoriya",
       "savedRuns": "Saqlangan ishlar",
       "synthesisPreview": "Sintez preview",
       "status": {
@@ -211,6 +216,7 @@
     },
     "modelTabShell": {
       "eyebrow": "Model tabi",
+      "plannedStatus": "Rejada / hisoblash o'chirilgan",
       "io": {
         "title": "I-O sektor shoki",
         "description": "Bu tab MCP bilan mos I-O analytics contract asosida yakuniy talabning sektorlar bo'ylab uzatilishini tahlil qiladi.",
@@ -218,6 +224,33 @@
           "inputs": "Kirishlar: talab turi, mlrd so'mdagi miqdor, taqsimlash rejimi va ixtiyoriy sektor tanlovi.",
           "outputs": "Chiqishlar: ishlab chiqarish, qo'shilgan qiymat, bandlik ta'sirlari, eng ko'p ta'sirlangan sektorlar va linkage klasslari.",
           "boundary": "Chegara: faqat sektor uzatish dalili; makroprognoz yoki umumiy muvozanat natijasi emas."
+        }
+      },
+      "pe": {
+        "title": "PE savdo shoki",
+        "description": "Rejalashtirilgan qisman muvozanat savdo tahlili. Bu sprintda tarif yoki savdo hisob-kitobi faol emas.",
+        "items": {
+          "inputs": "Kutiladigan kirishlar: tarif yoki import narxi shoki, HS/mahsulot guruhi, hamkor, elastiklik to'plami va stsenariy yorlig'i.",
+          "outputs": "Kutiladigan chiqishlar: bevosita import/eksport miqdor ta'sirlari, narxlar, ta'sirlangan mahsulot guruhlari va elastiklik sezgirligi.",
+          "boundary": "Integratsiya chegarasi: I-O, CGE yoki sintez kontraktlariga uzatilmaguncha faqat bevosita savdo kanali dalili."
+        }
+      },
+      "cge": {
+        "title": "CGE islohot shoki",
+        "description": "Rejalashtirilgan butun iqtisodiyot bo'yicha islohot tahlili. Tab tayyorgarlik placeholderi va CGE modelini ishga tushirmaydi.",
+        "items": {
+          "inputs": "Kutiladigan kirishlar: unumdorlik, soliqlar, tariflar, energiya, mehnat, kapital va yopilish taxminlari.",
+          "outputs": "Kutiladigan chiqishlar: farovonlik, real YaIM, sektorlar qayta taqsimoti, narxlar va mavjud bo'lsa taqsimot ko'rsatkichlari.",
+          "boundary": "Integratsiya chegarasi: umumiy muvozanat natijalari faollashishdan oldin CGE kontrakti va kalibrlangan SAM talab qiladi."
+        }
+      },
+      "fpp": {
+        "title": "FPP fiskal trayektoriya",
+        "description": "Rejalashtirilgan fiskal dasturlash trayektoriyasi. Fiskal kontrakt tayyor bo'lmaguncha hisoblash o'chirilgan.",
+        "items": {
+          "inputs": "Kutiladigan kirishlar: daromad, xarajat, moliyalashtirish, qarz zaxirasi, foiz stavkasi va o'sish taxminlari.",
+          "outputs": "Kutiladigan chiqishlar: defitsit, qarz trayektoriyasi, moliyalashtirish bo'shlig'i, fiskal buferlar va risk flaglari.",
+          "boundary": "Integratsiya chegarasi: faqat fiskal barqarorlik dalili; muvofiqlashtirishsiz QPM, I-O, PE yoki CGE natijalarini to'ldirmaydi."
         }
       },
       "saved": {
@@ -251,7 +284,9 @@
       "exchangeRate": "FX taxmini, so'm/USD",
       "distribution": "Taqsimlash",
       "sector": "Sektor",
+      "sectorHint": "Bitta sektor shoklari yakuniy talab vektorini {{count}} sektordan biriga yo'naltiradi.",
       "boundary": "Faqat sektor uzatishi. Qo'shilgan qiymat I-O hisob-kitobidagi YaIM hissasi, lekin makroprognoz, QPM stsenariy effekti yoki umumiy muvozanat natijasi emas.",
+      "employmentBoundary": "Bandlik chiziqli employment-intensity bahosi, mehnat bozori prognozi emas.",
       "topSectors": "Eng ko'p ta'sirlangan sektorlar",
       "caveats": "Manba cheklovlari",
       "saveRun": "I-O ishini saqlash",
@@ -274,6 +309,15 @@
         "bln_uzs": "Mlrd so'm",
         "mln_usd": "Mln USD"
       },
+      "summary": {
+        "title": "Ish qisqacha xulosasi",
+        "bucket": "Talab guruhi",
+        "amount": "Miqdor",
+        "fx": "FX taxmini",
+        "distribution": "Taqsimlash rejimi",
+        "selectedSector": "Tanlangan sektor",
+        "dataVintage": "Ma'lumot vintaji"
+      },
       "kpis": {
         "output": "Ishlab chiqarish ta'siri",
         "valueAdded": "Qo'shilgan qiymat ta'siri",
@@ -293,8 +337,20 @@
       "title": "Saqlangan ishlar",
       "description": "Ushbu brauzer sessiyasida {{count}} ta saqlangan ish mavjud.",
       "empty": "Saqlangan makro va I-O ishlari saqlagandan keyin shu yerda ko'rinadi.",
+      "filtersAria": "Saqlangan ish filtrlari",
+      "openInComparison": "Comparison'da ochish",
       "ioBoundary": "Faqat sektor uzatish dalili; bu makroprognoz yoki umumiy muvozanat natijasi emas.",
       "macroFallback": "Saqlangan QPM makro stsenariysi.",
+      "filters": {
+        "all": "Hammasi",
+        "macro_qpm": "Makro/QPM",
+        "io": "I-O"
+      },
+      "filteredEmpty": {
+        "all": "Bu filtr bo'yicha saqlangan ish yo'q.",
+        "macro_qpm": "Hali saqlangan Macro/QPM ishi yo'q.",
+        "io": "Hali saqlangan I-O ishi yo'q."
+      },
       "type": {
         "io": "I-O sektor shoki",
         "macro": "Makro/QPM"
@@ -302,6 +358,7 @@
       "fields": {
         "type": "Tur",
         "data": "Ma'lumot",
+        "source": "Manba vintaji",
         "saved": "Saqlangan"
       }
     },
@@ -462,7 +519,9 @@
     },
     "savedIo": {
       "title": "Saqlangan I-O sektor shoklari",
-      "description": "Bu saqlangan ishlar sektor tahlili sifatida ko'rsatiladi. Ular yuqoridagi makro qiyoslash qatorlarini o'zgartirmaydi.",
+      "description": "{{count}} ta saqlangan ish sektor tahlili sifatida ko'rsatiladi. Ular yuqoridagi makro qiyoslash qatorlarini o'zgartirmaydi.",
+      "emptyWithAvailable": "{{count}} ta saqlangan I-O ishi mavjud. Ularni qo'shsangiz, makro jadval ostida sektor bloklari ko'rinadi.",
+      "addAction": "Saqlangan ishni qo'shish",
       "type": "I-O ishi",
       "topSectors": "Top sektorlar",
       "boundary": "Chegara: qo'shilgan qiymat I-O hisob-kitob hissasi, sababiy makro stsenariy deltasi emas.",

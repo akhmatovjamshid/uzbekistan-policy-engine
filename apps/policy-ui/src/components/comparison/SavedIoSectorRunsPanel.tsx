@@ -3,6 +3,8 @@ import { isIoSectorShockRecord, type SavedScenarioRecord } from '../../state/sce
 
 type SavedIoSectorRunsPanelProps = {
   records: SavedScenarioRecord[]
+  availableCount?: number
+  onAddSavedRun?: () => void
 }
 
 function formatNumber(value: number, digits = 1): string {
@@ -19,11 +21,30 @@ function formatOptionalNumber(value: number | null): string {
   return formatNumber(value, 0)
 }
 
-export function SavedIoSectorRunsPanel({ records }: SavedIoSectorRunsPanelProps) {
+export function SavedIoSectorRunsPanel({
+  records,
+  availableCount = records.length,
+  onAddSavedRun,
+}: SavedIoSectorRunsPanelProps) {
   const { t } = useTranslation()
   const ioRecords = records.filter(isIoSectorShockRecord)
 
   if (ioRecords.length === 0) {
+    if (availableCount > 0) {
+      return (
+        <section className="cmp-saved-io cmp-saved-io--empty" aria-labelledby="cmp-saved-io-title">
+          <div className="cmp-saved-io__head">
+            <h4 id="cmp-saved-io-title">{t('comparison.savedIo.title')}</h4>
+            <p>{t('comparison.savedIo.emptyWithAvailable', { count: availableCount })}</p>
+          </div>
+          {onAddSavedRun ? (
+            <button type="button" className="ui-secondary-action" onClick={onAddSavedRun}>
+              {t('comparison.savedIo.addAction')}
+            </button>
+          ) : null}
+        </section>
+      )
+    }
     return null
   }
 
@@ -31,7 +52,7 @@ export function SavedIoSectorRunsPanel({ records }: SavedIoSectorRunsPanelProps)
     <section className="cmp-saved-io" aria-labelledby="cmp-saved-io-title">
       <div className="cmp-saved-io__head">
         <h4 id="cmp-saved-io-title">{t('comparison.savedIo.title')}</h4>
-        <p>{t('comparison.savedIo.description')}</p>
+        <p>{t('comparison.savedIo.description', { count: ioRecords.length })}</p>
       </div>
 
       <div className="cmp-saved-io__grid">

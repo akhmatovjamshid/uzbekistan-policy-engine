@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useLocation } from 'react-router-dom'
 import { AddSavedScenarioModal } from '../components/comparison/AddSavedScenarioModal'
 import { ComparisonSelector } from '../components/comparison/ComparisonSelector'
 import { DeltaTable } from '../components/comparison/DeltaTable'
@@ -26,13 +27,28 @@ import './comparison.css'
 
 const EMPTY_SAVED_SCENARIOS: [] = []
 
+function readLinkedSavedScenarioIds(state: unknown): string[] {
+  if (typeof state !== 'object' || state === null) {
+    return []
+  }
+  const candidate = (state as { addSavedScenarioIds?: unknown }).addSavedScenarioIds
+  if (!Array.isArray(candidate)) {
+    return []
+  }
+  return candidate.filter((id): id is string => typeof id === 'string' && id.length > 0)
+}
+
 export function ComparisonPage() {
   const { t } = useTranslation()
+  const location = useLocation()
   const [sourceState, setSourceState] = useState(getInitialComparisonSourceState)
   const [selectedIdsOverride, setSelectedIdsOverride] = useState<string[] | null>(null)
   const [baselineIdOverride, setBaselineIdOverride] = useState<string | null>(null)
   const [isSavedScenarioModalOpen, setIsSavedScenarioModalOpen] = useState(false)
-  const [addedSavedScenarioIds, setAddedSavedScenarioIds] = useState<string[]>([])
+  const [linkedSavedScenarioIds] = useState<string[]>(() =>
+    readLinkedSavedScenarioIds(location.state),
+  )
+  const [addedSavedScenarioIds, setAddedSavedScenarioIds] = useState<string[]>(linkedSavedScenarioIds)
   const savedScenarios = useSyncExternalStore(
     subscribeScenarioStore,
     listScenarios,
@@ -62,11 +78,30 @@ export function ComparisonPage() {
     if (!workspace) return []
     const scenarioIds = new Set(workspace.scenarios.map((scenario) => scenario.scenario_id))
     const candidate = selectedIdsOverride ?? workspace.default_selected_ids
-    const normalized = candidate.filter((id) => scenarioIds.has(id)).slice(0, COMPARISON_SLOT_LIMIT)
+    const linkedMacroScenarioIds =
+      selectedIdsOverride === null
+        ? savedScenarios
+            .filter(
+              (scenario) =>
+                linkedSavedScenarioIds.includes(scenario.scenario_id) &&
+                !isIoSectorShockRecord(scenario),
+            )
+            .map((scenario) => scenario.scenario_id)
+        : []
+    const candidateWithLinkedMacro =
+      linkedMacroScenarioIds.length > 0
+        ? addSavedScenarioIdsToSelection({
+            currentSelectedIds: candidate,
+            baselineId: baselineIdOverride ?? workspace.default_baseline_id,
+            savedScenarioIds: linkedMacroScenarioIds,
+            slotLimit: COMPARISON_SLOT_LIMIT,
+          })
+        : candidate
+    const normalized = candidateWithLinkedMacro.filter((id) => scenarioIds.has(id)).slice(0, COMPARISON_SLOT_LIMIT)
     return normalized.length >= 2
       ? normalized
       : workspace.scenarios.map((scenario) => scenario.scenario_id).slice(0, COMPARISON_SLOT_LIMIT)
-  }, [workspace, selectedIdsOverride])
+  }, [baselineIdOverride, linkedSavedScenarioIds, savedScenarios, selectedIdsOverride, workspace])
 
   const baselineId = useMemo(() => {
     if (!workspace) return ''
@@ -85,6 +120,10 @@ export function ComparisonPage() {
     const addedIds = new Set(addedSavedScenarioIds)
     return savedScenarios.filter((scenario) => addedIds.has(scenario.scenario_id) && isIoSectorShockRecord(scenario))
   }, [addedSavedScenarioIds, savedScenarios])
+  const savedIoRunCount = useMemo(
+    () => savedScenarios.filter(isIoSectorShockRecord).length,
+    [savedScenarios],
+  )
 
   async function handleRetry() {
     setSourceState((prev) => beginRetry(prev))
@@ -235,7 +274,11 @@ export function ComparisonPage() {
         <SectorEvidencePanel evidence={sourceState.ioSectorEvidence} />
       </div>
 
-      <SavedIoSectorRunsPanel records={selectedSavedIoRecords} />
+      <SavedIoSectorRunsPanel
+        records={selectedSavedIoRecords}
+        availableCount={savedIoRunCount}
+        onAddSavedRun={handleAddSavedScenario}
+      />
 
       <TradeoffSummaryPanel tradeoff={content.tradeoff} scenarios={content.scenarios} />
     </PageContainer>

@@ -54,8 +54,11 @@ async function createTestI18n() {
               exchangeRate: 'FX assumption, UZS/USD',
               distribution: 'Distribution',
               sector: 'Sector',
+              sectorHint: 'Single-sector shocks route the final-demand vector to one of {{count}} sectors.',
               boundary:
                 'Sector transmission only. Value-added is an I-O accounting contribution to GDP, not a macro forecast.',
+              employmentBoundary:
+                'Employment is a linear employment-intensity estimate, not a labor-market forecast.',
               topSectors: 'Top affected sectors',
               caveats: 'Source caveats',
               convertedShock: 'Converted demand shock: {{amount}} bln UZS',
@@ -74,6 +77,15 @@ async function createTestI18n() {
               currencies: {
                 bln_uzs: 'Billion UZS',
                 mln_usd: 'Million USD',
+              },
+              summary: {
+                title: 'Run summary',
+                bucket: 'Demand bucket',
+                amount: 'Amount',
+                fx: 'FX assumption',
+                distribution: 'Distribution mode',
+                selectedSector: 'Selected sector',
+                dataVintage: 'Data vintage',
               },
               kpis: {
                 output: 'Output effect',
@@ -119,10 +131,13 @@ describe('IoSectorShockPanel', () => {
     assert.match(markup, /Shock amount/)
     assert.match(markup, /Currency/)
     assert.match(markup, /Top affected sectors/)
+    assert.match(markup, /Run summary/)
+    assert.match(markup, /Demand bucket/)
     assert.match(markup, /GDP accounting contribution/)
     assert.match(markup, /Employment effect/)
     assert.doesNotMatch(markup, /n\/a/)
     assert.match(markup, /not a macro forecast/)
+    assert.match(markup, /linear employment-intensity estimate/)
   })
 
   it('renders a non-breaking fallback when IO analytics is unavailable', async () => {

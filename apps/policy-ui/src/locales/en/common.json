@@ -178,7 +178,9 @@
     "saveDraft": "Save draft",
     "runScenario": "Run scenario",
     "retryRun": "Retry run",
-    "close": "Close"
+    "close": "Close",
+    "load": "Load",
+    "delete": "Delete"
   },
   "scenarioLab": {
     "header": {
@@ -200,6 +202,9 @@
       "tabsAria": "Scenario Lab model tabs",
       "macroQpm": "Macro / QPM",
       "ioSectorShock": "I-O Sector Shock",
+      "peTradeShock": "PE Trade Shock",
+      "cgeReformShock": "CGE Reform Shock",
+      "fppFiscalPath": "FPP Fiscal Path",
       "savedRuns": "Saved Runs",
       "synthesisPreview": "Synthesis Preview",
       "status": {
@@ -211,6 +216,7 @@
     },
     "modelTabShell": {
       "eyebrow": "Model tab",
+      "plannedStatus": "Planned / disabled",
       "io": {
         "title": "I-O Sector Shock",
         "description": "This tab will host final-demand sector transmission analysis using the MCP-aligned I-O analytics contract.",
@@ -218,6 +224,33 @@
           "inputs": "Inputs: demand bucket, amount in billion UZS, distribution mode, and optional sector selector.",
           "outputs": "Outputs: output, value-added, employment effects, top affected sectors, and linkage classes.",
           "boundary": "Boundary: sector transmission evidence only; not a macro forecast or general-equilibrium result."
+        }
+      },
+      "pe": {
+        "title": "PE Trade Shock",
+        "description": "Planned partial-equilibrium trade analysis. No tariff or trade computation is active in this sprint.",
+        "items": {
+          "inputs": "Expected inputs: tariff or import-price shock, HS/product group, partner, elasticity set, and scenario label.",
+          "outputs": "Expected outputs: direct import/export quantity effects, price effects, affected product groups, and elasticity sensitivity.",
+          "boundary": "Integration boundary: direct trade-channel evidence only until it is handed to I-O, CGE, or synthesis contracts."
+        }
+      },
+      "cge": {
+        "title": "CGE Reform Shock",
+        "description": "Planned economy-wide reform analysis. The tab is a readiness placeholder and does not run a CGE model.",
+        "items": {
+          "inputs": "Expected inputs: productivity, tax, tariff, energy, labor, capital, and closure assumptions.",
+          "outputs": "Expected outputs: welfare, real GDP, sector reallocation, prices, and distributional indicators where supported.",
+          "boundary": "Integration boundary: general-equilibrium results require a scoped CGE contract and calibrated SAM before activation."
+        }
+      },
+      "fpp": {
+        "title": "FPP Fiscal Path",
+        "description": "Planned fiscal-programming path analysis. The tab is disabled for computation until the fiscal contract is ready.",
+        "items": {
+          "inputs": "Expected inputs: revenue, expenditure, financing, debt stock, interest-rate, and growth assumptions.",
+          "outputs": "Expected outputs: deficit, debt path, financing gap, fiscal buffers, and risk flags.",
+          "boundary": "Integration boundary: fiscal sustainability evidence only; it will not backfill QPM, I-O, PE, or CGE outputs without reconciliation."
         }
       },
       "saved": {
@@ -251,7 +284,9 @@
       "exchangeRate": "FX assumption, UZS/USD",
       "distribution": "Distribution",
       "sector": "Sector",
+      "sectorHint": "Single-sector shocks route the final-demand vector to one of {{count}} sectors.",
       "boundary": "Sector transmission only. Value-added is an I-O accounting contribution to GDP, not a macro forecast, QPM scenario effect, or general-equilibrium result.",
+      "employmentBoundary": "Employment is a linear employment-intensity estimate, not a labor-market forecast.",
       "topSectors": "Top affected sectors",
       "caveats": "Source caveats",
       "saveRun": "Save I-O run",
@@ -274,6 +309,15 @@
         "bln_uzs": "Billion UZS",
         "mln_usd": "Million USD"
       },
+      "summary": {
+        "title": "Run summary",
+        "bucket": "Demand bucket",
+        "amount": "Amount",
+        "fx": "FX assumption",
+        "distribution": "Distribution mode",
+        "selectedSector": "Selected sector",
+        "dataVintage": "Data vintage"
+      },
       "kpis": {
         "output": "Output effect",
         "valueAdded": "Value-added effect",
@@ -293,8 +337,20 @@
       "title": "Saved Runs",
       "description": "{{count}} saved run(s) are available in this browser session.",
       "empty": "Saved macro and I-O runs will appear here after you save them.",
+      "filtersAria": "Saved run filters",
+      "openInComparison": "Open in Comparison",
       "ioBoundary": "Sector transmission evidence only; this is not a macro forecast or general-equilibrium result.",
       "macroFallback": "Saved QPM macro scenario.",
+      "filters": {
+        "all": "All",
+        "macro_qpm": "Macro/QPM",
+        "io": "I-O"
+      },
+      "filteredEmpty": {
+        "all": "No saved runs match this filter.",
+        "macro_qpm": "No saved Macro/QPM runs yet.",
+        "io": "No saved I-O runs yet."
+      },
       "type": {
         "io": "I-O sector shock",
         "macro": "Macro/QPM"
@@ -302,6 +358,7 @@
       "fields": {
         "type": "Type",
         "data": "Data",
+        "source": "Source vintage",
         "saved": "Saved"
       }
     },
@@ -462,7 +519,9 @@
     },
     "savedIo": {
       "title": "Saved I-O sector shock runs",
-      "description": "These saved runs are shown as sector transmission analytics. They do not change the macro comparison rows above.",
+      "description": "{{count}} saved run(s) are shown as sector transmission analytics. They do not change the macro comparison rows above.",
+      "emptyWithAvailable": "{{count}} saved I-O run(s) are available. Add them to show sector transmission blocks below the macro table.",
+      "addAction": "Add saved run",
       "type": "I-O run",
       "topSectors": "Top sectors",
       "boundary": "Boundary: value-added is an I-O accounting contribution, not a causal macro scenario delta.",

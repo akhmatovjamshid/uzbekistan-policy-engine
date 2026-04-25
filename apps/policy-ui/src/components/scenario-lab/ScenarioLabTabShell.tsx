@@ -12,6 +12,21 @@ const SHELL_ITEMS: Record<ScenarioLabTabShellProps['tab'], string[]> = {
     'scenarioLab.modelTabShell.io.items.outputs',
     'scenarioLab.modelTabShell.io.items.boundary',
   ],
+  pe_trade_shock: [
+    'scenarioLab.modelTabShell.pe.items.inputs',
+    'scenarioLab.modelTabShell.pe.items.outputs',
+    'scenarioLab.modelTabShell.pe.items.boundary',
+  ],
+  cge_reform_shock: [
+    'scenarioLab.modelTabShell.cge.items.inputs',
+    'scenarioLab.modelTabShell.cge.items.outputs',
+    'scenarioLab.modelTabShell.cge.items.boundary',
+  ],
+  fpp_fiscal_path: [
+    'scenarioLab.modelTabShell.fpp.items.inputs',
+    'scenarioLab.modelTabShell.fpp.items.outputs',
+    'scenarioLab.modelTabShell.fpp.items.boundary',
+  ],
   saved_runs: [
     'scenarioLab.modelTabShell.saved.items.macro',
     'scenarioLab.modelTabShell.saved.items.io',
@@ -26,15 +41,28 @@ const SHELL_ITEMS: Record<ScenarioLabTabShellProps['tab'], string[]> = {
 
 const TITLE_KEYS: Record<ScenarioLabTabShellProps['tab'], string> = {
   io_sector_shock: 'scenarioLab.modelTabShell.io.title',
+  pe_trade_shock: 'scenarioLab.modelTabShell.pe.title',
+  cge_reform_shock: 'scenarioLab.modelTabShell.cge.title',
+  fpp_fiscal_path: 'scenarioLab.modelTabShell.fpp.title',
   saved_runs: 'scenarioLab.modelTabShell.saved.title',
   synthesis_preview: 'scenarioLab.modelTabShell.synthesis.title',
 }
 
 const DESCRIPTION_KEYS: Record<ScenarioLabTabShellProps['tab'], string> = {
   io_sector_shock: 'scenarioLab.modelTabShell.io.description',
+  pe_trade_shock: 'scenarioLab.modelTabShell.pe.description',
+  cge_reform_shock: 'scenarioLab.modelTabShell.cge.description',
+  fpp_fiscal_path: 'scenarioLab.modelTabShell.fpp.description',
   saved_runs: 'scenarioLab.modelTabShell.saved.description',
   synthesis_preview: 'scenarioLab.modelTabShell.synthesis.description',
 }
+
+const PLANNED_TABS = new Set<ScenarioLabTabShellProps['tab']>([
+  'pe_trade_shock',
+  'cge_reform_shock',
+  'fpp_fiscal_path',
+  'synthesis_preview',
+])
 
 export function ScenarioLabTabShell({ tab, savedRunCount = 0 }: ScenarioLabTabShellProps) {
   const { t } = useTranslation()
@@ -50,6 +78,11 @@ export function ScenarioLabTabShell({ tab, savedRunCount = 0 }: ScenarioLabTabSh
       <div className="scenario-tab-shell__intro">
         <p className="scenario-tab-shell__eyebrow">{t('scenarioLab.modelTabShell.eyebrow')}</p>
         <h2 id={titleId}>{t(TITLE_KEYS[tab])}</h2>
+        {PLANNED_TABS.has(tab) ? (
+          <span className="scenario-tab-shell__status">
+            {t('scenarioLab.modelTabShell.plannedStatus')}
+          </span>
+        ) : null}
         <p>{t(DESCRIPTION_KEYS[tab], { count: savedRunCount })}</p>
       </div>
       <div className="scenario-tab-shell__body">

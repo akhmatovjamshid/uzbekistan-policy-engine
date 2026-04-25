@@ -3,6 +3,9 @@ import { useTranslation } from 'react-i18next'
 export type ScenarioLabModelTab =
   | 'macro_qpm'
   | 'io_sector_shock'
+  | 'pe_trade_shock'
+  | 'cge_reform_shock'
+  | 'fpp_fiscal_path'
   | 'saved_runs'
   | 'synthesis_preview'
 
@@ -10,7 +13,6 @@ type ScenarioLabModelTabDefinition = {
   id: ScenarioLabModelTab
   labelKey: string
   statusKey: string
-  disabled?: boolean
 }
 
 const SCENARIO_LAB_MODEL_TABS: ScenarioLabModelTabDefinition[] = [
@@ -25,6 +27,21 @@ const SCENARIO_LAB_MODEL_TABS: ScenarioLabModelTabDefinition[] = [
     statusKey: 'scenarioLab.modelTabs.status.next',
   },
   {
+    id: 'pe_trade_shock',
+    labelKey: 'scenarioLab.modelTabs.peTradeShock',
+    statusKey: 'scenarioLab.modelTabs.status.planned',
+  },
+  {
+    id: 'cge_reform_shock',
+    labelKey: 'scenarioLab.modelTabs.cgeReformShock',
+    statusKey: 'scenarioLab.modelTabs.status.planned',
+  },
+  {
+    id: 'fpp_fiscal_path',
+    labelKey: 'scenarioLab.modelTabs.fppFiscalPath',
+    statusKey: 'scenarioLab.modelTabs.status.planned',
+  },
+  {
     id: 'saved_runs',
     labelKey: 'scenarioLab.modelTabs.savedRuns',
     statusKey: 'scenarioLab.modelTabs.status.shell',
@@ -33,7 +50,6 @@ const SCENARIO_LAB_MODEL_TABS: ScenarioLabModelTabDefinition[] = [
     id: 'synthesis_preview',
     labelKey: 'scenarioLab.modelTabs.synthesisPreview',
     statusKey: 'scenarioLab.modelTabs.status.planned',
-    disabled: true,
   },
 ]
 
@@ -66,15 +82,9 @@ export function ScenarioLabModelTabs({ activeTab, onTabChange }: ScenarioLabMode
               role="tab"
               aria-selected={isActive}
               aria-controls={`scenario-model-tabpanel-${tab.id}`}
-              aria-disabled={tab.disabled ? 'true' : undefined}
-              tabIndex={isActive ? 0 : -1}
+              tabIndex={0}
               className={isActive ? 'scenario-model-tabs__tab active' : 'scenario-model-tabs__tab'}
-              disabled={tab.disabled}
-              onClick={() => {
-                if (!tab.disabled) {
-                  onTabChange(tab.id)
-                }
-              }}
+              onClick={() => onTabChange(tab.id)}
             >
               <span>{t(tab.labelKey)}</span>
               <small>{t(tab.statusKey)}</small>

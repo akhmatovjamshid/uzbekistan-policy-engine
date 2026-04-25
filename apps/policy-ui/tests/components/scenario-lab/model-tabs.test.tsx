@@ -24,6 +24,9 @@ async function createTestI18n() {
               tabsAria: 'Scenario Lab model tabs',
               macroQpm: 'Macro / QPM',
               ioSectorShock: 'I-O Sector Shock',
+              peTradeShock: 'PE Trade Shock',
+              cgeReformShock: 'CGE Reform Shock',
+              fppFiscalPath: 'FPP Fiscal Path',
               savedRuns: 'Saved Runs',
               synthesisPreview: 'Synthesis Preview',
               status: {
@@ -35,6 +38,7 @@ async function createTestI18n() {
             },
             modelTabShell: {
               eyebrow: 'Model tab',
+              plannedStatus: 'Planned / disabled',
               io: {
                 title: 'I-O Sector Shock',
                 description: 'MCP-aligned I-O analytics contract.',
@@ -42,6 +46,33 @@ async function createTestI18n() {
                   inputs: 'Inputs: demand bucket and amount.',
                   outputs: 'Outputs: sector effects.',
                   boundary: 'Boundary: sector transmission evidence only; not a macro forecast.',
+                },
+              },
+              pe: {
+                title: 'PE Trade Shock',
+                description: 'Planned partial-equilibrium trade analysis.',
+                items: {
+                  inputs: 'Expected inputs: tariff and product group.',
+                  outputs: 'Expected outputs: import and export effects.',
+                  boundary: 'Integration boundary: direct trade-channel evidence only.',
+                },
+              },
+              cge: {
+                title: 'CGE Reform Shock',
+                description: 'Planned economy-wide reform analysis.',
+                items: {
+                  inputs: 'Expected inputs: productivity and tax assumptions.',
+                  outputs: 'Expected outputs: welfare and sector reallocation.',
+                  boundary: 'Integration boundary: CGE contract required before activation.',
+                },
+              },
+              fpp: {
+                title: 'FPP Fiscal Path',
+                description: 'Planned fiscal-programming path analysis.',
+                items: {
+                  inputs: 'Expected inputs: revenue and debt assumptions.',
+                  outputs: 'Expected outputs: deficit and debt path.',
+                  boundary: 'Integration boundary: fiscal sustainability evidence only.',
                 },
               },
               saved: {
@@ -72,7 +103,7 @@ async function createTestI18n() {
 }
 
 describe('ScenarioLabModelTabs', () => {
-  it('renders Macro/QPM as active and keeps Synthesis disabled', async () => {
+  it('renders Macro/QPM as active and shows planned model tabs', async () => {
     const i18n = await createTestI18n()
     const markup = renderToStaticMarkup(
       <I18nextProvider i18n={i18n}>
@@ -83,8 +114,10 @@ describe('ScenarioLabModelTabs', () => {
     assert.match(markup, /role="tablist"/)
     assert.match(markup, /Macro \/ QPM/)
     assert.match(markup, /I-O Sector Shock/)
+    assert.match(markup, /PE Trade Shock/)
+    assert.match(markup, /CGE Reform Shock/)
+    assert.match(markup, /FPP Fiscal Path/)
     assert.match(markup, /aria-selected="true"[^>]*><span>Macro \/ QPM<\/span>/)
-    assert.match(markup, /aria-disabled="true"[^>]*disabled="">/)
     assert.match(markup, /Synthesis Preview/)
   })
 
@@ -99,5 +132,32 @@ describe('ScenarioLabModelTabs', () => {
     assert.match(markup, /I-O Sector Shock/)
     assert.match(markup, /sector transmission evidence only/)
     assert.match(markup, /not a macro forecast/)
+  })
+
+  it('renders planned PE/CGE/FPP placeholders without implying active computation', async () => {
+    const i18n = await createTestI18n()
+    const peMarkup = renderToStaticMarkup(
+      <I18nextProvider i18n={i18n}>
+        <ScenarioLabTabShell tab="pe_trade_shock" />
+      </I18nextProvider>,
+    )
+    const cgeMarkup = renderToStaticMarkup(
+      <I18nextProvider i18n={i18n}>
+        <ScenarioLabTabShell tab="cge_reform_shock" />
+      </I18nextProvider>,
+    )
+    const fppMarkup = renderToStaticMarkup(
+      <I18nextProvider i18n={i18n}>
+        <ScenarioLabTabShell tab="fpp_fiscal_path" />
+      </I18nextProvider>,
+    )
+
+    assert.match(peMarkup, /Planned \/ disabled/)
+    assert.match(peMarkup, /Expected inputs: tariff/)
+    assert.match(peMarkup, /direct trade-channel evidence only/)
+    assert.match(cgeMarkup, /Planned \/ disabled/)
+    assert.match(cgeMarkup, /CGE contract required before activation/)
+    assert.match(fppMarkup, /Planned \/ disabled/)
+    assert.match(fppMarkup, /fiscal sustainability evidence only/)
   })
 })

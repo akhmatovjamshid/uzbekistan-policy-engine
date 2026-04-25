@@ -21,7 +21,10 @@ async function createTestI18n() {
             savedIo: {
               title: 'Saved I-O sector shock runs',
               description:
-                'These saved runs are shown as sector transmission analytics. They do not change the macro comparison rows above.',
+                '{{count}} saved run(s) are shown as sector transmission analytics. They do not change the macro comparison rows above.',
+              emptyWithAvailable:
+                '{{count}} saved I-O run(s) are available. Add them to show sector transmission blocks below the macro table.',
+              addAction: 'Add saved run',
               type: 'I-O run',
               topSectors: 'Top sectors',
               boundary:
@@ -129,5 +132,17 @@ describe('SavedIoSectorRunsPanel', () => {
     )
 
     assert.equal(markup, '')
+  })
+
+  it('renders an add prompt when saved I-O runs exist but none are selected', async () => {
+    const i18n = await createTestI18n()
+    const markup = renderToStaticMarkup(
+      <I18nextProvider i18n={i18n}>
+        <SavedIoSectorRunsPanel records={[]} availableCount={2} onAddSavedRun={() => {}} />
+      </I18nextProvider>,
+    )
+
+    assert.match(markup, /2 saved I-O run/)
+    assert.match(markup, /Add saved run/)
   })
 })

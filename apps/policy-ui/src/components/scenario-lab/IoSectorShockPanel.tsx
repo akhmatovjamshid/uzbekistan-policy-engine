@@ -55,6 +55,7 @@ export function IoSectorShockPanel({ state, onRetry, onSaveRun, saveStatus }: Io
   const selectedSectorCode = state.workspace?.sectors.some((sector) => sector.code === sectorCode)
     ? sectorCode
     : state.workspace?.sectors[0]?.code
+  const selectedSector = state.workspace?.sectors.find((sector) => sector.code === selectedSectorCode)
 
   const request: ScenarioLabIoShockRequest = useMemo(
     () => ({
@@ -192,7 +193,7 @@ export function IoSectorShockPanel({ state, onRetry, onSaveRun, saveStatus }: Io
           </label>
 
           {distribution === 'sector' ? (
-            <label>
+            <label className="io-shock__sector-select">
               <span>{t('scenarioLab.ioShock.sector')}</span>
               <select value={selectedSectorCode} onChange={(event) => setSectorCode(event.target.value)}>
                 {state.workspace.sectors.map((sector) => (
@@ -201,10 +202,52 @@ export function IoSectorShockPanel({ state, onRetry, onSaveRun, saveStatus }: Io
                   </option>
                 ))}
               </select>
+              <small>{t('scenarioLab.ioShock.sectorHint', { count: state.workspace.sector_count })}</small>
             </label>
           ) : null}
 
-          <p className="io-shock__boundary">{t('scenarioLab.ioShock.boundary')}</p>
+          <div className="io-shock__summary" aria-label={t('scenarioLab.ioShock.summary.title')}>
+            <h3>{t('scenarioLab.ioShock.summary.title')}</h3>
+            <dl>
+              <div>
+                <dt>{t('scenarioLab.ioShock.summary.bucket')}</dt>
+                <dd>{t(`scenarioLab.ioShock.buckets.${request.demand_bucket}`)}</dd>
+              </div>
+              <div>
+                <dt>{t('scenarioLab.ioShock.summary.amount')}</dt>
+                <dd>
+                  {formatNumber(request.amount)} {t(`scenarioLab.ioShock.currencies.${request.currency}`)}
+                </dd>
+              </div>
+              {request.currency === 'mln_usd' ? (
+                <div>
+                  <dt>{t('scenarioLab.ioShock.summary.fx')}</dt>
+                  <dd>{formatNumber(request.exchange_rate_uzs_per_usd ?? 0, 1)} UZS/USD</dd>
+                </div>
+              ) : null}
+              <div>
+                <dt>{t('scenarioLab.ioShock.summary.distribution')}</dt>
+                <dd>{t(`scenarioLab.ioShock.distributions.${request.distribution}`)}</dd>
+              </div>
+              {request.distribution === 'sector' && selectedSector ? (
+                <div>
+                  <dt>{t('scenarioLab.ioShock.summary.selectedSector')}</dt>
+                  <dd>
+                    {selectedSector.code} · {selectedSector.name}
+                  </dd>
+                </div>
+              ) : null}
+              <div>
+                <dt>{t('scenarioLab.ioShock.summary.dataVintage')}</dt>
+                <dd>{state.workspace.data_vintage}</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div className="io-shock__boundary">
+            <p>{t('scenarioLab.ioShock.boundary')}</p>
+            <p>{t('scenarioLab.ioShock.employmentBoundary')}</p>
+          </div>
         </div>
 
         {result ? (
