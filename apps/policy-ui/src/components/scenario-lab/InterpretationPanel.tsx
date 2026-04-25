@@ -81,20 +81,15 @@ export function InterpretationPanel({ interpretation }: InterpretationPanelProps
   const generationMode = resolveGenerationMode(enriched)
   const { reviewerName, reviewedAt } = resolveReviewerInfo(enriched)
   const reviewedAtFormatted = formatReviewedAt(reviewedAt, i18n.resolvedLanguage ?? 'en')
+  const reviewedDateLabel = reviewedAtFormatted || reviewedAt
+  const hasCompleteReview = reviewerName.length > 0 && reviewedDateLabel.length > 0
+  const effectiveTrustMode =
+    generationMode === 'reviewed' && !hasCompleteReview ? 'assisted' : generationMode
 
-  // Prompt §4.4: disclaimer is ALWAYS visible; generation_mode only switches
-  // the engine wording. No branching that hides the aside.
-  const disclaimerEngine =
-    generationMode === 'assisted'
-      ? t('scenarioLab.interpretation.aiAttribution.engineAssisted')
-      : generationMode === 'reviewed'
-        ? t('scenarioLab.interpretation.aiAttribution.engineReviewed')
-        : t('scenarioLab.interpretation.aiAttribution.engineTemplate')
-
-  const shouldFallbackReviewedToAssisted = generationMode === 'reviewed' && reviewerName.length === 0
+  const shouldFallbackReviewedToAssisted = generationMode === 'reviewed' && !hasCompleteReview
   if (shouldFallbackReviewedToAssisted) {
     console.warn(
-      'ScenarioLab interpretation marked as reviewed without reviewer_name. Falling back to assisted copy.',
+      'ScenarioLab interpretation marked as reviewed without complete reviewer metadata. Falling back to assisted copy.',
     )
   }
 
@@ -146,18 +141,25 @@ export function InterpretationPanel({ interpretation }: InterpretationPanelProps
         />
       ) : null}
 
-      <aside className="ai-attribution" aria-live="polite">
-        <strong>{t('scenarioLab.interpretation.aiAttribution.title')}</strong>
-        <p>{t('scenarioLab.interpretation.aiAttribution.body', { engine: disclaimerEngine })}</p>
-        {generationMode === 'reviewed' && reviewerName.length > 0 ? (
-          <p className="ai-attribution__reviewer">
-            {t('scenarioLab.interpretation.aiAttribution.reviewedMeta', {
-              reviewer_name: reviewerName,
-              review_date: reviewedAtFormatted || reviewedAt || '',
-            })}
+      {effectiveTrustMode === 'template' ? null : (
+        <aside className={`ai-attribution ai-attribution--${effectiveTrustMode}`} aria-live="polite">
+          <strong>
+            {effectiveTrustMode === 'reviewed'
+              ? t('scenarioLab.interpretation.aiAttribution.reviewed.title', {
+                  reviewed_at: reviewedDateLabel,
+                })
+              : t('scenarioLab.interpretation.aiAttribution.assisted.title')}
+          </strong>
+          <p>
+            {effectiveTrustMode === 'reviewed'
+              ? t('scenarioLab.interpretation.aiAttribution.reviewed.body', {
+                  reviewer_name: reviewerName,
+                  review_date: reviewedDateLabel,
+                })
+              : t('scenarioLab.interpretation.aiAttribution.assisted.body')}
           </p>
-        ) : null}
-      </aside>
+        </aside>
+      )}
     </section>
   )
 }

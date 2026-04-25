@@ -3,12 +3,10 @@ import type {
   ModelExplorerMeta,
 } from '../../contracts/data-contract.js'
 
-const SME_CONTENT_PENDING = '[SME content pending]'
-
 // Prompt §4.2: 6-model catalog mapped against the prototype status taxonomy.
 // QPM content is seeded verbatim from spec_prototype.html:2058–2303.
-// Other 5 models carry structural seed (card + minimal detail) with the SME
-// sentinel on validation_summary; Shot 2 fills full per-model prose.
+// Other 5 models carry structural seed (card + minimal detail). Shot 2 adds
+// concise English/source validation prose without claiming unsupported results.
 
 export const modelCatalogEntries: ModelCatalogEntry[] = [
   {
@@ -166,7 +164,10 @@ export const modelCatalogEntries: ModelCatalogEntry[] = [
         vintage_label: 'Apr 2026',
       },
     ],
-    validation_summary: [SME_CONTENT_PENDING],
+    validation_summary: [
+      'Nowcast validation is limited to real-time monitoring of incoming monthly indicators and published empirical uncertainty bands.',
+      'Single-factor loadings remain a caveat; sector-specific divergence is not yet validated in this UI.',
+    ],
   },
   {
     id: 'pe-model',
@@ -207,7 +208,10 @@ export const modelCatalogEntries: ModelCatalogEntry[] = [
         vintage_label: '2024',
       },
     ],
-    validation_summary: [SME_CONTENT_PENDING],
+    validation_summary: [
+      'Validation is limited to WITS/UN Comtrade tariff-flow reconciliation and WITS-SMART mechanics checks.',
+      'No differentiated-elasticity validation is claimed while the uniform-elasticity caveat remains open.',
+    ],
   },
   {
     id: 'io-model',
@@ -247,7 +251,10 @@ export const modelCatalogEntries: ModelCatalogEntry[] = [
         vintage_label: '2022',
       },
     ],
-    validation_summary: [SME_CONTENT_PENDING],
+    validation_summary: [
+      'Accounting checks focus on the 2022 SAM balance and Leontief identity consistency.',
+      'No price or behavioral response validation is claimed for this quantity-only model.',
+    ],
   },
   {
     id: 'cge-model',
@@ -291,7 +298,10 @@ export const modelCatalogEntries: ModelCatalogEntry[] = [
         vintage_label: '2021',
       },
     ],
-    validation_summary: [SME_CONTENT_PENDING],
+    validation_summary: [
+      'Calibration is documented for the 1-2-3 Armington/CET structure and 2021 SAM inputs.',
+      'Welfare outputs remain caveated, and employment effects are not validated until a labor block exists.',
+    ],
   },
   {
     id: 'fpp-fiscal',
@@ -337,7 +347,10 @@ export const modelCatalogEntries: ModelCatalogEntry[] = [
         vintage_label: '2024',
       },
     ],
-    validation_summary: [SME_CONTENT_PENDING],
+    validation_summary: [
+      'Consistency checks focus on four-sector accounting identities and IMF CAEM projection templates.',
+      'Current-account behavior remains exogenous, so external adjustment should not be read as jointly solved.',
+    ],
   },
 ]
 

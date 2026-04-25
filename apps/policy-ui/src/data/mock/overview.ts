@@ -6,8 +6,6 @@ import type {
   StateProvenance,
 } from '../../contracts/data-contract'
 
-const SME_CONTENT_PENDING = '[SME content pending]'
-
 const dfmAttribution = {
   model_id: 'dfm_nowcast',
   model_name: 'Dynamic Factor Model',
@@ -213,12 +211,30 @@ const nowcastChart: ChartSpec = {
   model_attribution: [nowcastAttribution],
 }
 
-// Prompt §4.5 item 3: every KPI tile carries a context_note; Shot 1 populates it
-// with the editorial sentinel so the UI surfaces the "SME content pending" chip
-// until Shot 2 fills per-indicator interpretive prose.
+const headlineMetricContextNotes: Record<string, string> = {
+  gdp_growth:
+    'DFM nowcast-based headline; read with the single-factor caveat and latest monthly data vintage.',
+  inflation:
+    'QPM baseline signal; still above the 5% target, so disinflation should be read with price-shock caveats.',
+  policy_rate:
+    'Policy stance indicator from the QPM baseline; compare with inflation path before treating easing as durable.',
+  exchange_rate:
+    'QPM baseline FX path; direct import-price pass-through is limited in the current Phillips setup.',
+  current_account:
+    'PE-linked external balance signal; uniform trade elasticities mean sector detail is not yet differentiated.',
+  fiscal_balance:
+    'Fiscal position indicator in the baseline set; use alongside inflation and debt caveats before citing.',
+  reserves:
+    'External buffer metric from the PE-linked snapshot; stress tests remain needed for remittance exposure.',
+  public_debt:
+    'Debt-ratio context from the baseline fiscal path; financing and growth assumptions drive interpretation.',
+}
+
+// Prompt §4.5 item 3: every KPI tile carries a context_note. Shot 2 replaces the
+// Week 1 editorial sentinel with concise English/source interpretive prose.
 const headlineMetricsWithContext: HeadlineMetric[] = headlineMetrics.map((metric) => ({
   ...metric,
-  context_note: SME_CONTENT_PENDING,
+  context_note: headlineMetricContextNotes[metric.metric_id],
 }))
 
 // Prompt §4.5 item 1: structured segments let the Overview state-header wrap key

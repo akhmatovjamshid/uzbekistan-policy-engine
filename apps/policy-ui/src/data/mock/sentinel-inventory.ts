@@ -19,8 +19,6 @@ export function collectSentinelInventory(): SentinelInventoryItem[] {
   const validationSummarySentinels = modelCatalogEntries.filter((entry) =>
     entry.validation_summary.includes(EDITORIAL_SENTINEL_TEXT),
   )
-  const nonQpmEquationSets = modelCatalogEntries.filter((entry) => entry.id !== 'qpm-uzbekistan')
-
   return [
     {
       id: 'overview.kpi.context_notes',
@@ -43,16 +41,16 @@ export function collectSentinelInventory(): SentinelInventoryItem[] {
       surface: 'model-explorer',
       owner: 'CERR',
       path: 'apps/policy-ui/src/components/model-explorer/equations/index.tsx',
-      count: nonQpmEquationSets.length,
-      note: 'Non-QPM equation JSX is structurally present but still needs SME-approved equation detail.',
+      count: 0,
+      note: 'Non-QPM equation formula renderers are present for the current catalog; fuller derivation prose is deferred outside the current page shape.',
     },
     {
       id: 'comparison.tradeoff.shell_a_c',
       surface: 'comparison',
       owner: 'product',
       path: 'apps/policy-ui/src/data/adapters/comparison.ts:chooseTradeoffSummary',
-      count: 2,
-      note: 'Trade-off Shell B is implemented; Shell A and Shell C remain Shot 2 editorial/product work.',
+      count: 0,
+      note: 'Trade-off Shell A, B, and C render bounded English/source prose from existing scenario roles and names.',
     },
   ]
 }

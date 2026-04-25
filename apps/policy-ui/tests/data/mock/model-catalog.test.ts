@@ -26,12 +26,13 @@ describe('model catalog mock', () => {
     assert.equal(b3?.inactive, true)
   })
 
-  it('renders the SME-pending sentinel on non-QPM validation summaries', () => {
+  it('renders source validation summaries on non-QPM models without SME sentinels', () => {
     const nonQpm = modelCatalogEntries.filter((entry) => entry.id !== 'qpm-uzbekistan')
     for (const entry of nonQpm) {
+      assert.ok(entry.validation_summary.length > 0, `${entry.title} should carry validation prose`)
       assert.ok(
-        entry.validation_summary.includes('[SME content pending]'),
-        `${entry.title} should carry the SME sentinel`,
+        entry.validation_summary.every((paragraph) => !paragraph.includes('[SME content pending]')),
+        `${entry.title} should not carry the SME sentinel`,
       )
     }
   })
