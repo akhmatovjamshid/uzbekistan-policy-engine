@@ -9,7 +9,7 @@ import {
 } from './bridge-fetch.js'
 
 const DEFAULT_QPM_TIMEOUT_MS = 10_000
-const DEFAULT_QPM_DATA_URL = '/data/qpm.json'
+const DEFAULT_QPM_DATA_PATH = 'data/qpm.json'
 
 export type QpmTransportErrorKind = BridgeTransportErrorKind
 
@@ -41,11 +41,13 @@ export class QpmValidationError extends Error {
 }
 
 function readImportMetaEnv(): {
+  baseUrl?: string
   dataUrl?: string
   timeoutMs?: string
 } {
   const env = (import.meta as ImportMeta & { env?: Record<string, string | undefined> }).env
   return {
+    baseUrl: env?.BASE_URL,
     dataUrl: env?.VITE_QPM_DATA_URL,
     timeoutMs: env?.VITE_QPM_TIMEOUT_MS,
   }
@@ -65,7 +67,12 @@ function readProcessEnv(): {
 export function resolveQpmDataUrl(): string {
   const metaEnv = readImportMetaEnv()
   const processEnv = readProcessEnv()
-  return metaEnv.dataUrl ?? processEnv.dataUrl ?? DEFAULT_QPM_DATA_URL
+  return metaEnv.dataUrl ?? processEnv.dataUrl ?? resolveQpmDefaultDataUrl(metaEnv.baseUrl)
+}
+
+export function resolveQpmDefaultDataUrl(baseUrl: string | undefined): string {
+  const normalizedBase = baseUrl && baseUrl.trim() ? baseUrl : '/'
+  return `${normalizedBase.endsWith('/') ? normalizedBase : `${normalizedBase}/`}${DEFAULT_QPM_DATA_PATH}`
 }
 
 export function resolveQpmTimeoutMs(): number {
