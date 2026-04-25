@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
+import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import type { SavedScenarioRecord } from '../../state/scenarioStore.js'
 
@@ -122,7 +123,7 @@ export function AddSavedScenarioModal({
     closeModal()
   }
 
-  return (
+  const modal = (
     <div
       className="comparison-modal-backdrop"
       role="presentation"
@@ -192,4 +193,10 @@ export function AddSavedScenarioModal({
       </div>
     </div>
   )
+
+  if (typeof document === 'undefined') {
+    return modal
+  }
+
+  return createPortal(modal, document.body)
 }

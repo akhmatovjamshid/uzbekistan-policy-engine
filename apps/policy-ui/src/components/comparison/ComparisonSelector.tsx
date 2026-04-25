@@ -59,7 +59,17 @@ export function ComparisonSelector({
         </select>
       </div>
 
-      <button type="button" className="btn-ghost cmp-selector__add" onClick={onAddSavedScenario}>
+      <button
+        type="button"
+        className="btn-ghost cmp-selector__add"
+        onPointerDown={(event) => {
+          if (event.pointerType === 'mouse' || event.pointerType === 'touch') {
+            event.preventDefault()
+            onAddSavedScenario()
+          }
+        }}
+        onClick={onAddSavedScenario}
+      >
         {t('comparison.selector.addSaved')}
       </button>
     </div>
