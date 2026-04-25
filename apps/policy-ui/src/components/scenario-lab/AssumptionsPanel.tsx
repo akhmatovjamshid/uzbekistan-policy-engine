@@ -101,6 +101,7 @@ function AssumptionField({
           step={item.step}
           value={displayValue}
           onChange={(event) => onChange(Number(event.target.value))}
+          aria-label={`${item.label} numeric value`}
         />
         <span className="scenario-assumption-field__unit">{item.unit}</span>
       </div>

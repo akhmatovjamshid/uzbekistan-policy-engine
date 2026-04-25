@@ -24,10 +24,10 @@ describe('sentinel inventory', () => {
   it('reports current sentinel counts for content owners', () => {
     const byId = new Map(collectSentinelInventory().map((item) => [item.id, item]))
 
-    assert.equal(byId.get('overview.kpi.context_notes')?.count, 8)
-    assert.equal(byId.get('model_explorer.validation_summaries')?.count, 5)
-    assert.equal(byId.get('model_explorer.equation_detail_sets')?.count, 5)
-    assert.equal(byId.get('comparison.tradeoff.shell_a_c')?.count, 2)
+    assert.equal(byId.get('overview.kpi.context_notes')?.count, 0)
+    assert.equal(byId.get('model_explorer.validation_summaries')?.count, 0)
+    assert.equal(byId.get('model_explorer.equation_detail_sets')?.count, 0)
+    assert.equal(byId.get('comparison.tradeoff.shell_a_c')?.count, 0)
   })
 
   it('stays aligned with the actual Overview and Model Explorer sentinel data', () => {

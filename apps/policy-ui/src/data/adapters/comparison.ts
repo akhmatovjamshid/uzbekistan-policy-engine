@@ -409,21 +409,76 @@ function renderShellBProse(
   )
 }
 
+function renderShellAProse(alternativeScenario: ComparisonScenarioMeta): string {
+  return (
+    `${alternativeScenario.name} is shown as a single alternative against the baseline. ` +
+    `Use the table deltas for magnitude; this summary only frames the comparison and does ` +
+    `not override model caveats or missing metrics.`
+  )
+}
+
+function renderShellCProse(
+  fiscalScenario: ComparisonScenarioMeta,
+  growthScenario: ComparisonScenarioMeta,
+): string {
+  return (
+    `${growthScenario.name} prioritizes growth and employment but raises inflation and ` +
+    `fiscal-pressure risks in this scenario set. ${fiscalScenario.name} improves inflation, ` +
+    `fiscal balance, and reserve buffers while giving up near-term growth. Choose based on ` +
+    `the binding policy objective, and cite row deltas rather than this prose for values.`
+  )
+}
+
+function renderGenericShellCProse(alternativeScenarios: ComparisonScenarioMeta[]): string {
+  const scenarioNames = alternativeScenarios.map((scenario) => scenario.name).join(' and ')
+  return (
+    `${scenarioNames} provide alternative policy paths against the baseline. Use the row ` +
+    `deltas to judge direction and magnitude; this summary does not rank scenarios or fill ` +
+    `metrics that are unavailable in the source payload.`
+  )
+}
+
 function chooseTradeoffSummary(metas: ComparisonScenarioMeta[]): TradeoffSummary {
   const fiscalCandidate =
     metas.find(
       (meta) =>
         meta.role === 'alternative' && /consolid|fiscal/i.test(meta.name),
     ) ?? null
+  const growthCandidate =
+    metas.find(
+      (meta) =>
+        meta.role === 'alternative' && /expansion|growth|stimulus/i.test(meta.name),
+    ) ?? null
   const stressCandidate = metas.find((meta) => meta.role === 'downside') ?? null
+  const alternativeCandidates = metas.filter((meta) => meta.role === 'alternative')
 
-  // Shell B fires on fiscal-consolidation alternative + stress scenario. Shell
-  // A / C remain Shot 2 — unmatched configurations render the sentinel chip.
+  // Shell B fires on fiscal-consolidation alternative + stress scenario.
   if (fiscalCandidate && stressCandidate) {
     return {
       mode: 'shell',
       shell_id: 'fiscal-vs-growth-tradeoff',
       rendered_text: renderShellBProse(fiscalCandidate, stressCandidate),
+    }
+  }
+  if (fiscalCandidate && growthCandidate) {
+    return {
+      mode: 'shell',
+      shell_id: 'stability-vs-expansion-tradeoff',
+      rendered_text: renderShellCProse(fiscalCandidate, growthCandidate),
+    }
+  }
+  if (alternativeCandidates.length === 1 && !stressCandidate) {
+    return {
+      mode: 'shell',
+      shell_id: 'single-alternative-tradeoff',
+      rendered_text: renderShellAProse(alternativeCandidates[0]),
+    }
+  }
+  if (alternativeCandidates.length > 1 && !stressCandidate) {
+    return {
+      mode: 'shell',
+      shell_id: 'multi-alternative-tradeoff',
+      rendered_text: renderGenericShellCProse(alternativeCandidates),
     }
   }
   return { mode: 'empty' }

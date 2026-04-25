@@ -168,15 +168,60 @@ describe('composeComparisonContent', () => {
     assert.ok(content.tradeoff.rendered_text?.includes('Russia slowdown'))
   })
 
-  it('returns tradeoff mode="empty" when no Shell-B configuration matches', () => {
+  it('Shell A fires for a single alternative against baseline', () => {
     const content = composeComparisonContent(
       comparisonWorkspaceMock,
       ['baseline-2026', 'aggressive-expansion'],
       'baseline-2026',
     )
-    assert.equal(content.tradeoff.mode, 'empty')
-    assert.equal(content.tradeoff.rendered_text, undefined)
-    assert.equal(content.tradeoff.shell_id, undefined)
+    assert.equal(content.tradeoff.mode, 'shell')
+    assert.equal(content.tradeoff.shell_id, 'single-alternative-tradeoff')
+    assert.ok(content.tradeoff.rendered_text?.includes('Aggressive expansion'))
+    assert.ok(content.tradeoff.rendered_text?.includes('Use the table deltas'))
+  })
+
+  it('Shell C fires for stability versus expansion alternatives without stress', () => {
+    const content = composeComparisonContent(
+      comparisonWorkspaceMock,
+      ['baseline-2026', 'fiscal-consolidation', 'aggressive-expansion'],
+      'baseline-2026',
+    )
+    assert.equal(content.tradeoff.mode, 'shell')
+    assert.equal(content.tradeoff.shell_id, 'stability-vs-expansion-tradeoff')
+    assert.ok(content.tradeoff.rendered_text?.includes('Aggressive expansion'))
+    assert.ok(content.tradeoff.rendered_text?.includes('Fiscal consolidation'))
+  })
+
+  it('Shell C uses bounded generic prose for multiple non-stress alternatives', () => {
+    const twoPolicyAlternatives: ComparisonWorkspace = {
+      ...comparisonWorkspaceMock,
+      scenarios: [
+        comparisonWorkspaceMock.scenarios[0],
+        {
+          ...comparisonWorkspaceMock.scenarios[1],
+          scenario_id: 'rate-cut',
+          scenario_name: 'Policy rate cut',
+          initial_tag: 'balanced',
+        },
+        {
+          ...comparisonWorkspaceMock.scenarios[2],
+          scenario_id: 'rate-hike',
+          scenario_name: 'Policy rate hike',
+          initial_tag: 'balanced',
+        },
+      ],
+      default_selected_ids: ['baseline-2026', 'rate-cut', 'rate-hike'],
+    }
+
+    const content = composeComparisonContent(
+      twoPolicyAlternatives,
+      ['baseline-2026', 'rate-cut', 'rate-hike'],
+      'baseline-2026',
+    )
+    assert.equal(content.tradeoff.mode, 'shell')
+    assert.equal(content.tradeoff.shell_id, 'multi-alternative-tradeoff')
+    assert.ok(content.tradeoff.rendered_text?.includes('Policy rate cut and Policy rate hike'))
+    assert.ok(content.tradeoff.rendered_text?.includes('does not rank scenarios'))
   })
 
   it('falls back to workspace default_baseline_id when the requested baseline is unknown', () => {
