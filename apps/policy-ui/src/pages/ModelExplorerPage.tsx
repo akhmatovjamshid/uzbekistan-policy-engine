@@ -46,17 +46,13 @@ export function ModelExplorerPage() {
     [workspace],
   )
 
-  useEffect(() => {
-    if (modelCatalogEntries.length === 0) {
-      return
-    }
-    if (!selectedModelId || !modelCatalogEntries.some((entry) => entry.id === selectedModelId)) {
-      setSelectedModelId(workspace?.default_model_id ?? modelCatalogEntries[0].id)
-    }
-  }, [modelCatalogEntries, selectedModelId, workspace?.default_model_id])
-
+  const fallbackModelId = workspace?.default_model_id ?? modelCatalogEntries[0]?.id ?? ''
+  const effectiveSelectedModelId = modelCatalogEntries.some((entry) => entry.id === selectedModelId)
+    ? selectedModelId
+    : fallbackModelId
   const selectedEntry =
-    modelCatalogEntries.find((entry) => entry.id === selectedModelId) ?? modelCatalogEntries[0]
+    modelCatalogEntries.find((entry) => entry.id === effectiveSelectedModelId) ??
+    modelCatalogEntries[0]
   const modelCatalogMeta = workspace?.meta ?? {
     models_total: modelCatalogEntries.length,
     models_live: modelCatalogEntries.length,
