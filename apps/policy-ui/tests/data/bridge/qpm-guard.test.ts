@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
+import { resolveQpmDefaultDataUrl } from '../../../src/data/bridge/qpm-client.js'
 import { validateQpmBridgePayload } from '../../../src/data/bridge/qpm-guard.js'
 import { buildValidQpmPayload } from './qpm-fixture.js'
 
@@ -8,6 +9,14 @@ function clonePayload<T>(value: T): T {
 }
 
 describe('qpm bridge guard', () => {
+  it('resolves the default public artifact URL against the Vite base path', () => {
+    assert.equal(resolveQpmDefaultDataUrl(undefined), '/data/qpm.json')
+    assert.equal(
+      resolveQpmDefaultDataUrl('/Uzbekistan-Economic-policy-engine/policy-ui/'),
+      '/Uzbekistan-Economic-policy-engine/policy-ui/data/qpm.json',
+    )
+  })
+
   it('accepts a valid payload', () => {
     const payload = buildValidQpmPayload()
     const validation = validateQpmBridgePayload(payload)

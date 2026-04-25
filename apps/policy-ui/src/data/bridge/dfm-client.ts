@@ -9,7 +9,7 @@ import {
 } from './bridge-fetch.js'
 
 const DEFAULT_DFM_TIMEOUT_MS = 10_000
-const DEFAULT_DFM_DATA_URL = '/data/dfm.json'
+const DEFAULT_DFM_DATA_PATH = 'data/dfm.json'
 
 export type DfmTransportErrorKind = BridgeTransportErrorKind
 
@@ -41,11 +41,13 @@ export class DfmValidationError extends Error {
 }
 
 function readImportMetaEnv(): {
+  baseUrl?: string
   dataUrl?: string
   timeoutMs?: string
 } {
   const env = (import.meta as ImportMeta & { env?: Record<string, string | undefined> }).env
   return {
+    baseUrl: env?.BASE_URL,
     dataUrl: env?.VITE_DFM_DATA_URL,
     timeoutMs: env?.VITE_DFM_TIMEOUT_MS,
   }
@@ -65,7 +67,12 @@ function readProcessEnv(): {
 export function resolveDfmDataUrl(): string {
   const metaEnv = readImportMetaEnv()
   const processEnv = readProcessEnv()
-  return metaEnv.dataUrl ?? processEnv.dataUrl ?? DEFAULT_DFM_DATA_URL
+  return metaEnv.dataUrl ?? processEnv.dataUrl ?? resolveDfmDefaultDataUrl(metaEnv.baseUrl)
+}
+
+export function resolveDfmDefaultDataUrl(baseUrl: string | undefined): string {
+  const normalizedBase = baseUrl && baseUrl.trim() ? baseUrl : '/'
+  return `${normalizedBase.endsWith('/') ? normalizedBase : `${normalizedBase}/`}${DEFAULT_DFM_DATA_PATH}`
 }
 
 export function resolveDfmTimeoutMs(): number {

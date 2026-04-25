@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
+import { resolveDfmDefaultDataUrl } from '../../../src/data/bridge/dfm-client.js'
 import { validateDfmBridgePayload } from '../../../src/data/bridge/dfm-guard.js'
 import { buildValidDfmPayload } from './dfm-fixture.js'
 
@@ -8,6 +9,14 @@ function clonePayload<T>(value: T): T {
 }
 
 describe('dfm bridge guard', () => {
+  it('resolves the default public artifact URL against the Vite base path', () => {
+    assert.equal(resolveDfmDefaultDataUrl(undefined), '/data/dfm.json')
+    assert.equal(
+      resolveDfmDefaultDataUrl('/Uzbekistan-Economic-policy-engine/policy-ui/'),
+      '/Uzbekistan-Economic-policy-engine/policy-ui/data/dfm.json',
+    )
+  })
+
   it('accepts a valid payload', () => {
     const payload = buildValidDfmPayload()
     const validation = validateDfmBridgePayload(payload)
