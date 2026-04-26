@@ -2,11 +2,15 @@
 
 Date: 2026-04-26  
 Branch: `epic/replatform-execution`  
-Status: pilot review preparation
+Status: deferred / ready to use later
 
-Pilot readiness requires named evaluators. The release candidate can be internally previewed before evaluator names are confirmed, but it must not be described as pilot-ready until the minimum evaluator roster is named and the hosted smoke checklist is complete.
+Named evaluator sessions are skipped for now. Use this kit when the pilot resumes; until then, the Sprint 3 branch remains an internal preview release candidate, not pilot-ready.
+
+Pilot readiness requires named evaluators. The release candidate can be internally previewed before evaluator names are confirmed, but it must not be described as pilot-ready until the minimum evaluator roster is named, the hosted smoke checklist is complete, and human RU/UZ terminology review is complete.
 
 ## Evaluator Invitation Note
+
+Deferred until named evaluator sessions resume.
 
 Subject: Invitation to review the Uzbekistan policy UI pilot
 
@@ -21,6 +25,8 @@ During the session, we will ask you to complete a few short tasks while we obser
 Please confirm whether you can join a 30-minute session and whether your preferred review lens is policy narrative, model credibility, or operational usability.
 
 ## Required Evaluator Roster
+
+Deferred until pilot sessions resume.
 
 | Slot | Lens | Requirement | Status |
 |---|---|---|---|
@@ -56,6 +62,16 @@ Minimum path: two named evaluators covering all three lenses. Preferred path: th
 - Follow-up questions captured.
 - Severity assigned after the session, not during the task.
 - Sprint 4 intake fields completed for any actionable observation.
+
+## Observer Prompts
+
+Use these prompts when the evaluator pauses, completes a task, or gives an ambiguous reaction. Ask neutrally; do not explain the intended interpretation first.
+
+- "What do you think this chart or table is saying?"
+- "Are the model lanes clear enough to tell what is active, planned, or saved?"
+- "Does the current analytical context help you understand where you are and what result you are viewing?"
+- "Do the trust, provenance, and caveat labels make the result clearer, or do they feel noisy?"
+- "Which label, chart element, or table cue most helped you trust or question the result?"
 
 ## Task Prompts
 
@@ -100,7 +116,7 @@ Copy one row per accepted observation into Sprint 4 triage.
 
 ## Pilot Readiness Rule
 
-Pilot readiness requires all of the following:
+Pilot readiness is deferred while named evaluator sessions are skipped. When pilot work resumes, readiness requires all of the following:
 
 1. Hosted smoke checklist completed with a `go` verdict.
 2. Minimum named evaluator roster confirmed.
@@ -108,4 +124,4 @@ Pilot readiness requires all of the following:
 4. Facilitator and observer roles assigned.
 5. Sprint 4 intake owner identified.
 
-Until those conditions are met, the correct status is internal preview / release candidate, not pilot-ready.
+Until those conditions are met, the correct status is internal preview release candidate, not pilot-ready.

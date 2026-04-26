@@ -54,6 +54,16 @@ Use this checklist after the GitHub Pages workflow publishes the Sprint 3 releas
 | Scenario Lab I-O save flow | Open `/policy-ui/#/scenario-lab`; run the I-O Sector Shock flow; save the I-O run. | I-O analytics render, `Save I-O run` succeeds, and the saved run appears with provenance and Comparison handoff. | `[pass/fail]` | |
 | Comparison saved I-O add flow | Open `/policy-ui/#/comparison`; add the saved I-O run from the saved-run modal/panel. | Saved I-O run can be selected and added; I-O analytics render below the macro table without changing macro rows. | `[pass/fail]` | |
 
+## Final Visual/Data-Viz Smoke
+
+| Check | Expected result | Result | Notes |
+|---|---|---|---|
+| Scenario Lab QPM chart clarity | QPM impulse-response chart title, unit context, baseline/scenario meaning, and claim/provenance labels are clear without facilitator narration. | `[pass/fail]` | |
+| I-O inline bars/readability | I-O sector results remain readable; inline contribution bars and rank cues make high-contribution sectors scannable without hiding sector labels, values, or caveats. | `[pass/fail]` | |
+| Comparison macro/I-O separation | Macro comparison rows and saved I-O evidence are visually and textually separated; I-O evidence is not presented as part of the macro scenario delta table. | `[pass/fail]` | |
+| Data Registry status matrix | Implemented/planned status, freshness warnings, source vintages, and artifact/export cues are scannable while preserving the validation caveat. | `[pass/fail]` | |
+| Model Explorer bridge evidence visual consistency | I-O bridge evidence uses consistent status, source, vintage, framework, linkage, and caveat presentation with the rest of the release-candidate trust/provenance labels. | `[pass/fail]` | |
+
 ## Accepted Hosted Warnings
 
 Record these if observed, but do not fail the hosted smoke pass solely because of them:

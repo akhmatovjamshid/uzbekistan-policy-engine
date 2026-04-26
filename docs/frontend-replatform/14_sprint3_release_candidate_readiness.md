@@ -2,27 +2,30 @@
 
 Date: 2026-04-26  
 Branch: `epic/replatform-execution`  
-Status: internal preview / release candidate  
+Status: Internal preview release candidate  
 Source closeout: `docs/planning/sprint-3-stabilization-closeout.md`
 
 ## Current Status
 
-Sprint 3 is release-candidate ready for internal preview and controlled pilot preparation.
+Sprint 3 is release-candidate ready for internal preview and workflow/trust review.
 
-The app-level stabilization gate is clean according to the Sprint 3 closeout: lint passed, tests passed, production build passed, local browser QA passed across the supported routes, and the I-O pilot workflows were verified. The remaining release-control work is hosted verification, named evaluator readiness, and slice-based review before any merge to `main`.
+The app-level stabilization gate is clean according to the Sprint 3 closeout: lint passed, tests passed, production build passed, local browser QA passed across the supported routes, and the I-O pilot workflows were verified. The final prototype/data-viz alignment pass is complete for the release-candidate surface, including Scenario Lab chart clarity, I-O result readability, Comparison macro/I-O separation, Data Registry status scanning, and Model Explorer bridge evidence consistency. The remaining release-control work is hosted verification, deferred named evaluator readiness, human RU/UZ terminology review, and slice-based review before any merge to `main`.
+
+This branch is not pilot-ready because named evaluator sessions are deferred. Broader pilot readiness still requires named evaluators and a human review of RU/UZ terminology and sector/model wording.
 
 ## In Scope
 
 - Internal preview of the React policy UI on `epic/replatform-execution`.
 - Hosted smoke verification for the `/policy-ui/` GitHub Pages path.
-- Six pilot surfaces: Overview, Scenario Lab, Comparison, Model Explorer, Data Registry, and Knowledge Hub.
+- Six internal-preview surfaces: Overview, Scenario Lab, Comparison, Model Explorer, Data Registry, and Knowledge Hub.
 - Static data artifact reachability for QPM, DFM, and I-O JSON files.
 - EN/RU/UZ language-switch smoke coverage.
 - I-O evidence visibility in Model Explorer.
 - I-O run/save flow in Scenario Lab.
 - Saved I-O add flow in Comparison.
 - Data Registry visibility for implemented and planned model/data rows.
-- Pilot review preparation with named evaluator requirement.
+- Final prototype/data-viz alignment pass across Scenario Lab, Comparison, Data Registry, and Model Explorer evidence surfaces.
+- Deferred pilot review preparation with named evaluator requirement.
 - Slice-based merge planning for eventual integration to `main`.
 
 ## Out of Scope
@@ -38,21 +41,27 @@ The app-level stabilization gate is clean according to the Sprint 3 closeout: li
 
 ## Allowed Claims
 
-- "Sprint 3 is an internal preview / release candidate."
+- "Sprint 3 is an internal preview release candidate."
+- "Sprint 3 is an internal preview for workflow/trust review."
 - "The current branch passed docs-recorded lint, test, build, and local browser QA gates."
-- "The pilot surface includes Overview, Scenario Lab, Comparison, Model Explorer, Data Registry, and Knowledge Hub."
+- "The internal-preview surface includes Overview, Scenario Lab, Comparison, Model Explorer, Data Registry, and Knowledge Hub."
 - "I-O evidence is visible in Model Explorer."
 - "Scenario Lab supports the current I-O run/save workflow."
 - "Comparison can add saved I-O runs without replacing the macro comparison rows."
 - "Data Registry makes implemented and planned model/data status visible."
-- "Pilot review may proceed after hosted smoke verification and named evaluator confirmation."
+- "Pilot review is deferred until hosted smoke verification, named evaluator confirmation, and human RU/UZ terminology review are complete."
+- "The final prototype/data-viz alignment pass is complete for the internal preview release candidate."
 
 ## Disallowed Claims
 
 - "Production release is complete."
+- "validated production policy platform"
+- "The pilot is complete."
+- "completed pilot"
 - "The branch is ready to merge into `main` without slice review."
 - "The hosted deployment has passed until the hosted smoke checklist is completed."
 - "Pilot readiness is achieved before evaluators are named."
+- "Broader pilot readiness is achieved before human RU/UZ terminology review."
 - "QPM and DFM freshness warnings are resolved."
 - "I-O localization is complete across EN/RU/UZ sector names."
 - "The bundle-size warning is fixed."
@@ -67,8 +76,10 @@ The app-level stabilization gate is clean according to the Sprint 3 closeout: li
 | Tests | Pass | `npm test` passed with 208 tests in Sprint 3 closeout. |
 | Production build | Pass with accepted warning | `npm run build` passed; existing large chunk warning remains. |
 | Local browser QA | Pass | Route, navigation, EN/RU/UZ, Data Registry, Model Explorer I-O evidence, Scenario Lab I-O save, and Comparison saved I-O add flows passed. |
+| Prototype/data-viz alignment | Pass for internal preview | Final alignment pass completed for Scenario Lab QPM chart clarity, I-O readability, Comparison macro/I-O separation, Data Registry status scanning, and Model Explorer bridge evidence visual consistency. |
 | Hosted deployment | Conditional | GitHub Pages workflow must pass on Ubuntu and the hosted `/policy-ui/` path must be smoke checked. |
-| Public launch | Not claimed | This package supports controlled pilot review, not public launch. |
+| Named evaluator pilot | Deferred | Named evaluator sessions are skipped for now; this branch is not pilot-ready. |
+| Public launch | Not claimed | This package supports internal preview workflow/trust review, not public launch. |
 
 ## Accepted Warnings
 
@@ -78,15 +89,19 @@ The app-level stabilization gate is clean according to the Sprint 3 closeout: li
 - Local Windows Pages-base build probing hit `spawn EPERM`; the Ubuntu GitHub Pages workflow remains the required hosted deployment gate.
 - Browser QA was a smoke/stabilization pass, not a complete accessibility, screen-reader, performance, or translation-quality audit.
 
-## Remaining Gates Before Pilot
+## Deferred Gates Before Pilot
+
+Named evaluator sessions are skipped for now. These gates apply when pilot work resumes.
 
 1. Complete the hosted smoke checklist in `docs/planning/sprint-3-hosted-smoke-checklist.md`.
 2. Confirm the GitHub Pages workflow publishes the app under `/policy-ui/`.
 3. Confirm QPM, DFM, and I-O JSON artifacts resolve from the hosted `/policy-ui/data/` path.
 4. Confirm EN/RU/UZ switching on hosted routes without console errors.
 5. Confirm Data Registry, Model Explorer I-O evidence, Scenario Lab I-O save flow, and Comparison saved I-O add flow on the hosted surface.
-6. Name the minimum evaluator roster required by `docs/planning/sprint-3-pilot-review-kit.md`.
-7. Prepare observation capture in `docs/frontend-replatform/13_pilot_observations.md`.
+6. Confirm final visual/data-viz smoke items remain clear on the hosted surface.
+7. Name the minimum evaluator roster required by `docs/planning/sprint-3-pilot-review-kit.md`.
+8. Complete human RU/UZ terminology review for pilot-facing model, provenance, and sector wording.
+9. Prepare observation capture in `docs/frontend-replatform/13_pilot_observations.md`.
 
 ## Remaining Gates Before Merging to Main
 
@@ -101,8 +116,8 @@ The app-level stabilization gate is clean according to the Sprint 3 closeout: li
 
 ## Go / No-Go Recommendation
 
-GO for internal release-candidate preview.
+GO for internal preview release candidate workflow/trust review.
 
-GO for controlled pilot review only after hosted smoke verification passes and named evaluators are confirmed.
+NO-GO for controlled pilot review while named evaluator sessions remain deferred. Pilot review may resume only after hosted smoke verification passes, named evaluators are confirmed, and human RU/UZ terminology review is complete.
 
 NO-GO for casual merge to `main` until the slice-based review ledger is complete, final CI is clean, hosted smoke is clean, and any P0/P1 pilot findings are resolved or explicitly blocked from the merge.
