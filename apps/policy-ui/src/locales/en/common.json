@@ -384,6 +384,7 @@
         "multiplier": "Output multiplier"
       },
       "table": {
+        "rank": "Rank",
         "sector": "Sector",
         "sectorCode": "Code",
         "sourceLabel": "Source label",

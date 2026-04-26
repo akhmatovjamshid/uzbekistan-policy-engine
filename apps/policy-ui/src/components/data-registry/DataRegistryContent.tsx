@@ -47,6 +47,31 @@ export function DataRegistryContent(props: {
         ))}
       </section>
 
+      <section
+        className="data-registry-status-matrix"
+        aria-label={t('dataRegistry.sections.bridgeOutputs.title')}
+      >
+        {registry.artifacts.map((artifact) => (
+          <article className="data-registry-status-card" key={`matrix-${artifact.id}`}>
+            <div className="data-registry-status-card__head">
+              <h2>{artifact.modelArea}</h2>
+              <span className={statusClass(artifact.status)}>{t(`dataRegistry.status.${artifact.status}`)}</span>
+            </div>
+            <dl>
+              <div>
+                <dt>{t('dataRegistry.artifact.sourceVintage')}</dt>
+                <dd>{artifact.sourceVintage}</dd>
+              </div>
+              <div>
+                <dt>{t('dataRegistry.artifact.exportTimestamp')}</dt>
+                <dd>{artifact.exportTimestamp}</dd>
+              </div>
+            </dl>
+            <p>{artifact.statusDetail}</p>
+          </article>
+        ))}
+      </section>
+
       <section className="data-registry-legend" aria-labelledby="data-registry-legend-title">
         <h2 id="data-registry-legend-title">{t('dataRegistry.legend.title')}</h2>
         <dl>

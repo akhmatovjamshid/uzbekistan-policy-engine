@@ -16,6 +16,7 @@ body {
   color: var(--color-text);
   font-family: var(--font-sans);
   line-height: 1.45;
+  font-variant-numeric: tabular-nums;
   text-rendering: optimizeLegibility;
 }
 
@@ -221,8 +222,10 @@ h2 {
 }
 
 .page-header {
+  border-bottom: 1px solid var(--color-border);
   display: grid;
   gap: var(--space-sm);
+  padding-bottom: var(--space-lg);
 }
 
 .page-header h1 {
@@ -314,21 +317,22 @@ h2 {
   align-items: center;
   background: transparent;
   border: 1px solid var(--color-border);
-  border-radius: 0.25rem;
+  border-radius: var(--radius-sm);
   color: var(--color-text-muted);
   display: inline-flex;
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.66rem;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
   line-height: 1;
-  padding: 0.16rem 0.38rem;
+  padding: 0.16rem 0.36rem;
   text-transform: uppercase;
   white-space: nowrap;
 }
 
 .attribution-badge--active {
-  border-color: var(--color-brand);
+  background: var(--color-surface);
+  border-color: var(--color-border-strong);
   color: var(--color-brand);
 }
 

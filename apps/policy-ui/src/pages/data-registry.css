@@ -26,6 +26,75 @@
   line-height: 1;
 }
 
+.data-registry-status-matrix {
+  display: grid;
+  gap: var(--space-sm);
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+}
+
+.data-registry-status-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  display: grid;
+  gap: var(--space-sm);
+  min-width: 0;
+  padding: var(--space-md);
+}
+
+.data-registry-status-card__head {
+  align-items: start;
+  display: flex;
+  gap: var(--space-md);
+  justify-content: space-between;
+}
+
+.data-registry-status-card h2,
+.data-registry-status-card p {
+  margin: 0;
+}
+
+.data-registry-status-card h2 {
+  font-family: var(--font-sans);
+  font-size: 0.96rem;
+  font-weight: 650;
+  line-height: 1.25;
+}
+
+.data-registry-status-card p {
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.data-registry-status-card dl {
+  display: grid;
+  gap: var(--space-xs);
+  margin: 0;
+}
+
+.data-registry-status-card dl div {
+  display: grid;
+  gap: var(--space-sm);
+  grid-template-columns: minmax(6.5rem, 0.55fr) minmax(0, 1fr);
+}
+
+.data-registry-status-card dt {
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.data-registry-status-card dd {
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
 .data-registry-legend {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -48,8 +117,8 @@
 }
 
 .data-registry-legend div {
-  border-left: 2px solid var(--color-border);
-  padding-left: var(--space-sm);
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-sm);
 }
 
 .data-registry-legend dt {
@@ -79,7 +148,7 @@
 .data-registry-table {
   background: var(--color-surface);
   border-collapse: collapse;
-  font-size: 0.84rem;
+  font-size: 0.82rem;
   min-width: 68rem;
   width: 100%;
 }
@@ -87,7 +156,7 @@
 .data-registry-table th,
 .data-registry-table td {
   border-bottom: 1px solid var(--color-border);
-  padding: 0.72rem 0.82rem;
+  padding: 0.58rem 0.72rem;
   text-align: start;
   vertical-align: top;
 }
@@ -190,7 +259,7 @@
 .data-registry-artifact {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   display: grid;
   gap: var(--space-md);
   min-width: 0;
@@ -235,9 +304,9 @@
 }
 
 .data-registry-facts div {
-  border-left: 2px solid var(--color-border);
+  border-top: 1px solid var(--color-border);
   min-width: 0;
-  padding-left: var(--space-sm);
+  padding-top: var(--space-xs);
 }
 
 .data-registry-facts dt {

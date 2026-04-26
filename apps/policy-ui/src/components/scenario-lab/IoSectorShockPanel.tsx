@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import type { CSSProperties } from 'react'
 import { useTranslation } from 'react-i18next'
 import type {
   ScenarioLabIoDemandBucket,
@@ -43,6 +44,12 @@ function formatOptionalNumber(value: number | null): string {
   return formatNumber(value, 0)
 }
 
+function contributionStyle(value: number | null, maxValue: number): CSSProperties {
+  const magnitude = value === null ? 0 : Math.abs(value)
+  const width = maxValue > 0 ? Math.max(4, Math.min(100, (magnitude / maxValue) * 100)) : 0
+  return { '--io-bar-width': `${width}%` } as CSSProperties
+}
+
 export function IoSectorShockPanel({ state, onRetry, onSaveRun, saveStatus }: IoSectorShockPanelProps) {
   const { t } = useTranslation()
   const [demandBucket, setDemandBucket] = useState<ScenarioLabIoDemandBucket>('export')
@@ -76,6 +83,26 @@ export function IoSectorShockPanel({ state, onRetry, onSaveRun, saveStatus }: Io
     }
     return runScenarioLabIoDemandShock(state.payload, request)
   }, [request, state])
+  const sectorContributionMaxima = useMemo(() => {
+    if (!result) {
+      return {
+        output: 0,
+        valueAdded: 0,
+        employment: 0,
+      }
+    }
+    return {
+      output: Math.max(...result.top_sectors.map((sector) => Math.abs(sector.output_effect_bln_uzs)), 0),
+      valueAdded: Math.max(
+        ...result.top_sectors.map((sector) => Math.abs(sector.value_added_effect_bln_uzs)),
+        0,
+      ),
+      employment: Math.max(
+        ...result.top_sectors.map((sector) => Math.abs(sector.employment_effect_persons ?? 0)),
+        0,
+      ),
+    }
+  }, [result])
 
   if (state.status === 'loading') {
     return (
@@ -324,6 +351,7 @@ export function IoSectorShockPanel({ state, onRetry, onSaveRun, saveStatus }: Io
               <table className="io-shock__table">
                 <thead>
                   <tr>
+                    <th>{t('scenarioLab.ioShock.table.rank')}</th>
                     <th>{t('scenarioLab.ioShock.table.sector')}</th>
                     <th>{t('scenarioLab.ioShock.table.output')}</th>
                     <th>{t('scenarioLab.ioShock.table.valueAdded')}</th>
@@ -332,15 +360,55 @@ export function IoSectorShockPanel({ state, onRetry, onSaveRun, saveStatus }: Io
                   </tr>
                 </thead>
                 <tbody>
-                  {result.top_sectors.map((sector) => (
+                  {result.top_sectors.map((sector, index) => (
                     <tr key={sector.sector_code}>
+                      <td className="io-shock__rank">{index + 1}</td>
                       <th scope="row">
                         <span>{t('scenarioLab.ioShock.table.sectorCode')}: {sector.sector_code}</span>
                         <strong>{t('scenarioLab.ioShock.table.sourceLabel')}: {sector.sector_name}</strong>
                       </th>
-                      <td>{formatNumber(sector.output_effect_bln_uzs)}</td>
-                      <td>{formatNumber(sector.value_added_effect_bln_uzs)}</td>
-                      <td>{formatOptionalNumber(sector.employment_effect_persons)}</td>
+                      <td>
+                        <span
+                          className="io-shock__bar-cell"
+                          style={contributionStyle(
+                            sector.output_effect_bln_uzs,
+                            sectorContributionMaxima.output,
+                          )}
+                        >
+                          <span className="io-shock__bar-cell-track" aria-hidden="true">
+                            <span className="io-shock__bar-cell-fill" />
+                          </span>
+                          <span>{formatNumber(sector.output_effect_bln_uzs)}</span>
+                        </span>
+                      </td>
+                      <td>
+                        <span
+                          className="io-shock__bar-cell"
+                          style={contributionStyle(
+                            sector.value_added_effect_bln_uzs,
+                            sectorContributionMaxima.valueAdded,
+                          )}
+                        >
+                          <span className="io-shock__bar-cell-track" aria-hidden="true">
+                            <span className="io-shock__bar-cell-fill" />
+                          </span>
+                          <span>{formatNumber(sector.value_added_effect_bln_uzs)}</span>
+                        </span>
+                      </td>
+                      <td>
+                        <span
+                          className="io-shock__bar-cell"
+                          style={contributionStyle(
+                            sector.employment_effect_persons,
+                            sectorContributionMaxima.employment,
+                          )}
+                        >
+                          <span className="io-shock__bar-cell-track" aria-hidden="true">
+                            <span className="io-shock__bar-cell-fill" />
+                          </span>
+                          <span>{formatOptionalNumber(sector.employment_effect_persons)}</span>
+                        </span>
+                      </td>
                       <td>{t(`comparison.ioEvidence.linkageClass.${sector.linkage_classification}`)}</td>
                     </tr>
                   ))}

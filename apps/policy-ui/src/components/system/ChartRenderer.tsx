@@ -374,6 +374,11 @@ export function ChartRenderer({ spec, height = 280, ariaLabel }: ChartRendererPr
           {chartBody}
         </ResponsiveContainer>
       </div>
+      <p className="chart-renderer__axis-note">
+        {spec.x.label}
+        {spec.x.unit ? ` (${spec.x.unit})` : ''} · {spec.y.label}
+        {spec.y.unit ? ` (${spec.y.unit})` : ''}
+      </p>
       {hasIllustrativeBand ? (
         <p className="chart-renderer__illustrative-note">Illustrative uncertainty band (hatched).</p>
       ) : null}

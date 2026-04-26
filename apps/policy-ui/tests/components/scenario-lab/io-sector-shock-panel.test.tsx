@@ -109,6 +109,7 @@ async function createTestI18n() {
                 multiplier: 'Output multiplier',
               },
               table: {
+                rank: 'Rank',
                 sector: 'Sector',
                 sectorCode: 'Code',
                 sourceLabel: 'Source label',

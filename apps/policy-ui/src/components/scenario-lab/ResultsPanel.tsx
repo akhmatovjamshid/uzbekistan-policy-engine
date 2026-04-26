@@ -60,6 +60,7 @@ function formatSignedDelta(value: number | null, unit: string) {
 function ScenarioTabChart({ chart, activeTab }: { chart: ChartSpec; activeTab: ScenarioLabResultTab }) {
   const { t } = useTranslation()
   const titleId = `scenario-chart-title-${chart.chart_id}`
+  const terminalIndex = Math.max(0, chart.x.values.length - 1)
   return (
     <div className="scenario-main-chart" aria-labelledby={titleId}>
       <div className="scenario-output-context">
@@ -70,6 +71,16 @@ function ScenarioTabChart({ chart, activeTab }: { chart: ChartSpec; activeTab: S
         <h3 id={titleId}>{chart.title}</h3>
         <p>{chart.subtitle}</p>
       </div>
+      <dl className="scenario-tab-summary" aria-label={chart.title}>
+        {chart.series.map((series) => (
+          <div key={series.series_id}>
+            <dt>{series.label}</dt>
+            <dd>
+              {series.values[terminalIndex]?.toFixed(1)} {chart.y.unit}
+            </dd>
+          </div>
+        ))}
+      </dl>
       <table className="scenario-chart-table">
         <thead>
           <tr>

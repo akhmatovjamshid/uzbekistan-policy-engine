@@ -384,6 +384,7 @@
         "multiplier": "Ishlab chiqarish multiplikatori"
       },
       "table": {
+        "rank": "Rang",
         "sector": "Sektor",
         "sectorCode": "Kod",
         "sourceLabel": "Manba yorlig'i",

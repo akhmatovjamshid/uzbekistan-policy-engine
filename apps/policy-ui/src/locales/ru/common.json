@@ -384,6 +384,7 @@
         "multiplier": "Мультипликатор выпуска"
       },
       "table": {
+        "rank": "Ранг",
         "sector": "Сектор",
         "sectorCode": "Код",
         "sourceLabel": "Исходная метка",

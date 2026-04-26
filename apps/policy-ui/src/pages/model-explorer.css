@@ -20,7 +20,7 @@
 .model-card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   padding: var(--space-lg);
   cursor: pointer;
   text-align: left;
@@ -126,7 +126,7 @@
 .model-detail {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
 }
 
 .model-detail__head {
@@ -199,7 +199,7 @@
 
 .equation-block {
   background: var(--color-surface-muted);
-  border-left: 2px solid var(--color-brand);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   padding: var(--space-md) var(--space-lg);
   margin: var(--space-sm) 0;
@@ -274,7 +274,7 @@
 
 .caveat-item {
   padding: var(--space-sm) var(--space-md);
-  border-left: 3px solid var(--color-border-strong);
+  border: 1px solid var(--color-border);
   background: var(--color-surface-muted);
   border-radius: var(--radius-sm);
   font-size: 0.86rem;
@@ -282,11 +282,13 @@
 }
 
 .caveat-item.severity-critical {
-  border-left-color: var(--color-downside);
+  border-color: #e2b8a9;
+  background: var(--color-crit-soft);
 }
 
 .caveat-item.severity-warning {
-  border-left-color: var(--color-warn);
+  border-color: #e7d5a7;
+  background: var(--color-warn-soft);
 }
 
 .caveat-item strong {
