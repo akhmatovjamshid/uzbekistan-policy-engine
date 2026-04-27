@@ -32,7 +32,8 @@
     "comparison": "Comparison",
     "modelExplorer": "Model Explorer",
     "dataRegistry": "Data Registry",
-    "knowledgeHub": "Knowledge Hub"
+    "knowledgeHub": "Knowledge Hub",
+    "pending": "Pending"
   },
   "pages": {
     "overview": {
@@ -86,7 +87,7 @@
     },
     "knowledgeHub": {
       "title": "Knowledge Hub",
-      "description": "Context for scenarios. Reforms underway, CERR research output, and the academic literature behind each model."
+      "description": "Internal-preview route retained for future source-linked policy context. Content remains pending until the citation workflow is accepted."
     }
   },
   "overview": {
@@ -673,6 +674,13 @@
     }
   },
   "knowledgeHub": {
+    "pending": {
+      "status": "Pending",
+      "title": "Knowledge Hub pending",
+      "message": "Knowledge Hub is not active in this internal preview.",
+      "reason": "Source/citation workflow is pending; no live legal or research feed is connected.",
+      "nextStep": "Next: accept the source/citation workflow, reviewer-of-record process, and static/currentness caveats before activation."
+    },
     "staticPilotBanner": "Curated static pilot content — not a live legal or research feed.",
     "metadata": {
       "sourceStatic": "Source: static pilot content",

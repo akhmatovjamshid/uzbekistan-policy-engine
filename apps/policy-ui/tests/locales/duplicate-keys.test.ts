@@ -127,6 +127,23 @@ function findDuplicateJsonKeys(text: string): DuplicateJsonKey[] {
   return state.duplicates
 }
 
+function collectLeafPaths(value: unknown, prefix = ''): string[] {
+  if (Array.isArray(value)) {
+    return value.flatMap((item, index) => collectLeafPaths(item, `${prefix}[${index}]`))
+  }
+  if (value && typeof value === 'object') {
+    return Object.entries(value).flatMap(([key, child]) =>
+      collectLeafPaths(child, prefix ? `${prefix}.${key}` : key),
+    )
+  }
+  return [prefix]
+}
+
+function readLocale(relativePath: string): Record<string, unknown> {
+  const localeDir = join(process.cwd(), 'src', 'locales')
+  return JSON.parse(readFileSync(join(localeDir, relativePath), 'utf8')) as Record<string, unknown>
+}
+
 describe('locale JSON duplicate-key guard', () => {
   it('detects duplicate keys before JSON.parse would overwrite them', () => {
     const duplicates = findDuplicateJsonKeys('{"nav":{"overview":"A","overview":"B"}}')
@@ -144,6 +161,16 @@ describe('locale JSON duplicate-key guard', () => {
     })
 
     assert.deepEqual(failures, [])
+  })
+
+  it('keeps EN/RU/UZ locale key coverage in parity', () => {
+    const enPaths = collectLeafPaths(readLocale('en/common.json')).sort()
+    const localizedFiles = ['ru/common.json', 'uz/common.json']
+
+    for (const relativePath of localizedFiles) {
+      const paths = collectLeafPaths(readLocale(relativePath)).sort()
+      assert.deepEqual(paths, enPaths, `${relativePath} should match en/common.json keys`)
+    }
   })
 })
 

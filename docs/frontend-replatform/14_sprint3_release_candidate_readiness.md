@@ -9,7 +9,7 @@ Source closeout: `docs/planning/sprint-3-stabilization-closeout.md`
 
 Sprint 3 is release-candidate ready for internal preview and workflow/trust review.
 
-The app-level stabilization gate is clean according to the Sprint 3 closeout: lint passed, tests passed, production build passed, local browser QA passed across the supported routes, and the I-O pilot workflows were verified. The final prototype/data-viz alignment pass is complete for the release-candidate surface, including Scenario Lab chart clarity, I-O result readability, Comparison macro/I-O separation, Data Registry status scanning, and Model Explorer bridge evidence consistency. The remaining release-control work is hosted verification, deferred named evaluator readiness, human RU/UZ terminology review, and slice-based review before any merge to `main`.
+The app-level stabilization gate is clean according to the Sprint 3 closeout: lint passed, tests passed, production build passed, local browser QA passed across the supported routes, and the I-O pilot workflows were verified. The final prototype/data-viz alignment pass is complete for the release-candidate surface, including Scenario Lab chart clarity, I-O result readability, Comparison macro/I-O separation, Data Registry status scanning, and Model Explorer bridge evidence consistency. Knowledge Hub remains route-visible for the operational internal preview, but seeded reform/brief/literature mock content is hidden behind a pending state until the source/citation workflow and reviewer model are accepted. The remaining release-control work is hosted verification, deferred named evaluator readiness, human RU/UZ terminology review, and slice-based review before any merge to `main`.
 
 This branch is not pilot-ready because named evaluator sessions are deferred. Broader pilot readiness still requires named evaluators and a human review of RU/UZ terminology and sector/model wording.
 
@@ -17,7 +17,7 @@ This branch is not pilot-ready because named evaluator sessions are deferred. Br
 
 - Internal preview of the React policy UI on `epic/replatform-execution`.
 - Hosted smoke verification for the `/policy-ui/` GitHub Pages path.
-- Six internal-preview surfaces: Overview, Scenario Lab, Comparison, Model Explorer, Data Registry, and Knowledge Hub.
+- Six internal-preview surfaces: Overview, Scenario Lab, Comparison, Model Explorer, Data Registry, and Knowledge Hub pending state.
 - Static data artifact reachability for QPM, DFM, and I-O JSON files.
 - EN/RU/UZ language-switch smoke coverage.
 - I-O evidence visibility in Model Explorer.
@@ -44,7 +44,7 @@ This branch is not pilot-ready because named evaluator sessions are deferred. Br
 - "Sprint 3 is an internal preview release candidate."
 - "Sprint 3 is an internal preview for workflow/trust review."
 - "The current branch passed docs-recorded lint, test, build, and local browser QA gates."
-- "The internal-preview surface includes Overview, Scenario Lab, Comparison, Model Explorer, Data Registry, and Knowledge Hub."
+- "The internal-preview surface includes Overview, Scenario Lab, Comparison, Model Explorer, Data Registry, and a pending Knowledge Hub route."
 - "I-O evidence is visible in Model Explorer."
 - "Scenario Lab supports the current I-O run/save workflow."
 - "Comparison can add saved I-O runs without replacing the macro comparison rows."
@@ -77,6 +77,9 @@ This branch is not pilot-ready because named evaluator sessions are deferred. Br
 | Production build | Pass with accepted warning | `npm run build` passed; existing large chunk warning remains. |
 | Local browser QA | Pass | Route, navigation, EN/RU/UZ, Data Registry, Model Explorer I-O evidence, Scenario Lab I-O save, and Comparison saved I-O add flows passed. |
 | Prototype/data-viz alignment | Pass for internal preview | Final alignment pass completed for Scenario Lab QPM chart clarity, I-O readability, Comparison macro/I-O separation, Data Registry status scanning, and Model Explorer bridge evidence visual consistency. |
+| Operational preview route gate | Pending verification | Every route must render either real output or the shared `PendingSurface`; Knowledge Hub mock content is hidden and pending-only. |
+| EN/RU/UZ key completeness | Pending verification | Locale keys must remain complete across EN/RU/UZ. Functional RU/UZ translations do not replace human terminology review. |
+| Browser smoke console errors | Pending verification | `/overview`, `/scenario-lab`, `/comparison`, `/model-explorer`, `/data-registry`, `/knowledge-hub`, and EN/RU/UZ toggles must pass with 0 console errors. |
 | Hosted deployment | Conditional | GitHub Pages workflow must pass on Ubuntu and the hosted `/policy-ui/` path must be smoke checked. |
 | Named evaluator pilot | Deferred | Named evaluator sessions are skipped for now; this branch is not pilot-ready. |
 | Public launch | Not claimed | This package supports internal preview workflow/trust review, not public launch. |
@@ -88,6 +91,15 @@ This branch is not pilot-ready because named evaluator sessions are deferred. Br
 - I-O sector labels remain Russian in the source artifact; EN and UZ sector-name reconciliation is a later data/content task.
 - Local Windows Pages-base build probing hit `spawn EPERM`; the Ubuntu GitHub Pages workflow remains the required hosted deployment gate.
 - Browser QA was a smoke/stabilization pass, not a complete accessibility, screen-reader, performance, or translation-quality audit.
+
+## Operational Preview Gate
+
+For the fast-track operational preview branch, the gate is:
+
+1. Every route renders real output or the shared `PendingSurface`.
+2. `npm run lint`, `npm test`, and `npm run build` are green.
+3. EN/RU/UZ locale keys are complete.
+4. Browser smoke across `/overview`, `/scenario-lab`, `/comparison`, `/model-explorer`, `/data-registry`, `/knowledge-hub`, and EN/RU/UZ toggles passes with 0 console errors.
 
 ## Deferred Gates Before Pilot
 

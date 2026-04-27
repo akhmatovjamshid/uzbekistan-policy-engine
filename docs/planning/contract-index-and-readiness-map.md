@@ -12,7 +12,7 @@ No code implementation is currently allowed on any listed gated workstream. Perm
 - HFI: gated - next: source-owner outreach - forbidden: create `/data/hfi_snapshot.json`
 - FPP: gated - next: clear Gate 1 workbook freeze - forbidden: frontend integration
 - PE: gated - next: freeze WITS/source vintage and owner acceptance - forbidden: PE artifact or `pe_data.js` regeneration
-- Knowledge Hub: gated - next: accept source/citation schema and reviewer model - forbidden: backend/API CRUD or external citation
+- Knowledge Hub: gated - internal-preview route is pending-only with mock content hidden - next: accept source/citation schema and reviewer model - forbidden: backend/API CRUD or external citation
 - Backend artifact registry: gated - next: accept backend operations, fallback adapter, and architecture owner decisions - forbidden: FastAPI/Postgres implementation
 - Registry API/static fallback adapter: gated - next: owner acceptance of API/static precedence and source-state labels - forbidden: frontend API wiring
 - Data Registry: implemented - next: preserve static/read-only registry semantics and update source docs with contract changes - forbidden: backend authority, scheduler status, or source CRUD claims
@@ -85,7 +85,7 @@ STOP conditions must be quoted or line-referenced from source contracts where po
 - Status: `gated`
 - Last verified: 2026-04-27 on `epic/replatform-execution` at `b3950dd`
 - Source-of-truth doc path: `docs/data-bridge/09_knowledge_hub_contract.md`
-- Current implementation status: static internal-preview content exists, but governed source/citation workflow, backend/API source records, external citation, and CRUD remain gated.
+- Current implementation status: Knowledge Hub remains route-visible but pending-only for the operational internal preview; seeded static reform/brief/literature content is hidden behind the shared pending surface. Governed source/citation workflow, backend/API source records, external citation, live ingest, and CRUD remain gated.
 - Blocking STOP conditions: `docs/data-bridge/09_knowledge_hub_contract.md:405-426` says stop before app code, backend work, API wiring, CRUD, live ingest, content expansion, external citation, or export if schema governance, AI governance binding, source/citation lineage, reform-status authority, model-ref whitelist, citation scope, correction/takedown, RU/UZ review, reviewer sign-off, static/legal-currentness caveats, and read-only API/static fallback acceptance remain unresolved. `docs/data-bridge/09_knowledge_hub_contract.md:121-125` blocks external citation/export of AI-drafted content without reviewed/accepted source state and actual reviewer sign-off.
 - Blocks / blocked-by: blocks Knowledge Hub backend/API CRUD, source records, external citation/export, live ingest, and content expansion; blocked by source/citation schema acceptance, AI governance binding, reviewer-of-record model, RU/UZ review process, model-ref whitelist, and backend ops/fallback acceptance before API work.
 - Next allowed action: accept the source/citation schema, reviewer-of-record process, and static/legal-currentness caveat model.

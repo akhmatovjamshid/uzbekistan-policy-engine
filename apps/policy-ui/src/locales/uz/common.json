@@ -32,7 +32,8 @@
     "comparison": "Stsenariylarni solishtirish",
     "modelExplorer": "Model katalogi",
     "dataRegistry": "Ma'lumotlar reyestri",
-    "knowledgeHub": "Bilimlar markazi"
+    "knowledgeHub": "Bilimlar markazi",
+    "pending": "Kutilmoqda"
   },
   "pages": {
     "overview": {
@@ -86,7 +87,7 @@
     },
     "knowledgeHub": {
       "title": "Bilimlar markazi",
-      "description": "Stsenariylar uchun kontekst. Amalga oshirilayotgan islohotlar, CERR tadqiqot yozuvlari va har bir model ortidagi ilmiy adabiyotlar."
+      "description": "Manbalarga bog'langan kelajakdagi siyosiy kontekst uchun ichki preview marshruti saqlangan. Kontent citation jarayoni qabul qilinmaguncha kutilmoqda."
     }
   },
   "overview": {
@@ -673,6 +674,13 @@
     }
   },
   "knowledgeHub": {
+    "pending": {
+      "status": "Kutilmoqda",
+      "title": "Bilimlar markazi kutilmoqda",
+      "message": "Bilimlar markazi ushbu ichki previewda faol emas.",
+      "reason": "Manba/citation jarayoni kutilmoqda; jonli huquqiy yoki tadqiqot lentasi ulanmagan.",
+      "nextStep": "Keyingi qadam: faollashtirishdan oldin manba/citation jarayoni, mas'ul taqrizchi modeli va statiklik/aktuallik izohlarini qabul qilish."
+    },
     "staticPilotBanner": "Kuratsiya qilingan statik pilot kontent — jonli huquqiy yoki tadqiqot lentasi emas.",
     "metadata": {
       "sourceStatic": "Manba: statik pilot kontent",

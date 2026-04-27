@@ -31,7 +31,10 @@ export function AppShell() {
                     isActive ? 'app-shell__nav-link active' : 'app-shell__nav-link'
                   }
                 >
-                  {t(item.labelKey)}
+                  <span>{t(item.labelKey)}</span>
+                  {item.badgeKey ? (
+                    <span className="app-shell__nav-badge">{t(item.badgeKey)}</span>
+                  ) : null}
                 </NavLink>
               </li>
             ))}
