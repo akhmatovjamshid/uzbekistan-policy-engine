@@ -4,6 +4,12 @@ Date: 2026-04-27
 Status: planning only; no backend implementation or database migrations authorized by this document  
 Scope: backend/database architecture for the full platform after Data Registry v2 foundation
 
+Prerequisite contracts before implementation:
+
+- `docs/planning/backend-operations-contract.md` must be accepted for hosting, operations, secrets, deployment, backup/restore, retention, and ingestion-auth posture.
+- `docs/planning/registry-api-fallback-adapter.md` must be accepted for API-prefer/static-fallback precedence, divergence handling, source-state labels, and frontend guard behavior.
+- Backend implementation remains blocked until both contracts are accepted.
+
 ## 1. Current Static Artifact Architecture
 
 The current platform is a frontend-only React app backed by static public JSON artifacts. The active bridge artifacts are:
@@ -442,6 +448,8 @@ Future requirements:
 
 Stop before backend implementation if any of these remain undecided:
 
+- Backend operations contract is not accepted.
+- Registry API/static fallback adapter contract is not accepted.
 - Deployment target and operational owner for the backend are not accepted.
 - Postgres hosting choice is unresolved.
 - Auth approach is unresolved for any write endpoint.
