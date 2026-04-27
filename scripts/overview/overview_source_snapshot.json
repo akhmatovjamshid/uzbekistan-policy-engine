@@ -1,0 +1,304 @@
+{
+  "source_snapshot_version": "overview-source.v1",
+  "status": "draft_not_for_public_artifact",
+  "draft_note": "Non-public draft scaffold only. Do not generate or commit apps/policy-ui/public/data/overview.json from this snapshot until every metric has an owner-accepted value, exact source_reference or release URL, and arithmetic checks pass. USD/UZS MoM/YoY must reconcile with level/previous values. Trade balance unit must be resolved to USD million or USD billion.",
+  "metrics": [
+    {
+      "metric_id": "real_gdp_growth_annual_yoy",
+      "value": 6.0,
+      "previous_value": 5.5,
+      "source_label": "Statistics Agency national accounts",
+      "source_period": "2025",
+      "source_url": "https://stat.uz/",
+      "observed_at": "2026-01-20T00:00:00Z",
+      "claim_type": "observed",
+      "unit": "percent YoY",
+      "frequency": "annual",
+      "validation_status": "valid",
+      "caveats": [
+        "Draft value only; exact release citation and owner verification are still required before public export."
+      ],
+      "warnings": []
+    },
+    {
+      "metric_id": "real_gdp_growth_quarter_yoy",
+      "value": 5.7,
+      "previous_value": 5.4,
+      "source_label": "Statistics Agency quarterly GDP",
+      "source_period": "2026 Q1",
+      "source_url": "https://stat.uz/",
+      "observed_at": "2026-04-18T00:00:00Z",
+      "claim_type": "observed",
+      "unit": "percent YoY",
+      "frequency": "quarterly",
+      "validation_status": "valid",
+      "caveats": [
+        "Draft value only; exact release citation and owner verification are still required before public export."
+      ],
+      "warnings": []
+    },
+    {
+      "metric_id": "gdp_nowcast_current_quarter",
+      "value": 5.9,
+      "previous_value": 5.8,
+      "source_label": "DFM bridge nowcast",
+      "source_period": "2026 Q2 nowcast",
+      "source_reference": "DFM bridge static Overview fallback",
+      "extracted_at": "2026-04-27T00:00:00Z",
+      "claim_type": "nowcast",
+      "unit": "percent YoY",
+      "frequency": "quarterly / model update cadence",
+      "validation_status": "valid",
+      "caveats": [
+        "Not an official GDP release; model nowcast only."
+      ],
+      "warnings": []
+    },
+    {
+      "metric_id": "cpi_yoy",
+      "value": 8.1,
+      "previous_value": 8.3,
+      "source_label": "Statistics Agency CPI",
+      "source_period": "March 2026",
+      "source_url": "https://stat.uz/",
+      "observed_at": "2026-04-05T00:00:00Z",
+      "claim_type": "observed",
+      "unit": "percent YoY",
+      "frequency": "monthly",
+      "validation_status": "valid",
+      "caveats": [
+        "Draft value only; exact release citation and owner verification are still required before public export."
+      ],
+      "warnings": []
+    },
+    {
+      "metric_id": "cpi_mom",
+      "value": 0.7,
+      "previous_value": 0.5,
+      "source_label": "Statistics Agency CPI",
+      "source_period": "March 2026",
+      "source_url": "https://stat.uz/",
+      "observed_at": "2026-04-05T00:00:00Z",
+      "claim_type": "observed",
+      "unit": "percent MoM",
+      "frequency": "monthly",
+      "validation_status": "valid",
+      "caveats": [
+        "Monthly inflation can be volatile; do not present as trend alone."
+      ],
+      "warnings": []
+    },
+    {
+      "metric_id": "food_cpi_yoy",
+      "value": 9.4,
+      "previous_value": 9.8,
+      "source_label": "Statistics Agency food CPI",
+      "source_period": "March 2026",
+      "source_url": "https://stat.uz/",
+      "observed_at": "2026-04-05T00:00:00Z",
+      "claim_type": "observed",
+      "unit": "percent YoY",
+      "frequency": "monthly",
+      "validation_status": "valid",
+      "caveats": [
+        "Category definitions must be stable before comparing over time."
+      ],
+      "warnings": []
+    },
+    {
+      "metric_id": "exports_yoy",
+      "value": 7.2,
+      "previous_value": 6.5,
+      "source_label": "Statistics Agency foreign trade",
+      "source_period": "March 2026",
+      "source_url": "https://stat.uz/",
+      "observed_at": "2026-04-22T00:00:00Z",
+      "claim_type": "observed",
+      "unit": "percent YoY",
+      "frequency": "monthly or quarterly",
+      "validation_status": "valid",
+      "caveats": [
+        "Trade values can be revised; show latest-vintage status."
+      ],
+      "warnings": []
+    },
+    {
+      "metric_id": "imports_yoy",
+      "value": 5.1,
+      "previous_value": 4.8,
+      "source_label": "Statistics Agency foreign trade",
+      "source_period": "March 2026",
+      "source_url": "https://stat.uz/",
+      "observed_at": "2026-04-22T00:00:00Z",
+      "claim_type": "observed",
+      "unit": "percent YoY",
+      "frequency": "monthly or quarterly",
+      "validation_status": "valid",
+      "caveats": [
+        "Trade values can be revised; show latest-vintage status."
+      ],
+      "warnings": []
+    },
+    {
+      "metric_id": "trade_balance",
+      "value": -1.2,
+      "previous_value": -1.4,
+      "source_label": "Statistics Agency foreign trade",
+      "source_period": "March 2026",
+      "source_url": "https://stat.uz/",
+      "observed_at": "2026-04-22T00:00:00Z",
+      "claim_type": "observed",
+      "unit": "USD million or USD billion",
+      "frequency": "monthly or quarterly",
+      "validation_status": "valid",
+      "caveats": [
+        "Label goods trade balance if services are excluded."
+      ],
+      "warnings": []
+    },
+    {
+      "metric_id": "policy_rate",
+      "value": 13.5,
+      "previous_value": 14.0,
+      "source_label": "Central Bank of Uzbekistan policy rate",
+      "source_period": "Effective April 2026",
+      "source_url": "https://cbu.uz/",
+      "observed_at": "2026-04-18T00:00:00Z",
+      "claim_type": "observed_policy_setting",
+      "unit": "percent",
+      "frequency": "event-based",
+      "validation_status": "valid",
+      "caveats": [
+        "Event-based setting; do not infer policy stance without inflation context."
+      ],
+      "warnings": []
+    },
+    {
+      "metric_id": "usd_uzs_level",
+      "value": 12680,
+      "previous_value": 12500,
+      "source_label": "Central Bank of Uzbekistan exchange rate",
+      "source_period": "2026-04-26",
+      "source_url": "https://cbu.uz/",
+      "observed_at": "2026-04-26T00:00:00Z",
+      "claim_type": "observed",
+      "unit": "UZS per USD",
+      "frequency": "daily",
+      "validation_status": "valid",
+      "caveats": [
+        "Official/reference rate, not transaction-weighted market average."
+      ],
+      "warnings": []
+    },
+    {
+      "metric_id": "usd_uzs_mom_change",
+      "value": 0.8,
+      "previous_value": 0.6,
+      "source_label": "CBU exchange rate, calculated",
+      "source_period": "April 2026 to March 2026",
+      "source_reference": "Calculated from accepted CBU official exchange-rate snapshot values",
+      "extracted_at": "2026-04-27T00:00:00Z",
+      "claim_type": "calculated_identity",
+      "unit": "percent MoM",
+      "frequency": "monthly from daily observations",
+      "validation_status": "valid",
+      "caveats": [
+        "Positive values indicate UZS depreciation against USD."
+      ],
+      "warnings": []
+    },
+    {
+      "metric_id": "usd_uzs_yoy_change",
+      "value": 4.3,
+      "previous_value": 4.0,
+      "source_label": "CBU exchange rate, calculated",
+      "source_period": "April 2026 to April 2025",
+      "source_reference": "Calculated from accepted CBU official exchange-rate snapshot values",
+      "extracted_at": "2026-04-27T00:00:00Z",
+      "claim_type": "calculated_identity",
+      "unit": "percent YoY",
+      "frequency": "monthly from daily observations",
+      "validation_status": "valid",
+      "caveats": [
+        "Positive values indicate UZS depreciation against USD."
+      ],
+      "warnings": []
+    },
+    {
+      "metric_id": "reer_level",
+      "value": 102.4,
+      "previous_value": 101.9,
+      "source_label": "REER source to be confirmed (TO CONFIRM)",
+      "source_period": "March 2026",
+      "source_reference": "Provisional REER snapshot pending accepted source confirmation",
+      "extracted_at": "2026-04-27T00:00:00Z",
+      "claim_type": "reference",
+      "unit": "index",
+      "frequency": "monthly or quarterly",
+      "validation_status": "warning",
+      "caveats": [
+        "Base year and methodology must be shown before citing."
+      ],
+      "warnings": [
+        "Source not yet confirmed."
+      ]
+    },
+    {
+      "metric_id": "gold_price_level",
+      "value": 2350,
+      "previous_value": 2290,
+      "source_label": "Gold price source to be confirmed (TO CONFIRM)",
+      "source_period": "April 2026",
+      "source_reference": "Provisional gold price snapshot pending accepted source confirmation",
+      "extracted_at": "2026-04-27T00:00:00Z",
+      "claim_type": "observed_market_price",
+      "unit": "USD per troy ounce",
+      "frequency": "daily or monthly",
+      "validation_status": "warning",
+      "caveats": [
+        "External market price; not a CERR forecast."
+      ],
+      "warnings": [
+        "Source not yet confirmed."
+      ]
+    },
+    {
+      "metric_id": "gold_price_change",
+      "value": 3.2,
+      "previous_value": 2.7,
+      "source_label": "Gold price source, calculated (TO CONFIRM)",
+      "source_period": "April 2026 vs March 2026",
+      "source_reference": "Calculated from provisional gold price snapshot pending accepted source confirmation",
+      "extracted_at": "2026-04-27T00:00:00Z",
+      "claim_type": "calculated_identity",
+      "unit": "percent MoM or YoY",
+      "frequency": "monthly",
+      "validation_status": "warning",
+      "caveats": [
+        "Comparison basis is MoM in this provisional snapshot."
+      ],
+      "warnings": [
+        "Source not yet confirmed."
+      ]
+    },
+    {
+      "metric_id": "gold_price_forecast",
+      "value": 2400,
+      "previous_value": null,
+      "source_label": "External gold price forecast (TO CONFIRM)",
+      "source_period": "2026 forecast vintage",
+      "source_reference": "Provisional external gold price forecast pending accepted source confirmation",
+      "extracted_at": "2026-04-27T00:00:00Z",
+      "claim_type": "reference_forecast",
+      "unit": "USD per troy ounce",
+      "frequency": "semiannual / forecast release cadence",
+      "validation_status": "warning",
+      "caveats": [
+        "External reference assumption, not a CERR forecast or policy recommendation."
+      ],
+      "warnings": [
+        "Source not yet confirmed."
+      ]
+    }
+  ]
+}

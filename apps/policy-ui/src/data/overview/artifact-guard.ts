@@ -263,12 +263,14 @@ export function validateOverviewArtifact(input: unknown): OverviewArtifactValida
 
   const validatedExportedAt = exportedAt ?? ''
   const validatedStatus = validationStatus as OverviewArtifactValidationStatus
+  const generatedBy = stringValue(input.generated_by)
 
   return {
     ok: true,
     value: {
       schema_version: OVERVIEW_ARTIFACT_SCHEMA_VERSION,
       exported_at: validatedExportedAt,
+      generated_by: generatedBy ?? undefined,
       validation_status: validatedStatus,
       metrics,
       caveats,

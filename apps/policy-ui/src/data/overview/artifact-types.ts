@@ -244,6 +244,7 @@ export type OverviewArtifactPanelGroup = {
 export type OverviewArtifact = {
   schema_version: typeof OVERVIEW_ARTIFACT_SCHEMA_VERSION
   exported_at: string
+  generated_by?: string
   validation_status: OverviewArtifactValidationStatus
   metrics: OverviewArtifactMetric[]
   caveats: string[]
