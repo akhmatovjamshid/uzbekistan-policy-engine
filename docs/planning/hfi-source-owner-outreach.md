@@ -21,23 +21,23 @@ This package alone authorizes none of the following:
 
 ## 2. Owner and Timebox
 
-HFI source-inventory owner: TBD.
+HFI source-inventory owner: project owner (provisional, sole-owner phase). To be reassigned to a named institutional owner once one is identified.
 
-Recommended timebox: 5 working days for initial source-owner responses after the HFI source-inventory owner is assigned.
+Recommended timebox: 5 working days for initial source-owner responses after each external source owner is contacted.
 
-Outreach cannot proceed meaningfully until the HFI source-inventory owner is assigned. That owner is responsible for coordinating source-owner responses, resolving conflicts, and ensuring accepted answers are written back into `docs/planning/hfi-source-inventory.md`.
+Provisional sole-owner assignment lets outreach begin with a single accountable internal contact. It does not waive external source-owner confirmation, does not unblock HFI implementation, and does not authorize any HFI artifact, data file, scheduler, backend, frontend, or model refit. Accepted answers must still be written back into `docs/planning/hfi-source-inventory.md` before any row may move to `accepted`.
 
 ## 3. Internal Pre-Outreach Decisions
 
-Resolve the internal decisions below before asking source owners for detailed confirmations:
+Resolved provisionally by the project owner (sole-owner phase) on 2026-04-27. Each item below is a placeholder accountability assignment that must be reassigned to a named institutional owner once one is identified, and none of these decisions unblock HFI implementation. Authoritative wording lives in `docs/planning/hfi-source-inventory.md` under "Internal Pre-Outreach Decisions (Provisional)" and "DFM-Overlap Governance".
 
-- [ ] DFM-overlap canonical ownership is declared for CPI, FX, trade, credit, monetary aggregates, and activity proxies.
-- [ ] Transformation owner is assigned for each candidate source or family.
-- [ ] RU/UZ label owner is assigned for each candidate source or family.
-- [ ] Stale/missing rule proposal sign-off role is assigned.
-- [ ] HFI source-inventory owner is assigned.
-- [ ] Acceptance role is assigned for moving a source-inventory row to `accepted`.
-- [ ] Each candidate is confirmed to remain inside the accepted five-family HFI contract.
+- [x] DFM-overlap canonical ownership rule declared (provisional). DFM holds canonical input ownership for any series already used as a DFM nowcast input (CPI/inflation, FX, trade, credit, monetary aggregates, activity proxies). HFI may register the same series only for monitoring and source-vintage display, with no DFM input backfill or DFM refit. For overlap-eligible series not currently used by DFM, HFI may hold provisional monitoring/display ownership and must re-register if DFM later adopts the series. Both-surface ownership requires separate accepted roles, vintage rules, and stale/missing rules. Per-series DFM-overlap declarations must still be written into each affected inventory row before the row can move to `accepted`.
+- [x] Transformation owner assigned (provisional). Default transformation owner for every candidate family is the project owner, limited to the transformations already recorded in each inventory row.
+- [x] RU/UZ label owner assigned (provisional). Default label owner is the project owner, with the explicit constraint that RU/UZ terminology review must be delegated to a qualified RU/UZ reviewer before any source appears in a user-facing artifact or Data Registry row.
+- [x] Stale/missing rule proposal sign-off role assigned (provisional). Sign-off role is the project owner; sign-off is recorded only when the rule is consistent with the cadence, lag, and revision convention confirmed by the source owner.
+- [x] HFI source-inventory owner assigned (provisional). Project owner (sole-owner phase).
+- [x] Acceptance role assigned (provisional). Project owner, conditional on written external source-owner confirmation of license/access, attribution, vintage rule, stale/missing rule, DFM-overlap declaration, RU/UZ label review, and display rights for the row.
+- [x] Each candidate is confirmed to remain inside the accepted five-family HFI contract: prices/inflation proxies, FX/financial conditions, trade/customs, fiscal/revenue, electricity/energy activity proxy. Cross-reference-only rows remain limited to FPP workbook fiscal and FPP workbook monetary/external historical inputs. CBU policy rate stays `deferred` and context-only; deferred extension families (housing, car market, business climate, business activity, labor/firm activity) stay out of scope.
 
 ## 4. Source-Owner Questions
 

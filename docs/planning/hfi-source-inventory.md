@@ -20,7 +20,7 @@ HFI is monitoring and early-warning context only. It must not be treated as a DF
 
 No source in this inventory should be promoted to `accepted` until every required field is confirmed by the source owner and data governance reviewer. Source license/access status is a hard gate: no row can move to `accepted` while access/license remains "to confirm" or while redistribution/display rights are unresolved.
 
-Acceptance role placeholder: HFI source-inventory owner, plus the named source owner for the relevant family.
+Acceptance role (provisional, sole-owner phase): the project owner acts as HFI source-inventory owner and as the internal acceptance role, alongside the named external source owner for the relevant family. A row may move from `candidate` to `accepted` only when the external source owner has confirmed every required field in writing and the project owner has recorded that confirmation in this inventory. The acceptance role must be reassigned to a named institutional reviewer once one is identified; provisional sole-owner acceptance does not waive external source-owner confirmation.
 
 ## In-Scope HFI Families
 
@@ -82,6 +82,13 @@ No HFI series can be accepted if it overlaps with DFM indicators until canonical
 
 Likely overlap candidates include CPI/inflation, FX, trade, credit, monetary aggregates, and activity proxies. For any overlapping series, Data Registry metadata must identify whether canonical ownership belongs to HFI monitoring/source-vintage display, DFM nowcast input ownership, or both surfaces with separate accepted roles.
 
+Provisional canonical ownership rule (sole-owner phase):
+
+- For any series already consumed as a DFM nowcast input, DFM holds canonical input ownership. HFI may register the same series only for monitoring and source-vintage display. Such a row carries no path back to DFM input backfill, DFM refit, or model-output substitution.
+- For an overlap-eligible series not currently consumed by DFM, HFI may hold provisional monitoring/display ownership. If DFM later adopts the series, the row must be re-registered and the canonical-input role transferred to DFM.
+- Both-surface ownership is permitted only when each surface has a separately recorded accepted role and a separately accepted vintage and stale/missing rule.
+- The DFM-overlap declaration for each overlapping HFI row must be written into the inventory row before that row can move to `accepted`.
+
 ## First Static Pilot Shortlist Recommendation
 
 The first static pilot artifact should contain only the safest 5-7 indicators after source acceptance. The recommended shortlist below is ordered by acceptance readiness, not analytical importance, and should use public official aggregate sources where possible:
@@ -95,6 +102,39 @@ The first static pilot artifact should contain only the safest 5-7 indicators af
 | 5 | Total budget revenue | fiscal/revenue | Accept after MEF/Treasury source table, basis, license/access, and display permission are confirmed. |
 
 Do not add policy rate, food CPI, customs revenue, electricity generation/load, housing, car market, business climate, labor, firm activity, FPP workbook values, or any CERR internal index to the first pilot unless source ownership, cadence, history, license/access, display rights, DFM-overlap ownership, and RU/UZ labels are all confirmed. Policy rate can remain context-only outside the pilot artifact because it is event-based rather than a monitored high-frequency series.
+
+## Internal Pre-Outreach Decisions (Provisional)
+
+These decisions are sole-owner provisional assignments made by the project owner before external source-owner outreach begins. They are placeholder accountability roles, not external commitments, and they do not unblock HFI implementation, data files, or any backend or frontend work. Each role must be reassigned to a named institutional owner when one is identified, and external source-owner confirmation remains a hard gate for `accepted` status.
+
+Internal role assignments:
+
+- HFI source-inventory owner: project owner (provisional, sole).
+- Transformation owner (default for every candidate family until reassigned): project owner. Transformations remain limited to the rules already recorded in each inventory row (mom/yoy from documented periods, native-level preservation, source-supplied USD conversion, percent-of-plan only with documented basis).
+- RU/UZ label owner (default): project owner, with the explicit constraint that RU/UZ terminology review must be delegated to a qualified RU/UZ reviewer before any source appears in a user-facing artifact or Data Registry row.
+- Acceptance role (moving a row from `candidate` to `accepted`): project owner, conditional on written external source-owner confirmation of license/access, attribution, vintage rule, stale/missing rule, DFM-overlap declaration, RU/UZ label review, and display rights for that row.
+- Stale/missing rule sign-off owner: project owner. Sign-off is recorded only when the rule is consistent with the cadence, lag, and revision convention confirmed by the source owner.
+
+DFM-overlap canonical ownership: see "DFM-Overlap Governance" above for the provisional rule.
+
+In-scope candidate families (provisional, unchanged from the HFI contract):
+
+- prices/inflation proxies
+- FX/financial conditions
+- trade/customs
+- fiscal/revenue
+- electricity/energy activity proxy
+
+No additional families are admitted by these provisional decisions. The deferred extension families (housing, car market, business climate, business activity, labor/firm activity) remain out of scope.
+
+Cross-reference-only sources (provisional, unchanged):
+
+- FPP workbook fiscal historical inputs
+- FPP workbook monetary/external historical inputs
+
+Cross-reference rows must not be ingested into an HFI artifact, used to backfill HFI, or treated as monitored high-frequency series. CBU policy rate remains `deferred` and context-only; it is not promoted to cross-reference and is not eligible for the first pilot artifact.
+
+These provisional decisions exist only to allow source-owner outreach to begin with a single accountable internal contact. They do not authorize any HFI artifact, data file, scheduler, backend, frontend, model refit, or Data Registry implementation.
 
 ## Governance Notes
 
@@ -123,3 +163,5 @@ Stop before promoting any row, building a shortlist artifact, or starting implem
 ## Review Resolution
 
 This revision resolves the bounded Claude Code review by removing policy rate from the pilot shortlist, moving FPP workbook rows into cross-reference-only status, cutting the pilot shortlist to five safer public aggregate candidates, adding DFM-overlap governance, making license/access a hard acceptance gate, renaming extension families as deferred, and adding explicit STOP conditions.
+
+The 2026-04-27 follow-up adds provisional sole-owner internal decisions (HFI source-inventory owner, transformation owner, RU/UZ label owner, acceptance role, stale/missing rule sign-off, DFM-overlap canonical ownership rule, in-scope candidate families, and cross-reference-only sources). These provisional decisions allow external source-owner outreach to begin and do not unblock HFI implementation, data files, scheduler, backend, frontend, or model refit.
