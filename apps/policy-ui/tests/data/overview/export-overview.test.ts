@@ -14,8 +14,15 @@ import {
 const repoRoot = resolve(process.cwd(), '..', '..')
 const exporterPath = join(repoRoot, 'scripts', 'overview', 'export-overview.mjs')
 const sourceSnapshotPath = join(repoRoot, 'scripts', 'overview', 'overview_source_snapshot.json')
+const publicOverviewArtifactPath = join(repoRoot, 'apps', 'policy-ui', 'public', 'data', 'overview.json')
 const fixedExportedAt = '2026-04-27T09:30:00Z'
-const toConfirmMetricIds = ['reer_level', 'gold_price_level', 'gold_price_change', 'gold_price_forecast']
+const warningMetricIds = [
+  'gdp_nowcast_current_quarter',
+  'exports_yoy',
+  'imports_yoy',
+  'trade_balance',
+  'reer_level',
+]
 
 function tempPath(name: string): string {
   return join(mkdtempSync(join(tmpdir(), 'overview-export-')), name)
@@ -35,6 +42,19 @@ function buildVerifiedFixturePath(): string {
   }
   delete fixture.draft_note
   const fixturePath = tempPath('verified-overview-source.json')
+  writeFileSync(fixturePath, `${JSON.stringify(fixture, null, 2)}\n`, 'utf8')
+  return fixturePath
+}
+
+function buildDraftFixturePath(): string {
+  const source = readJson(sourceSnapshotPath) as Record<string, unknown>
+  const fixture: Record<string, unknown> = {
+    ...source,
+    status: 'draft_not_for_public_artifact',
+  }
+  delete fixture.snapshot_accepted_by
+  delete fixture.snapshot_accepted_at
+  const fixturePath = tempPath('draft-overview-source.json')
   writeFileSync(fixturePath, `${JSON.stringify(fixture, null, 2)}\n`, 'utf8')
   return fixturePath
 }
@@ -62,12 +82,17 @@ function runExporter(options: {
 }
 
 describe('overview exporter', () => {
-  it('does not require a production overview.json fixture to exist', () => {
-    assert.equal(existsSync(join(repoRoot, 'apps', 'policy-ui', 'public', 'data', 'overview.json')), false)
+  it('commits a production overview.json artifact that passes the Overview UI guard', () => {
+    assert.equal(existsSync(publicOverviewArtifactPath), true)
+
+    const artifact = readJson(publicOverviewArtifactPath) as OverviewArtifact
+    const validation = validateOverviewArtifact(artifact)
+    assert.equal(validation.ok, true)
+    assert.equal(artifact.validation_status, 'warning')
   })
 
-  it('refuses to export the committed draft source snapshot', () => {
-    const result = runExporter({ sourcePath: sourceSnapshotPath })
+  it('refuses to export a draft source snapshot', () => {
+    const result = runExporter({ sourcePath: buildDraftFixturePath() })
 
     assert.notEqual(result.status, 0)
     assert.match(result.stderr, /draft_not_for_public_artifact/)
@@ -110,17 +135,20 @@ describe('overview exporter', () => {
     )
   })
 
-  it('carries TO CONFIRM source metrics as warnings in the public artifact', () => {
+  it('carries owner-approved fallback and unresolved source metrics as warnings in the public artifact', () => {
     const result = runExporter({})
     assert.equal(result.status, 0, result.stderr)
 
     const artifact = readJson(result.outputPath) as OverviewArtifact
-    for (const metricId of toConfirmMetricIds) {
+    for (const metricId of warningMetricIds) {
       const metric = artifact.metrics.find((entry) => entry.id === metricId)
       assert.equal(metric?.validation_status, 'warning')
-      assert.match(metric?.source_label ?? '', /\(TO CONFIRM\)$/)
-      assert.deepEqual(metric?.warnings, ['Source not yet confirmed.'])
+      assert.ok(metric?.warnings.length, `${metricId} should carry a warning`)
     }
+
+    const reer = artifact.metrics.find((entry) => entry.id === 'reer_level')
+    assert.equal(reer?.source_label, 'CERR, REER')
+    assert.match(reer?.warnings.join(' '), /Source URL is pending/)
   })
 
   it('fails export when a locked metric is missing', () => {
