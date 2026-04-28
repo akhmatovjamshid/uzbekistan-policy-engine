@@ -59,6 +59,19 @@ function buildDraftFixturePath(): string {
   return fixturePath
 }
 
+function buildAutomationPendingFixturePath(): string {
+  const source = readJson(sourceSnapshotPath) as Record<string, unknown>
+  const fixture: Record<string, unknown> = {
+    ...source,
+    status: 'automation_pending_owner_review',
+  }
+  delete fixture.snapshot_accepted_by
+  delete fixture.snapshot_accepted_at
+  const fixturePath = tempPath('automation-pending-overview-source.json')
+  writeFileSync(fixturePath, `${JSON.stringify(fixture, null, 2)}\n`, 'utf8')
+  return fixturePath
+}
+
 function runExporter(options: {
   sourcePath?: string
   outputPath?: string
@@ -97,6 +110,30 @@ describe('overview exporter', () => {
 
     assert.notEqual(result.status, 0)
     assert.match(result.stderr, /draft_not_for_public_artifact/)
+  })
+
+  it('refuses to export an automation-pending source snapshot', () => {
+    const result = runExporter({ sourcePath: buildAutomationPendingFixturePath() })
+
+    assert.notEqual(result.status, 0)
+    assert.match(result.stderr, /automation_pending_owner_review/)
+  })
+
+  it('refuses owner-verified snapshots when value_hash no longer matches values or provenance', () => {
+    const source = readJson(buildVerifiedFixturePath()) as {
+      value_hash: string
+      metrics: Array<{ metric_id: string; value: number }>
+    }
+    const fxLevel = source.metrics.find((metric) => metric.metric_id === 'usd_uzs_level')
+    assert.ok(fxLevel)
+    fxLevel.value += 1
+    const badSourcePath = tempPath('stale-value-hash.json')
+    writeFileSync(badSourcePath, `${JSON.stringify(source, null, 2)}\n`, 'utf8')
+
+    const result = runExporter({ sourcePath: badSourcePath })
+
+    assert.notEqual(result.status, 0)
+    assert.match(result.stderr, /value_hash/)
   })
 
   it('writes a deterministic artifact that passes the Overview UI guard', () => {

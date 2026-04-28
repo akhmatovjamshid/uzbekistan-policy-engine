@@ -4,6 +4,7 @@
   "snapshot_accepted_by": "project owner",
   "snapshot_accepted_at": "2026-04-27T12:00:00Z",
   "snapshot_note": "Owner-accepted Overview V1 source snapshot. REER remains warning-status with CERR owner-supplied value and source URL pending; replace with automated HFI-backed source when accepted.",
+  "value_hash": "8ea81fe9fa5bdcb3390266dd23a267cbca6224ce5bc4572814ae0730c43deaa3",
   "metrics": [
     {
       "metric_id": "real_gdp_growth_annual_yoy",

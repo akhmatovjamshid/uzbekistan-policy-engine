@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
+import { computeOverviewValueHash } from './sources/snapshot-hash.mjs'
 
 const repoRoot = dirname(dirname(dirname(fileURLToPath(import.meta.url))))
 const generatedBy = 'scripts/overview/export-overview.mjs'
@@ -217,6 +218,12 @@ function validateSourceSnapshot(snapshot) {
   const lockOrder = OVERVIEW_LOCKED_METRICS.map((definition) => definition.id).join('|')
   if (sourceOrder !== lockOrder) {
     fail('Source snapshot metrics must be in OVERVIEW_LOCKED_METRICS order.')
+  }
+
+  const storedValueHash = requireString(source.value_hash, 'value_hash')
+  const recomputedValueHash = computeOverviewValueHash(source)
+  if (storedValueHash !== recomputedValueHash) {
+    fail('Source snapshot value_hash does not match metric values/provenance; refusing public Overview export.')
   }
 
   const topCardOrder = OVERVIEW_LOCKED_METRICS
