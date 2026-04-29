@@ -1,10 +1,8 @@
 {
   "source_snapshot_version": "overview-source.v1",
-  "status": "owner_verified_for_public_artifact",
-  "snapshot_accepted_by": "project owner",
-  "snapshot_accepted_at": "2026-04-29T05:43:29Z",
+  "status": "automation_pending_owner_review",
   "snapshot_note": "Owner-accepted Overview V1 source snapshot. REER remains warning-status with CERR owner-supplied value and source URL pending; replace with automated HFI-backed source when accepted.",
-  "value_hash": "1bbcd82005a61539a187612df5e2294157361e305a2ed9a8da4a3469f95d5a71",
+  "value_hash": "cb1c26cc3a494c7a727664557bd2c68b213a5fed5dabe3a045f9b68c47963bbb",
   "metrics": [
     {
       "metric_id": "real_gdp_growth_annual_yoy",
@@ -84,9 +82,9 @@
       "metric_id": "cpi_mom",
       "value": 0.6,
       "previous_value": 0.6,
-      "source_label": "Statistics Agency CPI",
+      "source_label": "Statistics Agency SIAT CPI data, calculated MoM",
       "source_period": "March 2026",
-      "source_url": "https://stat.uz/img/press-relizlar/press-release-march-2026-eng_p22295.pdf",
+      "source_url": "https://api.siat.stat.uz/media/uploads/sdmx/sdmx_data_4585.json",
       "observed_at": "2026-04-05T00:00:00Z",
       "claim_type": "observed",
       "unit": "percent MoM",
@@ -94,9 +92,11 @@
       "validation_status": "valid",
       "caveats": [
         "Monthly inflation can be volatile; do not present as trend alone.",
-        "previous_value 0.6 is the February 2026 monthly CPI rate shown in the same Statistics Agency March 2026 CPI release."
+        "previous_value 0.6 is February 2026 SIAT 4585 aggregate index 100.6 minus 100."
       ],
-      "warnings": []
+      "warnings": [],
+      "source_reference": "Calculated from SIAT sdmx_data_4585 aggregate CPI previous-month index for March 2026: 100.6 minus 100. Previous value uses February 2026 aggregate index 100.6 minus 100.",
+      "extracted_at": "2026-04-29T09:52:00.206Z"
     },
     {
       "metric_id": "food_cpi_yoy",

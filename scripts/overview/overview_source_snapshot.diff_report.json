@@ -1,76 +1,46 @@
 {
-  "generated_at": "2026-04-29T05:00:31.433Z",
-  "family": "siat-trade",
+  "generated_at": "2026-04-29T09:52:00.225Z",
+  "family": "siat-cpi",
   "snapshot": "C:\\Users\\n.ortiqov\\Desktop\\Uzbekistan-Economic-policy-engine\\scripts\\overview\\overview_source_snapshot.json",
   "changed": true,
   "status": "automation_pending_owner_review",
-  "value_hash": "1bbcd82005a61539a187612df5e2294157361e305a2ed9a8da4a3469f95d5a71",
+  "value_hash": "cb1c26cc3a494c7a727664557bd2c68b213a5fed5dabe3a045f9b68c47963bbb",
   "manual_required": null,
   "diff": [
     {
-      "metric_id": "exports_yoy",
+      "metric_id": "cpi_mom",
+      "field": "source_label",
+      "old_value": "Statistics Agency CPI",
+      "new_value": "Statistics Agency SIAT CPI data, calculated MoM"
+    },
+    {
+      "metric_id": "cpi_mom",
+      "field": "source_url",
+      "old_value": "https://stat.uz/img/press-relizlar/press-release-march-2026-eng_p22295.pdf",
+      "new_value": "https://api.siat.stat.uz/media/uploads/sdmx/sdmx_data_4585.json"
+    },
+    {
+      "metric_id": "cpi_mom",
       "field": "source_reference",
       "old_value": null,
-      "new_value": "Calculated from SIAT sdmx_data_2407 cumulative monthly export levels for January-February 2026: USD 3,546.808 million versus USD 4,643 million for January-February 2025."
+      "new_value": "Calculated from SIAT sdmx_data_4585 aggregate CPI previous-month index for March 2026: 100.6 minus 100. Previous value uses February 2026 aggregate index 100.6 minus 100."
     },
     {
-      "metric_id": "exports_yoy",
+      "metric_id": "cpi_mom",
       "field": "extracted_at",
       "old_value": null,
-      "new_value": "2026-04-29T05:00:31.416Z"
+      "new_value": "2026-04-29T09:52:00.206Z"
     },
     {
-      "metric_id": "exports_yoy",
+      "metric_id": "cpi_mom",
       "field": "caveats",
       "old_value": [
-        "Trade values can be revised; show latest-vintage status.",
-        "YoY rate calculated from official SIAT cumulative monthly export levels: USD 3,546.808 million for January-February 2026 versus USD 4,643.0 million for January-February 2025."
+        "Monthly inflation can be volatile; do not present as trend alone.",
+        "previous_value 0.6 is the February 2026 monthly CPI rate shown in the same Statistics Agency March 2026 CPI release."
       ],
       "new_value": [
-        "Trade values can be revised; show latest-vintage status.",
-        "YoY rate calculated from official SIAT cumulative monthly export levels: USD 3,546.808 million for January-February 2026 versus USD 4,643 million for January-February 2025."
-      ]
-    },
-    {
-      "metric_id": "imports_yoy",
-      "field": "source_reference",
-      "old_value": null,
-      "new_value": "Calculated from SIAT sdmx_data_2414 cumulative monthly import levels for January-February 2026: USD 8,058.287 million versus USD 6,202.6 million for January-February 2025."
-    },
-    {
-      "metric_id": "imports_yoy",
-      "field": "extracted_at",
-      "old_value": null,
-      "new_value": "2026-04-29T05:00:31.416Z"
-    },
-    {
-      "metric_id": "trade_balance",
-      "field": "value",
-      "old_value": -4.511,
-      "new_value": -4.51
-    },
-    {
-      "metric_id": "trade_balance",
-      "field": "source_reference",
-      "old_value": "Calculated from SIAT export and import monthly datasets: exports USD 3,546.808 million, imports USD 8,058.287 million.",
-      "new_value": "Calculated from SIAT cumulative monthly goods trade levels for January-February 2026: exports USD 3,546.808 million from sdmx_data_2407, imports USD 8,058.287 million from sdmx_data_2414. Source URLs: https://api.siat.stat.uz/media/uploads/sdmx/sdmx_data_2407.json; https://api.siat.stat.uz/media/uploads/sdmx/sdmx_data_2414.json."
-    },
-    {
-      "metric_id": "trade_balance",
-      "field": "extracted_at",
-      "old_value": "2026-04-27T00:00:00Z",
-      "new_value": "2026-04-29T05:00:31.416Z"
-    },
-    {
-      "metric_id": "trade_balance",
-      "field": "caveats",
-      "old_value": [
-        "Displayed value is in USD billion and is calculated from SIAT cumulative monthly goods/trade levels.",
-        "Label goods trade balance if services are excluded."
-      ],
-      "new_value": [
-        "Displayed value is in USD billion (negative = goods trade deficit); calculated from SIAT cumulative monthly goods trade levels.",
-        "Label goods trade balance if services are excluded."
+        "Monthly inflation can be volatile; do not present as trend alone.",
+        "previous_value 0.6 is February 2026 SIAT 4585 aggregate index 100.6 minus 100."
       ]
     }
   ]

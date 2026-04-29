@@ -101,3 +101,60 @@ the lock cleanup is handled separately. Any changed trade value or provenance mo
 snapshot to `automation_pending_owner_review`, clears prior acceptance fields, recomputes
 `value_hash`, and updates `overview_source_snapshot.diff_report.json`. It must never
 write `apps/policy-ui/public/data/overview.json`.
+
+## Phase 3b-1 SIAT CPI Automation
+
+Phase 3b-1 automation is intentionally limited to one CPI metric:
+
+- `cpi_mom`
+
+`cpi_yoy` and `food_cpi_yoy` remain manual/pending. This slice must not update those
+metrics.
+
+It uses the official SIAT / Statistics Agency CPI endpoint:
+
+```bash
+https://api.siat.stat.uz/media/uploads/sdmx/sdmx_data_4585.json
+```
+
+Dry run with the saved Phase 3a fixture:
+
+```bash
+node scripts/overview/fetch-overview-sources.mjs --dry-run --family siat-cpi --snapshot scripts/overview/overview_source_snapshot.json --fixture-dir scripts/overview/source-discovery/phase3
+```
+
+Write the source snapshot after reviewer inspection of the diff:
+
+```bash
+node scripts/overview/fetch-overview-sources.mjs --write-snapshot --family siat-cpi --snapshot scripts/overview/overview_source_snapshot.json --fixture-dir scripts/overview/source-discovery/phase3
+```
+
+The SIAT 4585 parser is deliberately narrow:
+
+- It selects only the headline aggregate row where `Code === "1"` and the classifier
+  label matches `COMPOSITE INDEX` or its RU/UZ equivalents. COICOP/product rows are
+  never used to compute headline CPI MoM.
+- Monthly period columns must use Cyrillic `М` keys such as `2026-М03`. Latin `M`
+  keys are ignored; if no Cyrillic-`М` periods exist, the script returns
+  `manual_required`.
+- A `0.0` value on the selected aggregate row for the current or previous month is
+  treated as a missing-data sentinel and returns `manual_required`.
+- SIAT 4585 metadata is a multilingual `{ name_*, value_* }` array. Value preference is
+  `value_en`, `value_ru`, `value_uz`, then `value_uzc`.
+- Representation as `index_pct_prior_month` is accepted only when Unit normalizes to
+  Percent and the indicator name contains both an index token and a previous-month
+  token. The calculation is `round2(index_value - 100)`.
+- Indicator identity is required: metadata `Indicator identification number (code)`
+  must equal `1.11.01.0026`.
+- Current and previous aggregate raw index values must satisfy
+  `abs(index_value - 100) <= 5` before subtracting 100.
+- `observed_at` is derived from SIAT `Last modified date`, normalized to
+  `YYYY-MM-DDT00:00:00Z`.
+- `source_period` remains frontend-readable, for example `March 2026`; the SIAT key
+  format is not emitted as the visible period.
+
+This is a provenance migration for `cpi_mom`: the numeric March 2026 value may remain
+`0.6`, but source fields move from the CPI PDF press release to SIAT JSON 4585. Because
+source URL/reference, `extracted_at`, and caveats are hashed provenance fields, the
+snapshot still moves to `automation_pending_owner_review` when the migration is written.
+Public export remains blocked until the owner accepts the updated source snapshot hash.

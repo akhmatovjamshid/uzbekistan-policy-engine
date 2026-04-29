@@ -1,7 +1,8 @@
-import { readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { buildCbuFxMetricUpdates } from './sources/cbu-fx.mjs'
+import { buildSiatCpiMetricUpdates } from './sources/siat-cpi.mjs'
 import { buildSiatTradeMetricUpdates, isManualRequiredError } from './sources/siat-trade.mjs'
 import { applyMetricUpdatesToSnapshot, formatDiffReport } from './sources/update-snapshot.mjs'
 
@@ -50,7 +51,7 @@ function parseArgs(argv) {
     }
   }
 
-  if (!['cbu-fx', 'siat-trade'].includes(options.family)) {
+  if (!['cbu-fx', 'siat-trade', 'siat-cpi'].includes(options.family)) {
     fail(`Unsupported Overview source family: ${options.family}`)
   }
   if (options.dryRun && options.writeSnapshot) fail('Use either --dry-run or --write-snapshot, not both.')
@@ -67,7 +68,18 @@ function fixtureFetchJson(fixtureDir) {
 }
 
 function siatFixtureFetchJson(fixtureDir) {
-  return async (url) => readJson(join(fixtureDir, basename(new URL(url).pathname)))
+  return async (url) => {
+    const urlBasename = basename(new URL(url).pathname)
+    const primaryPath = join(fixtureDir, urlBasename)
+    if (existsSync(primaryPath)) return readJson(primaryPath)
+
+    if (urlBasename === 'sdmx_data_4585.json') {
+      const discoveryFixturePath = join(fixtureDir, 'siat-cpi-all-items-mom-4585.json')
+      if (existsSync(discoveryFixturePath)) return readJson(discoveryFixturePath)
+    }
+
+    return readJson(primaryPath)
+  }
 }
 
 function buildDiffReport(args, snapshotPath, result, manualRequired = null) {
@@ -87,21 +99,30 @@ async function main() {
   const args = parseArgs(process.argv.slice(2))
   const snapshotPath = resolve(args.snapshot)
   const snapshot = readJson(snapshotPath)
+  const siatFetchJson = args.fixtureDir ? siatFixtureFetchJson(resolve(args.fixtureDir)) : undefined
   let result
   let manualRequired = null
 
   try {
-    const updates = args.family === 'cbu-fx'
-      ? await buildCbuFxMetricUpdates({
+    let updates
+    if (args.family === 'cbu-fx') {
+      updates = await buildCbuFxMetricUpdates({
         latestDate: args.latestDate,
         priorMonthDate: args.priorMonthDate,
         priorYearDate: args.priorYearDate,
         fetchJson: args.fixtureDir ? fixtureFetchJson(resolve(args.fixtureDir)) : undefined,
       })
-      : await buildSiatTradeMetricUpdates({
+    } else if (args.family === 'siat-trade') {
+      updates = await buildSiatTradeMetricUpdates({
         snapshot,
-        fetchJson: args.fixtureDir ? siatFixtureFetchJson(resolve(args.fixtureDir)) : undefined,
+        fetchJson: siatFetchJson,
       })
+    } else {
+      updates = await buildSiatCpiMetricUpdates({
+        snapshot,
+        fetchJson: siatFetchJson,
+      })
+    }
     result = applyMetricUpdatesToSnapshot(snapshot, updates)
   } catch (error) {
     if (!isManualRequiredError(error)) throw error

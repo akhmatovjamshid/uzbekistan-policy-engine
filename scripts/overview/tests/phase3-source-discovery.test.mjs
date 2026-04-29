@@ -20,9 +20,6 @@ const targetMetrics = [
 ]
 
 const lockedPaths = [
-  'scripts/overview/fetch-overview-sources.mjs',
-  'scripts/overview/overview_source_snapshot.json',
-  'scripts/overview/overview_source_snapshot.diff_report.json',
   'scripts/overview/export-overview.mjs',
   'apps/policy-ui/public/data/overview.json',
 ]
@@ -77,7 +74,7 @@ test('every manual-required metric has a reason and candidate source reference',
   }
 })
 
-test('Phase 3a discovery leaves source snapshot and public artifacts unchanged', () => {
+test('Phase 3a discovery leaves exporter and public artifacts unchanged', () => {
   const diff = spawnSync(
     'git',
     ['diff', '--name-only', '--', ...lockedPaths],
