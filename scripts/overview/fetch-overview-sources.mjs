@@ -3,6 +3,7 @@ import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { buildCbuFxMetricUpdates } from './sources/cbu-fx.mjs'
 import { buildSiatCpiMetricUpdates } from './sources/siat-cpi.mjs'
+import { buildSiatGdpAnnualMetricUpdates } from './sources/siat-gdp-annual.mjs'
 import { buildSiatTradeMetricUpdates, isManualRequiredError } from './sources/siat-trade.mjs'
 import { applyMetricUpdatesToSnapshot, formatDiffReport } from './sources/update-snapshot.mjs'
 
@@ -51,7 +52,7 @@ function parseArgs(argv) {
     }
   }
 
-  if (!['cbu-fx', 'siat-trade', 'siat-cpi'].includes(options.family)) {
+  if (!['cbu-fx', 'siat-trade', 'siat-cpi', 'siat-gdp-annual'].includes(options.family)) {
     fail(`Unsupported Overview source family: ${options.family}`)
   }
   if (options.dryRun && options.writeSnapshot) fail('Use either --dry-run or --write-snapshot, not both.')
@@ -75,6 +76,10 @@ function siatFixtureFetchJson(fixtureDir) {
 
     if (urlBasename === 'sdmx_data_4585.json') {
       const discoveryFixturePath = join(fixtureDir, 'siat-cpi-all-items-mom-4585.json')
+      if (existsSync(discoveryFixturePath)) return readJson(discoveryFixturePath)
+    }
+    if (urlBasename === 'sdmx_data_582.json') {
+      const discoveryFixturePath = join(fixtureDir, 'siat-gdp-growth-annual-582.json')
       if (existsSync(discoveryFixturePath)) return readJson(discoveryFixturePath)
     }
 
@@ -117,8 +122,13 @@ async function main() {
         snapshot,
         fetchJson: siatFetchJson,
       })
-    } else {
+    } else if (args.family === 'siat-cpi') {
       updates = await buildSiatCpiMetricUpdates({
+        snapshot,
+        fetchJson: siatFetchJson,
+      })
+    } else {
+      updates = await buildSiatGdpAnnualMetricUpdates({
         snapshot,
         fetchJson: siatFetchJson,
       })

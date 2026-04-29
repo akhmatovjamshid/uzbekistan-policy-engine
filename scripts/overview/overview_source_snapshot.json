@@ -1,28 +1,29 @@
 {
   "source_snapshot_version": "overview-source.v1",
-  "status": "owner_verified_for_public_artifact",
-  "snapshot_accepted_by": "project owner",
-  "snapshot_accepted_at": "2026-04-29T10:34:43Z",
+  "status": "automation_pending_owner_review",
   "snapshot_note": "Owner-accepted Overview V1 source snapshot. REER remains warning-status with CERR owner-supplied value and source URL pending; replace with automated HFI-backed source when accepted.",
-  "value_hash": "cb1c26cc3a494c7a727664557bd2c68b213a5fed5dabe3a045f9b68c47963bbb",
+  "value_hash": "cb7897b1fb2b0655587e03c8e4dad1980755dc29fdcbd606ecdd94e1ecbca56d",
   "metrics": [
     {
       "metric_id": "real_gdp_growth_annual_yoy",
       "value": 7.7,
       "previous_value": 6.7,
-      "source_label": "Statistics Agency national accounts",
+      "source_label": "Statistics Agency SIAT annual GDP data, calculated YoY",
       "source_period": "2025",
-      "source_url": "https://stat.uz/img/news/analitika-vvp_eng_p32560.pdf",
-      "observed_at": "2026-01-26T00:00:00Z",
+      "source_url": "https://api.siat.stat.uz/media/uploads/sdmx/sdmx_data_582.json",
+      "observed_at": "2026-01-27T00:00:00Z",
       "claim_type": "observed",
       "unit": "percent YoY",
       "frequency": "annual",
       "validation_status": "valid",
       "caveats": [
-        "Preliminary annual national accounts release; owner verification is still required before public export.",
-        "previous_value 6.7 is the 2024 annual real GDP growth rate shown in the same Statistics Agency annual GDP release."
+        "SIAT 582 reports annual GDP growth rates as prior-year=100 index values; Overview stores index minus 100.",
+        "previous_value 6.7 is 2024 SIAT 582 index 106.7 minus 100.",
+        "SIAT 582 metadata note: for 2024 preliminary data."
       ],
-      "warnings": []
+      "warnings": [],
+      "source_reference": "Calculated from SIAT sdmx_data_582 national aggregate Code 1700 annual GDP prior-year index for 2025: 107.7 minus 100. Previous value uses 2024 index 106.7 minus 100. Methodology: https://lib.stat.uz/ru/features-3/natsionalnye-scheta/622-yalpi-ichki-mahsulotni-ishlab-chiqarish-usulida-hisoblash-bo-yicha-uslubiy-nizom-3.",
+      "extracted_at": "2026-04-29T10:55:55.021Z"
     },
     {
       "metric_id": "real_gdp_growth_quarter_yoy",

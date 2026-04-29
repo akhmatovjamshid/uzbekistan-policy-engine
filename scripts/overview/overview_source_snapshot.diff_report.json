@@ -1,46 +1,53 @@
 {
-  "generated_at": "2026-04-29T09:52:00.225Z",
-  "family": "siat-cpi",
+  "generated_at": "2026-04-29T10:55:55.032Z",
+  "family": "siat-gdp-annual",
   "snapshot": "C:\\Users\\n.ortiqov\\Desktop\\Uzbekistan-Economic-policy-engine\\scripts\\overview\\overview_source_snapshot.json",
   "changed": true,
   "status": "automation_pending_owner_review",
-  "value_hash": "cb1c26cc3a494c7a727664557bd2c68b213a5fed5dabe3a045f9b68c47963bbb",
+  "value_hash": "cb7897b1fb2b0655587e03c8e4dad1980755dc29fdcbd606ecdd94e1ecbca56d",
   "manual_required": null,
   "diff": [
     {
-      "metric_id": "cpi_mom",
+      "metric_id": "real_gdp_growth_annual_yoy",
       "field": "source_label",
-      "old_value": "Statistics Agency CPI",
-      "new_value": "Statistics Agency SIAT CPI data, calculated MoM"
+      "old_value": "Statistics Agency national accounts",
+      "new_value": "Statistics Agency SIAT annual GDP data, calculated YoY"
     },
     {
-      "metric_id": "cpi_mom",
+      "metric_id": "real_gdp_growth_annual_yoy",
       "field": "source_url",
-      "old_value": "https://stat.uz/img/press-relizlar/press-release-march-2026-eng_p22295.pdf",
-      "new_value": "https://api.siat.stat.uz/media/uploads/sdmx/sdmx_data_4585.json"
+      "old_value": "https://stat.uz/img/news/analitika-vvp_eng_p32560.pdf",
+      "new_value": "https://api.siat.stat.uz/media/uploads/sdmx/sdmx_data_582.json"
     },
     {
-      "metric_id": "cpi_mom",
+      "metric_id": "real_gdp_growth_annual_yoy",
       "field": "source_reference",
       "old_value": null,
-      "new_value": "Calculated from SIAT sdmx_data_4585 aggregate CPI previous-month index for March 2026: 100.6 minus 100. Previous value uses February 2026 aggregate index 100.6 minus 100."
+      "new_value": "Calculated from SIAT sdmx_data_582 national aggregate Code 1700 annual GDP prior-year index for 2025: 107.7 minus 100. Previous value uses 2024 index 106.7 minus 100. Methodology: https://lib.stat.uz/ru/features-3/natsionalnye-scheta/622-yalpi-ichki-mahsulotni-ishlab-chiqarish-usulida-hisoblash-bo-yicha-uslubiy-nizom-3."
     },
     {
-      "metric_id": "cpi_mom",
+      "metric_id": "real_gdp_growth_annual_yoy",
+      "field": "observed_at",
+      "old_value": "2026-01-26T00:00:00Z",
+      "new_value": "2026-01-27T00:00:00Z"
+    },
+    {
+      "metric_id": "real_gdp_growth_annual_yoy",
       "field": "extracted_at",
       "old_value": null,
-      "new_value": "2026-04-29T09:52:00.206Z"
+      "new_value": "2026-04-29T10:55:55.021Z"
     },
     {
-      "metric_id": "cpi_mom",
+      "metric_id": "real_gdp_growth_annual_yoy",
       "field": "caveats",
       "old_value": [
-        "Monthly inflation can be volatile; do not present as trend alone.",
-        "previous_value 0.6 is the February 2026 monthly CPI rate shown in the same Statistics Agency March 2026 CPI release."
+        "Preliminary annual national accounts release; owner verification is still required before public export.",
+        "previous_value 6.7 is the 2024 annual real GDP growth rate shown in the same Statistics Agency annual GDP release."
       ],
       "new_value": [
-        "Monthly inflation can be volatile; do not present as trend alone.",
-        "previous_value 0.6 is February 2026 SIAT 4585 aggregate index 100.6 minus 100."
+        "SIAT 582 reports annual GDP growth rates as prior-year=100 index values; Overview stores index minus 100.",
+        "previous_value 6.7 is 2024 SIAT 582 index 106.7 minus 100.",
+        "SIAT 582 metadata note: for 2024 preliminary data."
       ]
     }
   ]

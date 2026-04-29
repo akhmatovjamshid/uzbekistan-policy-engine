@@ -158,3 +158,66 @@ This is a provenance migration for `cpi_mom`: the numeric March 2026 value may r
 source URL/reference, `extracted_at`, and caveats are hashed provenance fields, the
 snapshot still moves to `automation_pending_owner_review` when the migration is written.
 Public export remains blocked until the owner accepts the updated source snapshot hash.
+
+## Phase 3b-2 SIAT Annual GDP Automation
+
+Phase 3b-2 automation is intentionally limited to one annual GDP metric:
+
+- `real_gdp_growth_annual_yoy`
+
+Quarterly GDP (`real_gdp_growth_quarter_yoy`) and the GDP nowcast
+(`gdp_nowcast_current_quarter`) remain manual/pending and are not updated by this
+family. Future quarterly GDP automation should use a separate family, not the annual
+GDP source.
+
+It uses the official SIAT / Statistics Agency annual GDP endpoint:
+
+```bash
+https://api.siat.stat.uz/media/uploads/sdmx/sdmx_data_582.json
+```
+
+Dry run with the saved Phase 3a fixture:
+
+```bash
+node scripts/overview/fetch-overview-sources.mjs --dry-run --family siat-gdp-annual --snapshot scripts/overview/overview_source_snapshot.json --fixture-dir scripts/overview/test-fixtures/siat-gdp-annual
+```
+
+Write the source snapshot after reviewer inspection of the diff:
+
+```bash
+node scripts/overview/fetch-overview-sources.mjs --write-snapshot --family siat-gdp-annual --snapshot scripts/overview/overview_source_snapshot.json --fixture-dir scripts/overview/test-fixtures/siat-gdp-annual
+```
+
+The SIAT 582 parser is deliberately narrow:
+
+- Indicator identity is required: metadata `Indicator identification number (code)`
+  must have `value_en === "1.01.01.0009"`.
+- It selects exactly one national aggregate row where `Code === "1700"` and the
+  classifier label matches Republic of Uzbekistan in EN/RU/UZ/UZC. Sectoral,
+  regional, and any non-`1700` rows are never used.
+- Annual period columns must be plain four-digit year keys such as `2025`. Monthly
+  and Cyrillic-month keys are ignored; if no year keys exist, the script returns
+  `manual_required`.
+- SIAT 582 reports prior-year=100 index values, not direct growth percentages. The
+  unit must prove this representation using the multilingual SIAT unit string
+  `as a percentage of the corresponding period of the previous year` or its RU/UZ/UZC
+  equivalents. The Overview value is `round2(index_value - 100)`.
+- Current and previous-year raw index values must be present in the same selected row,
+  non-zero, finite, unambiguous decimal numbers, and within the sanity bound
+  `50 <= value <= 150`.
+- `previous_value` is required from the same SIAT endpoint. For source period `2025`,
+  it uses the `2024` index value.
+- If the latest SIAT year is older than the current snapshot year, automation returns
+  `manual_required` instead of silently no-oping.
+- `observed_at` is derived from SIAT `Last modified date`, normalized to
+  `YYYY-MM-DDT00:00:00Z`.
+- `source_reference` includes the SIAT 582 calculation and surfaces the SIAT
+  methodology URL from metadata when available.
+- `source_period` remains the human-readable annual label, for example `2025`.
+
+This is a provenance migration for `real_gdp_growth_annual_yoy`: the numeric 2025
+value may remain `7.7` and `previous_value` may remain `6.7`, but source fields move
+from the Statistics Agency PDF release to SIAT JSON 582. Because source URL/reference,
+`extracted_at`, caveats, and `observed_at` are hashed provenance fields, the snapshot
+still moves to `automation_pending_owner_review` when the migration is written. Public
+export remains blocked until the owner accepts the updated source snapshot hash.
