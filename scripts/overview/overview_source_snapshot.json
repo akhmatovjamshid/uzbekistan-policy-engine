@@ -1,6 +1,8 @@
 {
   "source_snapshot_version": "overview-source.v1",
-  "status": "automation_pending_owner_review",
+  "status": "owner_verified_for_public_artifact",
+  "snapshot_accepted_by": "project owner",
+  "snapshot_accepted_at": "2026-04-29T05:43:29Z",
   "snapshot_note": "Owner-accepted Overview V1 source snapshot. REER remains warning-status with CERR owner-supplied value and source URL pending; replace with automated HFI-backed source when accepted.",
   "value_hash": "1bbcd82005a61539a187612df5e2294157361e305a2ed9a8da4a3469f95d5a71",
   "metrics": [
