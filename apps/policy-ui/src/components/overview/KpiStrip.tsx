@@ -81,7 +81,7 @@ export function KpiStrip({ metrics }: KpiStripProps) {
                 </p>
               </div>
               <div className="kpi__context overview-kpi-card__meta">
-                <span>{metric.period}</span>
+                <span className="overview-kpi-card__period">{metric.period}</span>
                 {contextIsSentinel ? (
                   <span
                     className="ui-chip ui-chip--warn overview-kpi-card__sme-chip"

@@ -214,6 +214,10 @@
       "title": "Панели показателей",
       "description": "Все закреплённые метрики обзора, сгруппированные по блокам источника.",
       "inflationPair": "Пара ИПЦ и продовольственной инфляции",
+      "tradeFlowPair": "Экспорт / импорт",
+      "usdUzsPair": "USD/UZS",
+      "primarySource": "Основной источник: {{source}}",
+      "forecastExternal": "Прогноз (внешний)",
       "groups": {
         "growth": "Рост",
         "inflation": "Инфляция",

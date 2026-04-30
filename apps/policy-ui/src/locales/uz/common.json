@@ -214,6 +214,10 @@
       "title": "Ko'rsatkich panellari",
       "description": "Barcha qulflangan Overview metrikalari manba bloki bo'yicha guruhlangan.",
       "inflationPair": "CPI va oziq-ovqat inflyatsiyasi juftligi",
+      "tradeFlowPair": "Eksport / import",
+      "usdUzsPair": "USD/UZS",
+      "primarySource": "Asosiy manba: {{source}}",
+      "forecastExternal": "Prognoz (tashqi)",
       "groups": {
         "growth": "O'sish",
         "inflation": "Inflyatsiya",

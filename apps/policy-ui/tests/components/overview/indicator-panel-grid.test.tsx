@@ -45,6 +45,10 @@ async function createTestI18n() {
               title: 'Indicator panels',
               description: 'All metrics',
               inflationPair: 'CPI and food inflation pair',
+              tradeFlowPair: 'Exports / Imports',
+              usdUzsPair: 'USD/UZS',
+              primarySource: 'Primary source: {{source}}',
+              forecastExternal: 'Forecast (external)',
               groups: {
                 growth: 'Growth',
                 inflation: 'Inflation',
@@ -233,5 +237,109 @@ describe('IndicatorPanelGrid', () => {
 
     assert.match(surplusMarkup, /USD 4\.51bn surplus/)
     assert.match(balancedMarkup, /balanced/)
+  })
+
+  it('renders Trade balance before the exports/imports pair', async () => {
+    const i18n = await createTestI18n()
+    const snapshot = overviewArtifactToMacroSnapshot(buildValidOverviewArtifact())
+    const markup = renderToStaticMarkup(
+      <I18nextProvider i18n={i18n}>
+        <IndicatorPanelGrid groups={snapshot.indicator_groups} />
+      </I18nextProvider>,
+    )
+
+    const tradeBalanceIndex = markup.indexOf('data-metric-id="trade_balance"')
+    const subheadIndex = markup.indexOf('Exports / Imports')
+    const exportsIndex = markup.indexOf('data-metric-id="exports_yoy"')
+    const importsIndex = markup.indexOf('data-metric-id="imports_yoy"')
+
+    assert.ok(tradeBalanceIndex > 0)
+    assert.ok(subheadIndex > tradeBalanceIndex)
+    assert.ok(exportsIndex > subheadIndex)
+    assert.ok(importsIndex > exportsIndex)
+    assert.match(markup, /overview-indicator-row--paired[^"]*"[^>]*data-metric-id="exports_yoy"/)
+    assert.match(markup, /overview-indicator-row--paired[^"]*"[^>]*data-metric-id="imports_yoy"/)
+  })
+
+  it('renders Monetary/FX with policy rate, USD/UZS pair, then REER and wide-panel hook', async () => {
+    const i18n = await createTestI18n()
+    const snapshot = overviewArtifactToMacroSnapshot(buildValidOverviewArtifact())
+    const markup = renderToStaticMarkup(
+      <I18nextProvider i18n={i18n}>
+        <IndicatorPanelGrid groups={snapshot.indicator_groups} />
+      </I18nextProvider>,
+    )
+
+    const panelIndex = markup.indexOf('overview-indicator-panel--monetary_fx')
+    const policyIndex = markup.indexOf('data-metric-id="policy_rate"')
+    const subheadIndex = markup.indexOf('USD/UZS', policyIndex)
+    const levelIndex = markup.indexOf('data-metric-id="usd_uzs_level"')
+    const momIndex = markup.indexOf('data-metric-id="usd_uzs_mom_change"')
+    const yoyIndex = markup.indexOf('data-metric-id="usd_uzs_yoy_change"')
+    const reerIndex = markup.indexOf('data-metric-id="reer_level"')
+
+    assert.ok(panelIndex > 0)
+    assert.match(markup, /overview-indicator-panel--monetary_fx overview-indicator-panel--wide/)
+    assert.match(markup, /data-panel-wide="true"/)
+    assert.ok(policyIndex > panelIndex)
+    assert.ok(subheadIndex > policyIndex)
+    assert.ok(levelIndex > subheadIndex)
+    assert.ok(momIndex > levelIndex)
+    assert.ok(yoyIndex > momIndex)
+    assert.ok(reerIndex > yoyIndex)
+    assert.match(markup, /overview-indicator-row--paired[^"]*"[^>]*data-metric-id="usd_uzs_level"/)
+    assert.match(markup, /overview-indicator-row--paired[^"]*"[^>]*data-metric-id="usd_uzs_mom_change"/)
+    assert.match(markup, /overview-indicator-row--paired[^"]*"[^>]*data-metric-id="usd_uzs_yoy_change"/)
+  })
+
+  it('demotes Gold forecast with a forecast row hook and external caption', async () => {
+    const i18n = await createTestI18n()
+    const snapshot = overviewArtifactToMacroSnapshot(buildValidOverviewArtifact())
+    const markup = renderToStaticMarkup(
+      <I18nextProvider i18n={i18n}>
+        <IndicatorPanelGrid groups={snapshot.indicator_groups} />
+      </I18nextProvider>,
+    )
+
+    assert.match(
+      markup,
+      /overview-indicator-row--forecast[^"]*"[^>]*data-metric-id="gold_price_forecast"[^>]*data-row-kind="forecast"/,
+    )
+    assert.match(markup, /data-metric-id="gold_price_forecast"[\s\S]*Forecast \(external\)/)
+  })
+
+  it('renders one panel-level source line per visible panel', async () => {
+    const i18n = await createTestI18n()
+    const snapshot = overviewArtifactToMacroSnapshot(buildValidOverviewArtifact())
+    const markup = renderToStaticMarkup(
+      <I18nextProvider i18n={i18n}>
+        <IndicatorPanelGrid groups={snapshot.indicator_groups} />
+      </I18nextProvider>,
+    )
+
+    const panelCount = (markup.match(/overview-indicator-panel overview-indicator-panel--/g) ?? []).length
+    const sourceLineCount = (markup.match(/overview-indicator-panel__source/g) ?? []).length
+    assert.equal(panelCount, 5)
+    assert.equal(sourceLineCount, panelCount)
+    assert.match(markup, /Primary source: Statistics Agency foreign trade/)
+  })
+
+  it('renders compact row source periods while keeping full row source provenance reachable', async () => {
+    const i18n = await createTestI18n()
+    const snapshot = overviewArtifactToMacroSnapshot(buildValidOverviewArtifact())
+    const markup = renderToStaticMarkup(
+      <I18nextProvider i18n={i18n}>
+        <IndicatorPanelGrid groups={snapshot.indicator_groups} />
+      </I18nextProvider>,
+    )
+
+    assert.match(
+      markup,
+      /data-metric-id="exports_yoy"[\s\S]*overview-indicator-row__source-period" aria-label="2026 Q1 · Statistics Agency foreign trade" title="2026 Q1 · Statistics Agency foreign trade"[^>]*>2026 Q1</,
+    )
+    assert.doesNotMatch(
+      markup,
+      /data-metric-id="exports_yoy"[\s\S]*overview-indicator-row__source-period[^>]*>2026 Q1 · Statistics Agency foreign trade</,
+    )
   })
 })

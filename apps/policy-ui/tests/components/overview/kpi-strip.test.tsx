@@ -381,4 +381,41 @@ describe('KpiStrip', () => {
     assert.match(markup, /UZS weaker 0\.2 pp/)
     assert.match(markup, /unchanged/)
   })
+
+  it('keeps claim, warning, semantic delta, and lower-rank period/context structure', async () => {
+    const i18n = await createTestI18n()
+    const markup = renderToStaticMarkup(
+      <I18nextProvider i18n={i18n}>
+        <KpiStrip
+          metrics={[
+            buildMetric({
+              metric_id: 'policy_rate',
+              label: 'Policy rate',
+              value: 14,
+              baseline_value: 13.5,
+              delta_abs: 0.5,
+              delta_value: 0.5,
+              delta_unit: 'pp',
+              delta_basis: 'percentage_point',
+              delta_pct: null,
+              claim_type: 'observed_policy_setting',
+              claim_label_key: 'overview.claimLabels.observed',
+              validation_status: 'warning',
+              comparison_basis_key: 'overview.comparisonBasis.policy_rate',
+              context_note: 'Policy setting context remains visible to auditors.',
+            }),
+          ]}
+        />
+      </I18nextProvider>,
+    )
+
+    assert.match(markup, /overview-kpi-card__claim-label[^>]*aria-label="Observed"[^>]*>Observed</)
+    assert.match(markup, /overview-kpi-card__status[\s\S]*Caution/)
+    assert.match(markup, /\+0\.5 pp policy setting/)
+    assert.match(markup, /overview-kpi-card__period[^>]*>2026 Q1</)
+    assert.match(
+      markup,
+      /overview-kpi-card__context-note" title="Policy setting context remains visible to auditors\."[^>]*>Policy setting context remains visible to auditors\.</,
+    )
+  })
 })

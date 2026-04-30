@@ -214,6 +214,10 @@
       "title": "Indicator panels",
       "description": "All locked Overview metrics grouped by source block.",
       "inflationPair": "CPI and food inflation pair",
+      "tradeFlowPair": "Exports / Imports",
+      "usdUzsPair": "USD/UZS",
+      "primarySource": "Primary source: {{source}}",
+      "forecastExternal": "Forecast (external)",
       "groups": {
         "growth": "Growth",
         "inflation": "Inflation",
