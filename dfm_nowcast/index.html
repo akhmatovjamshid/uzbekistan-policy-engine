@@ -206,11 +206,11 @@ tr:hover td { background: #f8f9ff; }
 </header>
 
 <nav>
-  <button class="tab-btn active" onclick="showTab('nowcast')" data-i18n="dfm_tab_nowcast">📈 Current Nowcast</button>
-  <button class="tab-btn" onclick="showTab('update')"><span data-i18n="dfm_tab_update">🔄 Update Nowcast</span> <span class="badge">Live KF</span></button>
-  <button class="tab-btn" onclick="showTab('factor')" data-i18n="dfm_tab_factor">⚙️ Factor & Loadings</button>
-  <button class="tab-btn" onclick="showTab('data')" data-i18n="dfm_tab_data">📂 Data & Model</button>
-  <button class="tab-btn" onclick="showTab('briefing')">📋 Auto Briefing <span class="badge">NEW</span></button>
+  <button class="tab-btn active" onclick="showTab('nowcast')" data-i18n="dfm_tab_nowcast" aria-label="Show Current Nowcast tab">📈 Current Nowcast</button>
+  <button class="tab-btn" onclick="showTab('update')" aria-label="Show Update Nowcast tab"><span data-i18n="dfm_tab_update">🔄 Update Nowcast</span> <span class="badge">Live KF</span></button>
+  <button class="tab-btn" onclick="showTab('factor')" data-i18n="dfm_tab_factor" aria-label="Show Factor and Loadings tab">⚙️ Factor & Loadings</button>
+  <button class="tab-btn" onclick="showTab('data')" data-i18n="dfm_tab_data" aria-label="Show Data and Model tab">📂 Data & Model</button>
+  <button class="tab-btn" onclick="showTab('briefing')" aria-label="Show Auto Briefing tab">📋 Auto Briefing <span class="badge">NEW</span></button>
 </nav>
 
 <!-- ════════════════════════════════════════════════════════
@@ -256,7 +256,7 @@ tr:hover td { background: #f8f9ff; }
         <div class="card-title" style="margin-bottom:0" data-i18n="dfm_chart_gdp">GDP Year-on-Year Growth Rate (%)</div>
         <div class="card-subtitle" style="margin-bottom:0" data-i18n="dfm_chart_gdp_sub">Historical + DFM nowcast (highlighted) · Quarterly</div>
       </div>
-      <button id="fan-toggle-btn" onclick="toggleFanChart()" data-i18n="show_fan" style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:5px 13px;font-size:12px;font-weight:600;color:#1d4ed8;cursor:pointer;display:flex;align-items:center;gap:5px;">
+      <button id="fan-toggle-btn" onclick="toggleFanChart()" data-i18n="show_fan" style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:5px 13px;font-size:12px;font-weight:600;color:#1d4ed8;cursor:pointer;display:flex;align-items:center;gap:5px;" aria-label="Toggle GDP forecast fan chart with confidence intervals">
         📊 Show Fan Chart
       </button>
     </div>
@@ -283,11 +283,11 @@ tr:hover td { background: #f8f9ff; }
   <!-- Export toolbar -->
   <div class="export-toolbar">
     <span class="export-label">Export Results:</span>
-    <button class="export-btn" onclick="dfmExportCSV()" data-i18n="export_csv">📊 CSV</button>
-    <button class="export-btn" onclick="dfmExportPNG()" data-i18n="export_png">🖼 PNG Chart</button>
-    <button class="export-btn" onclick="dfmExportPDF()" data-i18n="export_pdf">📄 PDF Report</button>
-    <button class="export-btn" onclick="dfmSaveScenario()" data-i18n="save_scenario" style="background:#16a34a;color:#fff;border-color:#16a34a;">💾 Save</button>
-    <button class="export-btn" onclick="dfmAIAnalysis()" data-i18n="ai_analysis" style="background:var(--navy2);color:#fff;border-color:#2563eb;">🤖 AI</button>
+    <button class="export-btn" onclick="dfmExportCSV()" data-i18n="export_csv" aria-label="Export nowcast results as CSV">📊 CSV</button>
+    <button class="export-btn" onclick="dfmExportPNG()" data-i18n="export_png" aria-label="Export chart as PNG">🖼 PNG Chart</button>
+    <button class="export-btn" onclick="dfmExportPDF()" data-i18n="export_pdf" aria-label="Export results as PDF report">📄 PDF Report</button>
+    <button class="export-btn" onclick="dfmSaveScenario()" data-i18n="save_scenario" style="background:#16a34a;color:#fff;border-color:#16a34a;" aria-label="Save current nowcast as scenario">💾 Save</button>
+    <button class="export-btn" onclick="dfmAIAnalysis()" data-i18n="ai_analysis" style="background:var(--navy2);color:#fff;border-color:#2563eb;" aria-label="Run AI analysis on nowcast">🤖 AI</button>
   </div>
 </div>
 
@@ -340,8 +340,8 @@ tr:hover td { background: #f8f9ff; }
       <div class="card-title">Enter New Monthly Data</div>
       <div class="card-subtitle">Growth rate (% MoM, log-difference × 100). Leave blank if not yet released.</div>
       <div class="btn-row" style="margin-top:0;margin-bottom:14px">
-        <button class="btn btn-primary" onclick="runKFUpdate()">▶ Run Update</button>
-        <button class="btn" style="background:#f0f2f8;color:var(--text)" onclick="clearInputs()">✕ Clear All</button>
+        <button class="btn btn-primary" onclick="runKFUpdate()" aria-label="Run Kalman filter update with new data">▶ Run Update</button>
+        <button class="btn" style="background:#f0f2f8;color:var(--text)" onclick="clearInputs()" aria-label="Clear all indicator input fields">✕ Clear All</button>
       </div>
       <div class="input-grid" id="indicator-inputs">
         <!-- Filled dynamically -->
@@ -495,9 +495,9 @@ tr:hover td { background: #f8f9ff; }
       </p>
     </div>
     <div class="briefing-toolbar" style="margin-top:0">
-      <button class="briefing-btn primary" onclick="generateBriefing()">⚡ Generate Briefing</button>
-      <button class="briefing-btn" onclick="copyBriefing()">📋 Copy Text</button>
-      <button class="briefing-btn" onclick="exportBriefingTXT()">⬇ Download .txt</button>
+      <button class="briefing-btn primary" onclick="generateBriefing()" aria-label="Generate automated nowcast briefing">⚡ Generate Briefing</button>
+      <button class="briefing-btn" onclick="copyBriefing()" aria-label="Copy briefing text to clipboard">📋 Copy Text</button>
+      <button class="briefing-btn" onclick="exportBriefingTXT()" aria-label="Download briefing as text file">⬇ Download .txt</button>
       <span id="briefing-timestamp"></span>
     </div>
   </div>

@@ -220,18 +220,18 @@ tr:hover td{background:#fffbf3;}
     <p data-i18n="subtitle">Center for Economic Research and Reforms · Leontief Framework · 136 Sectors</p>
   </div>
   <div class="lang-switcher">
-    <button class="lang-btn active" id="lang-en" onclick="setLang('en')">🇬🇧 EN</button>
-    <button class="lang-btn" id="lang-ru" onclick="setLang('ru')">🇷🇺 RU</button>
-    <button class="lang-btn" id="lang-uz" onclick="setLang('uz')">🇺🇿 UZ</button>
+    <button class="lang-btn active" id="lang-en" onclick="setLang('en')" aria-label="Switch to English">🇬🇧 EN</button>
+    <button class="lang-btn" id="lang-ru" onclick="setLang('ru')" aria-label="Switch to Russian">🇷🇺 RU</button>
+    <button class="lang-btn" id="lang-uz" onclick="setLang('uz')" aria-label="Switch to Uzbek">🇺🇿 UZ</button>
   </div>
   <div class="hbadge">136 × 136 · 2022</div>
 </header>
 
 <nav>
-  <button class="tab active" onclick="showTab('overview',this)">📊 <span data-i18n="io_tab_overview">Overview & Linkages</span></button>
-  <button class="tab" onclick="showTab('demand',this)">⚡ <span data-i18n="io_tab_demand">Demand Simulator</span></button>
-  <button class="tab" onclick="showTab('price',this)">💰 <span data-i18n="io_tab_price">Price Model</span></button>
-  <button class="tab" onclick="showTab('sectors',this)">🔍 <span data-i18n="io_tab_sectors">Sector Explorer</span></button>
+  <button class="tab active" onclick="showTab('overview',this)" aria-label="Show Overview and Linkages tab">📊 <span data-i18n="io_tab_overview">Overview & Linkages</span></button>
+  <button class="tab" onclick="showTab('demand',this)" aria-label="Show Demand Simulator tab">⚡ <span data-i18n="io_tab_demand">Demand Simulator</span></button>
+  <button class="tab" onclick="showTab('price',this)" aria-label="Show Price Model tab">💰 <span data-i18n="io_tab_price">Price Model</span></button>
+  <button class="tab" onclick="showTab('sectors',this)" aria-label="Show Sector Explorer tab">🔍 <span data-i18n="io_tab_sectors">Sector Explorer</span></button>
 </nav>
 
 <!-- ═══════════════════════════════════════
@@ -244,17 +244,17 @@ tr:hover td{background:#fffbf3;}
   <div class="export-toolbar">
     <span class="mult-toggle-label">Multiplier:</span>
     <div class="mult-toggle" id="mult-toggle">
-      <button class="active" onclick="setMultType('I')">Type I</button>
-      <button onclick="setMultType('II')">Type II</button>
+      <button class="active" onclick="setMultType('I')" aria-label="Show Type I multipliers (direct and indirect effects)">Type I</button>
+      <button onclick="setMultType('II')" aria-label="Show Type II multipliers (direct, indirect, and induced effects)">Type II</button>
     </div>
     <span style="font-size:11px;color:var(--text3);margin-right:8px;" id="mult-toggle-hint">Direct + indirect effects</span>
     <span style="flex:1"></span>
     <span class="export-label">Export:</span>
-    <button class="export-btn" onclick="exportOverviewCSV()" data-i18n="export_csv">📊 CSV</button>
-    <button class="export-btn" onclick="exportOverviewPNG()" data-i18n="export_png">🖼 PNG Chart</button>
-    <button class="export-btn" onclick="exportOverviewPDF()" data-i18n="export_pdf">📄 PDF Report</button>
-    <button class="export-btn" onclick="ioSaveScenario()" data-i18n="save_scenario" style="background:#16a34a;color:#fff;border-color:#16a34a;">💾 Save</button>
-    <button class="export-btn" onclick="ioAIAnalysis()" data-i18n="ai_analysis" style="background:var(--navy2);color:#fff;border-color:#2563eb;">🤖 AI</button>
+    <button class="export-btn" onclick="exportOverviewCSV()" data-i18n="export_csv" aria-label="Export linkage data as CSV">📊 CSV</button>
+    <button class="export-btn" onclick="exportOverviewPNG()" data-i18n="export_png" aria-label="Export charts as PNG">🖼 PNG Chart</button>
+    <button class="export-btn" onclick="exportOverviewPDF()" data-i18n="export_pdf" aria-label="Export results as PDF report">📄 PDF Report</button>
+    <button class="export-btn" onclick="ioSaveScenario()" data-i18n="save_scenario" style="background:#16a34a;color:#fff;border-color:#16a34a;" aria-label="Save current analysis as scenario">💾 Save</button>
+    <button class="export-btn" onclick="ioAIAnalysis()" data-i18n="ai_analysis" style="background:var(--navy2);color:#fff;border-color:#2563eb;" aria-label="Run AI analysis on linkages">🤖 AI</button>
   </div>
 
   <div class="slabel" data-i18n="io_slabel_linkages">Backward & Forward Linkages — Sector Classification</div>
@@ -302,14 +302,14 @@ tr:hover td{background:#fffbf3;}
   <div class="card">
     <div class="search-row">
       <input class="search-input" id="link-search" data-i18n-placeholder="search_placeholder" placeholder="Search sector name or code…" oninput="filterLinkTable()">
-      <select class="filter-select" id="link-filter-type" onchange="filterLinkTable()">
+      <select class="filter-select" id="link-filter-type" onchange="filterLinkTable()" aria-label="Filter sectors by linkage type">
         <option value="" data-i18n="filter_all">All types</option>
         <option value="key" data-i18n="badge_key_short">Key Sector</option>
         <option value="back" data-i18n="badge_back_short">Backward Key</option>
         <option value="fwd" data-i18n="badge_fwd_short">Forward Key</option>
         <option value="weak" data-i18n="badge_weak_short">Weak</option>
       </select>
-      <select class="filter-select" id="link-sort" onchange="sortLinkTable()">
+      <select class="filter-select" id="link-sort" onchange="sortLinkTable()" aria-label="Sort linkage table">
         <option value="bl-desc" data-i18n="sort_bl">Sort: BL ↓</option>
         <option value="fl-desc" data-i18n="sort_fl">FL ↓</option>
         <option value="out-desc" data-i18n="sort_outm">Output Mult ↓</option>
@@ -355,7 +355,7 @@ tr:hover td{background:#fffbf3;}
     <div style="display:flex;gap:10px;margin-bottom:14px;align-items:center;flex-wrap:wrap;">
       <div class="sim-field">
         <label>Mode</label>
-        <select id="demand-mode" class="filter-select" onchange="toggleDemandMode()">
+        <select id="demand-mode" class="filter-select" onchange="toggleDemandMode()" aria-label="Demand shock mode">
           <option value="sector">By Sector</option>
           <option value="agg">Aggregate Shock</option>
         </select>
@@ -391,7 +391,7 @@ tr:hover td{background:#fffbf3;}
           <input type="number" id="d-dm" value="0" step="1">
         </div>
         <div class="sim-field" style="justify-content:flex-end;">
-          <button class="btn btn-amber" onclick="addDemandSector()">+ Add Sector</button>
+          <button class="btn btn-amber" onclick="addDemandSector()" aria-label="Add sector to demand shock">+ Add Sector</button>
         </div>
       </div>
 
@@ -424,7 +424,7 @@ tr:hover td{background:#fffbf3;}
         </div>
         <div class="sim-field">
           <label>Distribute by</label>
-          <select id="agg-dist" class="filter-select">
+          <select id="agg-dist" class="filter-select" aria-label="Distribute aggregate shock by">
             <option value="output">Output share</option>
             <option value="gva">GVA share</option>
             <option value="equal">Equal</option>
@@ -434,8 +434,8 @@ tr:hover td{background:#fffbf3;}
     </div>
 
     <div style="display:flex;gap:10px;margin-top:14px;align-items:center;flex-wrap:wrap;">
-      <button class="btn btn-amber" onclick="runDemandModel()">▶ Run Demand Model</button>
-      <button class="btn btn-outline btn-sm" onclick="clearDemandModel()">✕ Clear</button>
+      <button class="btn btn-amber" onclick="runDemandModel()" aria-label="Run Leontief demand model">▶ Run Demand Model</button>
+      <button class="btn btn-outline btn-sm" onclick="clearDemandModel()" aria-label="Clear all demand shock inputs">✕ Clear</button>
       <span style="font-size:12px;color:#a16207;">Model: ΔX = L · ΔY &nbsp;|&nbsp; ΔY_i = ΔC_i + ΔG_i + ΔI_i + ΔX_i − ΔM_i</span>
     </div>
   </div>
@@ -449,9 +449,9 @@ tr:hover td{background:#fffbf3;}
 
     <div class="export-toolbar">
       <span class="export-label">Export:</span>
-      <button class="export-btn" onclick="exportDemandCSV()">📥 CSV — Output Effects</button>
-      <button class="export-btn" onclick="exportDemandJSON()">📋 JSON — Full Results</button>
-      <button class="export-btn" onclick="exportDemandPNG()">🖼 PNG — Chart</button>
+      <button class="export-btn" onclick="exportDemandCSV()" aria-label="Export demand model output effects as CSV">📥 CSV — Output Effects</button>
+      <button class="export-btn" onclick="exportDemandJSON()" aria-label="Export full demand model results as JSON">📋 JSON — Full Results</button>
+      <button class="export-btn" onclick="exportDemandPNG()" aria-label="Export demand model chart as PNG">🖼 PNG — Chart</button>
     </div>
 
     <div class="g2" style="margin-bottom:16px;">
@@ -498,7 +498,7 @@ tr:hover td{background:#fffbf3;}
     <div style="display:flex;gap:10px;margin-bottom:14px;align-items:center;flex-wrap:wrap;">
       <div class="price-field">
         <label>Mode</label>
-        <select id="price-mode" class="filter-select" onchange="togglePriceMode()">
+        <select id="price-mode" class="filter-select" onchange="togglePriceMode()" aria-label="Price shock mode">
           <option value="sector">By Sector</option>
           <option value="scenario">Scenario</option>
         </select>
@@ -518,7 +518,7 @@ tr:hover td{background:#fffbf3;}
           <input type="number" id="p-dv" value="10" step="1">
         </div>
         <div class="price-field" style="justify-content:flex-end;">
-          <button class="btn btn-blue" onclick="addPriceSector()">+ Add Sector</button>
+          <button class="btn btn-blue" onclick="addPriceSector()" aria-label="Add sector to price shock">+ Add Sector</button>
         </div>
       </div>
       <div class="slabel" style="margin-top:14px;">Sectors with cost shock</div>
@@ -542,7 +542,7 @@ tr:hover td{background:#fffbf3;}
         </div>
         <div class="price-field">
           <label>Apply to</label>
-          <select id="sc-apply" class="filter-select">
+          <select id="sc-apply" class="filter-select" aria-label="Apply scenario shock to sectors">
             <option value="all">All sectors</option>
             <option value="industry">Industry (B-E)</option>
             <option value="services">Services (G-U)</option>
@@ -553,8 +553,8 @@ tr:hover td{background:#fffbf3;}
     </div>
 
     <div style="display:flex;gap:10px;margin-top:14px;align-items:center;flex-wrap:wrap;">
-      <button class="btn btn-blue" onclick="runPriceModel()">▶ Run Price Model</button>
-      <button class="btn btn-outline btn-sm" onclick="clearPriceModel()">✕ Clear</button>
+      <button class="btn btn-blue" onclick="runPriceModel()" aria-label="Run cost-push price model">▶ Run Price Model</button>
+      <button class="btn btn-outline btn-sm" onclick="clearPriceModel()" aria-label="Clear all price shock inputs">✕ Clear</button>
       <span style="font-size:12px;color:#1e40af;">Model: Δp_j = Σ_i (Δv_i · L_ij) &nbsp;|&nbsp; row vector times L matrix</span>
     </div>
   </div>
@@ -568,9 +568,9 @@ tr:hover td{background:#fffbf3;}
 
     <div class="export-toolbar">
       <span class="export-label">Export:</span>
-      <button class="export-btn" onclick="exportPriceCSV()">📥 CSV — Price Effects</button>
-      <button class="export-btn" onclick="exportPriceJSON()">📋 JSON — Full Results</button>
-      <button class="export-btn" onclick="exportPricePNG()">🖼 PNG — Chart</button>
+      <button class="export-btn" onclick="exportPriceCSV()" aria-label="Export price model effects as CSV">📥 CSV — Price Effects</button>
+      <button class="export-btn" onclick="exportPriceJSON()" aria-label="Export full price model results as JSON">📋 JSON — Full Results</button>
+      <button class="export-btn" onclick="exportPricePNG()" aria-label="Export price model chart as PNG">🖼 PNG — Chart</button>
     </div>
 
     <div class="g2" style="margin-bottom:16px;">
@@ -609,14 +609,14 @@ tr:hover td{background:#fffbf3;}
 
   <div class="search-row">
     <input class="search-input" id="sec-search" data-i18n-placeholder="search_placeholder" placeholder="Search sector by name or code…" oninput="filterSectors()">
-    <select class="filter-select" id="sec-filter-type" onchange="filterSectors()">
+    <select class="filter-select" id="sec-filter-type" onchange="filterSectors()" aria-label="Filter sectors by linkage type">
       <option value="" data-i18n="filter_all">All types</option>
       <option value="key" data-i18n="badge_key_short">Key Sector</option>
       <option value="back" data-i18n="badge_back_short">Backward Key</option>
       <option value="fwd" data-i18n="badge_fwd_short">Forward Key</option>
       <option value="weak" data-i18n="badge_weak_short">Weak</option>
     </select>
-    <select class="filter-select" id="sec-sort" onchange="filterSectors()">
+    <select class="filter-select" id="sec-sort" onchange="filterSectors()" aria-label="Sort sectors">
       <option value="bl-desc" data-i18n="sort_bl">Sort: BL ↓</option>
       <option value="fl-desc" data-i18n="sort_fl">FL ↓</option>
       <option value="x-desc" data-i18n="sort_output">Output ↓</option>
@@ -651,7 +651,7 @@ tr:hover td{background:#fffbf3;}
         <h2 style="font-size:18px;font-weight:800;" id="modal-name"></h2>
         <div style="margin-top:6px;" id="modal-badges"></div>
       </div>
-      <button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('open')">✕</button>
+      <button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('open')" aria-label="Close sector detail modal">✕</button>
     </div>
     <div class="modal-body">
       <div class="g4" style="margin-bottom:16px;" id="modal-kpis"></div>
@@ -1020,7 +1020,7 @@ function removeDemandShock(j){
 function renderDemandTags(){
   document.getElementById('demand-tags').innerHTML = demandShocks.map(s=>
     `<span class="tag">${s.code}: ΔY=${fmtN(s.dy)} bln
-      <button onclick="removeDemandShock(${s.j})">×</button></span>`).join('');
+      <button onclick="removeDemandShock(${s.j})" aria-label="Remove ${s.code} from demand shock">×</button></span>`).join('');
 }
 
 function runDemandModel(){
@@ -1214,7 +1214,7 @@ function removePriceShock(j){
 function renderPriceTags(){
   document.getElementById('price-tags').innerHTML=priceShocks.map(s=>
     `<span class="tag ptag">${s.code}: Δv=${s.dv}%
-      <button onclick="removePriceShock(${s.j})">×</button></span>`).join('');
+      <button onclick="removePriceShock(${s.j})" aria-label="Remove ${s.code} from price shock">×</button></span>`).join('');
 }
 
 function runPriceModel(){
@@ -1387,7 +1387,7 @@ function buildSecTable(){
       <td>${fmtN(s.x)}</td>
       <td>${fmtN(s.gva)}</td>
       <td>${fmtEmp(s.empT)}</td>
-      <td><button class="btn btn-outline btn-sm" onclick="openModal(${s.j})">Detail →</button></td>
+      <td><button class="btn btn-outline btn-sm" onclick="openModal(${s.j})" aria-label="View details for ${s.name}">Detail →</button></td>
     </tr>`).join('');
 }
 

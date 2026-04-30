@@ -773,7 +773,7 @@ details[open] > .tracker-summary .tracker-chevron { transform: rotate(90deg); }
      HEADER
 ════════════════════════════════════════════ -->
 <header class="header">
-  <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+  <button class="menu-toggle" onclick="toggleSidebar()" aria-label="Toggle navigation sidebar">☰</button>
   <div class="header-logo">
     <div class="header-logo-icon">🏛️</div>
     <div>
@@ -786,14 +786,14 @@ details[open] > .tracker-summary .tracker-chevron { transform: rotate(90deg); }
     <div class="header-pill live">● Live Models: 6</div>
     <div class="header-pill">Beta v0.4</div>
     <div class="lang-picker" id="lang-picker">
-      <button class="lang-current" id="lang-current-btn" onclick="toggleLangPicker(event)" title="Switch language">
+      <button class="lang-current" id="lang-current-btn" onclick="toggleLangPicker(event)" title="Switch language" aria-label="Switch interface language" aria-haspopup="true">
         <span id="lang-code" class="lang-code">EN</span>
         <span class="lang-caret">▾</span>
       </button>
       <div class="lang-dropdown" id="lang-dropdown">
-        <button class="lang-opt" onclick="setLang('en');closeLangPicker()"><span class="lang-opt-code">EN</span></button>
-        <button class="lang-opt" onclick="setLang('ru');closeLangPicker()"><span class="lang-opt-code">RU</span></button>
-        <button class="lang-opt" onclick="setLang('uz');closeLangPicker()"><span class="lang-opt-code">UZ</span></button>
+        <button class="lang-opt" onclick="setLang('en');closeLangPicker()" aria-label="Switch to English"><span class="lang-opt-code">EN</span></button>
+        <button class="lang-opt" onclick="setLang('ru');closeLangPicker()" aria-label="Switch to Russian"><span class="lang-opt-code">RU</span></button>
+        <button class="lang-opt" onclick="setLang('uz');closeLangPicker()" aria-label="Switch to Uzbek"><span class="lang-opt-code">UZ</span></button>
       </div>
     </div>
   </div>
@@ -808,16 +808,16 @@ details[open] > .tracker-summary .tracker-chevron { transform: rotate(90deg); }
   <nav class="sidebar" id="sidebar">
     <div class="sidebar-section">
       <div class="sidebar-label" data-i18n="nav_section_overview">Overview</div>
-      <button class="nav-item active" onclick="navigate('home')">
+      <button class="nav-item active" onclick="navigate('home')" aria-label="Navigate to Home">
         <span class="nav-icon">🏠</span> <span data-i18n="nav_home">Home</span>
       </button>
-      <button class="nav-item" onclick="navigate('intl')">
+      <button class="nav-item" onclick="navigate('intl')" aria-label="Navigate to International Organizations">
         <span class="nav-icon">🌐</span> <span data-i18n="nav_intl">Int'l Organizations</span>
       </button>
-      <button class="nav-item" onclick="navigate('compare')">
+      <button class="nav-item" onclick="navigate('compare')" aria-label="Navigate to Compare Scenarios">
         <span class="nav-icon">⚖️</span> <span data-i18n="nav_compare">Compare Scenarios</span>
       </button>
-      <button class="nav-item" onclick="navigate('synthesis')">
+      <button class="nav-item" onclick="navigate('synthesis')" aria-label="Navigate to Synthesis cross-model view">
         <span class="nav-icon">🧩</span> <span data-i18n="nav_synthesis">Synthesis (Cross-Model)</span>
         <span style="margin-left:auto;font-size:9px;background:#14b8a6;color:#fff;padding:2px 6px;border-radius:10px;font-weight:700;letter-spacing:.5px;">NEW</span>
       </button>
@@ -827,22 +827,22 @@ details[open] > .tracker-summary .tracker-chevron { transform: rotate(90deg); }
 
     <div class="sidebar-section">
       <div class="sidebar-label" data-i18n="nav_section_models">Available Models</div>
-      <button class="nav-item" onclick="navigate('qpm')">
+      <button class="nav-item" onclick="navigate('qpm')" aria-label="Navigate to QPM Simulator">
         <span class="nav-icon">📈</span> <span data-i18n="nav_qpm">QPM Simulator</span>
       </button>
-      <button class="nav-item" onclick="navigate('dfm')">
+      <button class="nav-item" onclick="navigate('dfm')" aria-label="Navigate to GDP Forecast">
         <span class="nav-icon">🔮</span> <span data-i18n="nav_dfm">GDP Forecast</span>
       </button>
-      <button class="nav-item" onclick="navigate('pe')">
+      <button class="nav-item" onclick="navigate('pe')" aria-label="Navigate to Partial Equilibrium model">
         <span class="nav-icon">⚖️</span> <span data-i18n="nav_pe">Partial Equilibrium</span>
       </button>
-      <button class="nav-item" onclick="navigate('io')">
+      <button class="nav-item" onclick="navigate('io')" aria-label="Navigate to Input-Output model">
         <span class="nav-icon">🔗</span> <span data-i18n="nav_io">Input-Output</span>
       </button>
-      <button class="nav-item" onclick="navigate('cge')">
+      <button class="nav-item" onclick="navigate('cge')" aria-label="Navigate to CGE model">
         <span class="nav-icon">⚙️</span> <span data-i18n="nav_cge">CGE Model</span>
       </button>
-      <button class="nav-item" onclick="navigate('fpp')">
+      <button class="nav-item" onclick="navigate('fpp')" aria-label="Navigate to Financial Programming model">
         <span class="nav-icon">💰</span> <span data-i18n="nav_fpp">Fin. Programming</span>
       </button>
     </div>
@@ -851,10 +851,10 @@ details[open] > .tracker-summary .tracker-chevron { transform: rotate(90deg); }
 
     <div class="sidebar-section">
       <div class="sidebar-label" data-i18n="nav_section_platform">Platform</div>
-      <button class="nav-item" onclick="navigate('advisor')">
+      <button class="nav-item" onclick="navigate('advisor')" aria-label="Navigate to AI Policy Advisor">
         <span class="nav-icon">🤖</span> <span data-i18n="nav_advisor">AI Policy Advisor</span>
       </button>
-      <button class="nav-item" onclick="navigate('about')">
+      <button class="nav-item" onclick="navigate('about')" aria-label="Navigate to Methodology">
         <span class="nav-icon">📖</span> <span data-i18n="nav_about">Methodology</span>
       </button>
     </div>
@@ -863,16 +863,16 @@ details[open] > .tracker-summary .tracker-chevron { transform: rotate(90deg); }
 
     <div class="sidebar-section">
       <div class="sidebar-label" data-i18n="nav_section_knowledge">Knowledge Hub</div>
-      <button class="nav-item" onclick="navigate('explorer')">
+      <button class="nav-item" onclick="navigate('explorer')" aria-label="Navigate to Model Explorer">
         <span class="nav-icon">🔍</span> <span data-i18n="nav_explorer">Model Explorer</span>
       </button>
-      <button class="nav-item" onclick="navigate('tracker')">
+      <button class="nav-item" onclick="navigate('tracker')" aria-label="Navigate to Policy Tracker">
         <span class="nav-icon">📋</span> <span data-i18n="nav_tracker">Policy Tracker</span>
       </button>
-      <button class="nav-item" onclick="navigate('research')">
+      <button class="nav-item" onclick="navigate('research')" aria-label="Navigate to Research">
         <span class="nav-icon">📝</span> <span data-i18n="nav_research">Research</span>
       </button>
-      <button class="nav-item" onclick="navigate('literature')">
+      <button class="nav-item" onclick="navigate('literature')" aria-label="Navigate to Literature">
         <span class="nav-icon">📚</span> <span data-i18n="nav_literature">Literature</span>
       </button>
     </div>
@@ -904,12 +904,12 @@ details[open] > .tracker-summary .tracker-chevron { transform: rotate(90deg); }
             state-of-the-art structural models.
           </p>
           <div class="hero-actions" style="flex-wrap:wrap;gap:10px;">
-            <button class="btn btn-primary" onclick="navigate('qpm')" data-i18n="hero_btn_qpm">Open QPM Simulator</button>
-            <button class="btn btn-ghost" onclick="navigate('dfm')" data-i18n="hero_btn_dfm">GDP Forecast</button>
-            <button class="btn btn-ghost" onclick="navigate('pe')" data-i18n="hero_btn_pe">Partial Equilibrium</button>
-            <button class="btn btn-ghost" onclick="navigate('io')" data-i18n="hero_btn_io">Input-Output</button>
-            <button class="btn btn-ghost" onclick="navigate('fpp')" data-i18n="hero_btn_fpp">FPP</button>
-            <button class="btn btn-ghost" onclick="navigate('cge')" data-i18n="hero_btn_cge">CGE</button>
+            <button class="btn btn-primary" onclick="navigate('qpm')" data-i18n="hero_btn_qpm" aria-label="Open QPM Simulator">Open QPM Simulator</button>
+            <button class="btn btn-ghost" onclick="navigate('dfm')" data-i18n="hero_btn_dfm" aria-label="Open GDP Forecast model">GDP Forecast</button>
+            <button class="btn btn-ghost" onclick="navigate('pe')" data-i18n="hero_btn_pe" aria-label="Open Partial Equilibrium model">Partial Equilibrium</button>
+            <button class="btn btn-ghost" onclick="navigate('io')" data-i18n="hero_btn_io" aria-label="Open Input-Output model">Input-Output</button>
+            <button class="btn btn-ghost" onclick="navigate('fpp')" data-i18n="hero_btn_fpp" aria-label="Open Financial Programming model">FPP</button>
+            <button class="btn btn-ghost" onclick="navigate('cge')" data-i18n="hero_btn_cge" aria-label="Open CGE model">CGE</button>
           </div>
         </div>
 
@@ -978,7 +978,7 @@ details[open] > .tracker-summary .tracker-chevron { transform: rotate(90deg); }
             </div>
           </div>
           <div style="display:flex;justify-content:flex-end;margin-bottom:6px;">
-            <button id="hub-fan-btn" onclick="toggleHubFan()" style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:4px 12px;font-size:11px;font-weight:600;color:#1d4ed8;cursor:pointer;">📊 Show Fan Chart</button>
+            <button id="hub-fan-btn" onclick="toggleHubFan()" style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:4px 12px;font-size:11px;font-weight:600;color:#1d4ed8;cursor:pointer;" aria-label="Toggle GDP forecast fan chart with confidence intervals">📊 Show Fan Chart</button>
           </div>
           <div style="height:280px; position:relative">
             <canvas id="hub-gdp-chart"></canvas>
@@ -1267,10 +1267,10 @@ details[open] > .tracker-summary .tracker-chevron { transform: rotate(90deg); }
 
         <!-- Tabs -->
         <div class="scenario-tabs">
-          <button class="scenario-tab active" onclick="switchCompareTab('side-by-side')" data-i18n="compare_tab_sbs">Side-by-Side Models</button>
-          <button class="scenario-tab" onclick="switchCompareTab('library')" data-i18n="compare_tab_lib">Saved Scenarios</button>
-          <button class="scenario-tab" onclick="switchCompareTab('comparison')" data-i18n="compare_tab_cmp">Comparison Table</button>
-          <button class="scenario-tab" onclick="switchCompareTab('presets')" data-i18n="compare_tab_pre">Policy Presets</button>
+          <button class="scenario-tab active" onclick="switchCompareTab('side-by-side')" data-i18n="compare_tab_sbs" aria-label="Show Side-by-Side Models tab">Side-by-Side Models</button>
+          <button class="scenario-tab" onclick="switchCompareTab('library')" data-i18n="compare_tab_lib" aria-label="Show Saved Scenarios tab">Saved Scenarios</button>
+          <button class="scenario-tab" onclick="switchCompareTab('comparison')" data-i18n="compare_tab_cmp" aria-label="Show Comparison Table tab">Comparison Table</button>
+          <button class="scenario-tab" onclick="switchCompareTab('presets')" data-i18n="compare_tab_pre" aria-label="Show Policy Presets tab">Policy Presets</button>
         </div>
 
         <!-- TAB 1: Side-by-Side (original) -->
@@ -1342,8 +1342,8 @@ details[open] > .tracker-summary .tracker-chevron { transform: rotate(90deg); }
           <div class="scenario-compare-bar" id="scenario-compare-bar">
             <span id="scenario-compare-count">0 selected</span>
             <div style="display:flex;gap:10px;">
-              <button onclick="clearScenarioSelection()" style="background:rgba(255,255,255,.15);color:#fff;">Clear</button>
-              <button onclick="runScenarioComparison()">Compare Selected</button>
+              <button onclick="clearScenarioSelection()" style="background:rgba(255,255,255,.15);color:#fff;" aria-label="Clear scenario selection">Clear</button>
+              <button onclick="runScenarioComparison()" aria-label="Compare selected scenarios">Compare Selected</button>
             </div>
           </div>
         </div>
@@ -1421,7 +1421,7 @@ details[open] > .tracker-summary .tracker-chevron { transform: rotate(90deg); }
               style="flex:1;min-width:200px;padding:9px 14px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;background:var(--surface);">
               <option value="">-- Select a saved scenario --</option>
             </select>
-            <button class="btn-analyze" id="btn-analyze" onclick="runAdvisorAnalysis()" disabled>
+            <button class="btn-analyze" id="btn-analyze" onclick="runAdvisorAnalysis()" disabled aria-label="Run AI analysis on selected scenario">
               🤖 Analyze with AI
             </button>
           </div>
@@ -1431,10 +1431,10 @@ details[open] > .tracker-summary .tracker-chevron { transform: rotate(90deg); }
 
           <!-- Quick actions -->
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;">
-            <button onclick="runNowcastBrief()" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--surface);font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;">
+            <button onclick="runNowcastBrief()" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--surface);font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;" aria-label="Generate nowcast brief">
               📰 Generate Nowcast Brief
             </button>
-            <button onclick="runCompareAnalysis()" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--surface);font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;">
+            <button onclick="runCompareAnalysis()" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--surface);font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;" aria-label="Compare all saved scenarios with AI analysis">
               📊 Compare All Saved Scenarios
             </button>
           </div>
@@ -1624,9 +1624,9 @@ details[open] > .tracker-summary .tracker-chevron { transform: rotate(90deg); }
         <div id="explorer-summary-grid" class="explorer-summary-grid"></div>
 
         <div class="explorer-controls">
-          <input id="explorer-search" type="text" placeholder="Search parameters..." data-i18n-placeholder="explorer_search_ph" oninput="filterExplorerParams()">
-          <select id="explorer-model-filter" onchange="filterExplorerParams()"></select>
-          <select id="explorer-type-filter" onchange="filterExplorerParams()"></select>
+          <input id="explorer-search" type="text" placeholder="Search parameters..." data-i18n-placeholder="explorer_search_ph" oninput="filterExplorerParams()" aria-label="Search parameters">
+          <select id="explorer-model-filter" onchange="filterExplorerParams()" aria-label="Filter parameters by model"></select>
+          <select id="explorer-type-filter" onchange="filterExplorerParams()" aria-label="Filter parameters by type"></select>
         </div>
 
         <div class="explorer-table-wrap">
@@ -1675,7 +1675,7 @@ details[open] > .tracker-summary .tracker-chevron { transform: rotate(90deg); }
         <div class="search-row">
           <input id="tracker-search" class="search-input" type="text"
                  placeholder="Search entries..." data-i18n-placeholder="tracker_search_ph"
-                 oninput="onTrackerSearch(this.value)">
+                 oninput="onTrackerSearch(this.value)" aria-label="Search policy tracker entries">
           <span class="result-count" id="tracker-result-count"></span>
         </div>
 
@@ -1695,10 +1695,10 @@ details[open] > .tracker-summary .tracker-chevron { transform: rotate(90deg); }
         </p>
 
         <div class="research-toolbar">
-          <input id="research-search" type="text" placeholder="Search research..." data-i18n-placeholder="research_search_ph" oninput="filterResearch()">
-          <select id="research-topic-filter" onchange="filterResearch()"></select>
-          <select id="research-model-filter" onchange="filterResearch()"></select>
-          <select id="research-author-filter" onchange="filterResearch()"></select>
+          <input id="research-search" type="text" placeholder="Search research..." data-i18n-placeholder="research_search_ph" oninput="filterResearch()" aria-label="Search research">
+          <select id="research-topic-filter" onchange="filterResearch()" aria-label="Filter research by topic"></select>
+          <select id="research-model-filter" onchange="filterResearch()" aria-label="Filter research by model"></select>
+          <select id="research-author-filter" onchange="filterResearch()" aria-label="Filter research by author"></select>
         </div>
         <div id="research-grid" class="research-grid"></div>
       </div>
@@ -1716,9 +1716,9 @@ details[open] > .tracker-summary .tracker-chevron { transform: rotate(90deg); }
         </p>
 
         <div class="literature-toolbar">
-          <input id="lit-search" type="text" placeholder="Search papers..." data-i18n-placeholder="literature_search_ph" oninput="filterLiterature()">
-          <select id="lit-model-filter" onchange="filterLiterature()"></select>
-          <select id="lit-topic-filter" onchange="filterLiterature()"></select>
+          <input id="lit-search" type="text" placeholder="Search papers..." data-i18n-placeholder="literature_search_ph" oninput="filterLiterature()" aria-label="Search literature">
+          <select id="lit-model-filter" onchange="filterLiterature()" aria-label="Filter literature by model"></select>
+          <select id="lit-topic-filter" onchange="filterLiterature()" aria-label="Filter literature by topic"></select>
         </div>
         <div id="literature-sections"></div>
       </div>
@@ -2422,8 +2422,8 @@ function filterResearch() {
         ${expanded ? `<div class="research-body">${escHtml(localize(entry.body))}</div>` : ''}
         <div class="research-topics">${topics}</div>
         <div class="research-actions">
-          <button class="research-model-btn" onclick="navigate('${entry.model}')">${escHtml(modelLabelById(entry.model))}</button>
-          <button class="research-expand-btn" onclick="toggleResearchExpand('${entry.id}')">${escHtml(i18nText(expanded ? 'research_show_less' : 'research_read_more', expanded ? 'Show Less' : 'Read More'))}</button>
+          <button class="research-model-btn" onclick="navigate('${entry.model}')" aria-label="Open ${escHtml(modelLabelById(entry.model))} model">${escHtml(modelLabelById(entry.model))}</button>
+          <button class="research-expand-btn" onclick="toggleResearchExpand('${entry.id}')" aria-label="${expanded ? 'Collapse' : 'Expand'} research entry">${escHtml(i18nText(expanded ? 'research_show_less' : 'research_read_more', expanded ? 'Show Less' : 'Read More'))}</button>
         </div>
       </article>
     `;
@@ -2517,7 +2517,7 @@ function filterLiterature() {
             <div class="lit-section-title">${escHtml(modelLabelById(modelId))}</div>
             <div class="lit-section-count">${items.length}</div>
           </div>
-          <button class="lit-toggle-btn" onclick="toggleLitSection('${modelId}')">${escHtml(i18nText(collapsed ? 'literature_toggle_show' : 'literature_toggle_hide', collapsed ? 'Expand' : 'Collapse'))}</button>
+          <button class="lit-toggle-btn" onclick="toggleLitSection('${modelId}')" aria-label="${collapsed ? 'Expand' : 'Collapse'} ${escHtml(modelLabelById(modelId))} literature section">${escHtml(i18nText(collapsed ? 'literature_toggle_show' : 'literature_toggle_hide', collapsed ? 'Expand' : 'Collapse'))}</button>
         </div>
         ${list}
       </section>
@@ -2714,7 +2714,7 @@ function renderTrackerFilterBar() {
       { id: 'international', label: i18nText('tracker_type_international', 'International') }
     ];
     typeHost.innerHTML = types.map(t =>
-      `<button class="type-btn${trackerState.type === t.id ? ' active' : ''}" onclick="setTrackerType('${t.id}')">${escHtml(t.label)}</button>`
+      `<button class="type-btn${trackerState.type === t.id ? ' active' : ''}" onclick="setTrackerType('${t.id}')" aria-label="Filter by type: ${escHtml(t.label)}">${escHtml(t.label)}</button>`
     ).join('');
   }
 
@@ -2723,9 +2723,9 @@ function renderTrackerFilterBar() {
   if (tagHost) {
     const tagEntries = Object.entries(data.tags || {});
     const chips = [
-      `<button class="chip${trackerState.tag === 'all' ? ' active' : ''}" onclick="setTrackerTag('all')">${escHtml(allLabel)}</button>`
+      `<button class="chip${trackerState.tag === 'all' ? ' active' : ''}" onclick="setTrackerTag('all')" aria-label="Show all tags">${escHtml(allLabel)}</button>`
     ].concat(tagEntries.map(([id, t]) =>
-      `<button class="chip${trackerState.tag === id ? ' active' : ''}" onclick="setTrackerTag('${id}')">${escHtml(t.icon || '')} ${escHtml(localize(t.label))}</button>`
+      `<button class="chip${trackerState.tag === id ? ' active' : ''}" onclick="setTrackerTag('${id}')" aria-label="Filter by tag: ${escHtml(localize(t.label))}">${escHtml(t.icon || '')} ${escHtml(localize(t.label))}</button>`
     ));
     tagHost.innerHTML = chips.join('');
   }
@@ -2740,7 +2740,7 @@ function renderTrackerFilterBar() {
       { id: 'planned', label: i18nText('tracker_status_planned', 'Planned') }
     ];
     statusHost.innerHTML = statuses.map(s =>
-      `<button class="status-btn${trackerState.status === s.id ? ' active' : ''}" onclick="setTrackerStatus('${s.id}')">${escHtml(s.label)}</button>`
+      `<button class="status-btn${trackerState.status === s.id ? ' active' : ''}" onclick="setTrackerStatus('${s.id}')" aria-label="Filter by status: ${escHtml(s.label)}">${escHtml(s.label)}</button>`
     ).join('');
   }
 }
@@ -3275,8 +3275,8 @@ function renderScenarioLibrary() {
       ${kpis ? `<div class="scenario-card-kpis">${kpis}</div>` : ''}
       ${s.notes ? `<div style="font-size:12px;color:var(--text2);margin-bottom:10px;font-style:italic;">"${s.notes}"</div>` : ''}
       <div class="scenario-card-actions">
-        <button onclick="viewScenarioDetail('${s.id}')">View</button>
-        <button class="danger" onclick="deleteScenario('${s.id}')">Delete</button>
+        <button onclick="viewScenarioDetail('${s.id}')" aria-label="View scenario details for ${escHtml(s.name)}">View</button>
+        <button class="danger" onclick="deleteScenario('${s.id}')" aria-label="Delete scenario ${escHtml(s.name)}">Delete</button>
       </div>
     </div>`;
   }).join('');
@@ -3407,8 +3407,8 @@ function runScenarioComparison() {
           </table>
         </div>` : ''}
       <div style="margin-top:16px;display:flex;gap:10px;">
-        <button onclick="exportScenarioCSV()" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--surface);font-size:12px;font-weight:600;cursor:pointer;">📥 Export CSV</button>
-        <button onclick="analyzeComparedScenarios()" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--surface);font-size:12px;font-weight:600;cursor:pointer;">🤖 AI Analysis</button>
+        <button onclick="exportScenarioCSV()" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--surface);font-size:12px;font-weight:600;cursor:pointer;" aria-label="Export comparison results as CSV">📥 Export CSV</button>
+        <button onclick="analyzeComparedScenarios()" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--surface);font-size:12px;font-weight:600;cursor:pointer;" aria-label="Run AI analysis on compared scenarios">🤖 AI Analysis</button>
       </div>
     </div>`;
   switchCompareTab('comparison');

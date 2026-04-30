@@ -201,10 +201,10 @@ tr:hover td { background: #f5f8ff; }
 </header>
 
 <nav>
-  <button class="tab-btn active" onclick="showTab('simulator')">⚡ <span data-i18n="cge_tab_sim">Shock Simulator</span></button>
-  <button class="tab-btn" onclick="showTab('scenarios')">📋 <span data-i18n="cge_tab_scenarios">Scenario Analysis</span></button>
-  <button class="tab-btn" onclick="showTab('calibration')">🔢 <span data-i18n="cge_tab_calibration">Calibration &amp; Data</span></button>
-  <button class="tab-btn" onclick="showTab('documentation')">📖 <span data-i18n="cge_tab_docs">Model Documentation</span></button>
+  <button class="tab-btn active" onclick="showTab('simulator')" aria-label="Show Shock Simulator tab">⚡ <span data-i18n="cge_tab_sim">Shock Simulator</span></button>
+  <button class="tab-btn" onclick="showTab('scenarios')" aria-label="Show Scenario Analysis tab">📋 <span data-i18n="cge_tab_scenarios">Scenario Analysis</span></button>
+  <button class="tab-btn" onclick="showTab('calibration')" aria-label="Show Calibration and Data tab">🔢 <span data-i18n="cge_tab_calibration">Calibration &amp; Data</span></button>
+  <button class="tab-btn" onclick="showTab('documentation')" aria-label="Show Model Documentation tab">📖 <span data-i18n="cge_tab_docs">Model Documentation</span></button>
 </nav>
 
 <!-- ══════════════════════════════════════════
@@ -221,12 +221,12 @@ tr:hover td { background: #f5f8ff; }
         <div class="prow">
           <div class="plabel"><span class="pname">wm shock (%)</span><span class="pval" id="v-wm">0.0%</span></div>
           <div class="pdesc" data-i18n="cge_wp_import">World import price — e.g. energy, food</div>
-          <input type="range" id="sl-wm" min="-30" max="30" step="1" value="0" oninput="slPct(this,'v-wm')">
+          <input type="range" id="sl-wm" min="-30" max="30" step="1" value="0" oninput="slPct(this,'v-wm')" aria-label="World import price shock (percent)">
         </div>
         <div class="prow">
           <div class="plabel"><span class="pname">we shock (%)</span><span class="pval" id="v-we">0.0%</span></div>
           <div class="pdesc" data-i18n="cge_wp_export">World export price — e.g. gold, cotton</div>
-          <input type="range" id="sl-we" min="-30" max="30" step="1" value="0" oninput="slPct(this,'v-we')">
+          <input type="range" id="sl-we" min="-30" max="30" step="1" value="0" oninput="slPct(this,'v-we')" aria-label="World export price shock (percent)">
         </div>
       </div>
 
@@ -234,11 +234,11 @@ tr:hover td { background: #f5f8ff; }
         <div class="sec-hd" data-i18n="cge_trade_policy">Trade Policy</div>
         <div class="prow">
           <div class="plabel"><span class="pname">Import tariff tm (%)</span><span class="pval" id="v-tm">2.0%</span></div>
-          <input type="range" id="sl-tm" min="0" max="30" step="0.5" value="2" oninput="slPct(this,'v-tm')">
+          <input type="range" id="sl-tm" min="0" max="30" step="0.5" value="2" oninput="slPct(this,'v-tm')" aria-label="Import tariff rate (percent)">
         </div>
         <div class="prow">
           <div class="plabel"><span class="pname">Export duty te (%)</span><span class="pval" id="v-te">0.0%</span></div>
-          <input type="range" id="sl-te" min="0" max="10" step="0.5" value="0" oninput="slPct(this,'v-te')">
+          <input type="range" id="sl-te" min="0" max="10" step="0.5" value="0" oninput="slPct(this,'v-te')" aria-label="Export duty rate (percent)">
         </div>
       </div>
 
@@ -246,11 +246,11 @@ tr:hover td { background: #f5f8ff; }
         <div class="sec-hd" data-i18n="cge_fiscal">Fiscal Policy</div>
         <div class="prow">
           <div class="plabel"><span class="pname">Indirect tax ts (%)</span><span class="pval" id="v-ts">6.0%</span></div>
-          <input type="range" id="sl-ts" min="0" max="20" step="0.5" value="6" oninput="slPct(this,'v-ts')">
+          <input type="range" id="sl-ts" min="0" max="20" step="0.5" value="6" oninput="slPct(this,'v-ts')" aria-label="Indirect tax rate (percent)">
         </div>
         <div class="prow">
           <div class="plabel"><span class="pname">Direct tax ty (%)</span><span class="pval" id="v-ty">3.0%</span></div>
-          <input type="range" id="sl-ty" min="0" max="20" step="0.5" value="3" oninput="slPct(this,'v-ty')">
+          <input type="range" id="sl-ty" min="0" max="20" step="0.5" value="3" oninput="slPct(this,'v-ty')" aria-label="Direct tax rate (percent)">
         </div>
       </div>
 
@@ -258,11 +258,11 @@ tr:hover td { background: #f5f8ff; }
         <div class="sec-hd" data-i18n="cge_macro">Macro / Fiscal</div>
         <div class="prow">
           <div class="plabel"><span class="pname">Savings rate sy (%)</span><span class="pval" id="v-sy">38.0%</span></div>
-          <input type="range" id="sl-sy" min="20" max="60" step="0.5" value="38" oninput="slPct(this,'v-sy')">
+          <input type="range" id="sl-sy" min="20" max="60" step="0.5" value="38" oninput="slPct(this,'v-sy')" aria-label="Savings rate (percent)">
         </div>
         <div class="prow">
           <div class="plabel"><span class="pname">Govt spending G (% chg)</span><span class="pval" id="v-G">0.0%</span></div>
-          <input type="range" id="sl-G" min="-40" max="40" step="1" value="0" oninput="slPct(this,'v-G')">
+          <input type="range" id="sl-G" min="-40" max="40" step="1" value="0" oninput="slPct(this,'v-G')" aria-label="Government spending change (percent)">
         </div>
       </div>
 
@@ -270,11 +270,11 @@ tr:hover td { background: #f5f8ff; }
         <div class="sec-hd" data-i18n="cge_external">External</div>
         <div class="prow">
           <div class="plabel"><span class="pname">Foreign savings B (% chg)</span><span class="pval" id="v-B">0.0%</span></div>
-          <input type="range" id="sl-B" min="-80" max="100" step="5" value="0" oninput="slPct(this,'v-B')">
+          <input type="range" id="sl-B" min="-80" max="100" step="5" value="0" oninput="slPct(this,'v-B')" aria-label="Foreign savings change (percent)">
         </div>
         <div class="prow">
           <div class="plabel"><span class="pname">Remittances re (% chg)</span><span class="pval" id="v-re">0.0%</span></div>
-          <input type="range" id="sl-re" min="-50" max="100" step="5" value="0" oninput="slPct(this,'v-re')">
+          <input type="range" id="sl-re" min="-50" max="100" step="5" value="0" oninput="slPct(this,'v-re')" aria-label="Remittances change (percent)">
         </div>
       </div>
 
@@ -282,16 +282,16 @@ tr:hover td { background: #f5f8ff; }
         <div class="sec-hd" data-i18n="cge_supply">Supply</div>
         <div class="prow">
           <div class="plabel"><span class="pname">Output X (% chg)</span><span class="pval" id="v-X">0.0%</span></div>
-          <input type="range" id="sl-X" min="-20" max="20" step="0.5" value="0" oninput="slPct(this,'v-X')">
+          <input type="range" id="sl-X" min="-20" max="20" step="0.5" value="0" oninput="slPct(this,'v-X')" aria-label="Output X change (percent)">
         </div>
         <div class="prow">
           <div class="plabel"><span class="pname">Price factor Pf</span><span class="pval" id="v-Pf">1.00</span></div>
-          <input type="range" id="sl-Pf" min="0.5" max="2.0" step="0.05" value="1.0" oninput="slRaw(this,'v-Pf')">
+          <input type="range" id="sl-Pf" min="0.5" max="2.0" step="0.05" value="1.0" oninput="slRaw(this,'v-Pf')" aria-label="Price factor Pf">
         </div>
       </div>
 
-      <button class="run-btn" id="runBtn" onclick="runSimulation()" data-i18n="cge_run_btn">▶ Run Simulation</button>
-      <button class="reset-btn" onclick="resetToBase()" data-i18n="reset_btn">↺ Reset to Base</button>
+      <button class="run-btn" id="runBtn" onclick="runSimulation()" data-i18n="cge_run_btn" aria-label="Run CGE simulation">▶ Run Simulation</button>
+      <button class="reset-btn" onclick="resetToBase()" data-i18n="reset_btn" aria-label="Reset all parameters to base values">↺ Reset to Base</button>
       <div style="text-align:center;margin-top:10px;font-size:.68rem;color:var(--text3)">
         Solver: <span id="solver-status" class="solver-ok">Ready</span>
       </div>
@@ -333,11 +333,11 @@ tr:hover td { background: #f5f8ff; }
       <!-- Export toolbar -->
       <div class="export-toolbar">
         <span class="export-label">Export Results:</span>
-        <button class="export-btn" onclick="exportCSV()" data-i18n="export_csv">📊 CSV</button>
-        <button class="export-btn" onclick="exportPNG()" data-i18n="export_png">🖼 PNG Chart</button>
-        <button class="export-btn" onclick="exportPDF()" data-i18n="export_pdf">📄 PDF Report</button>
-        <button class="export-btn" onclick="cgeSaveScenario()" data-i18n="save_scenario" style="background:#16a34a;color:#fff;border-color:#16a34a;">💾 Save</button>
-        <button class="export-btn" onclick="cgeAIAnalysis()" data-i18n="ai_analysis" style="background:var(--navy2);color:#fff;border-color:#2563eb;">🤖 AI</button>
+        <button class="export-btn" onclick="exportCSV()" data-i18n="export_csv" aria-label="Export results as CSV">📊 CSV</button>
+        <button class="export-btn" onclick="exportPNG()" data-i18n="export_png" aria-label="Export chart as PNG">🖼 PNG Chart</button>
+        <button class="export-btn" onclick="exportPDF()" data-i18n="export_pdf" aria-label="Export results as PDF report">📄 PDF Report</button>
+        <button class="export-btn" onclick="cgeSaveScenario()" data-i18n="save_scenario" style="background:#16a34a;color:#fff;border-color:#16a34a;" aria-label="Save current simulation as scenario">💾 Save</button>
+        <button class="export-btn" onclick="cgeAIAnalysis()" data-i18n="ai_analysis" style="background:var(--navy2);color:#fff;border-color:#2563eb;" aria-label="Run AI analysis on simulation">🤖 AI</button>
       </div>
 
       <!-- Results table -->
@@ -381,37 +381,37 @@ tr:hover td { background: #f5f8ff; }
       <div class="scen-icon">🛡️</div>
       <div class="scen-title">Import Tariff +5pp</div>
       <div class="scen-desc">Raise import tariff rate from 2% to 7%. Evaluates protectionist trade policy impact on domestic output, exchange rate, and absorption.</div>
-      <button class="scen-run" onclick="runScenario('tariff')">▶ Run Scenario</button>
+      <button class="scen-run" onclick="runScenario('tariff')" aria-label="Run Import Tariff +5pp scenario">▶ Run Scenario</button>
     </div>
     <div class="scen-card">
       <div class="scen-icon">📉</div>
       <div class="scen-title">Export Price Fall −10%</div>
       <div class="scen-desc">World export price falls 10% (e.g. gold price shock). Simulates terms-of-trade deterioration and balance of payments adjustment.</div>
-      <button class="scen-run" onclick="runScenario('exprice')">▶ Run Scenario</button>
+      <button class="scen-run" onclick="runScenario('exprice')" aria-label="Run Export Price Fall scenario">▶ Run Scenario</button>
     </div>
     <div class="scen-card">
       <div class="scen-icon">⛽</div>
       <div class="scen-title">World Import Price +10%</div>
       <div class="scen-desc">Rise in world import prices +10% (energy/food global shock). Tests real exchange rate and welfare effects of a terms-of-trade deterioration.</div>
-      <button class="scen-run" onclick="runScenario('imprice')">▶ Run Scenario</button>
+      <button class="scen-run" onclick="runScenario('imprice')" aria-label="Run World Import Price scenario">▶ Run Scenario</button>
     </div>
     <div class="scen-card">
       <div class="scen-icon">🏛️</div>
       <div class="scen-title">Energy Reform: VAT +5pp</div>
       <div class="scen-desc">Indirect tax rate rises from 6% to 11% (VAT broadening). Evaluates fiscal revenue impact and absorption effects of energy subsidy reform.</div>
-      <button class="scen-run" onclick="runScenario('vat')">▶ Run Scenario</button>
+      <button class="scen-run" onclick="runScenario('vat')" aria-label="Run Energy Reform VAT scenario">▶ Run Scenario</button>
     </div>
     <div class="scen-card">
       <div class="scen-icon">💰</div>
       <div class="scen-title">FDI Surge: Foreign Savings +50%</div>
       <div class="scen-desc">Foreign savings (FDI inflows) increase 50%. Assesses Dutch disease risk, exchange rate appreciation, and investment expansion.</div>
-      <button class="scen-run" onclick="runScenario('fdi')">▶ Run Scenario</button>
+      <button class="scen-run" onclick="runScenario('fdi')" aria-label="Run FDI Surge scenario">▶ Run Scenario</button>
     </div>
     <div class="scen-card">
       <div class="scen-icon">✂️</div>
       <div class="scen-title">Government Austerity −20%</div>
       <div class="scen-desc">Government consumption cut by 20%. Fiscal consolidation scenario — evaluates GDP multiplier, trade balance, and private sector crowding-in.</div>
-      <button class="scen-run" onclick="runScenario('austerity')">▶ Run Scenario</button>
+      <button class="scen-run" onclick="runScenario('austerity')" aria-label="Run Government Austerity scenario">▶ Run Scenario</button>
     </div>
   </div>
   <div id="scen-results"></div>

@@ -168,11 +168,11 @@ select.ctrl-select:disabled{background:#f8fafc;color:var(--text3);cursor:not-all
 </header>
 
 <nav>
-  <button class="tab active" onclick="showTab('overview',this)" data-i18n="pe_tab_overview">Overview</button>
-  <button class="tab" onclick="showTab('simulator',this)" data-i18n="pe_tab_scenario">Scenario Simulator</button>
-  <button class="tab" onclick="showTab('sectors',this)" data-i18n="pe_tab_sector">Sector Analysis</button>
-  <button class="tab" onclick="showTab('partners',this)" data-i18n="pe_tab_partners">Trade Partners</button>
-  <button class="tab" onclick="showTab('methodology',this)" data-i18n="pe_tab_method">Methodology</button>
+  <button class="tab active" onclick="showTab('overview',this)" data-i18n="pe_tab_overview" aria-label="Show Overview tab">Overview</button>
+  <button class="tab" onclick="showTab('simulator',this)" data-i18n="pe_tab_scenario" aria-label="Show Scenario Simulator tab">Scenario Simulator</button>
+  <button class="tab" onclick="showTab('sectors',this)" data-i18n="pe_tab_sector" aria-label="Show Sector Analysis tab">Sector Analysis</button>
+  <button class="tab" onclick="showTab('partners',this)" data-i18n="pe_tab_partners" aria-label="Show Trade Partners tab">Trade Partners</button>
+  <button class="tab" onclick="showTab('methodology',this)" data-i18n="pe_tab_method" aria-label="Show Methodology tab">Methodology</button>
 </nav>
 
 <!-- ════════════════════════ OVERVIEW ════════════════════════ -->
@@ -246,7 +246,7 @@ select.ctrl-select:disabled{background:#f8fafc;color:var(--text3);cursor:not-all
         <div class="ctrl-label">Tariff Reduction</div>
         <div class="ctrl-row">
           <label>Cut Rate:</label>
-          <input type="range" id="sim-cut" min="5" max="100" step="5" value="20" oninput="runSim()">
+          <input type="range" id="sim-cut" min="5" max="100" step="5" value="20" oninput="runSim()" aria-label="Tariff cut rate (percent)">
           <span class="ctrl-val"><span id="sim-cut-val">20</span>%</span>
         </div>
         <div class="chip-group">
@@ -256,7 +256,7 @@ select.ctrl-select:disabled{background:#f8fafc;color:var(--text3);cursor:not-all
           <span class="chip" onclick="setSlider('sim-cut',100,this)">Full</span>
         </div>
         <div class="ctrl-label" style="margin-top:14px;">Apply To Regime</div>
-        <select class="ctrl-select" id="sim-regime" onchange="runSim()">
+        <select class="ctrl-select" id="sim-regime" onchange="runSim()" aria-label="Apply tariff cut to trade regime">
           <option value="all">All Regimes</option>
           <option value="MFN ">MFN Only</option>
           <option value="full">Full Tariff</option>
@@ -267,15 +267,15 @@ select.ctrl-select:disabled{background:#f8fafc;color:var(--text3);cursor:not-all
       <!-- Sector/Country filter -->
       <div class="ctrl-block">
         <div class="ctrl-label">Filter by HS Section</div>
-        <select class="ctrl-select" id="sim-section" onchange="updateChapterFilter();runSim()">
+        <select class="ctrl-select" id="sim-section" onchange="updateChapterFilter();runSim()" aria-label="Filter by HS Section">
           <option value="all">All Sections</option>
         </select>
         <div class="ctrl-label">Filter by HS Chapter</div>
-        <select class="ctrl-select" id="sim-chapter" onchange="runSim()">
+        <select class="ctrl-select" id="sim-chapter" onchange="runSim()" aria-label="Filter by HS Chapter">
           <option value="all">All Chapters</option>
         </select>
         <div class="ctrl-label">Filter by Partner Country</div>
-        <select class="ctrl-select" id="sim-country" onchange="runSim()">
+        <select class="ctrl-select" id="sim-country" onchange="runSim()" aria-label="Filter by partner country">
           <option value="all">All Countries</option>
         </select>
       </div>
@@ -300,10 +300,10 @@ select.ctrl-select:disabled{background:#f8fafc;color:var(--text3);cursor:not-all
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
       <div class="card-title" style="margin:0;">Simulation Results by Sector</div>
       <div style="flex:1;"></div>
-      <button class="btn btn-ghost no-print" onclick="exportCSV('sim')" data-i18n="export_csv">📊 CSV</button>
-      <button class="btn btn-primary no-print" onclick="printSection('sim')">🖨 Print</button>
-      <button class="btn btn-ghost no-print" onclick="peSaveScenario()" data-i18n="save_scenario" style="background:#16a34a;color:#fff;border-color:#16a34a;">💾 Save</button>
-      <button class="btn btn-ghost no-print" onclick="peAIAnalysis()" data-i18n="ai_analysis" style="background:var(--navy2);color:#fff;border-color:#2563eb;">🤖 AI</button>
+      <button class="btn btn-ghost no-print" onclick="exportCSV('sim')" data-i18n="export_csv" aria-label="Export simulation results as CSV">📊 CSV</button>
+      <button class="btn btn-primary no-print" onclick="printSection('sim')" aria-label="Print simulation results">🖨 Print</button>
+      <button class="btn btn-ghost no-print" onclick="peSaveScenario()" data-i18n="save_scenario" style="background:#16a34a;color:#fff;border-color:#16a34a;" aria-label="Save current scenario">💾 Save</button>
+      <button class="btn btn-ghost no-print" onclick="peAIAnalysis()" data-i18n="ai_analysis" style="background:var(--navy2);color:#fff;border-color:#2563eb;" aria-label="Run AI analysis on scenario">🤖 AI</button>
     </div>
     <table id="sim-table">
       <thead><tr>
@@ -333,8 +333,8 @@ select.ctrl-select:disabled{background:#f8fafc;color:var(--text3);cursor:not-all
       <span class="chip" onclick="setSectorView('chapter',this)">By Chapter (HS2)</span>
     </div>
     <div style="flex:1;"></div>
-    <button class="btn btn-ghost no-print" onclick="exportCSV('sectors')">⬇ Export CSV</button>
-    <button class="btn btn-primary no-print" onclick="printSection('sectors')">🖨 Print</button>
+    <button class="btn btn-ghost no-print" onclick="exportCSV('sectors')" aria-label="Export sector analysis as CSV">⬇ Export CSV</button>
+    <button class="btn btn-primary no-print" onclick="printSection('sectors')" aria-label="Print sector analysis">🖨 Print</button>
   </div>
 
   <div class="g2" style="margin-bottom:16px;">
@@ -371,8 +371,8 @@ select.ctrl-select:disabled{background:#f8fafc;color:var(--text3);cursor:not-all
       <span class="chip" onclick="setPartnerView('all',this)">All Partners</span>
     </div>
     <div style="flex:1;"></div>
-    <button class="btn btn-ghost no-print" onclick="exportCSV('partners')">⬇ Export CSV</button>
-    <button class="btn btn-primary no-print" onclick="printSection('partners')">🖨 Print</button>
+    <button class="btn btn-ghost no-print" onclick="exportCSV('partners')" aria-label="Export trade partners data as CSV">⬇ Export CSV</button>
+    <button class="btn btn-primary no-print" onclick="printSection('partners')" aria-label="Print trade partners analysis">🖨 Print</button>
   </div>
 
   <div class="g2" style="margin-bottom:16px;">
