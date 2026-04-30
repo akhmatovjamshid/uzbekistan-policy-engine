@@ -7,7 +7,6 @@ import {
 import type { ImplementedModelId, RegistryStatus } from './source.js'
 
 const DEFAULT_REGISTRY_API_TIMEOUT_MS = 3_000
-const DEFAULT_REGISTRY_API_PATH = '/api/v1/registry/artifacts'
 
 export type RegistryApiCaveat = {
   id: string | null
@@ -67,10 +66,15 @@ function readProcessEnv(): {
   }
 }
 
-export function resolveRegistryApiUrl(): string {
+export function resolveRegistryApiUrl(): string | null {
   const metaEnv = readImportMetaEnv()
   const processEnv = readProcessEnv()
-  return metaEnv.apiUrl ?? processEnv.apiUrl ?? DEFAULT_REGISTRY_API_PATH
+  const configuredUrl = metaEnv.apiUrl ?? processEnv.apiUrl
+  return configuredUrl && configuredUrl.trim() !== '' ? configuredUrl : null
+}
+
+export function isRegistryApiEnabled(): boolean {
+  return resolveRegistryApiUrl() !== null
 }
 
 export function resolveRegistryApiTimeoutMs(): number {
@@ -85,9 +89,14 @@ export function resolveRegistryApiTimeoutMs(): number {
 export async function fetchRegistryApiMetadata(
   fetchImpl: FetchLike = fetch,
 ): Promise<RegistryApiResponse> {
+  const registryApiUrl = resolveRegistryApiUrl()
+  if (registryApiUrl === null) {
+    throw new RegistryApiError('Registry API mode is not enabled.')
+  }
+
   try {
     const rawPayload = await fetchBridgeJson({
-      dataUrl: resolveRegistryApiUrl(),
+      dataUrl: registryApiUrl,
       timeoutMs: resolveRegistryApiTimeoutMs(),
       bridgeLabel: 'Registry API',
       fetchImpl,

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
-import { describe, it } from 'node:test'
+import { afterEach, describe, it } from 'node:test'
 import { fileURLToPath } from 'node:url'
 import type { IoBridgePayload } from '../../../src/data/bridge/io-types.js'
 import {
@@ -14,6 +14,15 @@ import { buildValidOverviewArtifact } from '../overview/overview-artifact-fixtur
 
 const IO_PUBLIC_ARTIFACT_PATH = fileURLToPath(new URL('../../../../public/data/io.json', import.meta.url))
 const NOW = new Date('2026-04-25T12:00:00Z')
+const ORIGINAL_REGISTRY_API_URL = process.env.VITE_REGISTRY_API_URL
+
+afterEach(() => {
+  if (ORIGINAL_REGISTRY_API_URL === undefined) {
+    delete process.env.VITE_REGISTRY_API_URL
+  } else {
+    process.env.VITE_REGISTRY_API_URL = ORIGINAL_REGISTRY_API_URL
+  }
+})
 
 function loadPublicIoPayload(): IoBridgePayload {
   return JSON.parse(readFileSync(IO_PUBLIC_ARTIFACT_PATH, 'utf8')) as IoBridgePayload
@@ -36,7 +45,7 @@ function bridgeFetch(payloads: {
   return (input: RequestInfo | URL) => {
     const url = String(input)
     let value = payloads.io
-    if (url.includes('/api/v1/registry/artifacts')) {
+    if (url.includes('/api/v1/registry/artifacts') || url.includes('registry.test/artifacts')) {
       value = payloads.api
     } else if (url.includes('overview.json')) {
       if (payloads.overview === undefined) {
@@ -57,6 +66,8 @@ function bridgeFetch(payloads: {
 
 describe('data registry source', () => {
   it('prefers API metadata when the backend registry is available', async () => {
+    process.env.VITE_REGISTRY_API_URL = 'https://registry.test/artifacts'
+
     const registry = await loadDataRegistry(
       bridgeFetch({
         api: {
@@ -124,7 +135,35 @@ describe('data registry source', () => {
     assert.ok(registry.bridgeOutputs.some((row) => row.id === 'qpm' && row.dataVintage === '2026Q1-api'))
   })
 
+  it('does not probe the registry API in default static mode', async () => {
+    delete process.env.VITE_REGISTRY_API_URL
+    const registryApiCalls: string[] = []
+    const fetchImpl = ((input: RequestInfo | URL) => {
+      const url = String(input)
+      if (url.includes('/api/v1/registry')) {
+        registryApiCalls.push(url)
+      }
+      return bridgeFetch({
+        overview: buildValidOverviewArtifact(),
+        qpm: buildValidQpmPayload(),
+        dfm: buildValidDfmPayload(),
+        io: loadPublicIoPayload(),
+      })(input)
+    }) as typeof fetch
+
+    const registry = await loadDataRegistry(fetchImpl, NOW)
+
+    assert.equal(registry.metadataSource, 'static-fallback')
+    assert.deepEqual(registryApiCalls, [])
+    assert.ok(registry.dataSources.some((row) => row.label === 'PE Trade Shock' && row.status === 'planned'))
+    assert.ok(registry.dataSources.some((row) => row.label === 'CGE Reform Shock' && row.status === 'planned'))
+    assert.ok(registry.dataSources.some((row) => row.label === 'FPP Fiscal Path' && row.status === 'planned'))
+    assert.ok(registry.dataSources.some((row) => row.label === 'High-frequency indicators' && row.status === 'planned'))
+  })
+
   it('falls back to static frontend composition when the backend registry is unavailable', async () => {
+    process.env.VITE_REGISTRY_API_URL = 'https://registry.test/artifacts'
+
     const registry = await loadDataRegistry(
       bridgeFetch({
         api: new Response('', { status: 503 }),
@@ -142,6 +181,8 @@ describe('data registry source', () => {
   })
 
   it('falls back to static frontend composition when the backend registry returns invalid metadata with HTTP 200', async () => {
+    process.env.VITE_REGISTRY_API_URL = 'https://registry.test/artifacts'
+
     const registry = await loadDataRegistry(
       bridgeFetch({
         api: {

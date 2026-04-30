@@ -25,7 +25,11 @@ import {
 } from '../overview/artifact-client.js'
 import type { OverviewArtifact } from '../overview/artifact-types.js'
 import { OVERVIEW_TOP_CARD_METRIC_IDS } from '../overview/artifact-types.js'
-import { fetchRegistryApiMetadata, type RegistryApiArtifact } from './api-client.js'
+import {
+  fetchRegistryApiMetadata,
+  isRegistryApiEnabled,
+  type RegistryApiArtifact,
+} from './api-client.js'
 
 export type RegistryStatus = 'valid' | 'warning' | 'failed' | 'missing' | 'unavailable' | 'planned'
 export type RegistryRecordKind = 'source_series' | 'model_input' | 'bridge_output' | 'planned_artifact'
@@ -256,6 +260,8 @@ export function matchesRegistryFilter(status: RegistryStatus, filter: RegistryFi
 }
 
 async function loadRegistryApiMetadata(fetchImpl: FetchLike): Promise<RegistryApiArtifact[] | null> {
+  if (!isRegistryApiEnabled()) return null
+
   try {
     const response = await fetchRegistryApiMetadata(fetchImpl)
     return response.artifacts
