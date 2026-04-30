@@ -624,9 +624,7 @@ body:has(.overview-page) {
   padding: var(--space-lg);
 }
 
-.overview-nowcast-column .recharts-responsive-container,
-.overview-nowcast-column .recharts-wrapper,
-.overview-nowcast-column .recharts-surface {
+.overview-nowcast-column .recharts-responsive-container {
   max-width: 100%;
 }
 
