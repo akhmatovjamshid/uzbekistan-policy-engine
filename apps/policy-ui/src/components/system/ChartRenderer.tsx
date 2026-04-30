@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type JSX } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type JSX } from 'react'
 import type {
   ChartSemanticRole,
   ChartSeries,
@@ -42,6 +42,7 @@ const Y_AXIS_TICK_STYLE = {
   letterSpacing: '0.04em',
 }
 const GRID_STROKE_OPACITY = 0.6
+const useChartMeasureEffect = typeof document === 'undefined' ? useEffect : useLayoutEffect
 
 function colorForSemanticRole(role: ChartSemanticRole): string {
   if (role === 'baseline') {
@@ -201,7 +202,7 @@ export function ChartRenderer({ spec, height = 280, ariaLabel }: ChartRendererPr
   const chartAriaLabel = ariaLabel ?? spec.title
   const freshness = getFreshness(spec)
 
-  useEffect(() => {
+  useChartMeasureEffect(() => {
     const element = bodyRef.current
     if (!element) {
       return undefined

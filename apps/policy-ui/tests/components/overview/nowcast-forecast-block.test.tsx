@@ -208,6 +208,35 @@ function buildLongSegmentedChart(withForecast = true): ChartSpec {
   }
 }
 
+function buildShortSegmentedChart(): ChartSpec {
+  return {
+    chart_id: 'nowcast_forecast',
+    title: 'Nowcast and forecast',
+    subtitle: 'Real GDP growth',
+    chart_type: 'line',
+    x: { label: 'Quarter', unit: '', values: ['2025Q4', '2026Q1'] },
+    y: { label: 'GDP growth', unit: '%', values: [8.7, 7.0] },
+    series: [
+      {
+        series_id: 'gdp_history_yoy',
+        label: 'GDP growth - history (YoY, %)',
+        semantic_role: 'baseline',
+        values: [8.7, Number.NaN],
+      },
+      {
+        series_id: 'gdp_nowcast_yoy',
+        label: 'GDP growth - current nowcast (YoY, %)',
+        semantic_role: 'alternative',
+        values: [8.7, 7.0],
+      },
+    ],
+    view_mode: 'level',
+    uncertainty: [],
+    takeaway: 'Current-quarter nowcast: 7.0% YoY (2026Q1).',
+    model_attribution: [attribution],
+  }
+}
+
 describe('NowcastForecastBlock (shape-agnostic)', () => {
   it('renders a single-series ChartSpec with uncertainty bands', async () => {
     const i18n = await createTestI18n()
@@ -422,6 +451,17 @@ describe('NowcastForecastBlock (shape-agnostic)', () => {
     assert.match(html, /data-nowcast-display-end="2026Q3"/)
     assert.match(html, /data-nowcast-display-points="15"/)
     assert.match(html, /<th scope="row">2017Q1<\/th>/)
+  })
+
+  it('keeps short nowcast charts in full-window mode', async () => {
+    const i18n = await createTestI18n()
+    const html = renderBlock(buildShortSegmentedChart(), {}, i18n)
+
+    assert.match(html, /data-nowcast-display-window="full"/)
+    assert.match(html, /data-nowcast-display-start="2025Q4"/)
+    assert.match(html, /data-nowcast-display-end="2026Q1"/)
+    assert.match(html, /data-nowcast-display-points="2"/)
+    assert.match(html, /data-nowcast-has-current-segment="true"/)
   })
 
   it('keeps the current segment and fan after recent-window projection', async () => {
