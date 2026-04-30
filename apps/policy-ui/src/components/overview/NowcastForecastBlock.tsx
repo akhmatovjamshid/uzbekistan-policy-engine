@@ -75,6 +75,12 @@ function hasForecastSeries(chart: ChartSpec): boolean {
   return chart.series.some((series) => series.series_id === 'gdp_forecast_yoy')
 }
 
+function hasUncertaintyBand(chart: ChartSpec): boolean {
+  return chart.uncertainty.some(
+    (band) => band.lower.some(isFinite) && band.upper.some(isFinite),
+  )
+}
+
 function findLastFiniteIndex(values: number[], beforeIndex = values.length): number {
   const endIndex = Math.min(beforeIndex, values.length)
   for (let index = endIndex - 1; index >= 0; index -= 1) {
@@ -188,9 +194,7 @@ export function NowcastForecastBlock({ chart, headerSlot, statusSlot }: NowcastF
   const displayHasCurrentSegment = displayChart.series.some((series) =>
     series.series_id === 'gdp_nowcast_yoy' && series.values.some(isFinite),
   )
-  const displayHasFan = displayChart.uncertainty.some(
-    (band) => band.lower.some(isFinite) && band.upper.some(isFinite),
-  )
+  const displayHasFan = hasUncertaintyBand(displayChart)
   const chartAriaLabel = [
     `${chart.title}. ${chart.takeaway}`,
     currentMarker
@@ -237,9 +241,11 @@ export function NowcastForecastBlock({ chart, headerSlot, statusSlot }: NowcastF
             {t('overview.nowcast.legend.forecast')}
           </span>
         ) : null}
-        <span className="overview-nowcast-legend__token overview-nowcast-legend__token--band">
-          {t('overview.nowcast.legend.band')}
-        </span>
+        {hasUncertaintyBand(chart) ? (
+          <span className="overview-nowcast-legend__token overview-nowcast-legend__token--band">
+            {t('overview.nowcast.legend.band')}
+          </span>
+        ) : null}
       </div>
 
       <div

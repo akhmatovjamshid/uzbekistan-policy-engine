@@ -368,7 +368,48 @@ describe('NowcastForecastBlock (shape-agnostic)', () => {
     assert.equal(html.includes('Forecast path'), false)
     assert.match(html, /Actual history/)
     assert.match(html, /Current nowcast/)
-    assert.match(html, /Uncertainty band/)
+    assert.equal(html.includes('Uncertainty band'), false)
+  })
+
+  it('renders an artifact-aligned actual-to-nowcast chart without implying a fan band', async () => {
+    const i18n = await createTestI18n()
+    const artifactAligned: ChartSpec = {
+      chart_id: 'artifact_nowcast_forecast',
+      title: 'Nowcast and forecast',
+      subtitle: 'Real GDP growth (YoY, %) — accepted actual and current Overview nowcast',
+      chart_type: 'line',
+      x: { label: 'Quarter', unit: '', values: ['2026 Q1', '2026 Q2 nowcast'] },
+      y: { label: 'GDP growth', unit: '%', values: [8.7, 6.0] },
+      series: [
+        {
+          series_id: 'gdp_history_yoy',
+          label: 'GDP growth — actual (YoY, %)',
+          semantic_role: 'baseline',
+          values: [8.7, Number.NaN],
+        },
+        {
+          series_id: 'gdp_nowcast_yoy',
+          label: 'GDP growth — current nowcast (YoY, %)',
+          semantic_role: 'alternative',
+          values: [8.7, 6.0],
+        },
+      ],
+      view_mode: 'level',
+      uncertainty: [],
+      takeaway: 'Overview artifact nowcast: 6.0% YoY (2026 Q2 nowcast), after actual 8.7% YoY (2026 Q1).',
+      model_attribution: [attribution],
+    }
+
+    const html = renderBlock(artifactAligned, {}, i18n)
+
+    assert.match(html, /overview-panel-value">6\.0%/)
+    assert.match(html, /data-nowcast-marker="last-actual"/)
+    assert.match(html, /2026 Q1/)
+    assert.match(html, /data-nowcast-marker="current"/)
+    assert.match(html, /2026 Q2 nowcast/)
+    assert.match(html, /data-nowcast-has-current-segment="true"/)
+    assert.match(html, /data-nowcast-has-fan="false"/)
+    assert.equal(html.includes('Uncertainty band'), false)
   })
 
   it('projects the default Overview nowcast chart to a recent display window', async () => {

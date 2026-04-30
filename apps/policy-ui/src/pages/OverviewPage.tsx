@@ -17,6 +17,10 @@ import {
   loadOverviewSourceState,
 } from '../data/overview/source'
 import { buildOverviewMacroPulseTokens } from '../data/overview/macro-pulse'
+import {
+  buildArtifactAlignedNowcastChart,
+  shouldUseDfmNowcastChart,
+} from '../data/overview/nowcast-chart-selection'
 import { useDfmNowcast } from '../data/overview/useDfmNowcast'
 import { NowcastBanner, type NowcastBannerErrorKind } from '../components/overview/NowcastBanner'
 import { DfmTransportError, DfmValidationError } from '../data/bridge/dfm-client'
@@ -162,11 +166,18 @@ export function OverviewPage() {
       .filter((metric) => metric.validation_status === 'warning')
       .map((metric) => metric.metric_id) ?? [],
   ).size
-  const macroPulseTokens = buildOverviewMacroPulseTokens(
-    [...(artifact_summary_metrics ?? []), ...headline_metrics],
-    locale,
-    t,
-  )
+  const overviewNowcastMetrics = [...(artifact_summary_metrics ?? []), ...headline_metrics]
+  const macroPulseTokens = buildOverviewMacroPulseTokens(overviewNowcastMetrics, locale, t)
+  const artifactAlignedNowcastChart = buildArtifactAlignedNowcastChart(overviewNowcastMetrics)
+  const useLiveDfmNowcastChart =
+    dfmState.status === 'bridge' && shouldUseDfmNowcastChart(dfmState.chart, overviewNowcastMetrics)
+  const displayedNowcastChart =
+    useLiveDfmNowcastChart ? dfmState.chart : artifactAlignedNowcastChart ?? nowcast_forecast
+  const displayedNowcastTrustId = useLiveDfmNowcastChart
+    ? 'liveBridgeJson'
+    : sourceState.sourceKind === 'overview-artifact'
+      ? 'overviewArtifact'
+      : 'fallbackMock'
 
   const pageHeaderMeta = (
     <>
@@ -220,11 +231,11 @@ export function OverviewPage() {
             />
           ) : null}
           <NowcastForecastBlock
-            chart={dfmState.status === 'bridge' ? dfmState.chart : nowcast_forecast}
+            chart={displayedNowcastChart}
             headerSlot={
               <TrustStateLabel
-                id={dfmState.status === 'bridge' ? 'liveBridgeJson' : 'fallbackMock'}
-                tone={dfmState.status === 'bridge' ? 'success' : 'warn'}
+                id={displayedNowcastTrustId}
+                tone={useLiveDfmNowcastChart ? 'success' : 'warn'}
               />
             }
             statusSlot={
