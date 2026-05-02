@@ -50,6 +50,8 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   line-height: 1.2;
+  max-width: 100%;
+  overflow-wrap: anywhere;
   padding: 0.18rem var(--space-sm);
   text-transform: uppercase;
   width: fit-content;
@@ -105,6 +107,9 @@
   border-radius: 99px;
   background: var(--color-surface);
   font-size: 0.84rem;
+  max-width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .scenario-chip .dot {
@@ -445,6 +450,7 @@
 .cmp-saved-io__card {
   display: grid;
   gap: var(--space-md);
+  min-width: 0;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   background: var(--color-surface-muted);
@@ -456,6 +462,7 @@
   align-items: start;
   justify-content: space-between;
   gap: var(--space-md);
+  min-width: 0;
 }
 
 .cmp-saved-io__card-head span {
@@ -470,6 +477,7 @@
   margin: 0;
   color: var(--color-text);
   font-size: 0.95rem;
+  overflow-wrap: anywhere;
 }
 
 .cmp-saved-io__metrics {
@@ -482,6 +490,7 @@
 .cmp-saved-io__metrics div {
   display: grid;
   gap: 0.1rem;
+  min-width: 0;
 }
 
 .cmp-saved-io__metrics dt {
@@ -493,6 +502,7 @@
   margin: 0;
   font-family: var(--font-mono);
   font-size: 0.84rem;
+  overflow-wrap: anywhere;
 }
 
 .cmp-saved-io__sectors {
@@ -510,7 +520,7 @@
 
 .cmp-saved-io__sectors li {
   display: grid;
-  grid-template-columns: 3rem minmax(0, 1fr) auto;
+  grid-template-columns: 3rem minmax(0, 1fr) minmax(4rem, auto);
   gap: var(--space-sm);
   align-items: center;
   border-top: 1px solid var(--color-border);

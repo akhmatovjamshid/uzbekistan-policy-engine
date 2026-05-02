@@ -1,4 +1,9 @@
 import type { ChartSpec, HeadlineMetric, ModelAttribution } from '../../contracts/data-contract.js'
+import {
+  formatQuarterLabel,
+  formatValueWithUnit,
+  parseQuarterRef,
+} from '../../lib/format/locale-format.js'
 import { HISTORY_SERIES_ID, NOWCAST_SERIES_ID } from './dfm-composition.js'
 
 const ACTUAL_GDP_METRIC_ID = 'real_gdp_growth_quarter_yoy'
@@ -18,25 +23,14 @@ function findMetric(metrics: HeadlineMetric[], metricId: string): HeadlineMetric
 }
 
 export function parseOverviewQuarterLabel(value: string | number | null | undefined): QuarterRef | null {
-  if (value === null || value === undefined) {
-    return null
-  }
-  const label = String(value).trim()
-  const yearFirst = /(\d{4})\s*Q\s*([1-4])/i.exec(label)
-  if (yearFirst) {
-    return {
-      year: Number(yearFirst[1]),
-      quarter: Number(yearFirst[2]),
-    }
-  }
-  const quarterFirst = /Q\s*([1-4])\s*(\d{4})/i.exec(label)
-  if (quarterFirst) {
-    return {
-      year: Number(quarterFirst[2]),
-      quarter: Number(quarterFirst[1]),
-    }
-  }
-  return null
+  return parseQuarterRef(value)
+}
+
+export function formatOverviewQuarterDisplay(
+  value: string | number | null | undefined,
+  locale: string | undefined,
+): string {
+  return formatQuarterLabel(value, locale)
 }
 
 function compareQuarter(left: QuarterRef, right: QuarterRef): number {
@@ -139,7 +133,7 @@ export function buildArtifactAlignedNowcastChart(metrics: HeadlineMetric[]): Cha
     ],
     view_mode: 'level',
     uncertainty: [],
-    takeaway: `Overview artifact nowcast: ${nowcast.value.toFixed(1)}${unit} YoY (${nowcastPeriod}), after actual ${actual.value.toFixed(1)}${unit} YoY (${actualPeriod}).`,
+    takeaway: `Overview artifact nowcast: ${formatValueWithUnit(nowcast.value, unit, 'en', { maximumFractionDigits: 1, minimumFractionDigits: 1 })} YoY (${nowcastPeriod}), after actual ${formatValueWithUnit(actual.value, unit, 'en', { maximumFractionDigits: 1, minimumFractionDigits: 1 })} YoY (${actualPeriod}).`,
     model_attribution: mergedAttribution(nowcast, actual),
   }
 }

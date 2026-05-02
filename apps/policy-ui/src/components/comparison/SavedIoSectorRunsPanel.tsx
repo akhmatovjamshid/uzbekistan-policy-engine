@@ -1,4 +1,9 @@
 import { useTranslation } from 'react-i18next'
+import {
+  formatCurrencyAmount,
+  formatNumber,
+  formatUnavailable,
+} from '../../lib/format/locale-format.js'
 import { isIoSectorShockRecord, type SavedScenarioRecord } from '../../state/scenarioStore.js'
 
 type SavedIoSectorRunsPanelProps = {
@@ -7,18 +12,11 @@ type SavedIoSectorRunsPanelProps = {
   onAddSavedRun?: () => void
 }
 
-function formatNumber(value: number, digits = 1): string {
-  return new Intl.NumberFormat('en-US', {
-    maximumFractionDigits: digits,
-    minimumFractionDigits: digits,
-  }).format(value)
-}
-
-function formatOptionalNumber(value: number | null): string {
+function formatOptionalNumber(value: number | null, locale: string | undefined): string {
   if (value === null) {
-    return 'n/a'
+    return formatUnavailable(locale)
   }
-  return formatNumber(value, 0)
+  return formatNumber(value, locale, { maximumFractionDigits: 0 })
 }
 
 export function SavedIoSectorRunsPanel({
@@ -26,7 +24,8 @@ export function SavedIoSectorRunsPanel({
   availableCount = records.length,
   onAddSavedRun,
 }: SavedIoSectorRunsPanelProps) {
-  const { t } = useTranslation()
+  const { i18n, t } = useTranslation()
+  const locale = i18n.resolvedLanguage ?? i18n.language
   const ioRecords = records.filter(isIoSectorShockRecord)
 
   if (ioRecords.length === 0) {
@@ -74,23 +73,38 @@ export function SavedIoSectorRunsPanel({
                 <div>
                   <span className="claim-label">{t('comparison.savedIo.claimLabels.output')}</span>
                   <dt>{t('comparison.savedIo.metrics.output')}</dt>
-                  <dd>{formatNumber(run.totals.output_effect_bln_uzs)} bln UZS</dd>
+                  <dd>
+                    {formatCurrencyAmount(run.totals.output_effect_bln_uzs, 'bln_uzs', locale, {
+                      maximumFractionDigits: 1,
+                      minimumFractionDigits: 1,
+                    })}
+                  </dd>
                 </div>
                 <div>
                   <span className="claim-label">{t('comparison.savedIo.claimLabels.output')}</span>
                   <dt>{t('comparison.savedIo.metrics.valueAdded')}</dt>
-                  <dd>{formatNumber(run.totals.value_added_effect_bln_uzs)} bln UZS</dd>
+                  <dd>
+                    {formatCurrencyAmount(run.totals.value_added_effect_bln_uzs, 'bln_uzs', locale, {
+                      maximumFractionDigits: 1,
+                      minimumFractionDigits: 1,
+                    })}
+                  </dd>
                 </div>
                 <div>
                   <span className="claim-label">{t('comparison.savedIo.claimLabels.gdpAccounting')}</span>
                   <dt>{t('comparison.savedIo.metrics.gdpAccounting')}</dt>
-                  <dd>{formatNumber(run.totals.gdp_accounting_contribution_bln_uzs)} bln UZS</dd>
+                  <dd>
+                    {formatCurrencyAmount(run.totals.gdp_accounting_contribution_bln_uzs, 'bln_uzs', locale, {
+                      maximumFractionDigits: 1,
+                      minimumFractionDigits: 1,
+                    })}
+                  </dd>
                 </div>
                 <div>
                   <span className="claim-label">{t('comparison.savedIo.claimLabels.employment')}</span>
                   <dt>{t('comparison.savedIo.metrics.employment')}</dt>
                   <dd>
-                    {formatOptionalNumber(run.totals.employment_effect_persons)}{' '}
+                    {formatOptionalNumber(run.totals.employment_effect_persons, locale)}{' '}
                     {t('comparison.savedIo.employmentUnit')}
                   </dd>
                 </div>
@@ -103,7 +117,12 @@ export function SavedIoSectorRunsPanel({
                     <li key={sector.sector_code}>
                       <span>{sector.sector_code}</span>
                       <strong>{sector.sector_name}</strong>
-                      <em>{formatNumber(sector.output_effect_bln_uzs)} bln UZS</em>
+                      <em>
+                        {formatCurrencyAmount(sector.output_effect_bln_uzs, 'bln_uzs', locale, {
+                          maximumFractionDigits: 1,
+                          minimumFractionDigits: 1,
+                        })}
+                      </em>
                     </li>
                   ))}
                 </ul>

@@ -1,6 +1,11 @@
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ChartSpec } from '../../contracts/data-contract.js'
+import {
+  formatQuarterLabel,
+  formatUnavailable,
+  formatValueWithUnit,
+} from '../../lib/format/locale-format.js'
 import { ChartRenderer } from '../system/ChartRenderer.js'
 
 type NowcastForecastBlockProps = {
@@ -183,7 +188,8 @@ function getVintageLine(chart: ChartSpec): string | null {
 }
 
 export function NowcastForecastBlock({ chart, headerSlot, statusSlot }: NowcastForecastBlockProps) {
-  const { t } = useTranslation()
+  const { i18n, t } = useTranslation()
+  const locale = i18n.resolvedLanguage ?? i18n.language
   const headline = getHeadline(chart)
   const vintageLine = getVintageLine(chart)
   const displayChart = toOverviewNowcastDisplayChart(chart)
@@ -198,7 +204,7 @@ export function NowcastForecastBlock({ chart, headerSlot, statusSlot }: NowcastF
   const chartAriaLabel = [
     `${chart.title}. ${chart.takeaway}`,
     currentMarker
-      ? `${t('overview.nowcast.markers.current')}: ${currentMarker.periodLabel}, ${currentMarker.value.toFixed(1)}${currentMarker.unit}.`
+      ? `${t('overview.nowcast.markers.current')}: ${formatQuarterLabel(currentMarker.periodLabel, locale)}, ${formatValueWithUnit(currentMarker.value, currentMarker.unit, locale, { maximumFractionDigits: 1, minimumFractionDigits: 1 })}.`
       : null,
   ].filter(Boolean).join(' ')
 
@@ -217,10 +223,11 @@ export function NowcastForecastBlock({ chart, headerSlot, statusSlot }: NowcastF
       {headline ? (
         <div className="overview-nowcast-summary overview-nowcast-summary--single">
           <div>
-            <p className="overview-panel-kicker">{headline.periodLabel || headline.seriesLabel}</p>
+            <p className="overview-panel-kicker">
+              {headline.periodLabel ? formatQuarterLabel(headline.periodLabel, locale) : headline.seriesLabel}
+            </p>
             <p className="overview-panel-value">
-              {headline.value.toFixed(1)}
-              {headline.unit}
+              {formatValueWithUnit(headline.value, headline.unit, locale, { maximumFractionDigits: 1, minimumFractionDigits: 1 })}
             </p>
           </div>
           {statusSlot ? <div className="overview-nowcast-status">{statusSlot}</div> : null}
@@ -267,8 +274,8 @@ export function NowcastForecastBlock({ chart, headerSlot, statusSlot }: NowcastF
               >
                 <dt>{t(`overview.nowcast.markers.${marker.kind === 'last-actual' ? 'lastActual' : 'current'}`)}</dt>
                 <dd>
-                  <span>{marker.periodLabel}</span>
-                  <strong>{marker.value.toFixed(1)}{marker.unit}</strong>
+                  <span>{formatQuarterLabel(marker.periodLabel, locale)}</span>
+                  <strong>{formatValueWithUnit(marker.value, marker.unit, locale, { maximumFractionDigits: 1, minimumFractionDigits: 1 })}</strong>
                 </dd>
               </div>
             ))}
@@ -293,7 +300,7 @@ export function NowcastForecastBlock({ chart, headerSlot, statusSlot }: NowcastF
           <caption>{chart.title} — {chart.y.label} ({chart.y.unit})</caption>
           <thead>
             <tr>
-              <th scope="col">Period</th>
+              <th scope="col">{t('overview.nowcast.series.period', { defaultValue: 'Period' })}</th>
               {chart.series.map((series) => (
                 <th key={series.series_id} scope="col">{series.label}</th>
               ))}
@@ -302,12 +309,14 @@ export function NowcastForecastBlock({ chart, headerSlot, statusSlot }: NowcastF
           <tbody>
             {chart.x.values.map((period, index) => (
               <tr key={period.toString()}>
-                <th scope="row">{period}</th>
+                <th scope="row">{formatQuarterLabel(period, locale)}</th>
                 {chart.series.map((series) => {
                   const value = series.values[index]
                   return (
                     <td key={series.series_id}>
-                      {isFinite(value) ? `${value.toFixed(1)}${chart.y.unit}` : 'n/a'}
+                      {isFinite(value)
+                        ? formatValueWithUnit(value, chart.y.unit, locale, { maximumFractionDigits: 1, minimumFractionDigits: 1 })
+                        : formatUnavailable(locale)}
                     </td>
                   )
                 })}
@@ -355,6 +364,8 @@ function getNowcastFanInset(chart: ChartSpec): NowcastFanInset | null {
 }
 
 function NowcastFanInsetGraphic({ inset }: { inset: NowcastFanInset }) {
+  const { i18n, t } = useTranslation()
+  const locale = i18n.resolvedLanguage ?? i18n.language
   const values = [inset.actualValue, inset.currentValue, inset.lower, inset.upper]
   const minValue = Math.min(...values)
   const maxValue = Math.max(...values)
@@ -367,7 +378,13 @@ function NowcastFanInsetGraphic({ inset }: { inset: NowcastFanInset }) {
 
   return (
     <figure
-      aria-label={`${inset.currentPeriod} nowcast fan: ${inset.lower.toFixed(1)}${inset.unit} to ${inset.upper.toFixed(1)}${inset.unit}, current ${inset.currentValue.toFixed(1)}${inset.unit}.`}
+      aria-label={t('overview.nowcast.fanInsetAria', {
+        defaultValue: '{{period}} nowcast fan: {{lower}} to {{upper}}, current {{current}}.',
+        period: formatQuarterLabel(inset.currentPeriod, locale),
+        lower: formatValueWithUnit(inset.lower, inset.unit, locale, { maximumFractionDigits: 1, minimumFractionDigits: 1 }),
+        upper: formatValueWithUnit(inset.upper, inset.unit, locale, { maximumFractionDigits: 1, minimumFractionDigits: 1 }),
+        current: formatValueWithUnit(inset.currentValue, inset.unit, locale, { maximumFractionDigits: 1, minimumFractionDigits: 1 }),
+      })}
       className="overview-nowcast-fan-inset"
       data-nowcast-fan-inset="true"
     >
@@ -391,10 +408,10 @@ function NowcastFanInsetGraphic({ inset }: { inset: NowcastFanInset }) {
           y2={currentY}
         />
         <circle className="overview-nowcast-fan-inset__point" cx="228" cy={currentY} r="4" />
-        <text x="28" y="84">{inset.actualPeriod}</text>
-        <text textAnchor="end" x="228" y="84">{inset.currentPeriod}</text>
-        <text textAnchor="end" x="252" y={upperY + 3}>{inset.upper.toFixed(1)}{inset.unit}</text>
-        <text textAnchor="end" x="252" y={lowerY + 3}>{inset.lower.toFixed(1)}{inset.unit}</text>
+        <text x="28" y="84">{formatQuarterLabel(inset.actualPeriod, locale)}</text>
+        <text textAnchor="end" x="228" y="84">{formatQuarterLabel(inset.currentPeriod, locale)}</text>
+        <text textAnchor="end" x="252" y={upperY + 3}>{formatValueWithUnit(inset.upper, inset.unit, locale, { maximumFractionDigits: 1, minimumFractionDigits: 1 })}</text>
+        <text textAnchor="end" x="252" y={lowerY + 3}>{formatValueWithUnit(inset.lower, inset.unit, locale, { maximumFractionDigits: 1, minimumFractionDigits: 1 })}</text>
       </svg>
     </figure>
   )

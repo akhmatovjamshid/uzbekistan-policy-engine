@@ -1,9 +1,16 @@
 import { useEffect, useLayoutEffect, useRef, useState, type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import type {
   ChartSemanticRole,
   ChartSeries,
   ChartSpec,
 } from '../../contracts/data-contract.js'
+import {
+  formatAxisUnitLabel,
+  formatQuarterLabel,
+  formatUnavailable,
+  formatValueWithUnit,
+} from '../../lib/format/locale-format.js'
 import { AttributionBadge } from './AttributionBadge.js'
 import { toBandMeta, type BandMeta } from './chart-meta-utils.js'
 import {
@@ -83,30 +90,6 @@ function lineStyleForSeriesId(seriesId: string) {
   }
 }
 
-function formatCompactNumber(value: number): string {
-  if (Math.abs(value) >= 1000) {
-    return new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value)
-  }
-  if (Math.abs(value) >= 100) {
-    return value.toFixed(0)
-  }
-  if (Math.abs(value) >= 10) {
-    return value.toFixed(1)
-  }
-  return value.toFixed(2).replace(/\.00$/, '')
-}
-
-function formatWithUnit(value: number, unit: string): string {
-  const numeric = formatCompactNumber(value)
-  if (!unit) {
-    return numeric
-  }
-  if (unit === '%' || unit === 'pp') {
-    return `${numeric}${unit}`
-  }
-  return `${numeric} ${unit}`
-}
-
 function isFiniteNumber(value: unknown): value is number {
   return typeof value === 'number' && Number.isFinite(value)
 }
@@ -181,7 +164,7 @@ function getFreshness(spec: ChartSpec): string | null {
   return normalized ? normalized : null
 }
 
-function buildScreenReaderSummary(spec: ChartSpec): string {
+function buildScreenReaderSummary(spec: ChartSpec, fallbackLabel: string): string {
   const takeaway = spec.takeaway.trim()
   if (takeaway) {
     return takeaway
@@ -190,15 +173,17 @@ function buildScreenReaderSummary(spec: ChartSpec): string {
   if (subtitle) {
     return subtitle
   }
-  return `${spec.title} chart`
+  return `${spec.title} ${fallbackLabel}`
 }
 
 export function ChartRenderer({ spec, height = 280, ariaLabel }: ChartRendererProps): JSX.Element {
+  const { i18n, t } = useTranslation()
+  const locale = i18n.resolvedLanguage ?? i18n.language
   const bodyRef = useRef<HTMLDivElement>(null)
   const [measuredWidth, setMeasuredWidth] = useState(() =>
     typeof document === 'undefined' ? 640 : 0,
   )
-  const primaryModel = spec.model_attribution[0]?.model_id ?? 'N/A'
+  const primaryModel = spec.model_attribution[0]?.model_id ?? formatUnavailable(locale)
   const chartAriaLabel = ariaLabel ?? spec.title
   const freshness = getFreshness(spec)
 
@@ -233,7 +218,9 @@ export function ChartRenderer({ spec, height = 280, ariaLabel }: ChartRendererPr
           </div>
           <AttributionBadge modelId={primaryModel} active />
         </header>
-        <p className="empty-state chart-renderer__empty">No data available for this chart.</p>
+        <p className="empty-state chart-renderer__empty">
+          {t('chartRenderer.empty', { defaultValue: 'No data available for this chart.' })}
+        </p>
       </article>
     )
   }
@@ -243,7 +230,10 @@ export function ChartRenderer({ spec, height = 280, ariaLabel }: ChartRendererPr
   const data = buildChartData(spec, seriesMeta, bandMeta)
   const yUnit = spec.y.unit
   const yDomain = toYAxisDomain(spec)
-  const screenReaderSummary = buildScreenReaderSummary(spec)
+  const screenReaderSummary = buildScreenReaderSummary(
+    spec,
+    t('chartRenderer.srFallback', { defaultValue: 'chart' }),
+  )
   const hasIllustrativeBand = bandMeta.some((item) => item.band.is_illustrative)
   const suppressInternalLegend = spec.series.some((series) => series.series_id === 'gdp_nowcast_yoy')
   const chartWidth = Math.max(measuredWidth, 1)
@@ -259,6 +249,7 @@ export function ChartRenderer({ spec, height = 280, ariaLabel }: ChartRendererPr
         dataKey={X_KEY}
         axisLine={false}
         tick={Y_AXIS_TICK_STYLE}
+        tickFormatter={(value) => formatQuarterLabel(value, locale)}
         tickLine={{ stroke: 'var(--color-border-strong)', strokeWidth: 0.75 }}
       />
       <YAxis
@@ -269,17 +260,18 @@ export function ChartRenderer({ spec, height = 280, ariaLabel }: ChartRendererPr
           if (!isFiniteNumber(value)) {
             return ''
           }
-          return formatWithUnit(value, yUnit)
+          return formatValueWithUnit(value, yUnit, locale, { maximumFractionDigits: 2 })
         }}
         tickLine={{ stroke: 'var(--color-border-strong)', strokeWidth: 0.75 }}
       />
       <Tooltip
         formatter={(value) => {
           if (!isFiniteNumber(value)) {
-            return 'n/a'
+            return formatUnavailable(locale)
           }
-          return formatWithUnit(value, yUnit)
+          return formatValueWithUnit(value, yUnit, locale, { maximumFractionDigits: 2 })
         }}
+        labelFormatter={(label) => formatQuarterLabel(label, locale)}
         itemStyle={{
           color: 'var(--color-text)',
           fontFamily: 'var(--font-mono)',
@@ -445,16 +437,18 @@ export function ChartRenderer({ spec, height = 280, ariaLabel }: ChartRendererPr
       </div>
       <p className="chart-renderer__axis-note">
         {spec.x.label}
-        {spec.x.unit ? ` (${spec.x.unit})` : ''} · {spec.y.label}
-        {spec.y.unit ? ` (${spec.y.unit})` : ''}
+        {spec.x.unit ? ` (${formatAxisUnitLabel(spec.x.unit, locale)})` : ''} · {spec.y.label}
+        {spec.y.unit ? ` (${formatAxisUnitLabel(spec.y.unit, locale)})` : ''}
       </p>
       {hasIllustrativeBand ? (
-        <p className="chart-renderer__illustrative-note">Illustrative uncertainty band (hatched).</p>
+        <p className="chart-renderer__illustrative-note">
+          {t('chartRenderer.illustrativeBand', { defaultValue: 'Illustrative uncertainty band (hatched).' })}
+        </p>
       ) : null}
 
       {spec.takeaway.trim() ? (
         <p className="chart-renderer__takeaway">
-          <strong>Takeaway.</strong> {spec.takeaway}
+          <strong>{t('chartRenderer.takeawayLabel', { defaultValue: 'Takeaway.' })}</strong> {spec.takeaway}
         </p>
       ) : null}
 

@@ -5,6 +5,15 @@ import type {
   ScenarioLabResultTab,
   ScenarioLabResultsBundle,
 } from '../../contracts/data-contract'
+import {
+  formatAxisUnitLabel,
+  formatNumber,
+  formatQuarterLabel,
+  formatSignedNumber,
+  formatUnavailable,
+  formatValueWithUnit,
+  getDefaultFractionDigitsForUnit,
+} from '../../lib/format/locale-format.js'
 import { ImpulseResponseChart } from './ImpulseResponseChart.js'
 
 type ResultsPanelProps = {
@@ -36,29 +45,30 @@ const CLAIM_LABEL_KEYS: Record<ScenarioLabResultTab, string> = {
 
 const HEADLINE_METRIC_ORDER = ['gdp_growth', 'inflation', 'current_account', 'policy_rate'] as const
 
-function formatMetricValue(metric: HeadlineMetric) {
-  if (metric.unit === 'UZS/USD') {
-    return new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(metric.value)
-  }
-  return new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format(metric.value)
+function formatMetricValue(metric: HeadlineMetric, locale: string | undefined) {
+  return formatNumber(metric.value, locale, {
+    maximumFractionDigits: getDefaultFractionDigitsForUnit(metric.unit),
+  })
 }
 
 const DIRECTION_GLYPH = { up: '↑', down: '↓', flat: '→' } as const
 
-function formatSignedDelta(value: number | null, unit: string) {
+function formatSignedDelta(value: number | null, unit: string, locale: string | undefined) {
   if (value === null) {
-    return 'n/a'
+    return formatUnavailable(locale)
   }
-  const sign = value > 0 ? '+' : value < 0 ? '−' : ''
-  const magnitude = Math.abs(value)
-  const precision = unit === 'UZS/USD' ? 0 : 1
-  return `${sign}${magnitude.toFixed(precision)}`
+  const precision = getDefaultFractionDigitsForUnit(unit)
+  return formatSignedNumber(value, locale, {
+    maximumFractionDigits: precision,
+    minimumFractionDigits: precision,
+  })
 }
 
 // Non-headline tabs retain the existing table-view — they're out of scope for
 // Shot-1 structural alignment (prompt §4.4 drops only the bar chart).
 function ScenarioTabChart({ chart, activeTab }: { chart: ChartSpec; activeTab: ScenarioLabResultTab }) {
-  const { t } = useTranslation()
+  const { i18n, t } = useTranslation()
+  const locale = i18n.resolvedLanguage ?? i18n.language
   const titleId = `scenario-chart-title-${chart.chart_id}`
   const terminalIndex = Math.max(0, chart.x.values.length - 1)
   return (
@@ -76,7 +86,10 @@ function ScenarioTabChart({ chart, activeTab }: { chart: ChartSpec; activeTab: S
           <div key={series.series_id}>
             <dt>{series.label}</dt>
             <dd>
-              {series.values[terminalIndex]?.toFixed(1)} {chart.y.unit}
+              {formatValueWithUnit(series.values[terminalIndex], chart.y.unit, locale, {
+                maximumFractionDigits: 1,
+                minimumFractionDigits: 1,
+              })}
             </dd>
           </div>
         ))}
@@ -95,9 +108,14 @@ function ScenarioTabChart({ chart, activeTab }: { chart: ChartSpec; activeTab: S
         <tbody>
           {chart.x.values.map((xValue, index) => (
             <tr key={xValue.toString()}>
-              <th scope="row">{xValue}</th>
+              <th scope="row">{formatQuarterLabel(xValue, locale)}</th>
               {chart.series.map((series) => (
-                <td key={series.series_id}>{series.values[index]?.toFixed(1)}</td>
+                <td key={series.series_id}>
+                  {formatNumber(series.values[index], locale, {
+                    maximumFractionDigits: 1,
+                    minimumFractionDigits: 1,
+                  })}
+                </td>
               ))}
             </tr>
           ))}
@@ -109,7 +127,8 @@ function ScenarioTabChart({ chart, activeTab }: { chart: ChartSpec; activeTab: S
 }
 
 export function ResultsPanel({ activeTab, onTabChange, results }: ResultsPanelProps) {
-  const { t } = useTranslation()
+  const { i18n, t } = useTranslation()
+  const locale = i18n.resolvedLanguage ?? i18n.language
   const activeChart = results.charts_by_tab[activeTab]
   const preferredHeadlineMetrics = HEADLINE_METRIC_ORDER.map((metricId) =>
     results.headline_metrics.find((metric) => metric.metric_id === metricId),
@@ -158,13 +177,13 @@ export function ResultsPanel({ activeTab, onTabChange, results }: ResultsPanelPr
 
       <div className="scenario-headline-grid hmetric-strip headline-metrics">
         {headlineMetrics.map((metric) => {
-          const deltaText = formatSignedDelta(metric.delta_abs, metric.unit)
+          const deltaText = formatSignedDelta(metric.delta_abs, metric.unit, locale)
           const glyph = DIRECTION_GLYPH[metric.direction]
           return (
             <article key={metric.metric_id} className="scenario-headline-card hmetric">
               <p className="scenario-headline-card__label hmetric__label">{metric.label}</p>
               <p className="scenario-headline-card__value hmetric__value">
-                {formatMetricValue(metric)} <span>{metric.unit}</span>
+                {formatMetricValue(metric, locale)} <span>{formatAxisUnitLabel(metric.unit, locale)}</span>
               </p>
               <span
                 className="scenario-headline-card__delta hmetric__delta"

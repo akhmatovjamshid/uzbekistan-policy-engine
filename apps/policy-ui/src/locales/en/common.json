@@ -16,10 +16,22 @@
       "staticOverviewFallback": "Static fallback"
     }
   },
+  "format": {
+    "notAvailable": "n/a",
+    "unavailable": "Unavailable",
+    "units": {
+      "percent": "%",
+      "percentagePoint": "pp",
+      "blnUzs": "bln UZS",
+      "mlnUsd": "mln USD",
+      "uzsUsd": "UZS/USD"
+    }
+  },
   "shell": {
     "skipToMainContent": "Skip to main content",
     "workspaceNavigationAria": "Workspace navigation",
     "primaryNavigationAria": "Primary",
+    "globalUtilitiesAria": "Global utilities",
     "workspaceLabel": "Workspace",
     "brandEyebrow": "Uzbekistan Economic Policy Engine",
     "brandTitle": "Policy Analysis Workspace"
@@ -27,6 +39,12 @@
   "languageSwitcher": {
     "label": "Language",
     "ariaLabel": "Select interface language"
+  },
+  "chartRenderer": {
+    "empty": "No data available for this chart.",
+    "srFallback": "chart",
+    "illustrativeBand": "Illustrative uncertainty band (hatched).",
+    "takeawayLabel": "Takeaway."
   },
   "nav": {
     "overview": "Overview",
@@ -276,6 +294,10 @@
         "lastActual": "Last actual",
         "current": "Current nowcast"
       },
+      "series": {
+        "period": "Period"
+      },
+      "fanInsetAria": "{{period}} nowcast fan: {{lower}} to {{upper}}, current {{current}}.",
       "legend": {
         "actual": "Actual history",
         "nowcast": "Current nowcast",
@@ -385,7 +407,7 @@
       "status": {
         "active": "Active",
         "next": "Next",
-        "bridgePilot": "Bridge pilot",
+        "bridgePilot": "Bridge proof point",
         "shell": "Shell",
         "planned": "Planned"
       }
@@ -460,7 +482,7 @@
       "exchangeRate": "FX assumption, UZS/USD",
       "distribution": "Distribution",
       "sector": "Sector",
-      "sectorHint": "Single-sector shocks route the final-demand vector to one of {{count}} sectors.",
+      "sectorHint": "Single-sector shocks route the final-demand vector to one of {{sectorCount}}.",
       "boundary": "Sector transmission only. Value-added is an I-O accounting contribution to GDP, not a macro forecast, QPM scenario effect, or general-equilibrium result.",
       "employmentBoundary": "Employment is a linear employment-intensity estimate, not a labor-market forecast.",
       "topSectors": "Top affected sectors",
@@ -468,7 +490,7 @@
       "saveRun": "Save I-O run",
       "savedTitle": "I-O {{bucket}} shock · {{amount}} {{currency}}",
       "savedDescription": "Saved I-O sector shock run for sector transmission analysis.",
-      "convertedShock": "Converted demand shock: {{amount}} bln UZS",
+      "convertedShock": "Converted demand shock: {{amount}}",
       "sourceLabelNote": "Sector labels are shown as source labels from {{artifact}} and are not translated here.",
       "units": {
         "employmentEstimate": "employment count estimate"
@@ -480,7 +502,7 @@
       },
       "whatThisMeans": {
         "title": "What this means",
-        "body": "This demand shock produces {{output}} bln UZS of gross output effect and {{valueAdded}} bln UZS of value-added accounting contribution. Employment is shown as {{employment}} estimated positions from fixed sector intensities."
+        "body": "This demand shock produces {{output}} of gross output effect and {{valueAdded}} of value-added accounting contribution. Employment is shown as {{employment}} estimated positions from fixed sector intensities."
       },
       "buckets": {
         "consumption": "Consumption",
@@ -735,7 +757,15 @@
       "title": "Sector evidence from saved I-O runs",
       "separationNote": "Not part of the macro scenario delta table.",
       "description": "{{count}} saved run(s) are shown as sector transmission analytics in a separate evidence section.",
+      "description_one": "{{count}} saved run is shown as sector transmission analytics in a separate evidence section.",
+      "description_few": "{{count}} saved runs are shown as sector transmission analytics in a separate evidence section.",
+      "description_many": "{{count}} saved runs are shown as sector transmission analytics in a separate evidence section.",
+      "description_other": "{{count}} saved runs are shown as sector transmission analytics in a separate evidence section.",
       "emptyWithAvailable": "{{count}} saved I-O run(s) are available. Add them to show sector transmission blocks below the macro table.",
+      "emptyWithAvailable_one": "{{count}} saved I-O run is available. Add it to show sector transmission blocks below the macro table.",
+      "emptyWithAvailable_few": "{{count}} saved I-O runs are available. Add them to show sector transmission blocks below the macro table.",
+      "emptyWithAvailable_many": "{{count}} saved I-O runs are available. Add them to show sector transmission blocks below the macro table.",
+      "emptyWithAvailable_other": "{{count}} saved I-O runs are available. Add them to show sector transmission blocks below the macro table.",
       "addAction": "Add saved run",
       "type": "I-O run",
       "topSectors": "Top sectors",

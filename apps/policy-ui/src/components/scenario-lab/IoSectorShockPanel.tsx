@@ -11,6 +11,12 @@ import type {
 } from '../../contracts/data-contract.js'
 import type { ScenarioLabIoAnalyticsState } from '../../data/scenario-lab/io-analytics-source.js'
 import { runScenarioLabIoDemandShock } from '../../data/scenario-lab/io-analytics-source.js'
+import {
+  formatCurrencyAmount,
+  formatNumber,
+  formatSectorCount,
+  formatUnavailable,
+} from '../../lib/format/locale-format.js'
 
 type IoSectorShockPanelProps = {
   state: ScenarioLabIoAnalyticsState
@@ -30,18 +36,11 @@ const DISTRIBUTION_MODES: ScenarioLabIoDistributionMode[] = ['output', 'gva', 'e
 const CURRENCY_OPTIONS: ScenarioLabIoShockCurrency[] = ['bln_uzs', 'mln_usd']
 const DEFAULT_EXCHANGE_RATE_UZS_PER_USD = 12_652.7
 
-function formatNumber(value: number, digits = 1): string {
-  return new Intl.NumberFormat('en-US', {
-    maximumFractionDigits: digits,
-    minimumFractionDigits: digits,
-  }).format(value)
-}
-
-function formatOptionalNumber(value: number | null): string {
+function formatOptionalNumber(value: number | null, locale: string | undefined): string {
   if (value === null) {
-    return 'n/a'
+    return formatUnavailable(locale)
   }
-  return formatNumber(value, 0)
+  return formatNumber(value, locale, { maximumFractionDigits: 0 })
 }
 
 function contributionStyle(value: number | null, maxValue: number): CSSProperties {
@@ -51,7 +50,8 @@ function contributionStyle(value: number | null, maxValue: number): CSSPropertie
 }
 
 export function IoSectorShockPanel({ state, onRetry, onSaveRun, saveStatus }: IoSectorShockPanelProps) {
-  const { t } = useTranslation()
+  const { i18n, t } = useTranslation()
+  const locale = i18n.resolvedLanguage ?? i18n.language
   const [demandBucket, setDemandBucket] = useState<ScenarioLabIoDemandBucket>('export')
   const [amount, setAmount] = useState(1000)
   const [currency, setCurrency] = useState<ScenarioLabIoShockCurrency>('bln_uzs')
@@ -229,7 +229,7 @@ export function IoSectorShockPanel({ state, onRetry, onSaveRun, saveStatus }: Io
                   </option>
                 ))}
               </select>
-              <small>{t('scenarioLab.ioShock.sectorHint', { count: state.workspace.sector_count })}</small>
+              <small>{t('scenarioLab.ioShock.sectorHint', { sectorCount: formatSectorCount(state.workspace.sector_count, locale) })}</small>
             </label>
           ) : null}
 
@@ -243,13 +243,21 @@ export function IoSectorShockPanel({ state, onRetry, onSaveRun, saveStatus }: Io
               <div>
                 <dt>{t('scenarioLab.ioShock.summary.amount')}</dt>
                 <dd>
-                  {formatNumber(request.amount)} {t(`scenarioLab.ioShock.currencies.${request.currency}`)}
+                  {formatCurrencyAmount(request.amount, request.currency, locale, {
+                    maximumFractionDigits: 1,
+                    minimumFractionDigits: 1,
+                  })}
                 </dd>
               </div>
               {request.currency === 'mln_usd' ? (
                 <div>
                   <dt>{t('scenarioLab.ioShock.summary.fx')}</dt>
-                  <dd>{formatNumber(request.exchange_rate_uzs_per_usd ?? 0, 1)} UZS/USD</dd>
+                  <dd>
+                    {formatCurrencyAmount(request.exchange_rate_uzs_per_usd ?? 0, 'uzs_usd', locale, {
+                      maximumFractionDigits: 1,
+                      minimumFractionDigits: 1,
+                    })}
+                  </dd>
                 </div>
               ) : null}
               <div>
@@ -283,37 +291,62 @@ export function IoSectorShockPanel({ state, onRetry, onSaveRun, saveStatus }: Io
               <div>
                 <span className="claim-label">{t('scenarioLab.ioShock.claimLabels.output')}</span>
                 <dt>{t('scenarioLab.ioShock.kpis.output')}</dt>
-                <dd>{formatNumber(result.totals.output_effect_bln_uzs)} bln UZS</dd>
+                <dd>
+                  {formatCurrencyAmount(result.totals.output_effect_bln_uzs, 'bln_uzs', locale, {
+                    maximumFractionDigits: 1,
+                    minimumFractionDigits: 1,
+                  })}
+                </dd>
               </div>
               <div>
                 <span className="claim-label">{t('scenarioLab.ioShock.claimLabels.output')}</span>
                 <dt>{t('scenarioLab.ioShock.kpis.valueAdded')}</dt>
-                <dd>{formatNumber(result.totals.value_added_effect_bln_uzs)} bln UZS</dd>
+                <dd>
+                  {formatCurrencyAmount(result.totals.value_added_effect_bln_uzs, 'bln_uzs', locale, {
+                    maximumFractionDigits: 1,
+                    minimumFractionDigits: 1,
+                  })}
+                </dd>
               </div>
               <div>
                 <span className="claim-label">{t('scenarioLab.ioShock.claimLabels.gdpContribution')}</span>
                 <dt>{t('scenarioLab.ioShock.kpis.gdpContribution')}</dt>
-                <dd>{formatNumber(result.totals.gdp_accounting_contribution_bln_uzs)} bln UZS</dd>
+                <dd>
+                  {formatCurrencyAmount(result.totals.gdp_accounting_contribution_bln_uzs, 'bln_uzs', locale, {
+                    maximumFractionDigits: 1,
+                    minimumFractionDigits: 1,
+                  })}
+                </dd>
               </div>
               <div>
                 <span className="claim-label">{t('scenarioLab.ioShock.claimLabels.employment')}</span>
                 <dt>{t('scenarioLab.ioShock.kpis.employment')}</dt>
-                <dd>{formatOptionalNumber(result.totals.employment_effect_persons)} {t('scenarioLab.ioShock.units.employmentEstimate')}</dd>
+                <dd>{formatOptionalNumber(result.totals.employment_effect_persons, locale)} {t('scenarioLab.ioShock.units.employmentEstimate')}</dd>
               </div>
               <div>
                 <span className="claim-label">{t('scenarioLab.ioShock.claimLabels.output')}</span>
                 <dt>{t('scenarioLab.ioShock.kpis.multiplier')}</dt>
-                <dd>{result.totals.aggregate_output_multiplier?.toFixed(2) ?? 'n/a'}</dd>
+                <dd>
+                  {result.totals.aggregate_output_multiplier === null
+                    ? formatUnavailable(locale)
+                    : formatNumber(result.totals.aggregate_output_multiplier, locale, {
+                      maximumFractionDigits: 2,
+                      minimumFractionDigits: 2,
+                    })}
+                </dd>
               </div>
             </dl>
 
             <div className="io-shock__meta">
               <span>{state.workspace.framework}</span>
               <span>{state.workspace.data_vintage}</span>
-              <span>{state.workspace.sector_count} sectors</span>
+              <span>{formatSectorCount(state.workspace.sector_count, locale)}</span>
               <span>
                 {t('scenarioLab.ioShock.convertedShock', {
-                  amount: formatNumber(result.totals.demand_shock_bln_uzs),
+                  amount: formatCurrencyAmount(result.totals.demand_shock_bln_uzs, 'bln_uzs', locale, {
+                    maximumFractionDigits: 1,
+                    minimumFractionDigits: 1,
+                  }),
                 })}
               </span>
             </div>
@@ -337,9 +370,15 @@ export function IoSectorShockPanel({ state, onRetry, onSaveRun, saveStatus }: Io
                 <h4>{t('scenarioLab.ioShock.whatThisMeans.title')}</h4>
                 <p>
                   {t('scenarioLab.ioShock.whatThisMeans.body', {
-                    output: formatNumber(result.totals.output_effect_bln_uzs),
-                    valueAdded: formatNumber(result.totals.value_added_effect_bln_uzs),
-                    employment: formatOptionalNumber(result.totals.employment_effect_persons),
+                    output: formatCurrencyAmount(result.totals.output_effect_bln_uzs, 'bln_uzs', locale, {
+                      maximumFractionDigits: 1,
+                      minimumFractionDigits: 1,
+                    }),
+                    valueAdded: formatCurrencyAmount(result.totals.value_added_effect_bln_uzs, 'bln_uzs', locale, {
+                      maximumFractionDigits: 1,
+                      minimumFractionDigits: 1,
+                    }),
+                    employment: formatOptionalNumber(result.totals.employment_effect_persons, locale),
                   })}
                 </p>
               </div>
@@ -378,7 +417,7 @@ export function IoSectorShockPanel({ state, onRetry, onSaveRun, saveStatus }: Io
                           <span className="io-shock__bar-cell-track" aria-hidden="true">
                             <span className="io-shock__bar-cell-fill" />
                           </span>
-                          <span>{formatNumber(sector.output_effect_bln_uzs)}</span>
+                          <span>{formatNumber(sector.output_effect_bln_uzs, locale, { maximumFractionDigits: 1, minimumFractionDigits: 1 })}</span>
                         </span>
                       </td>
                       <td>
@@ -392,7 +431,7 @@ export function IoSectorShockPanel({ state, onRetry, onSaveRun, saveStatus }: Io
                           <span className="io-shock__bar-cell-track" aria-hidden="true">
                             <span className="io-shock__bar-cell-fill" />
                           </span>
-                          <span>{formatNumber(sector.value_added_effect_bln_uzs)}</span>
+                          <span>{formatNumber(sector.value_added_effect_bln_uzs, locale, { maximumFractionDigits: 1, minimumFractionDigits: 1 })}</span>
                         </span>
                       </td>
                       <td>
@@ -406,7 +445,7 @@ export function IoSectorShockPanel({ state, onRetry, onSaveRun, saveStatus }: Io
                           <span className="io-shock__bar-cell-track" aria-hidden="true">
                             <span className="io-shock__bar-cell-fill" />
                           </span>
-                          <span>{formatOptionalNumber(sector.employment_effect_persons)}</span>
+                          <span>{formatOptionalNumber(sector.employment_effect_persons, locale)}</span>
                         </span>
                       </td>
                       <td>{t(`comparison.ioEvidence.linkageClass.${sector.linkage_classification}`)}</td>

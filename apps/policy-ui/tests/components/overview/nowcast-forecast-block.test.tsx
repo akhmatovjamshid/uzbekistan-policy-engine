@@ -450,7 +450,7 @@ describe('NowcastForecastBlock (shape-agnostic)', () => {
     assert.match(html, /data-nowcast-display-start="2023Q1"/)
     assert.match(html, /data-nowcast-display-end="2026Q3"/)
     assert.match(html, /data-nowcast-display-points="15"/)
-    assert.match(html, /<th scope="row">2017Q1<\/th>/)
+    assert.match(html, /<th scope="row">Q1 2017<\/th>/)
   })
 
   it('keeps short nowcast charts in full-window mode', async () => {
@@ -483,7 +483,7 @@ describe('NowcastForecastBlock (shape-agnostic)', () => {
     assert.match(html, /data-nowcast-marker="current"/)
     assert.match(html, /Current nowcast/)
     assert.match(html, /2026Q1/)
-    assert.match(html, /aria-label="Nowcast and forecast\. Current-quarter nowcast: 7\.0% YoY \(2026Q1\)\. Current nowcast: 2026Q1, 7\.0%\./)
-    assert.match(html, /<th scope="row">2017Q1<\/th>/)
+    assert.match(html, /aria-label="Nowcast and forecast\. Current-quarter nowcast: 7\.0% YoY \(2026Q1\)\. Current nowcast: Q1 2026, 7\.0%\./)
+    assert.match(html, /<th scope="row">Q1 2017<\/th>/)
   })
 })

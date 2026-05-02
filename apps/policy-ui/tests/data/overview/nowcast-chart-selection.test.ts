@@ -3,6 +3,7 @@ import { describe, it } from 'node:test'
 import type { ChartSpec, HeadlineMetric, ModelAttribution } from '../../../src/contracts/data-contract.js'
 import {
   buildArtifactAlignedNowcastChart,
+  formatOverviewQuarterDisplay,
   parseOverviewQuarterLabel,
   shouldUseDfmNowcastChart,
 } from '../../../src/data/overview/nowcast-chart-selection.js'
@@ -88,8 +89,16 @@ describe('nowcast chart selection', () => {
     assert.deepEqual(parseOverviewQuarterLabel('2026Q1'), { year: 2026, quarter: 1 })
     assert.deepEqual(parseOverviewQuarterLabel('2026 Q1'), { year: 2026, quarter: 1 })
     assert.deepEqual(parseOverviewQuarterLabel('2026 Q2 nowcast'), { year: 2026, quarter: 2 })
+    assert.deepEqual(parseOverviewQuarterLabel('Q1 2026'), { year: 2026, quarter: 1 })
     assert.deepEqual(parseOverviewQuarterLabel('Q3 2026'), { year: 2026, quarter: 3 })
     assert.equal(parseOverviewQuarterLabel('March 2026'), null)
+  })
+
+  it('keeps localized quarter labels display-only while EN artifact labels remain parseable', () => {
+    assert.deepEqual(parseOverviewQuarterLabel('Q1 2026'), { year: 2026, quarter: 1 })
+    assert.equal(formatOverviewQuarterDisplay('Q1 2026', 'ru'), '1 кв. 2026')
+    assert.equal(formatOverviewQuarterDisplay('Q1 2026', 'uz'), '2026 1-chorak')
+    assert.deepEqual(parseOverviewQuarterLabel('Q1 2026'), { year: 2026, quarter: 1 })
   })
 
   it('builds an artifact-aligned chart from accepted actual GDP and current nowcast metrics', () => {
