@@ -13,7 +13,7 @@ The app-level stabilization gate is clean according to the Sprint 3 closeout: li
 
 This branch is not pilot-ready because named evaluator sessions are deferred. Broader pilot readiness still requires named evaluators and a human review of RU/UZ terminology and sector/model wording.
 
-2026-05-04 release-control update: the slice review ledger in `docs/planning/sprint-3-main-merge-plan.md` now records owner/reviewer evidence for deployment/base-path, bridge foundation, I-O analytics, saved-run workflow, trust/content/i18n, and Data Registry. Current `origin/main` divergence is documented as QPM nightly data-refresh drift: `origin/main...HEAD` was `12` behind and `112` ahead after fetch, with the main-only side consisting of QPM nightly regeneration commits through 2026-05-03. This must be reconciled or accepted by the owner before the final main-merge candidate is cut.
+2026-05-04 release-control update: the slice review ledger in `docs/planning/sprint-3-main-merge-plan.md` now records owner/reviewer evidence for deployment/base-path, bridge foundation, I-O analytics, saved-run workflow, trust/content/i18n, and Data Registry. Current `origin/main` divergence was audited as QPM nightly data-refresh drift: the main-only side consists only of QPM nightly regeneration commits through 2026-05-03, each limited to `apps/policy-ui/public/data/qpm.json`. The latest accepted QPM public artifact from `origin/main` has been restored into the epic working tree without merging or rebasing `main`.
 
 ## In Scope
 
@@ -38,7 +38,7 @@ This branch is not pilot-ready because named evaluator sessions are deferred. Br
 - Changing roadmap priorities.
 - Full public launch or public-policy endorsement.
 - Full accessibility audit, performance optimization pass, or translation-quality review.
-- Refreshing QPM/DFM artifacts or reconciling I-O sector labels.
+- Refreshing DFM artifacts or reconciling I-O sector labels; QPM was refreshed only as a release-control artifact reconciliation from `origin/main`.
 - Treating the release candidate branch as automatically ready for a casual mega-PR into `main`.
 
 ## Allowed Claims
@@ -83,12 +83,12 @@ This branch is not pilot-ready because named evaluator sessions are deferred. Br
 | EN/RU/UZ key completeness | Pending verification | Locale keys must remain complete across EN/RU/UZ. Functional RU/UZ translations do not replace human terminology review. |
 | Browser smoke console errors | Pending verification | `/overview`, `/scenario-lab`, `/comparison`, `/model-explorer`, `/data-registry`, `/knowledge-hub`, and EN/RU/UZ toggles must pass with 0 console errors. |
 | Hosted deployment | Conditional | GitHub Pages workflow must pass on Ubuntu and the hosted `/policy-ui/` path must be smoke checked. |
-| Origin/main divergence | Documented; final reconciliation required | Main-only commits are QPM nightly regeneration updates through 2026-05-03. Reconcile the data artifact or record owner acceptance before final main merge. |
+| Origin/main divergence | Artifact reconciled locally | Main-only commits were QPM nightly regeneration updates through 2026-05-03, each limited to `apps/policy-ui/public/data/qpm.json`; the latest accepted artifact has been restored into the epic working tree. Final CI and hosted smoke are still required on the selected candidate. |
 | Unrelated local dirty files | Excluded | `shared/literature-data.js` and untracked guide/showcase/extract/skills-lock/Knowledge-Hub-planning files are outside this release-control decision and must not be staged into the merge PR without separate acceptance. |
 | Named evaluator pilot | Deferred | Named evaluator sessions are skipped for now; this branch is not pilot-ready. |
 | Public launch | Not claimed | This package supports internal preview workflow/trust review, not public launch. |
 
-2026-05-04 local verification rerun: `npm run lint` passed, `npm test` passed with 312 tests, and `npm run build` passed with the accepted large-chunk warning. This is local evidence only; it does not replace final CI or hosted smoke on the selected merge candidate.
+2026-05-04 local verification rerun after QPM artifact reconciliation: `npm test` passed with 312 tests, `npm run lint` passed, `npm run build` passed with the accepted large-chunk warning, `POLICY_UI_BASE=/policy-ui/ npm run build` passed for the active-preview base path, and `npm run smoke:active-preview` passed against a temporary local `vite preview` server at `http://127.0.0.1:4173/policy-ui/`. This is local evidence only; it does not replace final CI or hosted smoke on the selected merge candidate.
 
 ## Accepted Warnings
 
@@ -125,7 +125,7 @@ Named evaluator sessions are skipped for now. These gates apply when pilot work 
 
 1. Confirm CI passes on the final merge candidate.
 2. Confirm hosted smoke remains clean after the final branch state is selected.
-3. Reconcile or owner-accept the QPM nightly-data divergence from `origin/main`.
+3. Include the reconciled QPM artifact in the final candidate without staging unrelated dirty files.
 4. Resolve or explicitly accept all P0/P1 pilot findings before merge.
 5. Record owner approval for any remaining P2/P3 deferrals.
 6. Keep unrelated dirty files out of the merge PR unless separately reviewed and accepted.
@@ -137,6 +137,6 @@ GO for internal preview release candidate workflow/trust review.
 
 NO-GO for controlled pilot review while named evaluator sessions remain deferred. Pilot review may resume only after hosted smoke verification passes, named evaluators are confirmed, and human RU/UZ terminology review is complete.
 
-SPLIT for main-merge release control as of 2026-05-04. The slice review ledger and release-claim evidence are now documented, but the final main-merge candidate still needs current-SHA CI, hosted smoke, and QPM nightly-data divergence reconciliation or owner acceptance. This is not a HOLD on internal-preview review, and it is not permission to start gated workstreams.
+SPLIT for main-merge release control as of 2026-05-04. The slice review ledger, release-claim evidence, QPM artifact reconciliation, and local policy-ui verification are now documented, but the final main-merge candidate still needs current-SHA CI and hosted smoke. This is not a HOLD on internal-preview review, and it is not permission to start gated workstreams.
 
-NO-GO for casual merge to `main` until final CI is clean, hosted smoke is clean, QPM nightly-data divergence is reconciled or owner-accepted, unrelated dirty files are excluded, and any P0/P1 pilot findings are resolved or explicitly blocked from the merge.
+NO-GO for casual merge to `main` until final CI is clean, hosted smoke is clean, the reconciled QPM artifact is included without unrelated dirty files, and any P0/P1 pilot findings are resolved or explicitly blocked from the merge.

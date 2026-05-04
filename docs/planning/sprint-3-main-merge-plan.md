@@ -26,15 +26,17 @@ The branch should be reviewed through explicit slices even if the final technica
 
 ## Current Release-Control Record - 2026-05-04
 
-Current candidate reviewed locally: `8bba079` on `epic/replatform-execution` after `git fetch origin`.
+Current candidate reviewed locally: `9c6f563` on `epic/replatform-execution` after `git fetch origin`, with the QPM public artifact restored from `origin/main` into the working tree.
 
-`origin/main` divergence is documented, not merged in this cleanup pass: `git rev-list --left-right --count origin/main...HEAD` returned `12 112`. The 12 commits present on `origin/main` and absent from this branch are QPM nightly regeneration commits from 2026-04-22 through 2026-05-03; the latest inspected commit, `a419402 data(qpm): nightly regeneration 2026-05-03`, changes only `apps/policy-ui/public/data/qpm.json`. Treat this as data-refresh divergence to reconcile before the final merge candidate is cut, not as authorization to start new model/backend scope.
+`origin/main` divergence was audited before reconciliation. `git log origin/main..HEAD` confirmed the epic-only side remains the replatform change set. `git log HEAD..origin/main` showed 12 main-only commits, all `data(qpm): nightly regeneration` commits from 2026-04-22 through 2026-05-03. `git log --reverse --name-status HEAD..origin/main` confirmed each main-only commit changes only `apps/policy-ui/public/data/qpm.json`. The latest accepted artifact from `a419402 data(qpm): nightly regeneration 2026-05-03` was then restored into `apps/policy-ui/public/data/qpm.json` without merging or rebasing `main`.
+
+Local verification after the artifact sync: `npm test` passed with 312 tests; `npm run lint` passed; `npm run build` passed with the accepted large-chunk warning; `POLICY_UI_BASE=/policy-ui/ npm run build` passed for active-preview shape; and `npm run smoke:active-preview` passed against a temporary local `vite preview` server at `http://127.0.0.1:4173/policy-ui/`. A default-base preview smoke correctly failed before the Pages base rebuild because assets were emitted under `/assets/`; the Pages-base build resolved that release-control check.
 
 Local dirty files are excluded from this release decision. At this review point, `git status -sb` showed one tracked unrelated modification, `shared/literature-data.js`, and untracked local artifacts: `Git-GitHub-Guide-CERR-Team-v2.html`, `Git-GitHub-Guide-CERR-Team-v3-animated.html`, `_pptx_extract/`, `apps/policy-ui/skills-lock.json`, `docs/planning/knowledge-hub-mock-cleanup-slice.md`, and `huashu-design-showcase/`. None are part of the controlled main-merge evidence and none should be staged for the merge PR unless separately reviewed and explicitly accepted.
 
 Release-claim evidence remains bounded by `docs/frontend-replatform/14_sprint3_release_candidate_readiness.md`: internal preview release candidate only; not pilot-ready, not production-ready, not public-launch validated, and not a replacement for every legacy workflow. Named evaluator sessions and human RU/UZ terminology review are separated from main-merge readiness unless the owner changes that gate in writing.
 
-Final decision for this record: **SPLIT**. Proceed with the controlled main-merge path only after current-SHA CI, hosted `/policy-ui/` smoke, and QPM nightly-data divergence reconciliation/owner acceptance are recorded. Keep pilot readiness, gated workstreams, and unrelated dirty files out of the merge decision.
+Final decision for this record: **SPLIT**. The QPM artifact divergence is reconciled in the working tree, so the next release-control checkpoint can proceed to final-candidate evidence only after current-SHA CI and hosted `/policy-ui/` smoke are recorded. Keep pilot readiness, gated workstreams, and unrelated dirty files out of the merge decision.
 
 ## Acceptance Criteria by Slice
 
