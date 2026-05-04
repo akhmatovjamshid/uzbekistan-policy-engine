@@ -12,6 +12,12 @@ const HASH_ROUTES = [
   '#/data-registry',
   '#/knowledge-hub',
 ];
+const PUBLIC_DATA_ARTIFACTS = [
+  { path: 'data/overview.json', label: 'Overview artifact' },
+  { path: 'data/qpm.json', label: 'QPM bridge artifact' },
+  { path: 'data/dfm.json', label: 'DFM bridge artifact' },
+  { path: 'data/io.json', label: 'I-O bridge artifact' },
+];
 const DATA_REGISTRY_SMOKE_CONTRACT = {
   implemented: [
     { model: 'QPM', assetText: ['QPM'] },
@@ -116,6 +122,15 @@ function extractJsAndCssAssetRefs(html) {
   return [...refs];
 }
 
+function assetExtension(ref) {
+  return new URL(ref, 'https://example.invalid/').pathname.split('.').pop();
+}
+
+function hasHashedAssetFileName(assetUrl) {
+  const fileName = assetUrl.pathname.split('/').pop() ?? '';
+  return /-[A-Za-z0-9_-]{8,}\.(?:js|css)$/.test(fileName);
+}
+
 function failure(category, message, details = []) {
   return { ok: false, category, message, details };
 }
@@ -203,6 +218,46 @@ function validateDataRegistryAssetContract(details, assetText) {
   return null;
 }
 
+async function validatePublicDataArtifacts(baseUrl, details) {
+  for (const artifact of PUBLIC_DATA_ARTIFACTS) {
+    const artifactUrl = new URL(artifact.path, baseUrl);
+    let artifactResponse;
+    try {
+      artifactResponse = await fetchWithTimeout(artifactUrl);
+    } catch (error) {
+      return failure('public data artifact failure', `${artifact.label} request failed for ${artifactUrl.href}.`, [
+        ...details,
+        `Error: ${error.name}: ${error.message}`,
+      ]);
+    }
+
+    if (artifactResponse.status !== 200) {
+      return failure('public data artifact failure', `${artifact.label} returned HTTP ${artifactResponse.status}: ${artifactUrl.href}`, [
+        ...details,
+        `Artifact status: ${artifactResponse.status} ${artifactResponse.statusText}`,
+      ]);
+    }
+
+    const artifactText = await artifactResponse.text();
+    if (artifactText.trim().length === 0) {
+      return failure('public data artifact failure', `${artifact.label} is empty: ${artifactUrl.href}`, details);
+    }
+
+    try {
+      JSON.parse(artifactText);
+    } catch (error) {
+      return failure('public data artifact failure', `${artifact.label} is not valid JSON: ${artifactUrl.href}`, [
+        ...details,
+        `Error: ${error.name}: ${error.message}`,
+      ]);
+    }
+
+    details.push(`${artifact.label} returned HTTP 200 and valid JSON (${artifactText.length} bytes).`);
+  }
+
+  return null;
+}
+
 export async function runSmoke(rawBaseUrl) {
   const baseUrl = normalizeBaseUrl(rawBaseUrl);
   const details = [`Base URL: ${baseUrl.href}`, ...registrySmokeContractDetails()];
@@ -237,6 +292,16 @@ export async function runSmoke(rawBaseUrl) {
     return failure('asset/base-path failure', 'Built HTML shell does not reference any JS or CSS assets.', details);
   }
 
+  const jsAssetRefs = assetRefs.filter((ref) => assetExtension(ref) === 'js');
+  const cssAssetRefs = assetRefs.filter((ref) => assetExtension(ref) === 'css');
+  if (jsAssetRefs.length === 0 || cssAssetRefs.length === 0) {
+    return failure('asset/base-path failure', 'Built HTML shell must reference both JS and CSS assets.', [
+      ...details,
+      `JS asset refs: ${jsAssetRefs.length}.`,
+      `CSS asset refs: ${cssAssetRefs.length}.`,
+    ]);
+  }
+
   const assetUrls = assetRefs.map((ref) => new URL(ref, baseUrl));
   const outsidePolicyUiAssets = assetUrls.filter((assetUrl) => !assetUrl.pathname.includes('/policy-ui/assets/'));
   if (outsidePolicyUiAssets.length > 0) {
@@ -247,6 +312,16 @@ export async function runSmoke(rawBaseUrl) {
   }
 
   details.push(`HTML shell references ${assetUrls.length} JS/CSS asset(s) under /policy-ui/assets/.`);
+
+  const unhashedAssets = assetUrls.filter((assetUrl) => !hasHashedAssetFileName(assetUrl));
+  if (unhashedAssets.length > 0) {
+    return failure('asset/base-path failure', 'Built HTML shell references JS/CSS assets without hashed filenames.', [
+      ...details,
+      ...unhashedAssets.map((assetUrl) => `Unhashed asset path: ${assetUrl.href}`),
+    ]);
+  }
+
+  details.push('All referenced JS/CSS assets use hashed filenames.');
 
   const jsAssetTexts = [];
   for (const assetUrl of assetUrls) {
@@ -277,6 +352,11 @@ export async function runSmoke(rawBaseUrl) {
   const registryAssetFailure = validateDataRegistryAssetContract(details, jsAssetTexts.join('\n'));
   if (registryAssetFailure) {
     return registryAssetFailure;
+  }
+
+  const publicDataArtifactFailure = await validatePublicDataArtifacts(baseUrl, details);
+  if (publicDataArtifactFailure) {
+    return publicDataArtifactFailure;
   }
 
   for (const hashRoute of HASH_ROUTES) {
