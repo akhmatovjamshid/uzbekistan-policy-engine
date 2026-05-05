@@ -91,6 +91,45 @@ Once connected, you can ask Claude:
 docker compose up --build
 ```
 
+## Registry API v1 Runbook
+
+Install backend dependencies from the repository root:
+
+```bash
+python -m pip install -e ./mcp_server
+```
+
+Run the read-only registry API locally:
+
+```bash
+python -m uvicorn api.app:app --app-dir mcp_server --host 127.0.0.1 --port 8000
+```
+
+Endpoint:
+
+```text
+http://127.0.0.1:8000/api/v1/registry/artifacts
+```
+
+Expected 200 response shape:
+
+```json
+{
+  "api_version": "v1",
+  "source": "frontend_public_artifacts",
+  "artifacts": []
+}
+```
+
+The live response includes QPM, DFM, and I-O artifact records with checksum,
+source vintage, guard status, caveats, and warnings. If a public artifact is
+missing or invalid JSON, the API returns HTTP 503 with
+`registry_artifact_unavailable` in the `code` field.
+
+CORS is restricted to localhost origins for local development. GitHub Pages does
+not require the backend; the frontend keeps using its static public artifact
+fallback unless an API URL is supplied outside checked-in configuration.
+
 ## Testing
 
 ```bash
@@ -103,6 +142,7 @@ python -m pytest tests/ -v
 ```
 mcp_server/
 ├── main.py                 # MCP server entry point
+├── api/                    # Read-only registry metadata API
 ├── models/                 # Python ports of JS model solvers
 │   ├── qpm.py              # Gauss-Seidel DSGE solver
 │   ├── dfm.py              # Kalman filter (numpy)
