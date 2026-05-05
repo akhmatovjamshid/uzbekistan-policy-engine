@@ -2,28 +2,30 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { afterEach, describe, it } from 'node:test'
 import { fileURLToPath } from 'node:url'
-import { toKnowledgeHubContent } from '../../../src/data/adapters/knowledge-hub.js'
+import {
+  knowledgeHubArtifactToContent,
+  toKnowledgeHubContent,
+} from '../../../src/data/adapters/knowledge-hub.js'
+import { validateKnowledgeHubArtifact } from '../../../src/data/knowledge-hub/artifact-guard.js'
+import { KNOWLEDGE_HUB_ARTIFACT_SCHEMA_VERSION } from '../../../src/data/knowledge-hub/artifact-types.js'
 import { loadKnowledgeHubSourceState } from '../../../src/data/knowledge-hub/source.js'
 import { knowledgeHubContentMock } from '../../../src/data/mock/knowledge-hub.js'
 
 const KNOWLEDGE_HUB_SOURCE_PATH = fileURLToPath(
   new URL('../../../../src/data/knowledge-hub/source.ts', import.meta.url),
 )
+const PUBLIC_KNOWLEDGE_HUB_ARTIFACT_PATH = fileURLToPath(
+  new URL('../../../../public/data/knowledge-hub.json', import.meta.url),
+)
 const originalFetch = globalThis.fetch
-const originalKnowledgeHubDataMode = process.env.VITE_KNOWLEDGE_HUB_DATA_MODE
-const originalKnowledgeHubApiUrl = process.env.VITE_KNOWLEDGE_HUB_API_URL
+const originalKnowledgeHubArtifactUrl = process.env.VITE_KNOWLEDGE_HUB_ARTIFACT_URL
 
 afterEach(() => {
   globalThis.fetch = originalFetch
-  if (originalKnowledgeHubDataMode === undefined) {
-    delete process.env.VITE_KNOWLEDGE_HUB_DATA_MODE
+  if (originalKnowledgeHubArtifactUrl === undefined) {
+    delete process.env.VITE_KNOWLEDGE_HUB_ARTIFACT_URL
   } else {
-    process.env.VITE_KNOWLEDGE_HUB_DATA_MODE = originalKnowledgeHubDataMode
-  }
-  if (originalKnowledgeHubApiUrl === undefined) {
-    delete process.env.VITE_KNOWLEDGE_HUB_API_URL
-  } else {
-    process.env.VITE_KNOWLEDGE_HUB_API_URL = originalKnowledgeHubApiUrl
+    process.env.VITE_KNOWLEDGE_HUB_ARTIFACT_URL = originalKnowledgeHubArtifactUrl
   }
 })
 
@@ -63,6 +65,36 @@ describe('knowledge hub adapter', () => {
     assert.equal(content.meta.literature_items, 5)
   })
 
+  it('maps source-extracted candidate payload fields without mock reform conversion', () => {
+    const content = toKnowledgeHubContent({
+      meta: { candidate_items: 1, sources_configured: 1 },
+      candidates: [
+        {
+          id: 'candidate-1',
+          extraction_state: 'source-extracted',
+          review_state: 'unreviewed',
+          review_status: 'needs_review',
+          title: 'Policy rate consultation',
+          summary: 'Consultation summary.',
+          domain_tag: 'Monetary',
+          source_institution: 'Central Bank of Uzbekistan',
+          source_url: 'https://cbu.uz/example',
+          source_published_at: '2026-04-25',
+          extracted_at: '2026-05-05T08:00:00.000Z',
+          caveats: ['Unreviewed candidate.'],
+        },
+      ],
+    })
+
+    assert.equal(content.reforms.length, 0)
+    assert.equal(content.briefs.length, 0)
+    assert.equal(content.candidates?.length, 1)
+    assert.equal(content.candidates?.[0].extraction_state, 'source-extracted')
+    assert.equal(content.candidates?.[0].review_status, 'needs_review')
+    assert.equal(content.meta.candidate_items, 1)
+    assert.equal(content.meta.sources_configured, 1)
+  })
+
   it('defaults status to planned and applies safe fallbacks on missing fields', () => {
     const content = toKnowledgeHubContent({
       reforms: [{}],
@@ -86,30 +118,50 @@ describe('knowledge hub adapter', () => {
     assert.equal(planned[0].title, 'WTO accession · final tariff schedule')
   })
 
-  it('keeps Knowledge Hub source resolution mock-only with no active VITE live key', async () => {
+  it('validates and adapts the generated public candidate artifact', () => {
+    const artifact = JSON.parse(readFileSync(PUBLIC_KNOWLEDGE_HUB_ARTIFACT_PATH, 'utf8'))
+    const validation = validateKnowledgeHubArtifact(artifact)
+
+    assert.equal(validation.ok, true)
+    assert.equal(validation.ok ? validation.value.schema_version : null, KNOWLEDGE_HUB_ARTIFACT_SCHEMA_VERSION)
+    assert.equal(validation.ok ? validation.value.candidates.length : 0, 4)
+
+    const content = knowledgeHubArtifactToContent(validation.ok ? validation.value : artifact)
+    assert.equal(content.reforms.length, 0)
+    assert.equal(content.briefs.length, 0)
+    assert.equal(content.candidates?.length, 4)
+    assert.equal(content.meta.candidate_items, 4)
+    assert.equal(content.meta.sources_configured, 2)
+    assert.ok(content.caveats?.some((caveat) => caveat.includes('not an official reviewed policy database')))
+  })
+
+  it('loads Knowledge Hub from the static artifact and does not import hidden mock content', async () => {
     const source = readFileSync(KNOWLEDGE_HUB_SOURCE_PATH, 'utf8')
     const beforeMockSnapshot = JSON.stringify(knowledgeHubContentMock)
+    const artifact = JSON.parse(readFileSync(PUBLIC_KNOWLEDGE_HUB_ARTIFACT_PATH, 'utf8'))
     let fetchCalls = 0
 
-    process.env.VITE_KNOWLEDGE_HUB_DATA_MODE = 'live'
-    process.env.VITE_KNOWLEDGE_HUB_API_URL = 'https://example.invalid/knowledge-hub'
-    globalThis.fetch = (() => {
+    globalThis.fetch = (async () => {
       fetchCalls += 1
-      throw new Error('Knowledge Hub source must not enter live mode')
+      return new Response(JSON.stringify(artifact), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      })
     }) as typeof fetch
 
     const state = await loadKnowledgeHubSourceState()
 
-    assert.doesNotMatch(source, /(?:process|import\.meta)\.env\.VITE_[A-Z0-9_]*KNOWLEDGE_HUB/)
+    assert.doesNotMatch(source, /knowledgeHubContentMock/)
     assert.equal(state.status, 'ready')
-    assert.equal(state.mode, 'mock')
-    assert.equal(state.content, knowledgeHubContentMock)
-    assert.equal(fetchCalls, 0)
-    assert.equal(state.content?.meta.reforms_tracked, 14)
-    assert.equal(state.content?.meta.research_briefs, 9)
-    assert.equal(state.content?.meta.literature_items, 22)
-    assert.equal(state.content?.reforms.length, 4)
-    assert.equal(state.content?.briefs.length, 3)
+    assert.equal(state.mode, 'artifact')
+    assert.equal(fetchCalls, 1)
+    assert.equal(state.content?.meta.reforms_tracked, 0)
+    assert.equal(state.content?.meta.research_briefs, 0)
+    assert.equal(state.content?.meta.literature_items, 0)
+    assert.equal(state.content?.meta.candidate_items, 4)
+    assert.equal(state.content?.reforms.length, 0)
+    assert.equal(state.content?.briefs.length, 0)
+    assert.equal(state.content?.candidates?.[0].extraction_state, 'source-extracted')
     assert.equal(JSON.stringify(knowledgeHubContentMock), beforeMockSnapshot)
   })
 })

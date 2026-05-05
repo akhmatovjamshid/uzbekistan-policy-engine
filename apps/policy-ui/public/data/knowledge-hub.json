@@ -1,0 +1,93 @@
+{
+  "schema_version": "knowledge-hub-reform-candidates.v1",
+  "generated_at": "2026-05-05T08:00:00.000Z",
+  "generated_by": "scripts/knowledge-hub/reform-intake.mjs",
+  "extraction_mode": "fixture",
+  "sources": [
+    {
+      "id": "cbu-policy-news",
+      "institution": "Central Bank of Uzbekistan",
+      "url": "https://cbu.uz/en/press_center/news/"
+    },
+    {
+      "id": "mef-policy-news",
+      "institution": "Ministry of Economy and Finance of Uzbekistan",
+      "url": "https://imv.uz/en/news"
+    }
+  ],
+  "candidates": [
+    {
+      "id": "cbu-policy-news-2026-04-25-monetary-policy-rate-review-announced-for-the-next-board-meeting",
+      "extraction_state": "source-extracted",
+      "review_state": "unreviewed",
+      "review_status": "needs_review",
+      "title": "Monetary policy rate review announced for the next Board meeting",
+      "summary": "The Central Bank published materials on inflation conditions, policy rate options, and transmission risks for the upcoming rate decision.",
+      "domain_tag": "Monetary",
+      "source_institution": "Central Bank of Uzbekistan",
+      "source_url": "https://cbu.uz/en/press_center/news/monetary-policy-rate-review/",
+      "source_published_at": "2026-04-25",
+      "extracted_at": "2026-05-05T08:00:00.000Z",
+      "caveats": [
+        "Deterministic extraction from configured source text.",
+        "Unreviewed candidate; not an official reviewed policy database entry."
+      ]
+    },
+    {
+      "id": "mef-policy-news-2026-04-22-consultation-opens-on-customs-digital-corridor-and-risk-based-clearan",
+      "extraction_state": "source-extracted",
+      "review_state": "unreviewed",
+      "review_status": "needs_review",
+      "title": "Consultation opens on customs digital corridor and risk-based clearance",
+      "summary": "The Ministry invited comments on customs modernization steps, electronic declarations, and risk-based clearance for selected trade corridors.",
+      "domain_tag": "Trade",
+      "source_institution": "Ministry of Economy and Finance of Uzbekistan",
+      "source_url": "https://imv.uz/en/news/customs-digital-corridor-consultation",
+      "source_published_at": "2026-04-22",
+      "extracted_at": "2026-05-05T08:00:00.000Z",
+      "caveats": [
+        "Deterministic extraction from configured source text.",
+        "Unreviewed candidate; not an official reviewed policy database entry."
+      ]
+    },
+    {
+      "id": "mef-policy-news-2026-04-18-energy-tariff-adjustment-draft-paired-with-social-compensation-measur",
+      "extraction_state": "source-extracted",
+      "review_state": "unreviewed",
+      "review_status": "needs_review",
+      "title": "Energy tariff adjustment draft paired with social compensation measures",
+      "summary": "The draft describes household tariff adjustment parameters, compensation targeting, and fiscal monitoring requirements.",
+      "domain_tag": "Structural",
+      "source_institution": "Ministry of Economy and Finance of Uzbekistan",
+      "source_url": "https://imv.uz/en/news/energy-tariff-social-compensation",
+      "source_published_at": "2026-04-18",
+      "extracted_at": "2026-05-05T08:00:00.000Z",
+      "caveats": [
+        "Deterministic extraction from configured source text.",
+        "Unreviewed candidate; not an official reviewed policy database entry."
+      ]
+    },
+    {
+      "id": "cbu-policy-news-2026-04-12-reserve-requirement-rules-for-foreign-currency-deposits-updated",
+      "extraction_state": "source-extracted",
+      "review_state": "unreviewed",
+      "review_status": "needs_review",
+      "title": "Reserve requirement rules for foreign-currency deposits updated",
+      "summary": "The update describes a phased reserve requirement change for banks' foreign-currency deposit liabilities and the expected prudential review process.",
+      "domain_tag": "Monetary",
+      "source_institution": "Central Bank of Uzbekistan",
+      "source_url": "https://cbu.uz/en/press_center/news/fx-deposit-reserve-requirements/",
+      "source_published_at": "2026-04-12",
+      "extracted_at": "2026-05-05T08:00:00.000Z",
+      "caveats": [
+        "Deterministic extraction from configured source text.",
+        "Unreviewed candidate; not an official reviewed policy database entry."
+      ]
+    }
+  ],
+  "caveats": [
+    "This is a deterministic reform-candidate intake artifact.",
+    "Items are source-extracted and unreviewed; this is not an official reviewed policy database.",
+    "The frontend loads this static JSON artifact only and does not scrape source pages in the browser."
+  ]
+}

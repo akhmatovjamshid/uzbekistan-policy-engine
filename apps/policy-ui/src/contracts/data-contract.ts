@@ -680,14 +680,39 @@ export type ResearchBrief = {
   model_refs: string[]
 }
 
+export type ReformCandidateExtractionState = 'source-extracted'
+export type ReformCandidateReviewState = 'unreviewed'
+export type ReformCandidateReviewStatus = 'needs_review'
+
+export type ReformCandidateItem = {
+  id: string
+  extraction_state: ReformCandidateExtractionState
+  review_state: ReformCandidateReviewState
+  review_status: ReformCandidateReviewStatus
+  title: string
+  summary: string
+  domain_tag: string
+  source_institution: string
+  source_url: string
+  source_published_at?: string
+  extracted_at: string
+  caveats: string[]
+}
+
 export type KnowledgeHubMeta = {
   reforms_tracked: number
   research_briefs: number
   literature_items: number
+  candidate_items?: number
+  sources_configured?: number
 }
 
 export type KnowledgeHubContent = {
   reforms: ReformTrackerItem[]
   briefs: ResearchBrief[]
+  candidates?: ReformCandidateItem[]
+  caveats?: string[]
+  generated_at?: string
+  source_artifact?: string
   meta: KnowledgeHubMeta
 }

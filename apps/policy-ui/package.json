@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "test": "tsc -p tsconfig.test.json && node --experimental-specifier-resolution=node scripts/run-compiled-tests.mjs",
+    "knowledge-hub:intake": "node ../../scripts/knowledge-hub/reform-intake.mjs --write-public-artifact",
     "smoke:active-preview": "node scripts/active-preview-smoke.mjs",
     "preview": "vite preview"
   },
