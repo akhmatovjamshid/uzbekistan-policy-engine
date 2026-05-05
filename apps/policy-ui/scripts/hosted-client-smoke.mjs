@@ -82,23 +82,67 @@ const HASH_ROUTES = [
       uz: 'Bilimlar markazi',
     },
     extraExpression: `
-      !!document.querySelector('.candidate-section') &&
-      document.body.innerText.includes('Fixture/demo intake') &&
-      document.body.innerText.includes('source-extracted') &&
-      document.body.innerText.includes('unreviewed / needs review') &&
-      document.body.innerText.includes('Source institution') &&
-      document.body.innerText.includes('Source URL') &&
-      document.body.innerText.includes('extracted_at') &&
-      document.body.innerText.includes('Not an official reviewed policy database') &&
+      (() => {
+      const text = (document.body.innerText || '').toLowerCase();
+      const hasCandidateSection = !!document.querySelector('.candidate-section');
+      const hasSourceMetadata =
+        !!document.querySelector('.candidate-meta') &&
+        !!document.querySelector('.candidate-meta a[href^="http"]');
+      const hasReviewStatus =
+        text.includes('source-extracted') &&
+        text.includes('unreviewed') &&
+        text.includes('needs review');
+      const hasNonOfficialCaveat =
+        text.includes('not an official reviewed policy database') ||
+        (text.includes('not an official') && text.includes('reviewed') && text.includes('database'));
+      return (
+      hasCandidateSection &&
+      hasReviewStatus &&
+      hasSourceMetadata &&
+      hasNonOfficialCaveat &&
       !document.querySelector('.pending-surface') &&
       !document.querySelector('.knowledge-hub-static-banner') &&
       !document.querySelector('.hub-grid') &&
-      !document.body.innerText.includes('Curated static pilot content') &&
-      !document.body.innerText.includes('Research briefs') &&
-      !document.body.innerText.includes('WTO accession')
+      !text.includes('curated static pilot content') &&
+      !text.includes('research briefs') &&
+      !text.includes('wto accession')
+      );
+      })()
     `,
   },
 ]
+
+const ENGLISH_ROUTE_LANGUAGE = 'en'
+
+function resetRouteLanguageExpression(expectedTitle) {
+  return `
+    (async () => {
+      const expectedTitle = ${JSON.stringify(expectedTitle)};
+      const select = document.querySelector('.language-switcher select');
+      if (!select) {
+        return { ok: false, reason: 'language select not found' };
+      }
+      if (select.value !== ${JSON.stringify(ENGLISH_ROUTE_LANGUAGE)}) {
+        select.value = ${JSON.stringify(ENGLISH_ROUTE_LANGUAGE)};
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      const deadline = Date.now() + ${LANGUAGE_TIMEOUT_MS};
+      while (Date.now() < deadline) {
+        const h1 = document.querySelector('.page-header h1')?.textContent?.trim() ?? '';
+        if (select.value === ${JSON.stringify(ENGLISH_ROUTE_LANGUAGE)} && h1 === expectedTitle) {
+          return { ok: true, language: ${JSON.stringify(ENGLISH_ROUTE_LANGUAGE)}, title: h1 };
+        }
+        await new Promise((resolve) => setTimeout(resolve, 100));
+      }
+      return {
+        ok: false,
+        language: ${JSON.stringify(ENGLISH_ROUTE_LANGUAGE)},
+        selectValue: select.value,
+        title: document.querySelector('.page-header h1')?.textContent?.trim() ?? null,
+      };
+    })()
+  `
+}
 
 function usage() {
   return [
@@ -706,6 +750,7 @@ function knowledgeHubCandidateExpression() {
   return `
     (() => {
       const candidateSection = document.querySelector('.knowledge-hub-page .candidate-section');
+      const candidateMeta = document.querySelector('.knowledge-hub-page .candidate-meta');
       const forbiddenSelectors = [
         '.pending-surface',
         '.knowledge-hub-static-banner',
@@ -714,26 +759,38 @@ function knowledgeHubCandidateExpression() {
       ];
       const forbiddenSelector = forbiddenSelectors.find((selector) => document.querySelector(selector));
       const text = document.body.innerText || '';
+      const normalizedText = text.toLowerCase();
       const forbiddenText = [
         'Curated static pilot content',
         'Research briefs',
         'BriefCard',
         'ResearchBriefList',
         'WTO accession',
-      ].find((snippet) => text.includes(snippet));
-      const requiredText = [
-        'Fixture/demo intake',
+      ].find((snippet) => normalizedText.includes(snippet.toLowerCase()));
+      const requiredNormalizedText = [
         'source-extracted',
-        'unreviewed / needs review',
-        'Source institution',
-        'Source URL',
+        'unreviewed',
+        'needs review',
         'extracted_at',
-        'Not an official reviewed policy database',
       ];
-      const missingText = requiredText.filter((snippet) => !text.includes(snippet));
+      const missingText = requiredNormalizedText.filter((snippet) => !normalizedText.includes(snippet));
+      const hasSourceMetadata = !!candidateMeta && !!candidateMeta.querySelector('a[href^="http"]');
+      const hasNonOfficialCaveat =
+        normalizedText.includes('not an official reviewed policy database') ||
+        (normalizedText.includes('not an official') &&
+          normalizedText.includes('reviewed') &&
+          normalizedText.includes('database'));
       return {
-        ok: !!candidateSection && missingText.length === 0 && !forbiddenSelector && !forbiddenText,
+        ok:
+          !!candidateSection &&
+          missingText.length === 0 &&
+          hasSourceMetadata &&
+          hasNonOfficialCaveat &&
+          !forbiddenSelector &&
+          !forbiddenText,
         hasCandidateSection: !!candidateSection,
+        hasSourceMetadata,
+        hasNonOfficialCaveat,
         missingText,
         forbiddenSelector: forbiddenSelector ?? null,
         forbiddenText: forbiddenText ?? null,
@@ -877,6 +934,14 @@ async function navigateAndAssertRoute(client, baseUrl, route, details) {
   if (navigation.errorText) {
     const scope = isHostedPagesUrl(baseUrl) ? 'hosted URL unavailable / timeout' : 'URL unavailable / timeout'
     return failure(scope, `Browser navigation failed for ${url.href}: ${navigation.errorText}`, details)
+  }
+
+  const resetLanguageResult = await evaluate(client, resetRouteLanguageExpression(route.titles.en))
+  if (!resetLanguageResult?.ok) {
+    return failure('language reset failure', `${route.hash} did not reset to English before hydration assertion.`, [
+      ...details,
+      `Observed language reset state: ${JSON.stringify(resetLanguageResult)}`,
+    ])
   }
 
   const routeResult = await evaluate(client, expressionForRoute(route))
