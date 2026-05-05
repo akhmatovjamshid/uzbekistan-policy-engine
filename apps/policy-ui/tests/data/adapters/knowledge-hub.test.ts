@@ -9,6 +9,9 @@ import {
 import { validateKnowledgeHubArtifact } from '../../../src/data/knowledge-hub/artifact-guard.js'
 import { KNOWLEDGE_HUB_ARTIFACT_SCHEMA_VERSION } from '../../../src/data/knowledge-hub/artifact-types.js'
 import { loadKnowledgeHubSourceState } from '../../../src/data/knowledge-hub/source.js'
+import {
+  withKnowledgeHubArtifactCacheKey,
+} from '../../../src/data/knowledge-hub/artifact-client.js'
 import { knowledgeHubContentMock } from '../../../src/data/mock/knowledge-hub.js'
 
 const KNOWLEDGE_HUB_SOURCE_PATH = fileURLToPath(
@@ -204,5 +207,30 @@ describe('knowledge hub adapter', () => {
     assert.equal(state.content?.extraction_mode_label, 'Configured source fetch')
     assert.equal(state.content?.candidates?.[0].extraction_state, 'source_extracted')
     assert.equal(JSON.stringify(knowledgeHubContentMock), beforeMockSnapshot)
+  })
+
+  it('uses a schema cache key and no-cache mode when fetching the public artifact', async () => {
+    const artifact = JSON.parse(readFileSync(PUBLIC_KNOWLEDGE_HUB_ARTIFACT_PATH, 'utf8'))
+    let requestUrl = ''
+    let requestCacheMode: RequestCache | undefined
+
+    globalThis.fetch = (async (input, init) => {
+      requestUrl = String(input)
+      requestCacheMode = init?.cache
+      return new Response(JSON.stringify(artifact), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      })
+    }) as typeof fetch
+
+    const state = await loadKnowledgeHubSourceState()
+
+    assert.equal(state.status, 'ready')
+    assert.match(requestUrl, /data\/knowledge-hub\.json\?schema=knowledge-hub-reform-tracker\.v1$/)
+    assert.equal(requestCacheMode, 'no-cache')
+    assert.equal(
+      withKnowledgeHubArtifactCacheKey('/policy-ui/data/knowledge-hub.json?x=1#frag'),
+      '/policy-ui/data/knowledge-hub.json?x=1&schema=knowledge-hub-reform-tracker.v1#frag',
+    )
   })
 })

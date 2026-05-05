@@ -8,7 +8,10 @@ import {
   validateKnowledgeHubArtifact,
   type KnowledgeHubArtifactValidationIssue,
 } from './artifact-guard.js'
-import type { KnowledgeHubArtifact } from './artifact-types.js'
+import {
+  KNOWLEDGE_HUB_ARTIFACT_SCHEMA_VERSION,
+  type KnowledgeHubArtifact,
+} from './artifact-types.js'
 
 const DEFAULT_KNOWLEDGE_HUB_ARTIFACT_TIMEOUT_MS = 8_000
 const DEFAULT_KNOWLEDGE_HUB_ARTIFACT_PATH = 'data/knowledge-hub.json'
@@ -76,6 +79,13 @@ export function resolveKnowledgeHubArtifactDataUrl(): string {
   return metaEnv.dataUrl ?? processEnv.dataUrl ?? resolveKnowledgeHubArtifactDefaultDataUrl(metaEnv.baseUrl)
 }
 
+export function withKnowledgeHubArtifactCacheKey(dataUrl: string): string {
+  const [baseAndQuery, hash] = dataUrl.split('#', 2)
+  const separator = baseAndQuery.includes('?') ? '&' : '?'
+  const schemaParam = `schema=${encodeURIComponent(KNOWLEDGE_HUB_ARTIFACT_SCHEMA_VERSION)}`
+  return `${baseAndQuery}${separator}${schemaParam}${hash ? `#${hash}` : ''}`
+}
+
 export function resolveKnowledgeHubArtifactTimeoutMs(): number {
   const metaEnv = readImportMetaEnv()
   const processEnv = readProcessEnv()
@@ -96,8 +106,9 @@ async function fetchKnowledgeHubArtifactJson(fetchImpl: FetchLike): Promise<unkn
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
 
   try {
-    const response = await fetchImpl(resolveKnowledgeHubArtifactDataUrl(), {
+    const response = await fetchImpl(withKnowledgeHubArtifactCacheKey(resolveKnowledgeHubArtifactDataUrl()), {
       method: 'GET',
+      cache: 'no-cache',
       headers: { Accept: 'application/json' },
       signal: controller.signal,
     })
