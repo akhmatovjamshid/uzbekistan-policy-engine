@@ -58,6 +58,51 @@ describe('Knowledge Hub reform intake', () => {
     assert.ok(artifact.caveats.some((caveat) => caveat.includes('not an official reviewed policy database')))
   })
 
+  it('uses the current official gov.uz Ministry News source for MEF intake', () => {
+    const mefSource = REFORM_SOURCE_DEFINITIONS.find((source) => source.id === 'mef-policy-news')
+
+    assert.equal(mefSource.url, 'https://gov.uz/en/imv/news/news')
+    assert.equal(mefSource.api_url, 'https://api-portal.gov.uz/authorities/news/category?code_name=news&page=1')
+    assert.deepEqual(mefSource.api_headers, {
+      code: 'imv',
+      language: 'en',
+    })
+  })
+
+  it('extracts MEF candidates from the official gov.uz Ministry News API shape', () => {
+    const payload = JSON.stringify({
+      data: [
+        {
+          id: 161792,
+          date: '2026-05-05 14:25:00',
+          title: 'Analytical Report on the Fulfillment of Target Indicators in Agriculture, Forestry, and Fisheries',
+          anons: 'Budget and finance policy indicators were reviewed for the first quarter.',
+        },
+        {
+          id: 161541,
+          date: '2026-05-04 19:50:00',
+          title: 'Meeting held with international partners',
+          anons: 'Protocol meeting only.',
+        },
+      ],
+    })
+    const [candidate] = extractCandidatesFromSource(
+      {
+        id: 'mef-policy-news',
+        institution: 'Ministry of Economy and Finance of Uzbekistan',
+        url: 'https://gov.uz/en/imv/news/news',
+      },
+      payload,
+      '2026-05-05T08:00:00.000Z',
+    )
+
+    assert.equal(candidate.title, 'Analytical Report on the Fulfillment of Target Indicators in Agriculture, Forestry, and Fisheries')
+    assert.equal(candidate.source_url, 'https://gov.uz/en/imv/news/view/161792')
+    assert.equal(candidate.source_published_at, '2026-05-05 14:25:00')
+    assert.equal(candidate.source_institution, 'Ministry of Economy and Finance of Uzbekistan')
+    assert.equal(candidate.review_status, 'needs_review')
+  })
+
   it('reports configured-source fetch counts and failures without dropping successful candidates', async () => {
     const diagnostics = await buildKnowledgeHubCandidateArtifactWithDiagnostics({
       fetchSource: true,

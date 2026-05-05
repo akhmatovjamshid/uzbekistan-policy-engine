@@ -20,7 +20,12 @@ export const REFORM_SOURCE_DEFINITIONS = [
   {
     id: 'mef-policy-news',
     institution: 'Ministry of Economy and Finance of Uzbekistan',
-    url: 'https://imv.uz/en/news',
+    url: 'https://gov.uz/en/imv/news/news',
+    api_url: 'https://api-portal.gov.uz/authorities/news/category?code_name=news&page=1',
+    api_headers: {
+      code: 'imv',
+      language: 'en',
+    },
     fixture_path: resolve(scriptDir, 'source-fixtures', 'mef-policy-news.html'),
   },
 ]
@@ -130,7 +135,58 @@ function extractArticleBlocks(html) {
   return Array.from(html.matchAll(/<li\b[\s\S]*?<\/li>/gi), (match) => match[0])
 }
 
+function maybeParseJson(value) {
+  try {
+    return JSON.parse(value)
+  } catch {
+    return null
+  }
+}
+
+function extractCandidatesFromGovUzApi(source, payload, extractedAt) {
+  if (!payload || typeof payload !== 'object' || !Array.isArray(payload.data)) return []
+
+  return payload.data
+    .map((item) => {
+      const id = typeof item.id === 'number' || typeof item.id === 'string' ? String(item.id) : ''
+      const title = typeof item.title === 'string' ? normalizeWhitespace(item.title) : ''
+      const summary = typeof item.anons === 'string' ? normalizeWhitespace(item.anons) : ''
+      const publishedAt = typeof item.date === 'string' ? item.date : ''
+      const text = `${title} ${summary}`
+      return {
+        id,
+        title,
+        summary,
+        publishedAt,
+        sourceUrl: id ? toAbsoluteUrl(`/en/imv/news/view/${id}`, source.url) : source.url,
+        text,
+      }
+    })
+    .filter((item) => item.id && item.title && isLikelyReformCandidate(item.text))
+    .map((item) => ({
+      id: `${source.id}-${slugify(`${item.publishedAt}-${item.id}-${item.title}`)}`,
+      extraction_state: 'source-extracted',
+      review_state: 'unreviewed',
+      review_status: 'needs_review',
+      title: item.title,
+      summary: item.summary || 'Source API did not expose a summary for this configured extraction item.',
+      domain_tag: classifyDomain(item.text),
+      source_institution: source.institution,
+      source_url: item.sourceUrl,
+      source_published_at: item.publishedAt || undefined,
+      extracted_at: extractedAt,
+      caveats: [
+        'Deterministic extraction from configured source text.',
+        'Unreviewed candidate; not an official reviewed policy database entry.',
+      ],
+    }))
+}
+
 export function extractCandidatesFromSource(source, html, extractedAt) {
+  const jsonPayload = maybeParseJson(html)
+  const apiCandidates = extractCandidatesFromGovUzApi(source, jsonPayload, extractedAt)
+  if (apiCandidates.length > 0) return apiCandidates
+
   return extractArticleBlocks(html)
     .map((block) => {
       const href = firstMatch(block, [/<a\b[^>]*href=["']([^"']+)["']/i])
@@ -182,10 +238,11 @@ export function extractCandidatesFromSource(source, html, extractedAt) {
 async function readSource(source, fetchSource, fetchImpl = fetch) {
   if (!fetchSource) return readFileSync(source.fixture_path, 'utf8')
 
-  const response = await fetchImpl(source.url, {
+  const response = await fetchImpl(source.api_url ?? source.url, {
     headers: {
-      Accept: 'text/html',
+      Accept: source.api_url ? 'application/json' : 'text/html',
       'User-Agent': 'Uzbekistan-Economic-Policy-Engine/knowledge-hub-intake (+manual-review)',
+      ...(source.api_headers ?? {}),
     },
   })
   if (!response.ok) throw new Error(`Failed to fetch ${source.url}: HTTP ${response.status}`)
