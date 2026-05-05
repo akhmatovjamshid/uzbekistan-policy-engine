@@ -68,6 +68,8 @@ describe('knowledge hub adapter', () => {
   it('maps source-extracted candidate payload fields without mock reform conversion', () => {
     const content = toKnowledgeHubContent({
       meta: { candidate_items: 1, sources_configured: 1 },
+      extraction_mode: 'fixture-demo',
+      extraction_mode_label: 'Fixture/demo intake',
       candidates: [
         {
           id: 'candidate-1',
@@ -91,6 +93,8 @@ describe('knowledge hub adapter', () => {
     assert.equal(content.candidates?.length, 1)
     assert.equal(content.candidates?.[0].extraction_state, 'source-extracted')
     assert.equal(content.candidates?.[0].review_status, 'needs_review')
+    assert.equal(content.extraction_mode, 'fixture-demo')
+    assert.equal(content.extraction_mode_label, 'Fixture/demo intake')
     assert.equal(content.meta.candidate_items, 1)
     assert.equal(content.meta.sources_configured, 1)
   })
@@ -124,6 +128,8 @@ describe('knowledge hub adapter', () => {
 
     assert.equal(validation.ok, true)
     assert.equal(validation.ok ? validation.value.schema_version : null, KNOWLEDGE_HUB_ARTIFACT_SCHEMA_VERSION)
+    assert.equal(validation.ok ? validation.value.extraction_mode : null, 'fixture-demo')
+    assert.equal(validation.ok ? validation.value.extraction_mode_label : null, 'Fixture/demo intake')
     assert.equal(validation.ok ? validation.value.candidates.length : 0, 4)
 
     const content = knowledgeHubArtifactToContent(validation.ok ? validation.value : artifact)
@@ -132,6 +138,8 @@ describe('knowledge hub adapter', () => {
     assert.equal(content.candidates?.length, 4)
     assert.equal(content.meta.candidate_items, 4)
     assert.equal(content.meta.sources_configured, 2)
+    assert.equal(content.extraction_mode_label, 'Fixture/demo intake')
+    assert.ok(content.caveats?.some((caveat) => caveat.includes('Fixture/demo mode')))
     assert.ok(content.caveats?.some((caveat) => caveat.includes('not an official reviewed policy database')))
   })
 
@@ -161,6 +169,8 @@ describe('knowledge hub adapter', () => {
     assert.equal(state.content?.meta.candidate_items, 4)
     assert.equal(state.content?.reforms.length, 0)
     assert.equal(state.content?.briefs.length, 0)
+    assert.equal(state.content?.extraction_mode, 'fixture-demo')
+    assert.equal(state.content?.extraction_mode_label, 'Fixture/demo intake')
     assert.equal(state.content?.candidates?.[0].extraction_state, 'source-extracted')
     assert.equal(JSON.stringify(knowledgeHubContentMock), beforeMockSnapshot)
   })

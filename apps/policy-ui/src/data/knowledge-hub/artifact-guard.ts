@@ -151,13 +151,14 @@ export function validateKnowledgeHubArtifact(input: unknown): KnowledgeHubArtifa
     issues.push({ path: 'generated_at', message: 'Expected an ISO-like timestamp.', severity: 'error' })
   }
 
-  if (input.extraction_mode !== 'fixture' && input.extraction_mode !== 'configured-source-fetch') {
+  if (input.extraction_mode !== 'fixture-demo' && input.extraction_mode !== 'configured-source-fetch') {
     issues.push({
       path: 'extraction_mode',
-      message: 'Expected fixture or configured-source-fetch.',
+      message: 'Expected fixture-demo or configured-source-fetch.',
       severity: 'error',
     })
   }
+  const extractionModeLabel = requireString(input, 'extraction_mode_label', '$', issues)
 
   const sources = Array.isArray(input.sources)
     ? input.sources
@@ -196,6 +197,7 @@ export function validateKnowledgeHubArtifact(input: unknown): KnowledgeHubArtifa
       generated_at: generatedAt,
       generated_by: stringValue(input.generated_by) ?? undefined,
       extraction_mode: input.extraction_mode as KnowledgeHubArtifact['extraction_mode'],
+      extraction_mode_label: extractionModeLabel,
       sources,
       candidates,
       caveats,

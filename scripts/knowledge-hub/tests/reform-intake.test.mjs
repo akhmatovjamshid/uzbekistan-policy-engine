@@ -3,6 +3,7 @@ import { describe, it } from 'node:test'
 import {
   buildKnowledgeHubCandidateArtifact,
   extractCandidatesFromSource,
+  FIXTURE_DEMO_EXTRACTION_MODE,
   KNOWLEDGE_HUB_SCHEMA_VERSION,
   REFORM_SOURCE_DEFINITIONS,
 } from '../reform-intake.mjs'
@@ -46,10 +47,13 @@ describe('Knowledge Hub reform intake', () => {
     })
 
     assert.equal(artifact.schema_version, KNOWLEDGE_HUB_SCHEMA_VERSION)
+    assert.equal(artifact.extraction_mode, FIXTURE_DEMO_EXTRACTION_MODE)
+    assert.equal(artifact.extraction_mode_label, 'Fixture/demo intake')
     assert.equal(artifact.sources.length, REFORM_SOURCE_DEFINITIONS.length)
     assert.equal(artifact.candidates.length, 4)
     assert.ok(artifact.candidates.every((candidate) => candidate.extraction_state === 'source-extracted'))
     assert.ok(artifact.candidates.every((candidate) => candidate.review_status === 'needs_review'))
+    assert.ok(artifact.caveats.some((caveat) => caveat.includes('Fixture/demo mode')))
     assert.ok(artifact.caveats.some((caveat) => caveat.includes('not an official reviewed policy database')))
   })
 })

@@ -34,9 +34,11 @@ export function KnowledgeHubPage() {
 
   const candidateCount = sourceState.content?.meta.candidate_items ?? sourceState.content?.candidates?.length ?? 0
   const sourcesConfigured = sourceState.content?.meta.sources_configured ?? 0
+  const extractionModeLabel = sourceState.content?.extraction_mode_label ?? 'Candidate intake'
   const pageHeaderMeta = (
     <>
       <span className="page-header__eyebrow">Automated reform intake</span>
+      <span>{extractionModeLabel}</span>
       <span>source-extracted</span>
       <span>unreviewed / needs review</span>
       <span>

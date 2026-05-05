@@ -48,6 +48,8 @@ export type RawKnowledgeHubPayload = {
   candidates?: ReformCandidateItem[]
   caveats?: string[]
   generated_at?: string
+  extraction_mode?: string
+  extraction_mode_label?: string
   source_artifact?: string
 }
 
@@ -117,6 +119,8 @@ export function toKnowledgeHubContent(raw: RawKnowledgeHubPayload): KnowledgeHub
     candidates,
     caveats: asStringArray(raw.caveats),
     generated_at: typeof raw.generated_at === 'string' ? raw.generated_at : undefined,
+    extraction_mode: typeof raw.extraction_mode === 'string' ? raw.extraction_mode : undefined,
+    extraction_mode_label: typeof raw.extraction_mode_label === 'string' ? raw.extraction_mode_label : undefined,
     source_artifact: typeof raw.source_artifact === 'string' ? raw.source_artifact : undefined,
     meta: {
       reforms_tracked: asNumber(meta.reforms_tracked, reforms.length),
@@ -131,6 +135,8 @@ export function toKnowledgeHubContent(raw: RawKnowledgeHubPayload): KnowledgeHub
 export function knowledgeHubArtifactToContent(artifact: KnowledgeHubArtifact): KnowledgeHubContent {
   return toKnowledgeHubContent({
     generated_at: artifact.generated_at,
+    extraction_mode: artifact.extraction_mode,
+    extraction_mode_label: artifact.extraction_mode_label,
     source_artifact: '/data/knowledge-hub.json',
     candidates: artifact.candidates,
     caveats: artifact.caveats,

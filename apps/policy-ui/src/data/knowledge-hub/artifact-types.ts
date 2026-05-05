@@ -12,7 +12,8 @@ export type KnowledgeHubArtifact = {
   schema_version: typeof KNOWLEDGE_HUB_ARTIFACT_SCHEMA_VERSION
   generated_at: string
   generated_by?: string
-  extraction_mode: 'fixture' | 'configured-source-fetch'
+  extraction_mode: 'fixture-demo' | 'configured-source-fetch'
+  extraction_mode_label: string
   sources: KnowledgeHubArtifactSource[]
   candidates: ReformCandidateItem[]
   caveats: string[]

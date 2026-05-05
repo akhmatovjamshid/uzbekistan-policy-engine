@@ -3,6 +3,8 @@ import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 export const KNOWLEDGE_HUB_SCHEMA_VERSION = 'knowledge-hub-reform-candidates.v1'
+export const FIXTURE_DEMO_EXTRACTION_MODE = 'fixture-demo'
+export const CONFIGURED_SOURCE_FETCH_EXTRACTION_MODE = 'configured-source-fetch'
 
 const scriptDir = dirname(fileURLToPath(import.meta.url))
 const repoRoot = resolve(scriptDir, '..', '..')
@@ -194,6 +196,9 @@ export async function buildKnowledgeHubCandidateArtifact(options = {}) {
   const extractedAt = options.extractedAt ?? new Date().toISOString()
   const sources = options.sources ?? REFORM_SOURCE_DEFINITIONS
   const fetchSource = options.fetchSource === true
+  const extractionMode = fetchSource
+    ? CONFIGURED_SOURCE_FETCH_EXTRACTION_MODE
+    : FIXTURE_DEMO_EXTRACTION_MODE
   const candidatesBySource = await Promise.all(
     sources.map(async (source) => extractCandidatesFromSource(source, await readSource(source, fetchSource), extractedAt)),
   )
@@ -206,8 +211,9 @@ export async function buildKnowledgeHubCandidateArtifact(options = {}) {
   return {
     schema_version: KNOWLEDGE_HUB_SCHEMA_VERSION,
     generated_at: extractedAt,
-    generated_by: 'scripts/knowledge-hub/reform-intake.mjs',
-    extraction_mode: fetchSource ? 'configured-source-fetch' : 'fixture',
+    generated_by: options.generatedBy ?? 'scripts/knowledge-hub/reform-intake.mjs',
+    extraction_mode: extractionMode,
+    extraction_mode_label: fetchSource ? 'Configured source fetch' : 'Fixture/demo intake',
     sources: sources.map((source) => ({
       id: source.id,
       institution: source.institution,
@@ -216,6 +222,9 @@ export async function buildKnowledgeHubCandidateArtifact(options = {}) {
     candidates,
     caveats: [
       'This is a deterministic reform-candidate intake artifact.',
+      fetchSource
+        ? 'Generated from configured source URLs at artifact build time.'
+        : 'Fixture/demo mode: generated from checked-in HTML fixtures for deterministic review and smoke testing.',
       'Items are source-extracted and unreviewed; this is not an official reviewed policy database.',
       'The frontend loads this static JSON artifact only and does not scrape source pages in the browser.',
     ],

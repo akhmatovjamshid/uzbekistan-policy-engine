@@ -15,6 +15,7 @@ describe('Knowledge Hub page', () => {
     assert.match(source, /description=\{t\('pages\.knowledgeHub\.description'\)\}/)
     assert.match(source, /loadKnowledgeHubSourceState/)
     assert.match(source, /KnowledgeHubContentView/)
+    assert.match(source, /extractionModeLabel/)
     assert.match(source, /source-extracted/)
     assert.match(source, /unreviewed \/ needs review/)
     assert.match(source, /extracted_at/)

@@ -1,8 +1,9 @@
 {
   "schema_version": "knowledge-hub-reform-candidates.v1",
   "generated_at": "2026-05-05T08:00:00.000Z",
-  "generated_by": "scripts/knowledge-hub/reform-intake.mjs",
-  "extraction_mode": "fixture",
+  "generated_by": "scripts/knowledge-hub/generate-fixture-artifact.mjs",
+  "extraction_mode": "fixture-demo",
+  "extraction_mode_label": "Fixture/demo intake",
   "sources": [
     {
       "id": "cbu-policy-news",
@@ -87,6 +88,7 @@
   ],
   "caveats": [
     "This is a deterministic reform-candidate intake artifact.",
+    "Fixture/demo mode: generated from checked-in HTML fixtures for deterministic review and smoke testing.",
     "Items are source-extracted and unreviewed; this is not an official reviewed policy database.",
     "The frontend loads this static JSON artifact only and does not scrape source pages in the browser."
   ]

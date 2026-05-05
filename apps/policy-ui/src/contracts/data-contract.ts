@@ -713,6 +713,8 @@ export type KnowledgeHubContent = {
   candidates?: ReformCandidateItem[]
   caveats?: string[]
   generated_at?: string
+  extraction_mode?: string
+  extraction_mode_label?: string
   source_artifact?: string
   meta: KnowledgeHubMeta
 }
