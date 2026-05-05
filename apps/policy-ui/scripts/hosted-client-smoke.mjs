@@ -75,17 +75,27 @@ const HASH_ROUTES = [
   },
   {
     hash: '#/knowledge-hub',
-    selector: '.pending-surface',
+    selector: '.candidate-section',
     titles: {
       en: 'Knowledge Hub',
       ru: '\u0411\u0430\u0437\u0430 \u0437\u043d\u0430\u043d\u0438\u0439',
       uz: 'Bilimlar markazi',
     },
     extraExpression: `
-      !!document.querySelector('.pending-surface') &&
-      !document.body.innerText.includes('Reform timeline') &&
-      !document.body.innerText.includes('Research brief') &&
-      !document.body.innerText.includes('KnowledgeHubContentView')
+      !!document.querySelector('.candidate-section') &&
+      document.body.innerText.includes('Fixture/demo intake') &&
+      document.body.innerText.includes('source-extracted') &&
+      document.body.innerText.includes('unreviewed / needs review') &&
+      document.body.innerText.includes('Source institution') &&
+      document.body.innerText.includes('Source URL') &&
+      document.body.innerText.includes('extracted_at') &&
+      document.body.innerText.includes('Not an official reviewed policy database') &&
+      !document.querySelector('.pending-surface') &&
+      !document.querySelector('.knowledge-hub-static-banner') &&
+      !document.querySelector('.hub-grid') &&
+      !document.body.innerText.includes('Curated static pilot content') &&
+      !document.body.innerText.includes('Research briefs') &&
+      !document.body.innerText.includes('WTO accession')
     `,
   },
 ]
@@ -692,11 +702,12 @@ function languageSwitchExpression(language, expectedTitle) {
   `
 }
 
-function knowledgeHubPendingExpression() {
+function knowledgeHubCandidateExpression() {
   return `
     (() => {
-      const pendingSurface = document.querySelector('.knowledge-hub-page .pending-surface');
+      const candidateSection = document.querySelector('.knowledge-hub-page .candidate-section');
       const forbiddenSelectors = [
+        '.pending-surface',
         '.knowledge-hub-static-banner',
         '.hub-grid',
         '.knowledge-hub-reform-timeline-title',
@@ -704,14 +715,26 @@ function knowledgeHubPendingExpression() {
       const forbiddenSelector = forbiddenSelectors.find((selector) => document.querySelector(selector));
       const text = document.body.innerText || '';
       const forbiddenText = [
-        'Reform timeline',
-        'Research brief',
+        'Curated static pilot content',
+        'Research briefs',
         'BriefCard',
         'ResearchBriefList',
+        'WTO accession',
       ].find((snippet) => text.includes(snippet));
+      const requiredText = [
+        'Fixture/demo intake',
+        'source-extracted',
+        'unreviewed / needs review',
+        'Source institution',
+        'Source URL',
+        'extracted_at',
+        'Not an official reviewed policy database',
+      ];
+      const missingText = requiredText.filter((snippet) => !text.includes(snippet));
       return {
-        ok: !!pendingSurface && !forbiddenSelector && !forbiddenText,
-        hasPendingSurface: !!pendingSurface,
+        ok: !!candidateSection && missingText.length === 0 && !forbiddenSelector && !forbiddenText,
+        hasCandidateSection: !!candidateSection,
+        missingText,
         forbiddenSelector: forbiddenSelector ?? null,
         forbiddenText: forbiddenText ?? null,
       };
@@ -878,14 +901,14 @@ async function navigateAndAssertRoute(client, baseUrl, route, details) {
   details.push(`${route.hash} switched EN/RU/UZ through the real language select.`)
 
   if (route.hash === '#/knowledge-hub') {
-    const pendingResult = await evaluate(client, knowledgeHubPendingExpression())
-    if (!pendingResult?.ok) {
-      return failure('Knowledge Hub pending-only failure', 'Knowledge Hub rendered content beyond PendingSurface.', [
+    const candidateResult = await evaluate(client, knowledgeHubCandidateExpression())
+    if (!candidateResult?.ok) {
+      return failure('Knowledge Hub candidate-intake failure', 'Knowledge Hub did not render the candidate-intake contract.', [
         ...details,
-        `Observed Knowledge Hub state: ${JSON.stringify(pendingResult)}`,
+        `Observed Knowledge Hub state: ${JSON.stringify(candidateResult)}`,
       ])
     }
-    details.push('Knowledge Hub rendered pending-only PendingSurface content.')
+    details.push('Knowledge Hub rendered source-extracted candidate intake and kept hidden mock content out.')
   }
 
   return null

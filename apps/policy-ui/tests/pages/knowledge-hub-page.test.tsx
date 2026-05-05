@@ -8,42 +8,29 @@ const KNOWLEDGE_HUB_PAGE_SOURCE = fileURLToPath(
 )
 
 describe('Knowledge Hub page', () => {
-  it('renders only PageHeader and PendingSurface instead of hidden content surfaces', () => {
+  it('loads and renders source-extracted candidate content instead of the pending surface', () => {
     const source = readFileSync(KNOWLEDGE_HUB_PAGE_SOURCE, 'utf8')
-    const renderedComponentTags = Array.from(
-      source.matchAll(/^\s*<([A-Z][A-Za-z0-9]*)\b/gm),
-      ([, tag]) => tag,
-    )
 
-    assert.deepEqual(renderedComponentTags, ['PageContainer', 'PageHeader', 'PendingSurface'])
     assert.match(source, /<PageHeader\s+[\s\S]*title=\{t\('pages\.knowledgeHub\.title'\)\}/)
     assert.match(source, /description=\{t\('pages\.knowledgeHub\.description'\)\}/)
-    assert.match(source, /<PendingSurface\s+[\s\S]*title=\{t\('knowledgeHub\.pending\.title'\)\}/)
-    assert.match(source, /message=\{t\('knowledgeHub\.pending\.message'\)\}/)
-    assert.match(source, /reasonLabel=\{t\('knowledgeHub\.pending\.status'\)\}/)
-    assert.match(source, /nextStep=\{t\('knowledgeHub\.pending\.nextStep'\)\}/)
+    assert.match(source, /loadKnowledgeHubSourceState/)
+    assert.match(source, /KnowledgeHubContentView/)
+    assert.match(source, /extractionModeLabel/)
+    assert.match(source, /source-extracted/)
+    assert.match(source, /unreviewed \/ needs review/)
+    assert.match(source, /extracted_at/)
 
-    assert.doesNotMatch(source, /KnowledgeHubContentView/)
-    assert.doesNotMatch(source, /ReformTimeline/)
-    assert.doesNotMatch(source, /BriefCard/)
-    assert.doesNotMatch(source, /ResearchBriefList/)
-    assert.doesNotMatch(source, /knowledge-hub-static-banner/)
-    assert.doesNotMatch(source, /hub-grid/)
-    assert.doesNotMatch(source, /knowledge-hub-reform-timeline-title/)
+    assert.doesNotMatch(source, /PendingSurface/)
+    assert.doesNotMatch(source, /knowledgeHub\.pending/)
   })
 
-  it('routes the page through PendingSurface instead of static reform and brief cards', () => {
-    const source = readFileSync(KNOWLEDGE_HUB_PAGE_SOURCE, 'utf8')
+  it('keeps hidden mock reform and brief components out of the page route', () => {
+    const pageSource = readFileSync(KNOWLEDGE_HUB_PAGE_SOURCE, 'utf8')
 
-    assert.match(source, /import\s+\{\s*PageHeader\s*\}/)
-    assert.match(source, /import\s+\{\s*PendingSurface\s*\}/)
-    assert.match(source, /<PendingSurface/)
-    assert.match(source, /knowledgeHub\.pending\.message/)
-    assert.match(source, /knowledgeHub\.pending\.reason/)
-    assert.doesNotMatch(source, /import\s+\{\s*KnowledgeHubContentView\s*\}/)
-    assert.doesNotMatch(source, /from ['"].*KnowledgeHubContentView/)
-    assert.doesNotMatch(source, /KnowledgeHubContentView/)
-    assert.doesNotMatch(source, /loadKnowledgeHubSourceState/)
-    assert.doesNotMatch(source, /TrustStateLabel/)
+    assert.doesNotMatch(pageSource, /ReformTimeline/)
+    assert.doesNotMatch(pageSource, /BriefCard/)
+    assert.doesNotMatch(pageSource, /ResearchBriefList/)
+    assert.doesNotMatch(pageSource, /knowledge-hub-static-banner/)
+    assert.doesNotMatch(pageSource, /hub-grid/)
   })
 })

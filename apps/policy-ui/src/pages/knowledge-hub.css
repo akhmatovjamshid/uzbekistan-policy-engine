@@ -21,6 +21,117 @@
   padding: var(--space-sm) var(--space-md);
 }
 
+.knowledge-hub-intake-banner {
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  display: grid;
+  gap: var(--space-xs);
+  line-height: 1.45;
+  padding: var(--space-md);
+}
+
+.knowledge-hub-intake-banner strong {
+  color: var(--color-text);
+  font-size: 0.92rem;
+}
+
+.candidate-section {
+  display: grid;
+  gap: var(--space-lg);
+}
+
+.candidate-list {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.candidate-item {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  display: grid;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+}
+
+.candidate-item__topline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.candidate-item h3 {
+  font-size: 1.02rem;
+  font-weight: 680;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.candidate-item p {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.candidate-meta {
+  border-top: 1px solid var(--color-border);
+  display: grid;
+  gap: var(--space-sm);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  margin: var(--space-xs) 0 0;
+  padding-top: var(--space-sm);
+}
+
+.candidate-meta div {
+  min-width: 0;
+}
+
+.candidate-meta dt {
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.candidate-meta dd {
+  font-size: 0.84rem;
+  line-height: 1.45;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.candidate-meta a {
+  color: var(--color-brand);
+}
+
+.knowledge-hub-caveats {
+  border-top: 1px solid var(--color-border);
+  display: grid;
+  gap: var(--space-sm);
+  padding-top: var(--space-lg);
+}
+
+.knowledge-hub-caveats h2 {
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.knowledge-hub-caveats ul {
+  color: var(--color-text-muted);
+  margin: 0;
+  padding-left: var(--space-lg);
+}
+
+@media (max-width: 720px) {
+  .candidate-meta {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 1100px) {
   .hub-grid {
     grid-template-columns: 1fr;

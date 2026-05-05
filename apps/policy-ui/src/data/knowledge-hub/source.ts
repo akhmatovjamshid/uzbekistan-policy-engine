@@ -1,13 +1,19 @@
 import type { KnowledgeHubContent } from '../../contracts/data-contract.js'
 import {
+  createErrorSourceCore,
   createLoadingSourceCore,
   createReadySourceCore,
   type IntegrationSourceCore,
   type IntegrationValidationIssue,
 } from '../source-state.js'
-import { knowledgeHubContentMock } from '../mock/knowledge-hub.js'
+import { knowledgeHubArtifactToContent } from '../adapters/knowledge-hub.js'
+import {
+  fetchKnowledgeHubArtifact,
+  KnowledgeHubArtifactTransportError,
+  KnowledgeHubArtifactValidationError,
+} from './artifact-client.js'
 
-export type KnowledgeHubDataMode = 'mock' | 'live'
+export type KnowledgeHubDataMode = 'artifact'
 
 export type KnowledgeHubSourceState = IntegrationSourceCore<
   KnowledgeHubDataMode,
@@ -16,11 +22,8 @@ export type KnowledgeHubSourceState = IntegrationSourceCore<
   content: KnowledgeHubContent | null
 }
 
-// Shot-1 ships mock-only; live wiring lands in Shot 2 when CERR reform/research
-// feeds exist behind an API. The source state is kept in the same shape as the
-// other pages so the live mode slot is pre-reserved.
 function resolveKnowledgeHubDataMode(): KnowledgeHubDataMode {
-  return 'mock'
+  return 'artifact'
 }
 
 export function getInitialKnowledgeHubSourceState(): KnowledgeHubSourceState {
@@ -33,8 +36,40 @@ export function getInitialKnowledgeHubSourceState(): KnowledgeHubSourceState {
 
 export async function loadKnowledgeHubSourceState(): Promise<KnowledgeHubSourceState> {
   const mode = resolveKnowledgeHubDataMode()
-  return {
-    ...createReadySourceCore<KnowledgeHubDataMode, IntegrationValidationIssue>(mode),
-    content: knowledgeHubContentMock,
+  try {
+    const artifact = await fetchKnowledgeHubArtifact()
+    return {
+      ...createReadySourceCore<KnowledgeHubDataMode, IntegrationValidationIssue>(mode),
+      content: knowledgeHubArtifactToContent(artifact),
+    }
+  } catch (error) {
+    if (error instanceof KnowledgeHubArtifactValidationError) {
+      return {
+        ...createErrorSourceCore<KnowledgeHubDataMode, IntegrationValidationIssue>(
+          mode,
+          'Knowledge Hub candidate artifact failed frontend validation.',
+          error.issues,
+        ),
+        content: null,
+      }
+    }
+
+    if (error instanceof KnowledgeHubArtifactTransportError) {
+      return {
+        ...createErrorSourceCore<KnowledgeHubDataMode, IntegrationValidationIssue>(
+          mode,
+          `Knowledge Hub candidate artifact could not be loaded (${error.kind}${error.status ? ` ${error.status}` : ''}).`,
+        ),
+        content: null,
+      }
+    }
+
+    return {
+      ...createErrorSourceCore<KnowledgeHubDataMode, IntegrationValidationIssue>(
+        mode,
+        'Knowledge Hub candidate artifact could not be loaded.',
+      ),
+      content: null,
+    }
   }
 }
