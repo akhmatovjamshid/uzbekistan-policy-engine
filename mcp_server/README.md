@@ -93,6 +93,10 @@ docker compose up --build
 
 ## Registry API v1 Runbook
 
+The registry API is a separate read-only FastAPI service. It serves metadata
+for existing frontend public artifacts and does not run the MCP tools, refresh
+data, mutate sources, or deploy the frontend.
+
 Install backend dependencies from the repository root:
 
 ```bash
@@ -126,9 +130,72 @@ source vintage, guard status, caveats, and warnings. If a public artifact is
 missing or invalid JSON, the API returns HTTP 503 with
 `registry_artifact_unavailable` in the `code` field.
 
-CORS is restricted to localhost origins for local development. GitHub Pages does
-not require the backend; the frontend keeps using its static public artifact
-fallback unless an API URL is supplied outside checked-in configuration.
+### Container image
+
+Build the registry API image from the repository root so the image can preserve
+the existing repo-relative artifact path:
+
+```bash
+docker build -t uz-policy-registry-api:local .
+```
+
+The image keeps this layout:
+
+```text
+/app/mcp_server
+/app/apps/policy-ui/public/data
+```
+
+That preserves the API loader's existing repo-relative access to
+`apps/policy-ui/public/data` without changing the API contract.
+
+Run the service locally:
+
+```bash
+docker run --rm -p 8000:8000 \
+  -e PORT=8000 \
+  -e REGISTRY_API_CORS_ORIGINS=http://localhost:5173,http://127.0.0.1:5173 \
+  uz-policy-registry-api:local
+```
+
+The container starts:
+
+```bash
+uvicorn api.app:app --app-dir /app/mcp_server --host 0.0.0.0 --port ${PORT:-8000}
+```
+
+`PORT` defaults to `8000`. Operators can set a different container port with
+`-e PORT=<port>` and map the host port accordingly.
+
+For an HTTPS frontend, set CORS to the deployed origin handled by the TLS
+terminating proxy or platform:
+
+```bash
+docker run --rm -p 8000:8000 \
+  -e REGISTRY_API_CORS_ORIGINS=https://cerr-uzbekistan.github.io,https://policy.example.gov.uz \
+  uz-policy-registry-api:local
+```
+
+Smoke test:
+
+```bash
+python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/registry/artifacts', timeout=3).read(1)"
+```
+
+The image includes the checked-in public data JSON files by default. Operators
+who need to use externally refreshed artifacts without rebuilding can mount the
+same repo-relative data path read-only:
+
+```bash
+docker run --rm -p 8000:8000 \
+  -v "$PWD/apps/policy-ui/public/data:/app/apps/policy-ui/public/data:ro" \
+  uz-policy-registry-api:local
+```
+
+GitHub Pages does not require the backend. The checked-in Pages workflow does
+not set `VITE_REGISTRY_API_URL`, so the frontend keeps using its static public
+artifact fallback unless an API URL is supplied outside checked-in Pages
+configuration.
 
 ## Testing
 
