@@ -1,6 +1,6 @@
 {
   "schema_version": "knowledge-hub-reform-tracker.v1",
-  "generated_at": "2026-05-06T09:28:01.133Z",
+  "generated_at": "2026-05-06T12:07:08.711Z",
   "generated_by": "scripts/knowledge-hub/generate-source-fetch-artifact.mjs",
   "extraction_mode": "configured-source-fetch",
   "extraction_mode_label": "Configured source fetch",
@@ -240,6 +240,11 @@
       "url": "https://cbu.uz/en/press_center/news/"
     },
     {
+      "id": "customs-committee-news",
+      "institution": "State Customs Committee of the Republic of Uzbekistan",
+      "url": "https://www.customs.uz/en"
+    },
+    {
       "id": "mef-policy-news",
       "institution": "Ministry of Economy and Finance of Uzbekistan",
       "url": "https://gov.uz/en/imv/news/news"
@@ -276,7 +281,7 @@
       "candidate_count": 0,
       "excluded_count": 13,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-06T09:28:01.133Z"
+      "fetched_at": "2026-05-06T12:07:08.711Z"
     },
     {
       "id": "president-reform-news",
@@ -288,7 +293,7 @@
       "candidate_count": 0,
       "excluded_count": 14,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-06T09:28:01.133Z"
+      "fetched_at": "2026-05-06T12:07:08.711Z"
     },
     {
       "id": "gov-portal-reform-news",
@@ -300,7 +305,7 @@
       "candidate_count": 0,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-06T09:28:01.133Z"
+      "fetched_at": "2026-05-06T12:07:08.711Z"
     },
     {
       "id": "cbu-policy-news",
@@ -312,7 +317,19 @@
       "candidate_count": 0,
       "excluded_count": 347,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-06T09:28:01.133Z"
+      "fetched_at": "2026-05-06T12:07:08.711Z"
+    },
+    {
+      "id": "customs-committee-news",
+      "institution": "State Customs Committee of the Republic of Uzbekistan",
+      "url": "https://www.customs.uz/en",
+      "parser": "html-articles",
+      "fetch_url": "https://www.customs.uz/en",
+      "ok": true,
+      "candidate_count": 0,
+      "excluded_count": 0,
+      "link_invalid_count": 0,
+      "fetched_at": "2026-05-06T12:07:08.711Z"
     },
     {
       "id": "mef-policy-news",
@@ -324,7 +341,7 @@
       "candidate_count": 0,
       "excluded_count": 12,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-06T09:28:01.133Z"
+      "fetched_at": "2026-05-06T12:07:08.711Z"
     },
     {
       "id": "tax-committee-news",
@@ -336,7 +353,7 @@
       "candidate_count": 0,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-06T09:28:01.133Z"
+      "fetched_at": "2026-05-06T12:07:08.711Z"
     },
     {
       "id": "energy-ministry-news",
@@ -348,7 +365,7 @@
       "candidate_count": 0,
       "excluded_count": 12,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-06T09:28:01.133Z"
+      "fetched_at": "2026-05-06T12:07:08.711Z"
     },
     {
       "id": "investment-trade-ministry-news",
@@ -360,7 +377,7 @@
       "candidate_count": 1,
       "excluded_count": 11,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-06T09:28:01.133Z"
+      "fetched_at": "2026-05-06T12:07:08.711Z"
     },
     {
       "id": "justice-ministry-news",
@@ -372,150 +389,71 @@
       "candidate_count": 0,
       "excluded_count": 12,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-06T09:28:01.133Z"
+      "fetched_at": "2026-05-06T12:07:08.711Z"
     }
   ],
   "reform_packages": [
     {
-      "package_id": "pkg-healthcare-quality-licensing-private-sector-2026",
-      "title": "Healthcare quality, licensing, and private-sector participation reform",
-      "policy_area": "Healthcare services and private-sector participation",
-      "reform_category": "social_protection",
-      "current_stage": "Instructions issued",
-      "current_stage_date": "2026-05-01",
-      "next_milestone": "Revised licensing procedures start",
-      "next_milestone_date": "2026-07-01",
+      "package_id": "pkg-tax-administration-incentives-2026-04-14",
+      "title": "Tax administration and investment incentive reform",
+      "policy_area": "Tax administration and fiscal incentives",
+      "reform_category": "fiscal_tax",
+      "current_stage": "Verified official measure",
+      "current_stage_date": "2026-04-14",
+      "next_milestone": "financing or incentive measure recorded",
+      "next_milestone_date": "2026-04-14",
       "responsible_institutions": [
-        "Ministry of Health",
-        "National Health Insurance Fund",
-        "Agency for Attracting Investments and Implementing PPP Projects in Medicine"
+        "Ministry of Investment, Industry and Trade of the Republic of Uzbekistan"
       ],
-      "legal_basis": "Official presidential instruction package on healthcare quality, licensing, accreditation, and private-sector participation.",
-      "official_basis": "Official website of the President of the Republic of Uzbekistan, 1 May 2026.",
-      "financing_or_incentive": "200 billion soums preferential credit resources; loans up to 10 billion soums",
+      "legal_basis": "Verified official source event: Uzbekistan Expands Tax Incentives for Investors Financing Infrastructure Projects.",
+      "official_basis": "Ministry of Investment, Industry and Trade of the Republic of Uzbekistan",
+      "financing_or_incentive": "Tax incentive measure identified in verified official source event",
       "source_confidence": "high",
-      "why_tracked": "The official source sets dated licensing, accreditation, state-funded service eligibility, credit, and institutional implementation milestones that affect health-sector service delivery and public financing channels.",
+      "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
       "model_relevance": [
-        "Social spending",
-        "Private investment",
-        "Public finance",
-        "Service-sector productivity"
+        "Fiscal balance",
+        "Investment",
+        "Business costs"
       ],
       "measure_tracks": [
         {
-          "id": "healthcare-licensing-reform",
-          "label": "licensing reform",
-          "status": "instructions issued"
-        },
-        {
-          "id": "healthcare-accreditation-state-funded",
-          "label": "accreditation and state-funded service eligibility",
-          "status": "planned"
-        },
-        {
-          "id": "healthcare-state-hospital-licensing",
-          "label": "state hospital licensing rollout",
-          "status": "scheduled"
-        },
-        {
-          "id": "healthcare-preferential-credit-support",
-          "label": "preferential credit support",
-          "status": "announced"
-        },
-        {
-          "id": "healthcare-investment-ppp-agency",
-          "label": "investment and PPP agency setup",
-          "status": "announced"
+          "id": "tax-administration-incentives-measure-1",
+          "label": "expanded incentives",
+          "status": "source verified"
         }
       ],
       "implementation_milestones": [
         {
-          "id": "healthcare-licensing-procedures-start-2026-07-01",
-          "label": "revised licensing procedures start",
-          "date": "2026-07-01",
+          "id": "tax-administration-incentives-financing_allocated-2026-04-14",
+          "label": "financing or incentive measure recorded",
+          "date": "2026-04-14",
           "date_precision": "day",
-          "event_type": "effective_date",
+          "event_type": "financing_allocated",
           "responsible_institutions": [
-            "Ministry of Health"
+            "Ministry of Investment, Industry and Trade of the Republic of Uzbekistan"
           ],
-          "evidence_type": "implementation_program",
+          "evidence_type": "official_policy_announcement",
           "source_event_ids": [
-            "president-healthcare-quality-2026-05-01"
-          ],
-          "confidence": "high",
-          "related_next_milestone_ids": [
-            "healthcare-republican-institutions-deadline-2027-04-01"
-          ]
-        },
-        {
-          "id": "healthcare-republican-institutions-deadline-2027-04-01",
-          "label": "republican institutions licensing deadline",
-          "date": "2027-04-01",
-          "date_precision": "day",
-          "event_type": "target_deadline",
-          "responsible_institutions": [
-            "Ministry of Health",
-            "Republican medical institutions"
-          ],
-          "evidence_type": "implementation_program",
-          "source_event_ids": [
-            "president-healthcare-quality-2026-05-01"
-          ],
-          "confidence": "high",
-          "related_next_milestone_ids": [
-            "healthcare-insurance-fund-accreditation-rule-2028"
-          ]
-        },
-        {
-          "id": "healthcare-insurance-fund-accreditation-rule-2028",
-          "label": "Insurance Fund accreditation purchasing rule starts",
-          "date": "2028",
-          "date_precision": "year",
-          "event_type": "effective_date",
-          "responsible_institutions": [
-            "National Health Insurance Fund",
-            "Accredited medical organizations"
-          ],
-          "evidence_type": "implementation_program",
-          "source_event_ids": [
-            "president-healthcare-quality-2026-05-01"
-          ],
-          "confidence": "high",
-          "related_next_milestone_ids": [
-            "healthcare-district-city-licensing-target-2030-12-31"
-          ]
-        },
-        {
-          "id": "healthcare-district-city-licensing-target-2030-12-31",
-          "label": "district/city licensing target",
-          "date": "2030-12-31",
-          "date_precision": "day",
-          "event_type": "target_deadline",
-          "responsible_institutions": [
-            "Ministry of Health",
-            "District and city medical associations"
-          ],
-          "evidence_type": "implementation_program",
-          "source_event_ids": [
-            "president-healthcare-quality-2026-05-01"
+            "source-event-2026-04-14-10-20-00-uzbekistan-expands-tax-incentives-for-investors-financing-in"
           ],
           "confidence": "high"
         }
       ],
       "official_source_events": [
         {
-          "id": "president-healthcare-quality-2026-05-01",
-          "title": "Presentation on reforms in the healthcare system",
-          "source_institution": "Official website of the President of the Republic of Uzbekistan",
-          "source_url": "https://president.uz/en/lists/view/9164",
-          "source_published_at": "2026-05-01",
+          "id": "source-event-2026-04-14-10-20-00-uzbekistan-expands-tax-incentives-for-investors-financing-in",
+          "title": "Uzbekistan Expands Tax Incentives for Investors Financing Infrastructure Projects",
+          "source_institution": "Ministry of Investment, Industry and Trade of the Republic of Uzbekistan",
+          "source_url": "https://gov.uz/en/miit/news/view/153388",
+          "source_published_at": "2026-04-14",
           "evidence_type": "official_policy_announcement",
-          "event_type": "instructions_issued",
-          "summary": "Official presidential source describing instructions on licensing, accreditation, state hospital rollout, preferential credit resources, private investment, and the medical PPP agency.",
-          "source_url_status": "verified"
+          "event_type": "financing_allocated",
+          "summary": "Source API did not expose a summary for this configured extraction item.",
+          "source_url_status": "verified",
+          "extracted_at": "2026-05-06T12:07:08.711Z"
         }
       ],
-      "caveat": "Automatic official-source tracker entry assembled from a verified source event. It is not an official legal registry and does not assert legal force beyond the cited official source."
+      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
     }
   ],
   "accepted_reforms": [],
@@ -554,8 +492,8 @@
       "source_owner": "Ministry of Investment, Industry and Trade of the Republic of Uzbekistan",
       "source_url": "https://gov.uz/en/miit/news/view/153388",
       "source_published_at": "2026-04-14 10:20:00",
-      "retrieved_at": "2026-05-06T09:28:01.133Z",
-      "extracted_at": "2026-05-06T09:28:01.133Z",
+      "retrieved_at": "2026-05-06T12:07:08.711Z",
+      "extracted_at": "2026-05-06T12:07:08.711Z",
       "citation_permission": "pending",
       "license_class": "unknown",
       "translation_review_state": "not_translated",
@@ -565,7 +503,7 @@
       ],
       "extraction_mode": "configured-source-fetch",
       "source_url_status": "verified",
-      "source_url_verified_at": "2026-05-06T09:28:01.133Z"
+      "source_url_verified_at": "2026-05-06T12:07:08.711Z"
     }
   ],
   "caveats": [
