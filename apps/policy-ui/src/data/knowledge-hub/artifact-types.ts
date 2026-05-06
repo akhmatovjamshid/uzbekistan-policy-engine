@@ -1,5 +1,6 @@
 import type {
   KnowledgeHubSourceDiagnostic,
+  ReformPackage,
   ReformCandidateItem,
   ReformTrackerItem,
 } from '../../contracts/data-contract.js'
@@ -32,6 +33,7 @@ export type KnowledgeHubArtifact = {
   rulebook: KnowledgeHubRulebook
   sources: KnowledgeHubArtifactSource[]
   source_diagnostics: KnowledgeHubSourceDiagnostic[]
+  reform_packages: ReformPackage[]
   accepted_reforms: ReformTrackerItem[]
   candidates: ReformCandidateItem[]
   caveats: string[]

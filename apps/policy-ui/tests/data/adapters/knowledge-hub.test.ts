@@ -157,6 +157,7 @@ describe('knowledge hub adapter', () => {
     assert.ok(validation.ok && validation.value.rulebook.exclude_rules.length > 0)
     assert.ok(validation.ok && validation.value.rulebook.exclusion_reasons.length > 0)
     assert.ok(validation.ok && validation.value.rulebook.actual_reform_definition?.includes('legal or policy instrument'))
+    assert.ok(validation.ok && validation.value.reform_packages.length === 1)
     assert.ok(validation.ok && validation.value.accepted_reforms.length === 0)
     assert.ok(validation.ok && validation.value.candidates.every((candidate) => candidate.extraction_state === 'source_extracted'))
     assert.ok(validation.ok && validation.value.candidates.every((candidate) => candidate.extraction_mode === 'configured-source-fetch'))
@@ -173,15 +174,56 @@ describe('knowledge hub adapter', () => {
     assert.ok(validation.ok && validation.value.candidates.every((candidate) => candidate.source_url.startsWith('https://')))
 
     const content = knowledgeHubArtifactToContent(validation.ok ? validation.value : artifact)
+    assert.equal(content.reform_packages?.length, 1)
+    assert.equal(content.reform_packages?.[0].title, 'Healthcare quality, licensing, and private-sector participation reform')
     assert.equal(content.reforms.length, 0)
     assert.equal(content.briefs.length, 0)
     assert.equal(content.candidates?.length, validation.ok ? validation.value.candidates.length : 0)
     assert.equal(content.source_diagnostics?.length, validation.ok ? validation.value.source_diagnostics.length : 0)
     assert.equal(content.meta.candidate_items, validation.ok ? validation.value.candidates.length : 0)
     assert.equal(content.meta.sources_configured, 9)
+    assert.equal(content.meta.reform_packages, 1)
+    assert.equal(content.meta.reforms_tracked, 1)
     assert.equal(content.extraction_mode_label, 'Configured source fetch')
     assert.ok(content.caveats?.some((caveat) => caveat.includes('configured source URLs')))
     assert.ok(content.caveats?.some((caveat) => caveat.includes('not an official reviewed policy database')))
+  })
+
+  it('validates the healthcare package and rejects invalid package source links', () => {
+    const artifact = JSON.parse(readFileSync(PUBLIC_KNOWLEDGE_HUB_ARTIFACT_PATH, 'utf8'))
+    const validation = validateKnowledgeHubArtifact(artifact)
+
+    assert.equal(validation.ok, true)
+    assert.ok(validation.ok)
+    const healthcarePackage = validation.value.reform_packages[0]
+    assert.equal(healthcarePackage.title, 'Healthcare quality, licensing, and private-sector participation reform')
+    assert.equal(healthcarePackage.official_source_events[0].source_url, 'https://president.uz/en/lists/view/9164')
+    assert.equal(healthcarePackage.official_source_events[0].source_published_at, '2026-05-01')
+    assert.equal(
+      healthcarePackage.financing_or_incentive,
+      '200 billion soums preferential credit resources; loans up to 10 billion soums',
+    )
+    assert.deepEqual(
+      healthcarePackage.measure_tracks.map((track) => track.label),
+      [
+        'licensing reform',
+        'accreditation and state-funded service eligibility',
+        'state hospital licensing rollout',
+        'preferential credit support',
+        'investment and PPP agency setup',
+      ],
+    )
+    assert.deepEqual(
+      healthcarePackage.implementation_milestones.map((milestone) => milestone.date),
+      ['2026-07-01', '2027-04-01', '2028', '2030-12-31'],
+    )
+
+    const invalidArtifact = JSON.parse(JSON.stringify(artifact))
+    invalidArtifact.reform_packages[0].official_source_events[0].source_url = 'https://example.test/fake'
+    const invalidValidation = validateKnowledgeHubArtifact(invalidArtifact)
+
+    assert.equal(invalidValidation.ok, false)
+    assert.ok(invalidValidation.issues.some((issue) => issue.message.includes('synthetic or local links')))
   })
 
   it('loads Knowledge Hub from the static artifact and does not import hidden mock content', async () => {
@@ -204,11 +246,13 @@ describe('knowledge hub adapter', () => {
     assert.equal(state.status, 'ready')
     assert.equal(state.mode, 'artifact')
     assert.equal(fetchCalls, 1)
-    assert.equal(state.content?.meta.reforms_tracked, 0)
+    assert.equal(state.content?.meta.reforms_tracked, 1)
+    assert.equal(state.content?.meta.reform_packages, 1)
     assert.equal(state.content?.meta.research_briefs, 0)
     assert.equal(state.content?.meta.literature_items, 0)
     assert.equal(state.content?.meta.candidate_items, artifact.candidates.length)
     assert.equal(state.content?.reforms.length, 0)
+    assert.equal(state.content?.reform_packages?.[0].title, 'Healthcare quality, licensing, and private-sector participation reform')
     assert.equal(state.content?.briefs.length, 0)
     assert.equal(state.content?.extraction_mode, 'configured-source-fetch')
     assert.equal(state.content?.extraction_mode_label, 'Configured source fetch')

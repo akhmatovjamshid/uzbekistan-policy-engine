@@ -47,7 +47,7 @@ export async function loadKnowledgeHubSourceState(): Promise<KnowledgeHubSourceS
       return {
         ...createErrorSourceCore<KnowledgeHubDataMode, IntegrationValidationIssue>(
           mode,
-          'Knowledge Hub candidate artifact failed frontend validation.',
+          'Knowledge Hub reform tracker artifact failed frontend validation.',
           error.issues,
         ),
         content: null,
@@ -58,7 +58,7 @@ export async function loadKnowledgeHubSourceState(): Promise<KnowledgeHubSourceS
       return {
         ...createErrorSourceCore<KnowledgeHubDataMode, IntegrationValidationIssue>(
           mode,
-          `Knowledge Hub candidate artifact could not be loaded (${error.kind}${error.status ? ` ${error.status}` : ''}).`,
+          `Knowledge Hub reform tracker artifact could not be loaded (${error.kind}${error.status ? ` ${error.status}` : ''}).`,
         ),
         content: null,
       }
@@ -67,7 +67,7 @@ export async function loadKnowledgeHubSourceState(): Promise<KnowledgeHubSourceS
     return {
       ...createErrorSourceCore<KnowledgeHubDataMode, IntegrationValidationIssue>(
         mode,
-        'Knowledge Hub candidate artifact could not be loaded.',
+        'Knowledge Hub reform tracker artifact could not be loaded.',
       ),
       content: null,
     }

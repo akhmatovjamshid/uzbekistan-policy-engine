@@ -11,6 +11,7 @@ import {
   KNOWLEDGE_HUB_SCHEMA_VERSION,
   REFORM_INTAKE_RULEBOOK,
   REFORM_SOURCE_DEFINITIONS,
+  SEEDED_REFORM_PACKAGES,
 } from '../reform-intake.mjs'
 
 describe('Knowledge Hub reform intake', () => {
@@ -250,6 +251,11 @@ describe('Knowledge Hub reform intake', () => {
     assert.equal(artifact.rulebook.version, REFORM_INTAKE_RULEBOOK.version)
     assert.equal(artifact.sources.length, REFORM_SOURCE_DEFINITIONS.length)
     assert.equal(artifact.source_diagnostics.length, REFORM_SOURCE_DEFINITIONS.length)
+    assert.equal(artifact.reform_packages.length, 1)
+    assert.equal(artifact.reform_packages[0].title, 'Healthcare quality, licensing, and private-sector participation reform')
+    assert.equal(artifact.reform_packages[0].official_source_events[0].source_url, 'https://president.uz/en/lists/view/9164')
+    assert.equal(artifact.reform_packages[0].implementation_milestones.length, 4)
+    assert.equal(artifact.reform_packages[0].financing_or_incentive, '200 billion soums preferential credit resources; loans up to 10 billion soums')
     assert.deepEqual(artifact.accepted_reforms, [])
     assert.equal(artifact.candidates.length, 7)
     assert.ok(artifact.candidates.every((candidate) => candidate.extraction_state === 'source_extracted'))
@@ -264,6 +270,26 @@ describe('Knowledge Hub reform intake', () => {
     assert.ok(artifact.candidates.every((candidate) => candidate.evidence_types.length > 0))
     assert.ok(artifact.caveats.some((caveat) => caveat.includes('Fixture/demo mode')))
     assert.ok(artifact.caveats.some((caveat) => caveat.includes('not an official reviewed policy database')))
+  })
+
+  it('defines the healthcare reform package seed used by the tracker surface', () => {
+    const healthcarePackage = SEEDED_REFORM_PACKAGES[0]
+
+    assert.equal(healthcarePackage.title, 'Healthcare quality, licensing, and private-sector participation reform')
+    assert.deepEqual(
+      healthcarePackage.measure_tracks.map((track) => track.label),
+      [
+        'licensing reform',
+        'accreditation and state-funded service eligibility',
+        'state hospital licensing rollout',
+        'preferential credit support',
+        'investment and PPP agency setup',
+      ],
+    )
+    assert.deepEqual(
+      healthcarePackage.implementation_milestones.map((milestone) => milestone.date),
+      ['2026-07-01', '2027-04-01', '2028', '2030-12-31'],
+    )
   })
 
   it('configures official source coverage for the requested next batch', () => {
