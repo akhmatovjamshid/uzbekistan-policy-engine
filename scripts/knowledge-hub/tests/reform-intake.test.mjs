@@ -259,7 +259,7 @@ describe('Knowledge Hub reform intake', () => {
     assert.equal(artifact.reform_packages[0].implementation_milestones.length, 4)
     assert.equal(artifact.reform_packages[0].financing_or_incentive, '200 billion soums preferential credit resources; loans up to 10 billion soums')
     assert.deepEqual(artifact.accepted_reforms, [])
-    assert.equal(artifact.candidates.length, 8)
+    assert.equal(artifact.candidates.length, 9)
     assert.ok(artifact.candidates.every((candidate) => candidate.extraction_state === 'source_extracted'))
     assert.ok(artifact.candidates.every((candidate) => candidate.extraction_mode === 'fixture-demo'))
     assert.ok(artifact.candidates.every((candidate) => candidate.review_state === 'candidate'))
@@ -462,8 +462,8 @@ describe('Knowledge Hub reform intake', () => {
     })
 
     assert.equal(diagnostics.source_results.length, REFORM_SOURCE_DEFINITIONS.length)
-    assert.equal(diagnostics.source_results.reduce((sum, source) => sum + source.candidate_count, 0), 9)
-    assert.equal(diagnostics.artifact.candidates.length, 8)
+    assert.equal(diagnostics.source_results.reduce((sum, source) => sum + source.candidate_count, 0), 10)
+    assert.equal(diagnostics.artifact.candidates.length, 9)
     assert.equal(diagnostics.source_failures.length, 0)
 
     for (const source of REFORM_SOURCE_DEFINITIONS) {

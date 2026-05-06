@@ -50,6 +50,14 @@ export const REFORM_SOURCE_DEFINITIONS = [
     fixture_path: fixturePath('president-reform-news.html'),
   },
   {
+    id: 'president-healthcare-reform-detail',
+    institution: 'Official website of the President of the Republic of Uzbekistan',
+    url: 'https://president.uz/en/lists/view/9164',
+    parser: 'president-uz-detail',
+    allow_source_url_as_candidate: true,
+    fixture_path: fixturePath('president-healthcare-reform-detail.html'),
+  },
+  {
     id: 'gov-portal-reform-news',
     institution: 'Government portal of the Republic of Uzbekistan',
     url: 'https://gov.uz/en/news/news',
@@ -640,6 +648,7 @@ function slugify(value) {
 function classifyDomain(text) {
   const normalized = text.toLowerCase()
   if (/(energy|gas|tariff adjustment)/.test(normalized)) return 'energy_tariffs'
+  if (/(healthcare|medical|clinic|clinics|health insurance|insurance fund|state-funded medical)/.test(normalized)) return 'social_protection'
   if (/(privatization|state-owned|soe)/.test(normalized)) return 'soe_privatization'
   if (/(customs|trade|wto|import|export|clearance)/.test(normalized)) return 'trade_customs'
   if (/(policy rate|reserve requirement|foreign exchange|fx|deposit|bank|microfinance|microcredit)/.test(normalized)) return 'monetary_policy'
@@ -728,7 +737,7 @@ function isUsableCandidateSourceUrl(source, sourceUrl) {
   if (!sourceUrl || sourceUrl.endsWith('#')) return false
   const normalizedSourceUrl = normalizeUrlForComparison(sourceUrl)
   if (!normalizedSourceUrl) return false
-  if (normalizedSourceUrl === normalizeUrlForComparison(source.url)) return false
+  if (normalizedSourceUrl === normalizeUrlForComparison(source.url) && !source.allow_source_url_as_candidate) return false
   if (source.candidate_url_prefix && !sourceUrl.startsWith(source.candidate_url_prefix)) return false
   return true
 }
@@ -876,7 +885,7 @@ function extractDecisionsFromGovUzApi(source, payload, extractedAt) {
 }
 
 function parsePresidentUzDate(value) {
-  const match = value.match(/^([0-3]\d)-([01]\d)-(\d{4})$/)
+  const match = value.match(/^([0-3]\d)[.-]([01]\d)[.-](\d{4})$/)
   if (!match) return value
   return `${match[3]}-${match[2]}-${match[1]}`
 }
@@ -912,9 +921,58 @@ function extractDecisionsFromPresidentUzList(source, html, extractedAt) {
   }
 }
 
+function extractDecisionsFromPresidentUzDetail(source, html, extractedAt) {
+  const title = normalizeWhitespace(
+    firstMatch(html, [
+      /<meta\b[^>]*(?:property|name)=["'](?:og:title|twitter:title)["'][^>]*content=["']([^"']+)["'][^>]*>/i,
+      /<title\b[^>]*>([\s\S]*?)<\/title>/i,
+      /<h1\b[^>]*>([\s\S]*?)<\/h1>/i,
+      /<h[2-3]\b[^>]*class=["'][^"']*(?:title|news|article)[^"']*["'][^>]*>([\s\S]*?)<\/h[2-3]>/i,
+    ]),
+  ).replace(/\s*[-|]\s*.*$/, '')
+  const publishedAt = parsePresidentUzDate(
+    firstMatch(html, [
+      /<time\b[^>]*datetime=["']([^"']+)["']/i,
+      /\b([0-3]\d[.-][01]\d[.-]\d{4})\b/i,
+    ]),
+  )
+  const paragraphs = Array.from(html.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi), (match) => normalizeWhitespace(match[1]))
+    .filter((paragraph) => paragraph.length > 40)
+  const fallbackBodyText = normalizeWhitespace(
+    firstMatch(html, [/<article\b[^>]*>([\s\S]*?)<\/article>/i, /<main\b[^>]*>([\s\S]*?)<\/main>/i, /<body\b[^>]*>([\s\S]*?)<\/body>/i]) ||
+      html,
+  )
+  const bodyText = paragraphs.length > 0 ? paragraphs.join(' ') : fallbackBodyText
+  const summary = bodyText.slice(0, 700)
+
+  if (!title) return { candidates: [], exclusions: [] }
+
+  const decision = sourceItemToDecision(
+    source,
+    {
+      id: 'detail',
+      title,
+      summary,
+      publishedAt,
+      sourceUrl: source.url,
+      text: `${title} ${bodyText}`,
+    },
+    extractedAt,
+    'President.uz detail page did not expose a separate summary in the configured extraction block.',
+  )
+
+  return {
+    candidates: decision.candidate ? [decision.candidate] : [],
+    exclusions: decision.exclusion ? [decision.exclusion] : [],
+  }
+}
+
 export function extractCandidateDecisionsFromSource(source, html, extractedAt) {
   if (source.parser === 'president-uz-list') {
     return extractDecisionsFromPresidentUzList(source, html, extractedAt)
+  }
+  if (source.parser === 'president-uz-detail') {
+    return extractDecisionsFromPresidentUzDetail(source, html, extractedAt)
   }
 
   const jsonPayload = maybeParseJson(html)
