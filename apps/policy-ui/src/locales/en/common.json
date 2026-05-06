@@ -106,8 +106,8 @@
       "description": "Read-only source, vintage, artifact, guard-check, and update-state inventory for the public frontend data layer. It does not refresh data."
     },
     "knowledgeHub": {
-      "title": "Knowledge Hub",
-      "description": "Strict reform tracker for accepted records and source-extracted candidates, with source, review, status, and caveat metadata."
+      "title": "Reform Tracker",
+      "description": "Official-source reform packages and implementation milestones."
     }
   },
   "overview": {
@@ -880,6 +880,114 @@
         "aiDrafted": "AI-drafted",
         "reviewedBy": "reviewed by {{reviewer}}",
         "readTime": "{{minutes}} min read"
+      }
+    },
+    "reformTracker": {
+      "errorUnavailable": "Knowledge Hub reform tracker artifact is unavailable.",
+      "header": {
+        "eyebrow": "Reform tracker",
+        "automaticTracker": "Automatic official-source tracker",
+        "sources": "Sources",
+        "packages": "Packages",
+        "lastFetch": "Last fetch"
+      },
+      "metrics": {
+        "aria": "Reform tracker metrics",
+        "activePackages": "Active packages",
+        "upcomingMilestones": "Upcoming milestones",
+        "officialSources": "Official sources",
+        "verifiedLinks": "Verified links",
+        "lastFetch": "Last fetch"
+      },
+      "tabs": {
+        "aria": "Reform tracker views",
+        "packages": "Reform Packages",
+        "timeline": "Implementation Timeline"
+      },
+      "packages": {
+        "aria": "Reform package table and dossier",
+        "empty": "No reform packages are available in this artifact."
+      },
+      "table": {
+        "package": "Reform package",
+        "policyArea": "Policy area",
+        "currentStage": "Current stage",
+        "nextMilestone": "Next milestone",
+        "institution": "Responsible institution",
+        "financing": "Financing / incentive",
+        "legalBasis": "Legal basis",
+        "confidence": "Source confidence"
+      },
+      "dossier": {
+        "aria": "Selected reform package dossier",
+        "status": "Status / current stage",
+        "officialSource": "Official source",
+        "policyArea": "Policy area",
+        "financing": "Financing / incentive",
+        "whyTracked": "Why tracked",
+        "measureTracks": "Measure tracks",
+        "upcomingMilestones": "Upcoming milestones",
+        "evidence": "Evidence / source events",
+        "modelRelevance": "Model relevance"
+      },
+      "timeline": {
+        "aria": "Implementation timeline",
+        "empty": "No implementation milestones are available in this artifact.",
+        "detailAria": "Selected milestone detail",
+        "package": "Reform package",
+        "source": "Source",
+        "evidenceType": "Evidence type",
+        "institution": "Responsible institution",
+        "confidence": "Confidence",
+        "relatedNext": "Related next milestones"
+      },
+      "labels": {
+        "sourceConfidence": {
+          "high": "High",
+          "medium": "Medium",
+          "low": "Low"
+        },
+        "eventType": {
+          "instructions_issued": "Instructions issued",
+          "consultation": "Consultation",
+          "approved": "Approved",
+          "effective_date": "Effective date",
+          "implementation_milestone": "Implementation milestone",
+          "financing_allocated": "Financing allocated",
+          "monitoring_update": "Monitoring update",
+          "target_deadline": "Target deadline",
+          "amended": "Amended",
+          "completed": "Completed",
+          "superseded": "Superseded"
+        },
+        "evidenceType": {
+          "legal_text": "Legal text",
+          "official_policy_announcement": "Official policy announcement",
+          "consultation_notice": "Consultation notice",
+          "budget_tax_measure": "Budget or tax measure",
+          "regulatory_parameter_change": "Regulatory parameter change",
+          "implementation_program": "Implementation program",
+          "international_agreement": "International agreement"
+        }
+      },
+      "methodology": {
+        "title": "Methodology note",
+        "includedTitle": "Included",
+        "included": "Official policy measures, decrees, implementation deadlines, financing mechanisms, and institutional reforms.",
+        "excludedTitle": "Excluded",
+        "excluded": "Meetings, speeches, trainings, generic cooperation news, and analytical reports without a policy measure.",
+        "caveat": "Automatic official-source tracker, not an official legal registry. Package links are blocked when invalid, synthetic, or unverified for production artifacts.",
+        "diagnostics": "Internal source diagnostics",
+        "sourcesChecked": "{{count}} source checked",
+        "sourcesChecked_one": "{{count}} source checked",
+        "sourcesChecked_few": "{{count}} sources checked",
+        "sourcesChecked_many": "{{count}} sources checked",
+        "sourcesChecked_other": "{{count}} sources checked",
+        "invalidLinksBlocked": "{{count}} invalid link blocked",
+        "invalidLinksBlocked_one": "{{count}} invalid link blocked",
+        "invalidLinksBlocked_few": "{{count}} invalid links blocked",
+        "invalidLinksBlocked_many": "{{count}} invalid links blocked",
+        "invalidLinksBlocked_other": "{{count}} invalid links blocked"
       }
     }
   },

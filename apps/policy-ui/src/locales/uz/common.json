@@ -106,8 +106,8 @@
       "description": "Ommaviy frontend ma'lumot qatlami uchun read-only manba, vintaj, artefakt, guard-check va yangilanish holati inventari. U ma'lumotni yangilamaydi."
     },
     "knowledgeHub": {
-      "title": "Bilimlar markazi",
-      "description": "Qabul qilingan yozuvlar va manbadan olingan nomzodlar uchun qat'iy islohot trekeri: manba, ko'rib chiqish, status va caveat metama'lumotlari bilan."
+      "title": "Islohotlar monitoringi",
+      "description": "Rasmiy manbalardagi islohot paketlari va amalga oshirish bosqichlari."
     }
   },
   "overview": {
@@ -880,6 +880,114 @@
         "aiDrafted": "AI tayyorlagan",
         "reviewedBy": "taqrizchi {{reviewer}}",
         "readTime": "{{minutes}} min o'qish"
+      }
+    },
+    "reformTracker": {
+      "errorUnavailable": "Islohotlar monitoringi artefakti mavjud emas.",
+      "header": {
+        "eyebrow": "Islohotlar monitoringi",
+        "automaticTracker": "Rasmiy manbalar bo'yicha avtomatik monitoring",
+        "sources": "Manbalar",
+        "packages": "Paketlar",
+        "lastFetch": "Oxirgi yuklash"
+      },
+      "metrics": {
+        "aria": "Islohotlar monitoringi ko'rsatkichlari",
+        "activePackages": "Faol paketlar",
+        "upcomingMilestones": "Kelayotgan bosqichlar",
+        "officialSources": "Rasmiy manbalar",
+        "verifiedLinks": "Tekshirilgan havolalar",
+        "lastFetch": "Oxirgi yuklash"
+      },
+      "tabs": {
+        "aria": "Islohotlar monitoringi ko'rinishlari",
+        "packages": "Islohot paketlari",
+        "timeline": "Amalga oshirish jadvali"
+      },
+      "packages": {
+        "aria": "Islohot paketlari jadvali va dosye",
+        "empty": "Bu artefaktda islohot paketlari mavjud emas."
+      },
+      "table": {
+        "package": "Islohot paketi",
+        "policyArea": "Siyosat sohasi",
+        "currentStage": "Joriy bosqich",
+        "nextMilestone": "Keyingi bosqich",
+        "institution": "Mas'ul tashkilot",
+        "financing": "Moliyalashtirish / imtiyoz",
+        "legalBasis": "Huquqiy asos",
+        "confidence": "Manba ishonchi"
+      },
+      "dossier": {
+        "aria": "Tanlangan islohot paketi dosyesi",
+        "status": "Status / joriy bosqich",
+        "officialSource": "Rasmiy manba",
+        "policyArea": "Siyosat sohasi",
+        "financing": "Moliyalashtirish / imtiyoz",
+        "whyTracked": "Nega kuzatiladi",
+        "measureTracks": "Chora yo'nalishlari",
+        "upcomingMilestones": "Kelayotgan bosqichlar",
+        "evidence": "Dalillar / manba voqealari",
+        "modelRelevance": "Modellar bilan bog'liqlik"
+      },
+      "timeline": {
+        "aria": "Amalga oshirish jadvali",
+        "empty": "Bu artefaktda amalga oshirish bosqichlari mavjud emas.",
+        "detailAria": "Tanlangan bosqich tafsiloti",
+        "package": "Islohot paketi",
+        "source": "Manba",
+        "evidenceType": "Dalil turi",
+        "institution": "Mas'ul tashkilot",
+        "confidence": "Ishonch",
+        "relatedNext": "Bog'liq keyingi bosqichlar"
+      },
+      "labels": {
+        "sourceConfidence": {
+          "high": "Yuqori",
+          "medium": "O'rta",
+          "low": "Past"
+        },
+        "eventType": {
+          "instructions_issued": "Topshiriqlar berildi",
+          "consultation": "Maslahatlashuv",
+          "approved": "Tasdiqlandi",
+          "effective_date": "Kuchga kirish sanasi",
+          "implementation_milestone": "Amalga oshirish bosqichi",
+          "financing_allocated": "Moliyalashtirish ajratildi",
+          "monitoring_update": "Monitoring yangilanishi",
+          "target_deadline": "Maqsadli muddat",
+          "amended": "O'zgartirildi",
+          "completed": "Yakunlandi",
+          "superseded": "Almashtirildi"
+        },
+        "evidenceType": {
+          "legal_text": "Huquqiy matn",
+          "official_policy_announcement": "Rasmiy siyosat bayonoti",
+          "consultation_notice": "Maslahatlashuv xabarnomasi",
+          "budget_tax_measure": "Byudjet yoki soliq chorasi",
+          "regulatory_parameter_change": "Regulyator parametr o'zgarishi",
+          "implementation_program": "Amalga oshirish dasturi",
+          "international_agreement": "Xalqaro kelishuv"
+        }
+      },
+      "methodology": {
+        "title": "Metodologiya eslatmasi",
+        "includedTitle": "Kiritiladi",
+        "included": "Rasmiy siyosat choralari, farmonlar, amalga oshirish muddatlari, moliyalashtirish mexanizmlari va institutsional islohotlar.",
+        "excludedTitle": "Kiritilmaydi",
+        "excluded": "Siyosat chorasi bo'lmagan uchrashuvlar, nutqlar, treninglar, umumiy hamkorlik yangiliklari va tahliliy hisobotlar.",
+        "caveat": "Rasmiy manbalar bo'yicha avtomatik monitoring, rasmiy huquqiy reyestr emas. Production artefaktlarida paket havolalari yaroqsiz, sintetik yoki tekshirilmagan bo'lsa bloklanadi.",
+        "diagnostics": "Ichki manba diagnostikasi",
+        "sourcesChecked": "{{count}} ta manba tekshirildi",
+        "sourcesChecked_one": "{{count}} ta manba tekshirildi",
+        "sourcesChecked_few": "{{count}} ta manba tekshirildi",
+        "sourcesChecked_many": "{{count}} ta manba tekshirildi",
+        "sourcesChecked_other": "{{count}} ta manba tekshirildi",
+        "invalidLinksBlocked": "{{count}} ta yaroqsiz havola bloklandi",
+        "invalidLinksBlocked_one": "{{count}} ta yaroqsiz havola bloklandi",
+        "invalidLinksBlocked_few": "{{count}} ta yaroqsiz havola bloklandi",
+        "invalidLinksBlocked_many": "{{count}} ta yaroqsiz havola bloklandi",
+        "invalidLinksBlocked_other": "{{count}} ta yaroqsiz havola bloklandi"
       }
     }
   },

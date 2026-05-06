@@ -106,8 +106,8 @@
       "description": "Read-only инвентарь источников, винтажей, артефактов, guard-check и статуса обновлений для публичного frontend-слоя данных. Он не обновляет данные."
     },
     "knowledgeHub": {
-      "title": "База знаний",
-      "description": "Строгий трекер реформ для принятых записей и кандидатов из источников с метаданными источника, проверки, статуса и caveat."
+      "title": "Трекер реформ",
+      "description": "Пакеты реформ и этапы внедрения из официальных источников."
     }
   },
   "overview": {
@@ -880,6 +880,114 @@
         "aiDrafted": "Составлено ИИ",
         "reviewedBy": "рецензент {{reviewer}}",
         "readTime": "{{minutes}} мин чтения"
+      }
+    },
+    "reformTracker": {
+      "errorUnavailable": "Артефакт трекера реформ недоступен.",
+      "header": {
+        "eyebrow": "Трекер реформ",
+        "automaticTracker": "Автоматический трекер официальных источников",
+        "sources": "Источники",
+        "packages": "Пакеты",
+        "lastFetch": "Последняя загрузка"
+      },
+      "metrics": {
+        "aria": "Метрики трекера реформ",
+        "activePackages": "Активные пакеты",
+        "upcomingMilestones": "Ближайшие этапы",
+        "officialSources": "Официальные источники",
+        "verifiedLinks": "Проверенные ссылки",
+        "lastFetch": "Последняя загрузка"
+      },
+      "tabs": {
+        "aria": "Виды трекера реформ",
+        "packages": "Пакеты реформ",
+        "timeline": "График внедрения"
+      },
+      "packages": {
+        "aria": "Таблица пакетов реформ и досье",
+        "empty": "В этом артефакте нет пакетов реформ."
+      },
+      "table": {
+        "package": "Пакет реформ",
+        "policyArea": "Сфера политики",
+        "currentStage": "Текущий этап",
+        "nextMilestone": "Следующий этап",
+        "institution": "Ответственная организация",
+        "financing": "Финансирование / стимул",
+        "legalBasis": "Правовая основа",
+        "confidence": "Уверенность источника"
+      },
+      "dossier": {
+        "aria": "Досье выбранного пакета реформ",
+        "status": "Статус / текущий этап",
+        "officialSource": "Официальный источник",
+        "policyArea": "Сфера политики",
+        "financing": "Финансирование / стимул",
+        "whyTracked": "Почему отслеживается",
+        "measureTracks": "Направления мер",
+        "upcomingMilestones": "Ближайшие этапы",
+        "evidence": "Доказательства / события источников",
+        "modelRelevance": "Связь с моделями"
+      },
+      "timeline": {
+        "aria": "График внедрения",
+        "empty": "В этом артефакте нет этапов внедрения.",
+        "detailAria": "Детали выбранного этапа",
+        "package": "Пакет реформ",
+        "source": "Источник",
+        "evidenceType": "Тип доказательства",
+        "institution": "Ответственная организация",
+        "confidence": "Уверенность",
+        "relatedNext": "Связанные следующие этапы"
+      },
+      "labels": {
+        "sourceConfidence": {
+          "high": "Высокая",
+          "medium": "Средняя",
+          "low": "Низкая"
+        },
+        "eventType": {
+          "instructions_issued": "Поручения даны",
+          "consultation": "Консультация",
+          "approved": "Одобрено",
+          "effective_date": "Дата вступления в силу",
+          "implementation_milestone": "Этап внедрения",
+          "financing_allocated": "Финансирование выделено",
+          "monitoring_update": "Мониторинговое обновление",
+          "target_deadline": "Целевой срок",
+          "amended": "Изменено",
+          "completed": "Завершено",
+          "superseded": "Заменено"
+        },
+        "evidenceType": {
+          "legal_text": "Правовой текст",
+          "official_policy_announcement": "Официальное объявление о мере политики",
+          "consultation_notice": "Уведомление о консультации",
+          "budget_tax_measure": "Бюджетная или налоговая мера",
+          "regulatory_parameter_change": "Изменение регуляторного параметра",
+          "implementation_program": "Программа внедрения",
+          "international_agreement": "Международное соглашение"
+        }
+      },
+      "methodology": {
+        "title": "Методологическая заметка",
+        "includedTitle": "Включено",
+        "included": "Официальные меры политики, указы, сроки внедрения, механизмы финансирования и институциональные реформы.",
+        "excludedTitle": "Исключено",
+        "excluded": "Встречи, выступления, обучения, общие новости о сотрудничестве и аналитические отчеты без меры политики.",
+        "caveat": "Автоматический трекер официальных источников, не официальный правовой реестр. Ссылки пакетов блокируются, если они недействительны, синтетические или не проверены для production-артефактов.",
+        "diagnostics": "Внутренняя диагностика источников",
+        "sourcesChecked": "{{count}} источник проверен",
+        "sourcesChecked_one": "{{count}} источник проверен",
+        "sourcesChecked_few": "{{count}} источника проверены",
+        "sourcesChecked_many": "{{count}} источников проверено",
+        "sourcesChecked_other": "{{count}} источника проверено",
+        "invalidLinksBlocked": "{{count}} недействительная ссылка заблокирована",
+        "invalidLinksBlocked_one": "{{count}} недействительная ссылка заблокирована",
+        "invalidLinksBlocked_few": "{{count}} недействительные ссылки заблокированы",
+        "invalidLinksBlocked_many": "{{count}} недействительных ссылок заблокировано",
+        "invalidLinksBlocked_other": "{{count}} недействительной ссылки заблокировано"
       }
     }
   },

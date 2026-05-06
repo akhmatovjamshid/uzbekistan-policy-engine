@@ -705,6 +705,19 @@ export type ReformEvidenceType =
   | 'regulatory_parameter_change'
   | 'implementation_program'
   | 'international_agreement'
+export type ReformMilestoneEventType =
+  | 'instructions_issued'
+  | 'consultation'
+  | 'approved'
+  | 'effective_date'
+  | 'implementation_milestone'
+  | 'financing_allocated'
+  | 'monitoring_update'
+  | 'target_deadline'
+  | 'amended'
+  | 'completed'
+  | 'superseded'
+export type ReformSourceConfidence = 'high' | 'medium' | 'low'
 export type ReformCategory =
   | 'monetary_policy'
   | 'fiscal_tax'
@@ -772,12 +785,67 @@ export type ReformCandidateItem = ReformTrackerRecordBase & {
   source_url_verified_at?: string
 }
 
+export type ReformPackageMeasureTrack = {
+  id: string
+  label: string
+  status?: string
+}
+
+export type ReformPackageMilestone = {
+  id: string
+  label: string
+  date: string
+  date_precision?: 'day' | 'month' | 'quarter' | 'year'
+  event_type: ReformMilestoneEventType
+  responsible_institutions: string[]
+  evidence_type: ReformEvidenceType
+  source_event_ids: string[]
+  confidence: ReformSourceConfidence
+  related_next_milestone_ids?: string[]
+}
+
+export type ReformPackageSourceEvent = {
+  id: string
+  title: string
+  source_institution: string
+  source_url: string
+  source_published_at: string
+  evidence_type: ReformEvidenceType
+  event_type: ReformMilestoneEventType
+  summary: string
+  source_url_status: 'verified' | 'not_checked_fixture'
+  extracted_at?: string
+}
+
+export type ReformPackage = {
+  package_id: string
+  title: string
+  policy_area: string
+  reform_category: ReformCategory
+  current_stage: string
+  current_stage_date: string
+  next_milestone: string
+  next_milestone_date: string
+  responsible_institutions: string[]
+  legal_basis: string
+  official_basis: string
+  financing_or_incentive?: string
+  source_confidence: ReformSourceConfidence
+  why_tracked: string
+  model_relevance: string[]
+  measure_tracks: ReformPackageMeasureTrack[]
+  implementation_milestones: ReformPackageMilestone[]
+  official_source_events: ReformPackageSourceEvent[]
+  caveat: string
+}
+
 export type KnowledgeHubMeta = {
   reforms_tracked: number
   research_briefs: number
   literature_items: number
   candidate_items?: number
   sources_configured?: number
+  reform_packages?: number
 }
 
 export type KnowledgeHubSourceDiagnostic = {
@@ -795,6 +863,7 @@ export type KnowledgeHubSourceDiagnostic = {
 }
 
 export type KnowledgeHubContent = {
+  reform_packages?: ReformPackage[]
   reforms: ReformTrackerItem[]
   briefs: ResearchBrief[]
   candidates?: ReformCandidateItem[]

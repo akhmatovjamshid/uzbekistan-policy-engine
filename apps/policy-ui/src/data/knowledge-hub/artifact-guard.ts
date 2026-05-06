@@ -5,8 +5,14 @@ import type {
   ReformEvidenceType,
   ReformArtifactExtractionMode,
   ReformLicenseClass,
+  ReformMilestoneEventType,
+  ReformPackage,
+  ReformPackageMeasureTrack,
+  ReformPackageMilestone,
+  ReformPackageSourceEvent,
   ReformReviewState,
   ReformSourceUrlStatus,
+  ReformSourceConfidence,
   ReformStatus,
   ReformTrackerItem,
   ReformTranslationReviewState,
@@ -132,6 +138,29 @@ const REFORM_SOURCE_URL_STATUS_VALUES: ReformSourceUrlStatus[] = [
   'not_checked_fixture',
 ]
 
+const REFORM_MILESTONE_EVENT_TYPE_VALUES: ReformMilestoneEventType[] = [
+  'instructions_issued',
+  'consultation',
+  'approved',
+  'effective_date',
+  'implementation_milestone',
+  'financing_allocated',
+  'monitoring_update',
+  'target_deadline',
+  'amended',
+  'completed',
+  'superseded',
+]
+
+const REFORM_SOURCE_CONFIDENCE_VALUES: ReformSourceConfidence[] = ['high', 'medium', 'low']
+
+const REFORM_DATE_PRECISION_VALUES: NonNullable<ReformPackageMilestone['date_precision']>[] = [
+  'day',
+  'month',
+  'quarter',
+  'year',
+]
+
 function requireNumber(
   record: Record<string, unknown>,
   key: string,
@@ -170,6 +199,28 @@ function validateUrl(value: string, path: string, issues: KnowledgeHubArtifactVa
     // handled below
   }
   issues.push({ path, message: 'Expected an absolute HTTP(S) URL.', severity: 'error' })
+}
+
+function validateProductionSourceUrl(
+  value: string,
+  status: ReformPackageSourceEvent['source_url_status'],
+  extractionMode: unknown,
+  path: string,
+  issues: KnowledgeHubArtifactValidationIssue[],
+): void {
+  validateUrl(value, path, issues)
+  try {
+    const host = new URL(value).hostname
+    if (/\.test$/i.test(host) || /^(?:example|localhost|127\.0\.0\.1)(?:\.|$)/i.test(host)) {
+      issues.push({ path, message: 'Production package source events cannot use synthetic or local links.', severity: 'error' })
+    }
+  } catch {
+    return
+  }
+
+  if (extractionMode === 'configured-source-fetch' && status !== 'verified') {
+    issues.push({ path, message: 'Configured-source package source events require verified links.', severity: 'error' })
+  }
 }
 
 function validateSource(
@@ -312,6 +363,197 @@ function validateSourceDiagnostic(
   }
 
   return diagnostic
+}
+
+function validateMeasureTrack(
+  value: unknown,
+  path: string,
+  issues: KnowledgeHubArtifactValidationIssue[],
+): ReformPackageMeasureTrack | null {
+  if (!isRecord(value)) {
+    issues.push({ path, message: 'Measure track entry must be an object.', severity: 'error' })
+    return null
+  }
+
+  return {
+    id: requireString(value, 'id', path, issues),
+    label: requireString(value, 'label', path, issues),
+    status: stringValue(value.status) ?? undefined,
+  }
+}
+
+function validatePackageMilestone(
+  value: unknown,
+  path: string,
+  issues: KnowledgeHubArtifactValidationIssue[],
+): ReformPackageMilestone | null {
+  if (!isRecord(value)) {
+    issues.push({ path, message: 'Package milestone entry must be an object.', severity: 'error' })
+    return null
+  }
+
+  const milestone: ReformPackageMilestone = {
+    id: requireString(value, 'id', path, issues),
+    label: requireString(value, 'label', path, issues),
+    date: requireString(value, 'date', path, issues),
+    date_precision: stringValue(value.date_precision) as ReformPackageMilestone['date_precision'],
+    event_type: requireEnum(value, 'event_type', path, REFORM_MILESTONE_EVENT_TYPE_VALUES, issues),
+    responsible_institutions: stringArray(value.responsible_institutions, `${path}.responsible_institutions`, issues),
+    evidence_type: requireEnum(value, 'evidence_type', path, REFORM_EVIDENCE_TYPE_VALUES, issues),
+    source_event_ids: stringArray(value.source_event_ids, `${path}.source_event_ids`, issues),
+    confidence: requireEnum(value, 'confidence', path, REFORM_SOURCE_CONFIDENCE_VALUES, issues),
+    related_next_milestone_ids: Array.isArray(value.related_next_milestone_ids)
+      ? stringArray(value.related_next_milestone_ids, `${path}.related_next_milestone_ids`, issues)
+      : undefined,
+  }
+
+  if (milestone.date && !isIsoLike(milestone.date)) {
+    issues.push({ path: `${path}.date`, message: 'Expected an ISO-like milestone date.', severity: 'error' })
+  }
+  if (milestone.date_precision && !REFORM_DATE_PRECISION_VALUES.includes(milestone.date_precision)) {
+    issues.push({ path: `${path}.date_precision`, message: 'Expected day, month, quarter, or year.', severity: 'error' })
+  }
+  if (milestone.responsible_institutions.length === 0) {
+    issues.push({ path: `${path}.responsible_institutions`, message: 'Expected at least one responsible institution.', severity: 'error' })
+  }
+  if (milestone.source_event_ids.length === 0) {
+    issues.push({ path: `${path}.source_event_ids`, message: 'Expected at least one source event id.', severity: 'error' })
+  }
+
+  return milestone
+}
+
+function validatePackageSourceEvent(
+  value: unknown,
+  path: string,
+  extractionMode: unknown,
+  issues: KnowledgeHubArtifactValidationIssue[],
+): ReformPackageSourceEvent | null {
+  if (!isRecord(value)) {
+    issues.push({ path, message: 'Package source event entry must be an object.', severity: 'error' })
+    return null
+  }
+
+  const event: ReformPackageSourceEvent = {
+    id: requireString(value, 'id', path, issues),
+    title: requireString(value, 'title', path, issues),
+    source_institution: requireString(value, 'source_institution', path, issues),
+    source_url: requireString(value, 'source_url', path, issues),
+    source_published_at: requireString(value, 'source_published_at', path, issues),
+    evidence_type: requireEnum(value, 'evidence_type', path, REFORM_EVIDENCE_TYPE_VALUES, issues),
+    event_type: requireEnum(value, 'event_type', path, REFORM_MILESTONE_EVENT_TYPE_VALUES, issues),
+    summary: requireString(value, 'summary', path, issues),
+    source_url_status: requireEnum(value, 'source_url_status', path, REFORM_SOURCE_URL_STATUS_VALUES, issues),
+    extracted_at: stringValue(value.extracted_at) ?? undefined,
+  }
+
+  validateProductionSourceUrl(event.source_url, event.source_url_status, extractionMode, `${path}.source_url`, issues)
+  if (event.source_published_at && !isIsoLike(event.source_published_at)) {
+    issues.push({ path: `${path}.source_published_at`, message: 'Expected an ISO-like source date.', severity: 'error' })
+  }
+  if (event.extracted_at && !isIsoLike(event.extracted_at)) {
+    issues.push({ path: `${path}.extracted_at`, message: 'Expected an ISO-like extracted timestamp.', severity: 'error' })
+  }
+
+  return event
+}
+
+function validateReformPackage(
+  value: unknown,
+  path: string,
+  extractionMode: unknown,
+  issues: KnowledgeHubArtifactValidationIssue[],
+): ReformPackage | null {
+  if (!isRecord(value)) {
+    issues.push({ path, message: 'Reform package entry must be an object.', severity: 'error' })
+    return null
+  }
+
+  const measureTracks = Array.isArray(value.measure_tracks)
+    ? value.measure_tracks
+        .map((entry, index) => validateMeasureTrack(entry, `${path}.measure_tracks[${index}]`, issues))
+        .filter((entry): entry is ReformPackageMeasureTrack => entry !== null)
+    : []
+  if (!Array.isArray(value.measure_tracks)) {
+    issues.push({ path: `${path}.measure_tracks`, message: 'Expected a measure track array.', severity: 'error' })
+  }
+
+  const milestones = Array.isArray(value.implementation_milestones)
+    ? value.implementation_milestones
+        .map((entry, index) => validatePackageMilestone(entry, `${path}.implementation_milestones[${index}]`, issues))
+        .filter((entry): entry is ReformPackageMilestone => entry !== null)
+    : []
+  if (!Array.isArray(value.implementation_milestones)) {
+    issues.push({ path: `${path}.implementation_milestones`, message: 'Expected a milestone array.', severity: 'error' })
+  }
+
+  const sourceEvents = Array.isArray(value.official_source_events)
+    ? value.official_source_events
+        .map((entry, index) => validatePackageSourceEvent(entry, `${path}.official_source_events[${index}]`, extractionMode, issues))
+        .filter((entry): entry is ReformPackageSourceEvent => entry !== null)
+    : []
+  if (!Array.isArray(value.official_source_events)) {
+    issues.push({ path: `${path}.official_source_events`, message: 'Expected a source event array.', severity: 'error' })
+  }
+
+  const sourceEventIds = new Set(sourceEvents.map((event) => event.id))
+  for (const milestone of milestones) {
+    for (const sourceEventId of milestone.source_event_ids) {
+      if (!sourceEventIds.has(sourceEventId)) {
+        issues.push({
+          path: `${path}.implementation_milestones.${milestone.id}.source_event_ids`,
+          message: `Unknown source event id ${sourceEventId}.`,
+          severity: 'error',
+        })
+      }
+    }
+  }
+
+  const reformPackage: ReformPackage = {
+    package_id: requireString(value, 'package_id', path, issues),
+    title: requireString(value, 'title', path, issues),
+    policy_area: requireString(value, 'policy_area', path, issues),
+    reform_category: requireEnum(value, 'reform_category', path, REFORM_CATEGORY_VALUES, issues),
+    current_stage: requireString(value, 'current_stage', path, issues),
+    current_stage_date: requireString(value, 'current_stage_date', path, issues),
+    next_milestone: requireString(value, 'next_milestone', path, issues),
+    next_milestone_date: requireString(value, 'next_milestone_date', path, issues),
+    responsible_institutions: stringArray(value.responsible_institutions, `${path}.responsible_institutions`, issues),
+    legal_basis: requireString(value, 'legal_basis', path, issues),
+    official_basis: requireString(value, 'official_basis', path, issues),
+    financing_or_incentive: stringValue(value.financing_or_incentive) ?? undefined,
+    source_confidence: requireEnum(value, 'source_confidence', path, REFORM_SOURCE_CONFIDENCE_VALUES, issues),
+    why_tracked: requireString(value, 'why_tracked', path, issues),
+    model_relevance: stringArray(value.model_relevance, `${path}.model_relevance`, issues),
+    measure_tracks: measureTracks,
+    implementation_milestones: milestones,
+    official_source_events: sourceEvents,
+    caveat: requireString(value, 'caveat', path, issues),
+  }
+
+  if (!isIsoLike(reformPackage.current_stage_date)) {
+    issues.push({ path: `${path}.current_stage_date`, message: 'Expected an ISO-like current stage date.', severity: 'error' })
+  }
+  if (!isIsoLike(reformPackage.next_milestone_date)) {
+    issues.push({ path: `${path}.next_milestone_date`, message: 'Expected an ISO-like next milestone date.', severity: 'error' })
+  }
+  if (reformPackage.responsible_institutions.length === 0) {
+    issues.push({ path: `${path}.responsible_institutions`, message: 'Expected at least one responsible institution.', severity: 'error' })
+  }
+  if (reformPackage.model_relevance.length === 0) {
+    issues.push({ path: `${path}.model_relevance`, message: 'Expected at least one model relevance chip.', severity: 'error' })
+  }
+  if (reformPackage.measure_tracks.length === 0) {
+    issues.push({ path: `${path}.measure_tracks`, message: 'Expected at least one measure track.', severity: 'error' })
+  }
+  if (reformPackage.implementation_milestones.length === 0) {
+    issues.push({ path: `${path}.implementation_milestones`, message: 'Expected at least one implementation milestone.', severity: 'error' })
+  }
+  if (reformPackage.official_source_events.length === 0) {
+    issues.push({ path: `${path}.official_source_events`, message: 'Expected at least one official source event.', severity: 'error' })
+  }
+
+  return reformPackage
 }
 
 function validateTrackerCommon(
@@ -546,6 +788,15 @@ export function validateKnowledgeHubArtifact(input: unknown): KnowledgeHubArtifa
     issues.push({ path: 'source_diagnostics', message: 'Expected a source diagnostics array.', severity: 'error' })
   }
 
+  const reformPackages = Array.isArray(input.reform_packages)
+    ? input.reform_packages
+        .map((entry, index) => validateReformPackage(entry, `reform_packages[${index}]`, input.extraction_mode, issues))
+        .filter((entry): entry is ReformPackage => entry !== null)
+    : []
+  if (!Array.isArray(input.reform_packages)) {
+    issues.push({ path: 'reform_packages', message: 'Expected a reform package array.', severity: 'error' })
+  }
+
   const acceptedReforms = Array.isArray(input.accepted_reforms)
     ? input.accepted_reforms
         .map((entry, index) => validateAcceptedReform(entry, `accepted_reforms[${index}]`, issues))
@@ -565,6 +816,12 @@ export function validateKnowledgeHubArtifact(input: unknown): KnowledgeHubArtifa
   }
 
   const ids = new Set<string>()
+  for (const reformPackage of reformPackages) {
+    if (ids.has(reformPackage.package_id)) {
+      issues.push({ path: 'reform_packages', message: `Duplicate package id ${reformPackage.package_id}.`, severity: 'error' })
+    }
+    ids.add(reformPackage.package_id)
+  }
   for (const reform of acceptedReforms) {
     if (ids.has(reform.id)) {
       issues.push({ path: 'accepted_reforms', message: `Duplicate tracker id ${reform.id}.`, severity: 'error' })
@@ -602,6 +859,7 @@ export function validateKnowledgeHubArtifact(input: unknown): KnowledgeHubArtifa
       },
       sources,
       source_diagnostics: sourceDiagnostics,
+      reform_packages: reformPackages,
       accepted_reforms: acceptedReforms,
       candidates,
       caveats,

@@ -2,6 +2,7 @@ import type {
   KnowledgeHubContent,
   KnowledgeHubSourceDiagnostic,
   ReformCandidateItem,
+  ReformPackage,
   ReformStatus,
   ReformTrackerItem,
   ResearchBrief,
@@ -68,8 +69,10 @@ export type RawKnowledgeHubPayload = {
     literature_items?: number
     candidate_items?: number
     sources_configured?: number
+    reform_packages?: number
   }
   accepted_reforms?: RawKnowledgeHubReform[]
+  reform_packages?: ReformPackage[]
   reforms?: RawKnowledgeHubReform[]
   briefs?: RawKnowledgeHubBrief[]
   candidates?: ReformCandidateItem[]
@@ -196,12 +199,14 @@ function adaptBrief(raw: RawKnowledgeHubBrief, index: number): ResearchBrief {
 
 export function toKnowledgeHubContent(raw: RawKnowledgeHubPayload): KnowledgeHubContent {
   const rawReforms = Array.isArray(raw.accepted_reforms) ? raw.accepted_reforms : raw.reforms
+  const reformPackages = Array.isArray(raw.reform_packages) ? raw.reform_packages : []
   const reforms = Array.isArray(rawReforms) ? rawReforms.map(adaptReform) : []
   const briefs = Array.isArray(raw.briefs) ? raw.briefs.map(adaptBrief) : []
   const candidates = Array.isArray(raw.candidates) ? raw.candidates : []
   const sourceDiagnostics = Array.isArray(raw.source_diagnostics) ? raw.source_diagnostics : []
   const meta = raw.meta ?? {}
   return {
+    reform_packages: reformPackages,
     reforms,
     briefs,
     candidates,
@@ -217,6 +222,7 @@ export function toKnowledgeHubContent(raw: RawKnowledgeHubPayload): KnowledgeHub
       literature_items: asNumber(meta.literature_items, 0),
       candidate_items: asNumber(meta.candidate_items, candidates.length),
       sources_configured: asNumber(meta.sources_configured, 0),
+      reform_packages: asNumber(meta.reform_packages, reformPackages.length),
     },
   }
 }
@@ -227,6 +233,7 @@ export function knowledgeHubArtifactToContent(artifact: KnowledgeHubArtifact): K
     extraction_mode: artifact.extraction_mode,
     extraction_mode_label: artifact.extraction_mode_label,
     source_artifact: '/data/knowledge-hub.json',
+    reform_packages: artifact.reform_packages,
     accepted_reforms: artifact.accepted_reforms,
     candidates: artifact.candidates,
     source_diagnostics: artifact.source_diagnostics,
@@ -234,7 +241,8 @@ export function knowledgeHubArtifactToContent(artifact: KnowledgeHubArtifact): K
     meta: {
       candidate_items: artifact.candidates.length,
       sources_configured: artifact.sources.length,
-      reforms_tracked: 0,
+      reforms_tracked: artifact.reform_packages.length,
+      reform_packages: artifact.reform_packages.length,
       research_briefs: 0,
       literature_items: 0,
     },

@@ -32,27 +32,23 @@ export function KnowledgeHubPage() {
     setSourceState(nextState)
   }
 
-  const acceptedCount = sourceState.content?.meta.reforms_tracked ?? sourceState.content?.reforms.length ?? 0
-  const candidateCount = sourceState.content?.meta.candidate_items ?? sourceState.content?.candidates?.length ?? 0
+  const packageCount = sourceState.content?.meta.reform_packages ?? sourceState.content?.reform_packages?.length ?? 0
   const sourcesConfigured = sourceState.content?.meta.sources_configured ?? 0
   const extractionModeLabel = sourceState.content?.extraction_mode_label ?? 'Tracker artifact'
   const pageHeaderMeta = (
     <>
-      <span className="page-header__eyebrow">Reform tracker</span>
+      <span className="page-header__eyebrow">{t('knowledgeHub.reformTracker.header.eyebrow')}</span>
       <span>{extractionModeLabel}</span>
-      <span>accepted records separated from candidates</span>
+      <span>{t('knowledgeHub.reformTracker.header.automaticTracker')}</span>
       <span>
-        Sources <strong>{sourcesConfigured}</strong>
+        {t('knowledgeHub.reformTracker.header.sources')} <strong>{sourcesConfigured}</strong>
       </span>
       <span>
-        Accepted reforms <strong>{acceptedCount}</strong>
-      </span>
-      <span>
-        Candidates <strong>{candidateCount}</strong>
+        {t('knowledgeHub.reformTracker.header.packages')} <strong>{packageCount}</strong>
       </span>
       {sourceState.content?.generated_at ? (
         <span>
-          extracted_at <strong>{sourceState.content.generated_at}</strong>
+          {t('knowledgeHub.reformTracker.header.lastFetch')} <strong>{sourceState.content.generated_at}</strong>
         </span>
       ) : null}
     </>
@@ -82,7 +78,7 @@ export function KnowledgeHubPage() {
           meta={pageHeaderMeta}
         />
         <p className="empty-state" role="alert">
-          {sourceState.error ?? 'Knowledge Hub candidate artifact is unavailable.'}
+          {sourceState.error ?? t('knowledgeHub.reformTracker.errorUnavailable')}
         </p>
         {sourceState.canRetry ? (
           <div>
