@@ -143,6 +143,27 @@ describe('Knowledge Hub reform intake', () => {
     }
   })
 
+  it('retains official video-conference coverage when hard implementation measures are present', () => {
+    const decision = classifyReformCandidateText(
+      'At a video conference on housing construction and urbanization, regional khokims were instructed to develop master plan implementation programs within two months. From July 1, technical specifications for electricity, gas, water supply, and sewerage will be issued through a single application and a single payment. Responsible officials were instructed to submit a draft resolution on reducing requirements, timelines, and payments by at least half.',
+    )
+
+    assert.equal(decision.included, true)
+    assert.equal(decision.reform_category, 'infrastructure_investment')
+    assert.ok(decision.matched_include_rules.includes('structural-implementation-program'))
+    assert.ok(!decision.matched_exclude_rules.includes('training-or-outreach'))
+  })
+
+  it('excludes quarterly achievement reports even when they mention implementation of resolutions', () => {
+    const decision = classifyReformCandidateText(
+      'Results of the First Quarter of 2026 in the Field of Accounting and Auditing: Key Activities and Achievements. The ministry reported work to ensure implementation of Resolution No. PQ-282 and summarized target indicators, seminars, and monitoring activities.',
+    )
+
+    assert.equal(decision.included, false)
+    assert.equal(decision.exclusion_reason, 'analytical_report_only')
+    assert.ok(decision.matched_exclude_rules.includes('analytical-report-only'))
+  })
+
   it('excludes policy-rate review previews that do not announce a parameter change', () => {
     const html = `
       <article>
@@ -259,7 +280,7 @@ describe('Knowledge Hub reform intake', () => {
     assert.equal(artifact.reform_packages[0].implementation_milestones.length, 4)
     assert.equal(artifact.reform_packages[0].financing_or_incentive, '200 billion soums preferential credit resources; loans up to 10 billion soums')
     assert.deepEqual(artifact.accepted_reforms, [])
-    assert.equal(artifact.candidates.length, 9)
+    assert.equal(artifact.candidates.length, 11)
     assert.ok(artifact.candidates.every((candidate) => candidate.extraction_state === 'source_extracted'))
     assert.ok(artifact.candidates.every((candidate) => candidate.extraction_mode === 'fixture-demo'))
     assert.ok(artifact.candidates.every((candidate) => candidate.review_state === 'candidate'))
@@ -329,6 +350,53 @@ describe('Knowledge Hub reform intake', () => {
     assert.deepEqual(
       diagnostics.artifact.reform_packages[0].implementation_milestones.map((milestone) => milestone.date),
       ['2026-07-01', '2027-04-01', '2028', '2030-12-31'],
+    )
+  })
+
+  it('assembles configured-source housing and agriculture packages from verified official detail pages', () => {
+    const baseCandidate = {
+      extraction_mode: CONFIGURED_SOURCE_FETCH_EXTRACTION_MODE,
+      source_url_status: 'verified',
+      extracted_at: '2026-05-06T12:30:00.000Z',
+      source_institution: 'Government portal of the Republic of Uzbekistan',
+      evidence_types: ['official_policy_announcement', 'implementation_program', 'budget_tax_measure'],
+      relevance_score: 100,
+      inclusion_reason: 'Included by adopted official-source implementation measure.',
+    }
+    const packages = assembleReformPackagesFromCandidates([
+      {
+        ...baseCandidate,
+        title: 'Progress and priorities in housing construction and urbanization reviewed',
+        summary: 'Master plans, construction permits, technical specifications, land privatization and apartment commissioning targets were instructed.',
+        source_title: 'Progress and priorities in housing construction and urbanization reviewed',
+        source_url: 'https://gov.uz/en/news/view/153724',
+        source_published_at: '2026-04-15',
+        reform_category: 'infrastructure_investment',
+      },
+      {
+        ...baseCandidate,
+        title: 'Financing and subsidy plans for the agricultural sector reviewed',
+        summary: 'Agricultural Payments Agency, Agroportal, Agrosubsidy and proactive 2026 subsidy delivery were instructed.',
+        source_title: 'Financing and subsidy plans for the agricultural sector reviewed',
+        source_url: 'https://gov.uz/en/news/view/109178',
+        source_published_at: '2025-12-09',
+        reform_category: 'agriculture',
+      },
+    ])
+
+    assert.equal(packages.length, 2)
+    assert.equal(packages[0].title, 'Urbanization, construction permits, and housing delivery reform')
+    assert.equal(packages[0].next_milestone_date, '2026-07-01')
+    assert.deepEqual(
+      packages[0].implementation_milestones.map((milestone) => milestone.date),
+      ['2026-06', '2026-06-01', '2026-07-01', '2026-07', '2026'],
+    )
+    assert.equal(packages[1].title, 'Agriculture financing and subsidy delivery reform')
+    assert.equal(packages[1].reform_category, 'agriculture')
+    assert.equal(packages[1].financing_or_incentive.includes('34.2 trillion soums'), true)
+    assert.deepEqual(
+      packages[1].implementation_milestones.map((milestone) => milestone.date),
+      ['2025-12-09', '2026', '2026'],
     )
   })
 
@@ -446,6 +514,8 @@ describe('Knowledge Hub reform intake', () => {
 
     assert.ok(sourceIds.includes('lex-official-legal-acts'))
     assert.ok(sourceIds.includes('president-reform-news'))
+    assert.ok(sourceIds.includes('gov-housing-urbanization-detail'))
+    assert.ok(sourceIds.includes('gov-agriculture-subsidy-detail'))
     assert.ok(sourceIds.includes('gov-portal-reform-news'))
     assert.ok(sourceIds.includes('tax-committee-news'))
     assert.ok(sourceIds.includes('customs-committee-news'))
@@ -462,8 +532,8 @@ describe('Knowledge Hub reform intake', () => {
     })
 
     assert.equal(diagnostics.source_results.length, REFORM_SOURCE_DEFINITIONS.length)
-    assert.equal(diagnostics.source_results.reduce((sum, source) => sum + source.candidate_count, 0), 10)
-    assert.equal(diagnostics.artifact.candidates.length, 9)
+    assert.equal(diagnostics.source_results.reduce((sum, source) => sum + source.candidate_count, 0), 12)
+    assert.equal(diagnostics.artifact.candidates.length, 11)
     assert.equal(diagnostics.source_failures.length, 0)
 
     for (const source of REFORM_SOURCE_DEFINITIONS) {
@@ -524,7 +594,7 @@ describe('Knowledge Hub reform intake', () => {
     assert.equal(candidate.source_url, 'https://gov.uz/en/imv/news/view/161792')
     assert.equal(candidate.source_published_at, '2026-05-05 14:25:00')
     assert.equal(candidate.source_institution, 'Ministry of Economy and Finance of Uzbekistan')
-    assert.equal(candidate.reform_category, 'fiscal_tax')
+    assert.equal(candidate.reform_category, 'agriculture')
     assert.equal(candidate.review_status, 'needs_review')
   })
 

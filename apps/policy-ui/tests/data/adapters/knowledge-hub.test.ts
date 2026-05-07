@@ -152,7 +152,7 @@ describe('knowledge hub adapter', () => {
     assert.equal(validation.ok ? validation.value.schema_version : null, KNOWLEDGE_HUB_ARTIFACT_SCHEMA_VERSION)
     assert.equal(validation.ok ? validation.value.extraction_mode : null, 'configured-source-fetch')
     assert.equal(validation.ok ? validation.value.extraction_mode_label : null, 'Configured source fetch')
-    assert.equal(validation.ok ? validation.value.source_diagnostics.length : null, 11)
+    assert.equal(validation.ok ? validation.value.source_diagnostics.length : null, 13)
     assert.ok(validation.ok && validation.value.rulebook.include_rules.length > 0)
     assert.ok(validation.ok && validation.value.rulebook.exclude_rules.length > 0)
     assert.ok(validation.ok && validation.value.rulebook.exclusion_reasons.length > 0)
@@ -187,7 +187,7 @@ describe('knowledge hub adapter', () => {
     assert.equal(content.candidates?.length, validation.ok ? validation.value.candidates.length : 0)
     assert.equal(content.source_diagnostics?.length, validation.ok ? validation.value.source_diagnostics.length : 0)
     assert.equal(content.meta.candidate_items, validation.ok ? validation.value.candidates.length : 0)
-    assert.equal(content.meta.sources_configured, 11)
+    assert.equal(content.meta.sources_configured, 13)
     assert.equal(content.meta.reform_packages, validation.ok ? validation.value.reform_packages.length : 0)
     assert.equal(content.meta.reforms_tracked, validation.ok ? validation.value.reform_packages.length : 0)
     assert.equal(content.extraction_mode_label, 'Configured source fetch')
@@ -199,6 +199,8 @@ describe('knowledge hub adapter', () => {
           reformPackage.implementation_milestones.some((milestone) => milestone.id === 'tax-administration-incentives-financing_allocated-2026-04-14'),
       ),
     )
+    assert.ok(content.reform_packages?.some((reformPackage) => reformPackage.package_id === 'pkg-urbanization-construction-permits-housing-2026'))
+    assert.ok(content.reform_packages?.some((reformPackage) => reformPackage.package_id === 'pkg-agriculture-subsidy-financing-digital-delivery-2026'))
     assert.ok(content.caveats?.some((caveat) => caveat.includes('configured source URLs')))
     assert.ok(content.caveats?.some((caveat) => caveat.includes('not an official reviewed policy database')))
   })

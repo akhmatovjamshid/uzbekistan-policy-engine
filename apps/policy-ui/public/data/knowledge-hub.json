@@ -1,6 +1,6 @@
 {
   "schema_version": "knowledge-hub-reform-tracker.v1",
-  "generated_at": "2026-05-06T12:30:00.000Z",
+  "generated_at": "2026-05-07T06:50:00.000Z",
   "generated_by": "scripts/knowledge-hub/generate-source-fetch-artifact.mjs",
   "extraction_mode": "configured-source-fetch",
   "extraction_mode_label": "Configured source fetch",
@@ -104,7 +104,7 @@
       {
         "id": "training-or-outreach",
         "label": "Training or outreach",
-        "description": "Exclude trainings, calendars, awareness weeks, conferences, seminars, workshops, and public outreach even when they refer to an existing reform or resolution.",
+        "description": "Exclude trainings, calendars, awareness weeks, seminars, workshops, and public outreach even when they refer to an existing reform or resolution.",
         "reason": "training_or_outreach_only",
         "overridable_by_policy_measure": false
       },
@@ -235,6 +235,16 @@
       "url": "https://president.uz/en/lists/view/9164"
     },
     {
+      "id": "gov-housing-urbanization-detail",
+      "institution": "Government portal of the Republic of Uzbekistan",
+      "url": "https://gov.uz/en/news/view/153724"
+    },
+    {
+      "id": "gov-agriculture-subsidy-detail",
+      "institution": "Government portal of the Republic of Uzbekistan",
+      "url": "https://gov.uz/en/news/view/109178"
+    },
+    {
       "id": "gov-portal-reform-news",
       "institution": "Government portal of the Republic of Uzbekistan",
       "url": "https://gov.uz/en/news/news"
@@ -286,7 +296,7 @@
       "candidate_count": 0,
       "excluded_count": 13,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-06T12:30:00.000Z"
+      "fetched_at": "2026-05-07T06:50:00.000Z"
     },
     {
       "id": "president-reform-news",
@@ -298,7 +308,7 @@
       "candidate_count": 0,
       "excluded_count": 14,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-06T12:30:00.000Z"
+      "fetched_at": "2026-05-07T06:50:00.000Z"
     },
     {
       "id": "president-healthcare-reform-detail",
@@ -310,7 +320,31 @@
       "candidate_count": 1,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-06T12:30:00.000Z"
+      "fetched_at": "2026-05-07T06:50:00.000Z"
+    },
+    {
+      "id": "gov-housing-urbanization-detail",
+      "institution": "Government portal of the Republic of Uzbekistan",
+      "url": "https://gov.uz/en/news/view/153724",
+      "parser": "official-detail",
+      "fetch_url": "https://gov.uz/en/news/view/153724",
+      "ok": true,
+      "candidate_count": 1,
+      "excluded_count": 0,
+      "link_invalid_count": 0,
+      "fetched_at": "2026-05-07T06:50:00.000Z"
+    },
+    {
+      "id": "gov-agriculture-subsidy-detail",
+      "institution": "Government portal of the Republic of Uzbekistan",
+      "url": "https://gov.uz/en/news/view/109178",
+      "parser": "official-detail",
+      "fetch_url": "https://gov.uz/en/news/view/109178",
+      "ok": true,
+      "candidate_count": 1,
+      "excluded_count": 0,
+      "link_invalid_count": 0,
+      "fetched_at": "2026-05-07T06:50:00.000Z"
     },
     {
       "id": "gov-portal-reform-news",
@@ -322,7 +356,7 @@
       "candidate_count": 0,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-06T12:30:00.000Z"
+      "fetched_at": "2026-05-07T06:50:00.000Z"
     },
     {
       "id": "cbu-policy-news",
@@ -334,7 +368,7 @@
       "candidate_count": 0,
       "excluded_count": 347,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-06T12:30:00.000Z"
+      "fetched_at": "2026-05-07T06:50:00.000Z"
     },
     {
       "id": "customs-committee-news",
@@ -346,7 +380,7 @@
       "candidate_count": 0,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-06T12:30:00.000Z"
+      "fetched_at": "2026-05-07T06:50:00.000Z"
     },
     {
       "id": "mef-policy-news",
@@ -358,7 +392,7 @@
       "candidate_count": 0,
       "excluded_count": 12,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-06T12:30:00.000Z"
+      "fetched_at": "2026-05-07T06:50:00.000Z"
     },
     {
       "id": "tax-committee-news",
@@ -370,7 +404,7 @@
       "candidate_count": 0,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-06T12:30:00.000Z"
+      "fetched_at": "2026-05-07T06:50:00.000Z"
     },
     {
       "id": "energy-ministry-news",
@@ -382,7 +416,7 @@
       "candidate_count": 0,
       "excluded_count": 12,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-06T12:30:00.000Z"
+      "fetched_at": "2026-05-07T06:50:00.000Z"
     },
     {
       "id": "investment-trade-ministry-news",
@@ -394,7 +428,7 @@
       "candidate_count": 1,
       "excluded_count": 11,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-06T12:30:00.000Z"
+      "fetched_at": "2026-05-07T06:50:00.000Z"
     },
     {
       "id": "justice-ministry-news",
@@ -406,7 +440,7 @@
       "candidate_count": 0,
       "excluded_count": 12,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-06T12:30:00.000Z"
+      "fetched_at": "2026-05-07T06:50:00.000Z"
     }
   ],
   "reform_packages": [
@@ -547,7 +581,287 @@
           "event_type": "instructions_issued",
           "summary": "President Shavkat Mirziyoyev reviewed measures for the further development of the healthcare system, enhancement of the quality of medical services, and expansion of private sector participation. Consistent efforts are underway nationwide to provide the population with high-quality, modern medical care, improve management efficiency in the sector, make broader use of private sector potential, and elevate regional healthcare infrastructure to a new level. The role of the private sector in advancing the industry, along with the opportunities available in this area, was also examined. As noted, while 3,200 private clinics were operating in the country in 2016, their number is expected to reach ",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-06T12:30:00.000Z"
+          "extracted_at": "2026-05-07T06:50:00.000Z"
+        }
+      ],
+      "caveat": "Automatic official-source tracker entry assembled from a verified source event. It is not an official legal registry and does not assert legal force beyond the cited official source."
+    },
+    {
+      "package_id": "pkg-urbanization-construction-permits-housing-2026",
+      "title": "Urbanization, construction permits, and housing delivery reform",
+      "policy_area": "Urbanization, construction permits, housing, and infrastructure delivery",
+      "reform_category": "infrastructure_investment",
+      "current_stage": "Instructions issued",
+      "current_stage_date": "2026-04-15",
+      "next_milestone": "Construction permit and utility connection simplification starts",
+      "next_milestone_date": "2026-07-01",
+      "responsible_institutions": [
+        "National Committee for Urbanization",
+        "Regional khokimiyats",
+        "State Assets Management Agency",
+        "Construction sector authorities"
+      ],
+      "legal_basis": "Official presidential meeting coverage on urbanization, master plans, construction permits, land privatization, and housing delivery.",
+      "official_basis": "Government portal of the Republic of Uzbekistan, 2026-04-15.",
+      "financing_or_incentive": "Annual master-plan budget allocations and 1.4 trillion soums planned infrastructure support for Yangi Uzbekistan residential areas identified in source.",
+      "source_confidence": "high",
+      "why_tracked": "The official source sets dated instructions for master-plan preparation, online land-privatization processing, construction-permit simplification, utility-connection simplification, state-client KPIs, and housing delivery targets.",
+      "model_relevance": [
+        "Investment",
+        "Construction output",
+        "Public infrastructure spending",
+        "Housing supply"
+      ],
+      "measure_tracks": [
+        {
+          "id": "urbanization-master-plan-programs",
+          "label": "master-plan implementation programs",
+          "status": "instructions issued"
+        },
+        {
+          "id": "urbanization-land-privatization-online",
+          "label": "online land privatization processing",
+          "status": "scheduled"
+        },
+        {
+          "id": "construction-permit-simplification",
+          "label": "construction permit simplification",
+          "status": "scheduled"
+        },
+        {
+          "id": "utility-connection-single-application",
+          "label": "single utility-connection application",
+          "status": "scheduled"
+        },
+        {
+          "id": "housing-delivery-target",
+          "label": "regional apartment commissioning target",
+          "status": "2026 target"
+        }
+      ],
+      "implementation_milestones": [
+        {
+          "id": "urbanization-master-plan-programs-due-2026-06",
+          "label": "regional master-plan implementation programs due",
+          "date": "2026-06",
+          "date_precision": "month",
+          "event_type": "target_deadline",
+          "responsible_institutions": [
+            "Regional khokimiyats"
+          ],
+          "evidence_type": "implementation_program",
+          "source_event_ids": [
+            "source-event-2026-04-15-progress-and-priorities-in-housing-construction-and-urbanization-revi"
+          ],
+          "confidence": "high",
+          "related_next_milestone_ids": [
+            "construction-utility-single-application-start-2026-07-01"
+          ]
+        },
+        {
+          "id": "state-client-kpi-evaluation-start-2026-06-01",
+          "label": "state client KPI evaluation starts",
+          "date": "2026-06-01",
+          "date_precision": "day",
+          "event_type": "effective_date",
+          "responsible_institutions": [
+            "State clients",
+            "Construction sector authorities"
+          ],
+          "evidence_type": "implementation_program",
+          "source_event_ids": [
+            "source-event-2026-04-15-progress-and-priorities-in-housing-construction-and-urbanization-revi"
+          ],
+          "confidence": "high",
+          "related_next_milestone_ids": [
+            "construction-utility-single-application-start-2026-07-01"
+          ]
+        },
+        {
+          "id": "construction-utility-single-application-start-2026-07-01",
+          "label": "single-stage permit and utility-connection application starts",
+          "date": "2026-07-01",
+          "date_precision": "day",
+          "event_type": "effective_date",
+          "responsible_institutions": [
+            "Regional khokimiyats",
+            "Construction sector authorities"
+          ],
+          "evidence_type": "implementation_program",
+          "source_event_ids": [
+            "source-event-2026-04-15-progress-and-priorities-in-housing-construction-and-urbanization-revi"
+          ],
+          "confidence": "high",
+          "related_next_milestone_ids": [
+            "construction-requirements-reduction-draft-2026-07"
+          ]
+        },
+        {
+          "id": "construction-requirements-reduction-draft-2026-07",
+          "label": "draft resolution on reducing requirements, timelines, and payments due",
+          "date": "2026-07",
+          "date_precision": "month",
+          "event_type": "target_deadline",
+          "responsible_institutions": [
+            "Responsible construction-sector officials"
+          ],
+          "evidence_type": "implementation_program",
+          "source_event_ids": [
+            "source-event-2026-04-15-progress-and-priorities-in-housing-construction-and-urbanization-revi"
+          ],
+          "confidence": "high",
+          "related_next_milestone_ids": [
+            "regional-apartment-commissioning-target-2026"
+          ]
+        },
+        {
+          "id": "regional-apartment-commissioning-target-2026",
+          "label": "140,000 regional apartments commissioning target",
+          "date": "2026",
+          "date_precision": "year",
+          "event_type": "target_deadline",
+          "responsible_institutions": [
+            "Regional khokimiyats",
+            "Responsible housing officials"
+          ],
+          "evidence_type": "implementation_program",
+          "source_event_ids": [
+            "source-event-2026-04-15-progress-and-priorities-in-housing-construction-and-urbanization-revi"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "official_source_events": [
+        {
+          "id": "source-event-2026-04-15-progress-and-priorities-in-housing-construction-and-urbanization-revi",
+          "title": "Progress and priorities in housing construction and urbanization reviewed",
+          "source_institution": "Government portal of the Republic of Uzbekistan",
+          "source_url": "https://gov.uz/en/news/view/153724",
+          "source_published_at": "2026-04-15",
+          "evidence_type": "official_policy_announcement",
+          "event_type": "instructions_issued",
+          "summary": "More than 500 industry representatives, including entrepreneurs, construction professionals, designers, architects, and urban plannersparticipated via regional studios. The Head of State emphasized that the construction sector plays a special role in achieving the ambitious goals set to ensure high economic growth across all sectors and regions. According to studies, each dollar invested in construction can generate an additional two to three dollars for the economy, while each job created in the sector leads to up to five new jobs in other industries. Over the past nine years, nearly 10,000 new construction enterprises have been established in the country. Twenty large companies with an ann",
+          "source_url_status": "verified",
+          "extracted_at": "2026-05-07T06:50:00.000Z"
+        }
+      ],
+      "caveat": "Automatic official-source tracker entry assembled from a verified source event. It is not an official legal registry and does not assert legal force beyond the cited official source."
+    },
+    {
+      "package_id": "pkg-agriculture-subsidy-financing-digital-delivery-2026",
+      "title": "Agriculture financing and subsidy delivery reform",
+      "policy_area": "Agriculture financing, subsidies, and digital delivery",
+      "reform_category": "agriculture",
+      "current_stage": "Instructions issued",
+      "current_stage_date": "2025-12-09",
+      "next_milestone": "2026 proactive subsidy delivery through Agrosubsidy",
+      "next_milestone_date": "2026",
+      "responsible_institutions": [
+        "Ministry of Agriculture",
+        "Agricultural Payments Agency",
+        "Government agencies integrated with Agrosubsidy"
+      ],
+      "legal_basis": "Official presidential presentation coverage citing the decree on improving state support for agriculture and the Agricultural Payments Agency.",
+      "official_basis": "Government portal of the Republic of Uzbekistan, 2025-12-09.",
+      "financing_or_incentive": "34.2 trillion soums planned for cotton and grain harvest financing; 1.3 trillion soums of 2026 subsidies to be provided proactively; additional 5 trillion soums proposed for agrotechnical measures.",
+      "source_confidence": "high",
+      "why_tracked": "The official source identifies a new agriculture support delivery system, quantified subsidy and financing envelopes, the Agricultural Payments Agency, and digitalized subsidy procedures through Agroportal and Agrosubsidy.",
+      "model_relevance": [
+        "Agricultural output",
+        "Food prices",
+        "Rural income",
+        "Fiscal costs"
+      ],
+      "measure_tracks": [
+        {
+          "id": "agriculture-payments-agency",
+          "label": "Agricultural Payments Agency setup",
+          "status": "established by decree"
+        },
+        {
+          "id": "agrosubsidy-digital-delivery",
+          "label": "Agrosubsidy digital subsidy delivery",
+          "status": "scheduled"
+        },
+        {
+          "id": "cotton-grain-financing-plan",
+          "label": "cotton and grain financing plan",
+          "status": "2026 plan"
+        },
+        {
+          "id": "preferential-credit-discipline-model",
+          "label": "discipline for affordable credit model",
+          "status": "proposed"
+        }
+      ],
+      "implementation_milestones": [
+        {
+          "id": "agriculture-payments-agency-organization-2025-12-09",
+          "label": "Agricultural Payments Agency implementation reviewed",
+          "date": "2025-12-09",
+          "date_precision": "day",
+          "event_type": "instructions_issued",
+          "responsible_institutions": [
+            "Ministry of Agriculture",
+            "Agricultural Payments Agency"
+          ],
+          "evidence_type": "official_policy_announcement",
+          "source_event_ids": [
+            "source-event-2025-12-09-financing-and-subsidy-plans-for-the-agricultural-sector-reviewed"
+          ],
+          "confidence": "high",
+          "related_next_milestone_ids": [
+            "agriculture-financing-envelope-2026"
+          ]
+        },
+        {
+          "id": "agriculture-financing-envelope-2026",
+          "label": "34.2 trillion soums cotton and grain harvest financing plan",
+          "date": "2026",
+          "date_precision": "year",
+          "event_type": "financing_allocated",
+          "responsible_institutions": [
+            "Ministry of Agriculture",
+            "Ministry of Economy and Finance"
+          ],
+          "evidence_type": "budget_tax_measure",
+          "source_event_ids": [
+            "source-event-2025-12-09-financing-and-subsidy-plans-for-the-agricultural-sector-reviewed"
+          ],
+          "confidence": "high",
+          "related_next_milestone_ids": [
+            "agrosubsidy-proactive-subsidy-delivery-2026"
+          ]
+        },
+        {
+          "id": "agrosubsidy-proactive-subsidy-delivery-2026",
+          "label": "1.3 trillion soums proactive subsidy delivery through Agrosubsidy",
+          "date": "2026",
+          "date_precision": "year",
+          "event_type": "implementation_milestone",
+          "responsible_institutions": [
+            "Agricultural Payments Agency",
+            "Integrated government agencies"
+          ],
+          "evidence_type": "implementation_program",
+          "source_event_ids": [
+            "source-event-2025-12-09-financing-and-subsidy-plans-for-the-agricultural-sector-reviewed"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "official_source_events": [
+        {
+          "id": "source-event-2025-12-09-financing-and-subsidy-plans-for-the-agricultural-sector-reviewed",
+          "title": "Financing and subsidy plans for the agricultural sector reviewed",
+          "source_institution": "Government portal of the Republic of Uzbekistan",
+          "source_url": "https://gov.uz/en/news/view/109178",
+          "source_published_at": "2025-12-09",
+          "evidence_type": "official_policy_announcement",
+          "event_type": "financing_allocated",
+          "summary": "The presentation began with an overview of the funds allocated to the sector this year and their effectiveness. It was noted that 29 trillion soums were allocated for financing cotton and grain cultivation, purchasing agricultural machinery, and implementing water-saving technologies. Furthermore, 2,35 trillion soums in subsidies were directed to the sector. Allocating subsidies equivalent to 10 percent of the cotton value to 3,430 farms and clusters enabled them to cultivate cotton on 151 thousand hectares using their own funds, resulting in savings of 1,9 trillion soums. Moreover, farmers who fully repaid their loans for cotton cultivation this year were offered a reimbursement of 4 percen",
+          "source_url_status": "verified",
+          "extracted_at": "2026-05-07T06:50:00.000Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from a verified source event. It is not an official legal registry and does not assert legal force beyond the cited official source."
@@ -609,7 +923,7 @@
           "event_type": "financing_allocated",
           "summary": "Source API did not expose a summary for this configured extraction item.",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-06T12:30:00.000Z"
+          "extracted_at": "2026-05-07T06:50:00.000Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
@@ -625,11 +939,11 @@
       "status": "unknown",
       "title": "Healthcare system development issues discussed",
       "summary": "President Shavkat Mirziyoyev reviewed measures for the further development of the healthcare system, enhancement of the quality of medical services, and expansion of private sector participation. Consistent efforts are underway nationwide to provide the population with high-quality, modern medical care, improve management efficiency in the sector, make broader use of private sector potential, and elevate regional healthcare infrastructure to a new level. The role of the private sector in advancing the industry, along with the opportunities available in this area, was also examined. As noted, while 3,200 private clinics were operating in the country in 2016, their number is expected to reach ",
-      "domain_tag": "Social protection",
+      "domain_tag": "Infrastructure",
       "domain_tags": [
-        "Social protection"
+        "Infrastructure"
       ],
-      "reform_category": "social_protection",
+      "reform_category": "infrastructure_investment",
       "evidence_types": [
         "official_policy_announcement",
         "implementation_program",
@@ -653,8 +967,8 @@
       "source_owner": "Official website of the President of the Republic of Uzbekistan",
       "source_url": "https://president.uz/en/lists/view/9164",
       "source_published_at": "2026-05-01",
-      "retrieved_at": "2026-05-06T12:30:00.000Z",
-      "extracted_at": "2026-05-06T12:30:00.000Z",
+      "retrieved_at": "2026-05-07T06:50:00.000Z",
+      "extracted_at": "2026-05-07T06:50:00.000Z",
       "citation_permission": "pending",
       "license_class": "unknown",
       "translation_review_state": "not_translated",
@@ -664,7 +978,55 @@
       ],
       "extraction_mode": "configured-source-fetch",
       "source_url_status": "verified",
-      "source_url_verified_at": "2026-05-06T12:30:00.000Z"
+      "source_url_verified_at": "2026-05-07T06:50:00.000Z"
+    },
+    {
+      "id": "gov-housing-urbanization-detail-2026-04-15-detail-progress-and-priorities-in-housing-construction-and-urbanizati",
+      "extraction_state": "source_extracted",
+      "review_state": "candidate",
+      "review_status": "needs_review",
+      "status": "unknown",
+      "title": "Progress and priorities in housing construction and urbanization reviewed",
+      "summary": "More than 500 industry representatives, including entrepreneurs, construction professionals, designers, architects, and urban plannersparticipated via regional studios. The Head of State emphasized that the construction sector plays a special role in achieving the ambitious goals set to ensure high economic growth across all sectors and regions. According to studies, each dollar invested in construction can generate an additional two to three dollars for the economy, while each job created in the sector leads to up to five new jobs in other industries. Over the past nine years, nearly 10,000 new construction enterprises have been established in the country. Twenty large companies with an ann",
+      "domain_tag": "Infrastructure",
+      "domain_tags": [
+        "Infrastructure"
+      ],
+      "reform_category": "infrastructure_investment",
+      "evidence_types": [
+        "legal_text",
+        "official_policy_announcement",
+        "implementation_program"
+      ],
+      "relevance_score": 100,
+      "inclusion_reason": "Included by Legal or regulatory change, Adopted policy measure, Structural implementation program with hard reform signal(s): legal_or_policy_instrument, adopted_measure, parameter_change, named_implementation_update; source evidence: legal_text, official_policy_announcement, implementation_program.",
+      "matched_rules": [
+        "legal-or-regulatory-change",
+        "adopted-policy-measure",
+        "structural-implementation-program"
+      ],
+      "matched_include_rules": [
+        "legal-or-regulatory-change",
+        "adopted-policy-measure",
+        "structural-implementation-program"
+      ],
+      "source_title": "Progress and priorities in housing construction and urbanization reviewed",
+      "source_institution": "Government portal of the Republic of Uzbekistan",
+      "source_owner": "Government portal of the Republic of Uzbekistan",
+      "source_url": "https://gov.uz/en/news/view/153724",
+      "source_published_at": "2026-04-15",
+      "retrieved_at": "2026-05-07T06:50:00.000Z",
+      "extracted_at": "2026-05-07T06:50:00.000Z",
+      "citation_permission": "pending",
+      "license_class": "unknown",
+      "translation_review_state": "not_translated",
+      "caveats": [
+        "Deterministic extraction from configured source text.",
+        "Unreviewed candidate; not an official reviewed policy database entry."
+      ],
+      "extraction_mode": "configured-source-fetch",
+      "source_url_status": "verified",
+      "source_url_verified_at": "2026-05-07T06:50:00.000Z"
     },
     {
       "id": "investment-trade-ministry-news-2026-04-14-10-20-00-153388-uzbekistan-expands-tax-incentives-for-investors-finan",
@@ -700,8 +1062,8 @@
       "source_owner": "Ministry of Investment, Industry and Trade of the Republic of Uzbekistan",
       "source_url": "https://gov.uz/en/miit/news/view/153388",
       "source_published_at": "2026-04-14 10:20:00",
-      "retrieved_at": "2026-05-06T12:30:00.000Z",
-      "extracted_at": "2026-05-06T12:30:00.000Z",
+      "retrieved_at": "2026-05-07T06:50:00.000Z",
+      "extracted_at": "2026-05-07T06:50:00.000Z",
       "citation_permission": "pending",
       "license_class": "unknown",
       "translation_review_state": "not_translated",
@@ -711,7 +1073,59 @@
       ],
       "extraction_mode": "configured-source-fetch",
       "source_url_status": "verified",
-      "source_url_verified_at": "2026-05-06T12:30:00.000Z"
+      "source_url_verified_at": "2026-05-07T06:50:00.000Z"
+    },
+    {
+      "id": "gov-agriculture-subsidy-detail-2025-12-09-detail-financing-and-subsidy-plans-for-the-agricultural-sector-review",
+      "extraction_state": "source_extracted",
+      "review_state": "candidate",
+      "review_status": "needs_review",
+      "status": "unknown",
+      "title": "Financing and subsidy plans for the agricultural sector reviewed",
+      "summary": "The presentation began with an overview of the funds allocated to the sector this year and their effectiveness. It was noted that 29 trillion soums were allocated for financing cotton and grain cultivation, purchasing agricultural machinery, and implementing water-saving technologies. Furthermore, 2,35 trillion soums in subsidies were directed to the sector. Allocating subsidies equivalent to 10 percent of the cotton value to 3,430 farms and clusters enabled them to cultivate cotton on 151 thousand hectares using their own funds, resulting in savings of 1,9 trillion soums. Moreover, farmers who fully repaid their loans for cotton cultivation this year were offered a reimbursement of 4 percen",
+      "domain_tag": "Agriculture",
+      "domain_tags": [
+        "Agriculture"
+      ],
+      "reform_category": "agriculture",
+      "evidence_types": [
+        "legal_text",
+        "official_policy_announcement",
+        "implementation_program",
+        "budget_tax_measure",
+        "regulatory_parameter_change"
+      ],
+      "relevance_score": 100,
+      "inclusion_reason": "Included by Legal or regulatory change, Adopted policy measure, Fiscal, tax, budget, subsidy, or tariff measure, Structural implementation program with hard reform signal(s): legal_or_policy_instrument, adopted_measure, parameter_change, named_implementation_update; source evidence: legal_text, official_policy_announcement, implementation_program, budget_tax_measure, regulatory_parameter_change.",
+      "matched_rules": [
+        "legal-or-regulatory-change",
+        "adopted-policy-measure",
+        "fiscal-tax-budget-measure",
+        "structural-implementation-program"
+      ],
+      "matched_include_rules": [
+        "legal-or-regulatory-change",
+        "adopted-policy-measure",
+        "fiscal-tax-budget-measure",
+        "structural-implementation-program"
+      ],
+      "source_title": "Financing and subsidy plans for the agricultural sector reviewed",
+      "source_institution": "Government portal of the Republic of Uzbekistan",
+      "source_owner": "Government portal of the Republic of Uzbekistan",
+      "source_url": "https://gov.uz/en/news/view/109178",
+      "source_published_at": "2025-12-09",
+      "retrieved_at": "2026-05-07T06:50:00.000Z",
+      "extracted_at": "2026-05-07T06:50:00.000Z",
+      "citation_permission": "pending",
+      "license_class": "unknown",
+      "translation_review_state": "not_translated",
+      "caveats": [
+        "Deterministic extraction from configured source text.",
+        "Unreviewed candidate; not an official reviewed policy database entry."
+      ],
+      "extraction_mode": "configured-source-fetch",
+      "source_url_status": "verified",
+      "source_url_verified_at": "2026-05-07T06:50:00.000Z"
     }
   ],
   "caveats": [

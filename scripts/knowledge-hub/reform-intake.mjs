@@ -58,6 +58,22 @@ export const REFORM_SOURCE_DEFINITIONS = [
     fixture_path: fixturePath('president-healthcare-reform-detail.html'),
   },
   {
+    id: 'gov-housing-urbanization-detail',
+    institution: 'Government portal of the Republic of Uzbekistan',
+    url: 'https://gov.uz/en/news/view/153724',
+    parser: 'official-detail',
+    allow_source_url_as_candidate: true,
+    fixture_path: fixturePath('gov-housing-urbanization-detail.html'),
+  },
+  {
+    id: 'gov-agriculture-subsidy-detail',
+    institution: 'Government portal of the Republic of Uzbekistan',
+    url: 'https://gov.uz/en/news/view/109178',
+    parser: 'official-detail',
+    allow_source_url_as_candidate: true,
+    fixture_path: fixturePath('gov-agriculture-subsidy-detail.html'),
+  },
+  {
     id: 'gov-portal-reform-news',
     institution: 'Government portal of the Republic of Uzbekistan',
     url: 'https://gov.uz/en/news/news',
@@ -321,6 +337,170 @@ function healthcarePackageFromSourceEvent(sourceEvent) {
   }
 }
 
+function housingUrbanizationPackageFromSourceEvent(sourceEvent) {
+  return {
+    package_id: 'pkg-urbanization-construction-permits-housing-2026',
+    title: 'Urbanization, construction permits, and housing delivery reform',
+    policy_area: 'Urbanization, construction permits, housing, and infrastructure delivery',
+    reform_category: 'infrastructure_investment',
+    current_stage: 'Instructions issued',
+    current_stage_date: sourceEvent.source_published_at,
+    next_milestone: 'Construction permit and utility connection simplification starts',
+    next_milestone_date: '2026-07-01',
+    responsible_institutions: [
+      'National Committee for Urbanization',
+      'Regional khokimiyats',
+      'State Assets Management Agency',
+      'Construction sector authorities',
+    ],
+    legal_basis: 'Official presidential meeting coverage on urbanization, master plans, construction permits, land privatization, and housing delivery.',
+    official_basis: `${sourceEvent.source_institution}, ${sourceEvent.source_published_at}.`,
+    financing_or_incentive: 'Annual master-plan budget allocations and 1.4 trillion soums planned infrastructure support for Yangi Uzbekistan residential areas identified in source.',
+    source_confidence: 'high',
+    why_tracked: 'The official source sets dated instructions for master-plan preparation, online land-privatization processing, construction-permit simplification, utility-connection simplification, state-client KPIs, and housing delivery targets.',
+    model_relevance: ['Investment', 'Construction output', 'Public infrastructure spending', 'Housing supply'],
+    measure_tracks: [
+      { id: 'urbanization-master-plan-programs', label: 'master-plan implementation programs', status: 'instructions issued' },
+      { id: 'urbanization-land-privatization-online', label: 'online land privatization processing', status: 'scheduled' },
+      { id: 'construction-permit-simplification', label: 'construction permit simplification', status: 'scheduled' },
+      { id: 'utility-connection-single-application', label: 'single utility-connection application', status: 'scheduled' },
+      { id: 'housing-delivery-target', label: 'regional apartment commissioning target', status: '2026 target' },
+    ],
+    implementation_milestones: [
+      {
+        id: 'urbanization-master-plan-programs-due-2026-06',
+        label: 'regional master-plan implementation programs due',
+        date: '2026-06',
+        date_precision: 'month',
+        event_type: 'target_deadline',
+        responsible_institutions: ['Regional khokimiyats'],
+        evidence_type: 'implementation_program',
+        source_event_ids: [sourceEvent.id],
+        confidence: 'high',
+        related_next_milestone_ids: ['construction-utility-single-application-start-2026-07-01'],
+      },
+      {
+        id: 'state-client-kpi-evaluation-start-2026-06-01',
+        label: 'state client KPI evaluation starts',
+        date: '2026-06-01',
+        date_precision: 'day',
+        event_type: 'effective_date',
+        responsible_institutions: ['State clients', 'Construction sector authorities'],
+        evidence_type: 'implementation_program',
+        source_event_ids: [sourceEvent.id],
+        confidence: 'high',
+        related_next_milestone_ids: ['construction-utility-single-application-start-2026-07-01'],
+      },
+      {
+        id: 'construction-utility-single-application-start-2026-07-01',
+        label: 'single-stage permit and utility-connection application starts',
+        date: '2026-07-01',
+        date_precision: 'day',
+        event_type: 'effective_date',
+        responsible_institutions: ['Regional khokimiyats', 'Construction sector authorities'],
+        evidence_type: 'implementation_program',
+        source_event_ids: [sourceEvent.id],
+        confidence: 'high',
+        related_next_milestone_ids: ['construction-requirements-reduction-draft-2026-07'],
+      },
+      {
+        id: 'construction-requirements-reduction-draft-2026-07',
+        label: 'draft resolution on reducing requirements, timelines, and payments due',
+        date: '2026-07',
+        date_precision: 'month',
+        event_type: 'target_deadline',
+        responsible_institutions: ['Responsible construction-sector officials'],
+        evidence_type: 'implementation_program',
+        source_event_ids: [sourceEvent.id],
+        confidence: 'high',
+        related_next_milestone_ids: ['regional-apartment-commissioning-target-2026'],
+      },
+      {
+        id: 'regional-apartment-commissioning-target-2026',
+        label: '140,000 regional apartments commissioning target',
+        date: '2026',
+        date_precision: 'year',
+        event_type: 'target_deadline',
+        responsible_institutions: ['Regional khokimiyats', 'Responsible housing officials'],
+        evidence_type: 'implementation_program',
+        source_event_ids: [sourceEvent.id],
+        confidence: 'high',
+      },
+    ],
+    official_source_events: [sourceEvent],
+    caveat: 'Automatic official-source tracker entry assembled from a verified source event. It is not an official legal registry and does not assert legal force beyond the cited official source.',
+  }
+}
+
+function agricultureSubsidyPackageFromSourceEvent(sourceEvent) {
+  return {
+    package_id: 'pkg-agriculture-subsidy-financing-digital-delivery-2026',
+    title: 'Agriculture financing and subsidy delivery reform',
+    policy_area: 'Agriculture financing, subsidies, and digital delivery',
+    reform_category: 'agriculture',
+    current_stage: 'Instructions issued',
+    current_stage_date: sourceEvent.source_published_at,
+    next_milestone: '2026 proactive subsidy delivery through Agrosubsidy',
+    next_milestone_date: '2026',
+    responsible_institutions: [
+      'Ministry of Agriculture',
+      'Agricultural Payments Agency',
+      'Government agencies integrated with Agrosubsidy',
+    ],
+    legal_basis: 'Official presidential presentation coverage citing the decree on improving state support for agriculture and the Agricultural Payments Agency.',
+    official_basis: `${sourceEvent.source_institution}, ${sourceEvent.source_published_at}.`,
+    financing_or_incentive: '34.2 trillion soums planned for cotton and grain harvest financing; 1.3 trillion soums of 2026 subsidies to be provided proactively; additional 5 trillion soums proposed for agrotechnical measures.',
+    source_confidence: 'high',
+    why_tracked: 'The official source identifies a new agriculture support delivery system, quantified subsidy and financing envelopes, the Agricultural Payments Agency, and digitalized subsidy procedures through Agroportal and Agrosubsidy.',
+    model_relevance: ['Agricultural output', 'Food prices', 'Rural income', 'Fiscal costs'],
+    measure_tracks: [
+      { id: 'agriculture-payments-agency', label: 'Agricultural Payments Agency setup', status: 'established by decree' },
+      { id: 'agrosubsidy-digital-delivery', label: 'Agrosubsidy digital subsidy delivery', status: 'scheduled' },
+      { id: 'cotton-grain-financing-plan', label: 'cotton and grain financing plan', status: '2026 plan' },
+      { id: 'preferential-credit-discipline-model', label: 'discipline for affordable credit model', status: 'proposed' },
+    ],
+    implementation_milestones: [
+      {
+        id: 'agriculture-payments-agency-organization-2025-12-09',
+        label: 'Agricultural Payments Agency implementation reviewed',
+        date: sourceEvent.source_published_at,
+        date_precision: 'day',
+        event_type: 'instructions_issued',
+        responsible_institutions: ['Ministry of Agriculture', 'Agricultural Payments Agency'],
+        evidence_type: 'official_policy_announcement',
+        source_event_ids: [sourceEvent.id],
+        confidence: 'high',
+        related_next_milestone_ids: ['agriculture-financing-envelope-2026'],
+      },
+      {
+        id: 'agriculture-financing-envelope-2026',
+        label: '34.2 trillion soums cotton and grain harvest financing plan',
+        date: '2026',
+        date_precision: 'year',
+        event_type: 'financing_allocated',
+        responsible_institutions: ['Ministry of Agriculture', 'Ministry of Economy and Finance'],
+        evidence_type: 'budget_tax_measure',
+        source_event_ids: [sourceEvent.id],
+        confidence: 'high',
+        related_next_milestone_ids: ['agrosubsidy-proactive-subsidy-delivery-2026'],
+      },
+      {
+        id: 'agrosubsidy-proactive-subsidy-delivery-2026',
+        label: '1.3 trillion soums proactive subsidy delivery through Agrosubsidy',
+        date: '2026',
+        date_precision: 'year',
+        event_type: 'implementation_milestone',
+        responsible_institutions: ['Agricultural Payments Agency', 'Integrated government agencies'],
+        evidence_type: 'implementation_program',
+        source_event_ids: [sourceEvent.id],
+        confidence: 'high',
+      },
+    ],
+    official_source_events: [sourceEvent],
+    caveat: 'Automatic official-source tracker entry assembled from a verified source event. It is not an official legal registry and does not assert legal force beyond the cited official source.',
+  }
+}
+
 const INCLUDE_RULE_DEFINITIONS = [
   {
     id: 'legal-or-regulatory-change',
@@ -430,11 +610,11 @@ const EXCLUDE_RULE_DEFINITIONS = [
   {
     id: 'training-or-outreach',
     label: 'Training or outreach',
-    description: 'Exclude trainings, calendars, awareness weeks, conferences, seminars, workshops, and public outreach even when they refer to an existing reform or resolution.',
+    description: 'Exclude trainings, calendars, awareness weeks, seminars, workshops, and public outreach even when they refer to an existing reform or resolution.',
     reason: 'training_or_outreach_only',
     overridable_by_policy_measure: false,
     patterns: [
-      /\b(training|calendar|seminar|workshop|financial literacy|awareness|conference|forum)\b/i,
+      /\b(calendar|seminar|workshop|financial literacy|awareness|training conference|training forum|training seminar|training workshop|staff training|public outreach)\b/i,
     ],
   },
   {
@@ -445,6 +625,7 @@ const EXCLUDE_RULE_DEFINITIONS = [
     overridable_by_policy_measure: false,
     patterns: [
       /\b(analytical report|analysis report|indicator review|target indicators|statistics release|published materials|inflation conditions|growth rate)\b/i,
+      /\b(results of the .* quarter|quarterly results|key activities and achievements|accounting and auditing.*achievements)\b/i,
     ],
   },
   {
@@ -647,14 +828,15 @@ function slugify(value) {
 
 function classifyDomain(text) {
   const normalized = text.toLowerCase()
+  if (/(housing|construction|urbanization|urban planning|master plan|land privatization|technical specifications|utility networks)/.test(normalized)) return 'infrastructure_investment'
   if (/(energy|gas|tariff adjustment)/.test(normalized)) return 'energy_tariffs'
   if (/(healthcare|medical|clinic|clinics|health insurance|insurance fund|state-funded medical)/.test(normalized)) return 'social_protection'
   if (/(privatization|state-owned|soe)/.test(normalized)) return 'soe_privatization'
   if (/(customs|trade|wto|import|export|clearance)/.test(normalized)) return 'trade_customs'
   if (/(policy rate|reserve requirement|foreign exchange|fx|deposit|bank|microfinance|microcredit)/.test(normalized)) return 'monetary_policy'
+  if (/(agriculture|fisheries|forestry)/.test(normalized)) return 'agriculture'
   if (/(budget|tax|excise|fiscal|subsidy|duty)/.test(normalized)) return 'fiscal_tax'
   if (/(compensation|social protection|household)/.test(normalized)) return 'social_protection'
-  if (/(agriculture|fisheries|forestry)/.test(normalized)) return 'agriculture'
   if (/(digital|electronic declaration|e-government|public service|notarial|legal service)/.test(normalized)) return 'digital_public_admin'
   if (/(infrastructure|grant|loan|financing|master plan|green economic development)/.test(normalized)) return 'infrastructure_investment'
   if (/(business|investment climate|investor|sme|small and medium-sized)/.test(normalized)) return 'business_environment'
@@ -927,12 +1109,14 @@ function extractDecisionsFromPresidentUzDetail(source, html, extractedAt) {
       /<meta\b[^>]*(?:property|name)=["'](?:og:title|twitter:title)["'][^>]*content=["']([^"']+)["'][^>]*>/i,
       /<title\b[^>]*>([\s\S]*?)<\/title>/i,
       /<h1\b[^>]*>([\s\S]*?)<\/h1>/i,
+      /<h2\b[^>]*>([\s\S]*?)<\/h2>/i,
       /<h[2-3]\b[^>]*class=["'][^"']*(?:title|news|article)[^"']*["'][^>]*>([\s\S]*?)<\/h[2-3]>/i,
     ]),
   ).replace(/\s*[-|]\s*.*$/, '')
   const publishedAt = parsePresidentUzDate(
     firstMatch(html, [
       /<time\b[^>]*datetime=["']([^"']+)["']/i,
+      /\b(\d{4}-[01]\d-[0-3]\d)(?:\s+\d{2}:\d{2}:\d{2})?\b/i,
       /\b([0-3]\d[.-][01]\d[.-]\d{4})\b/i,
     ]),
   )
@@ -971,7 +1155,7 @@ export function extractCandidateDecisionsFromSource(source, html, extractedAt) {
   if (source.parser === 'president-uz-list') {
     return extractDecisionsFromPresidentUzList(source, html, extractedAt)
   }
-  if (source.parser === 'president-uz-detail') {
+  if (source.parser === 'president-uz-detail' || source.parser === 'official-detail') {
     return extractDecisionsFromPresidentUzDetail(source, html, extractedAt)
   }
 
@@ -1165,7 +1349,39 @@ function isVerifiedHealthcareSourceEvent(candidate) {
   )
 }
 
+function isVerifiedHousingUrbanizationSourceEvent(candidate) {
+  const text = `${candidate.title} ${candidate.summary} ${candidate.source_url}`.toLowerCase()
+  return (
+    isConfiguredVerifiedCandidate(candidate) &&
+    candidate.source_url.includes('gov.uz') &&
+    (candidate.source_url.includes('/153724') ||
+      (text.includes('urbanization') && text.includes('construction') && text.includes('master plans')))
+  )
+}
+
+function isVerifiedAgricultureSubsidySourceEvent(candidate) {
+  const text = `${candidate.title} ${candidate.summary} ${candidate.source_url}`.toLowerCase()
+  return (
+    isConfiguredVerifiedCandidate(candidate) &&
+    candidate.source_url.includes('gov.uz') &&
+    (candidate.source_url.includes('/109178') ||
+      (text.includes('agricultur') && text.includes('subsid') && text.includes('agroportal')))
+  )
+}
+
 const PACKAGE_TOPIC_DEFINITIONS = [
+  {
+    id: 'urbanization-housing-construction',
+    title: 'Urbanization, construction permits, and housing delivery reform',
+    policy_area: 'Urbanization, construction permits, housing, and infrastructure delivery',
+    patterns: [/\b(urbanization|housing construction|construction permits?|master plans?|land privatization|technical specifications|utility networks|yangi uzbekistan)\b/i],
+  },
+  {
+    id: 'agriculture-subsidy-financing',
+    title: 'Agriculture financing and subsidy delivery reform',
+    policy_area: 'Agriculture financing, subsidies, and digital delivery',
+    patterns: [/\b(agrosubsidy|agricultural payments agency|cotton and grain|agricultur(?:e|al).{0,60}subsid|farmers?.{0,60}subsid|proactive subsidy)\b/i],
+  },
   {
     id: 'customs-clearance-digitalization',
     title: 'Risk-based customs clearance and electronic declaration reform',
@@ -1398,9 +1614,24 @@ export function assembleReformPackagesFromCandidates(candidates) {
     .filter(isVerifiedHealthcareSourceEvent)
     .slice(0, 1)
     .map((candidate) => healthcarePackageFromSourceEvent(candidateToSourceEvent(candidate)))
+  const housingUrbanizationPackages = verifiedCandidates
+    .filter(isVerifiedHousingUrbanizationSourceEvent)
+    .slice(0, 1)
+    .map((candidate) => housingUrbanizationPackageFromSourceEvent(candidateToSourceEvent(candidate)))
+  const agricultureSubsidyPackages = verifiedCandidates
+    .filter(isVerifiedAgricultureSubsidySourceEvent)
+    .slice(0, 1)
+    .map((candidate) => agricultureSubsidyPackageFromSourceEvent(candidateToSourceEvent(candidate)))
   const genericGroups = new Map()
 
-  for (const candidate of verifiedCandidates.filter((item) => !isVerifiedHealthcareSourceEvent(item))) {
+  for (
+    const candidate of verifiedCandidates.filter(
+      (item) =>
+        !isVerifiedHealthcareSourceEvent(item) &&
+        !isVerifiedHousingUrbanizationSourceEvent(item) &&
+        !isVerifiedAgricultureSubsidySourceEvent(item),
+    )
+  ) {
     const key = packageAssemblyKey(candidate)
     genericGroups.set(key, [...(genericGroups.get(key) ?? []), candidate])
   }
@@ -1409,7 +1640,7 @@ export function assembleReformPackagesFromCandidates(candidates) {
     .map(genericPackageFromCandidateGroup)
     .sort((left, right) => right.current_stage_date.localeCompare(left.current_stage_date))
 
-  return [...healthcarePackages, ...genericPackages]
+  return [...healthcarePackages, ...housingUrbanizationPackages, ...agricultureSubsidyPackages, ...genericPackages]
 }
 
 async function validateCandidateSourceLink(candidate, fetchImpl) {
