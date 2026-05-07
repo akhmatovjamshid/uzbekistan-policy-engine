@@ -21,6 +21,11 @@ type TimelineMilestone = {
   sourceEvent: ReformPackageSourceEvent | undefined
 }
 
+const EXTERNAL_LINK_PROPS = {
+  target: '_blank',
+  rel: 'noopener noreferrer',
+} as const
+
 function dateSortKey(value: string): string {
   if (/^\d{4}$/.test(value)) return `${value}-01-01`
   if (/^\d{4}-\d{2}$/.test(value)) return `${value}-01`
@@ -33,6 +38,32 @@ function formatDisplayDate(value: string | undefined): string {
   const parsed = new Date(value)
   if (!Number.isFinite(parsed.getTime())) return value
   return parsed.toISOString().slice(0, 10)
+}
+
+function referenceTime(value: string | undefined): number {
+  const parsed = value ? Date.parse(value) : Number.NaN
+  return Number.isFinite(parsed) ? parsed : Date.now()
+}
+
+function isFutureDate(value: string, reference: number): boolean {
+  const parsed = Date.parse(dateSortKey(value))
+  return Number.isFinite(parsed) && parsed > reference
+}
+
+function upcomingMilestones(reformPackage: ReformPackage, reference: number): ReformPackageMilestone[] {
+  return reformPackage.implementation_milestones
+    .filter((milestone) => isFutureDate(milestone.date, reference))
+    .sort((left, right) => dateSortKey(left.date).localeCompare(dateSortKey(right.date)))
+}
+
+function nextPublishedMilestone(reformPackage: ReformPackage, reference: number): Pick<ReformPackageMilestone, 'label' | 'date'> | undefined {
+  if (isFutureDate(reformPackage.next_milestone_date, reference)) {
+    return {
+      label: reformPackage.next_milestone,
+      date: reformPackage.next_milestone_date,
+    }
+  }
+  return upcomingMilestones(reformPackage, reference)[0]
 }
 
 function milestonePeriod(milestone: ReformPackageMilestone): string {
@@ -78,9 +109,9 @@ function MetricStrip({ content, packages }: { content: KnowledgeHubContent; pack
   const sourceDiagnostics = content.source_diagnostics ?? []
   const sourceEvents = packages.flatMap((item) => item.official_source_events)
   const verifiedLinks = sourceEvents.filter((event) => event.source_url_status === 'verified').length
-  const referenceTime = content.generated_at ? Date.parse(content.generated_at) : Number.NEGATIVE_INFINITY
+  const generatedReference = referenceTime(content.generated_at)
   const upcomingMilestones = flattenMilestones(packages).filter(
-    (item) => new Date(dateSortKey(item.milestone.date)).getTime() >= referenceTime,
+    (item) => isFutureDate(item.milestone.date, generatedReference),
   ).length
   const metrics = [
     [t('knowledgeHub.reformTracker.metrics.activePackages'), String(packages.length)],
@@ -102,9 +133,10 @@ function MetricStrip({ content, packages }: { content: KnowledgeHubContent; pack
   )
 }
 
-function DossierPanel({ reformPackage }: { reformPackage: ReformPackage }) {
+function DossierPanel({ reformPackage, generatedReference }: { reformPackage: ReformPackage; generatedReference: number }) {
   const { t } = useTranslation()
   const sourceEvent = reformPackage.official_source_events[0]
+  const milestones = upcomingMilestones(reformPackage, generatedReference)
 
   return (
     <aside className="reform-dossier" aria-label={t('knowledgeHub.reformTracker.dossier.aria')}>
@@ -121,7 +153,9 @@ function DossierPanel({ reformPackage }: { reformPackage: ReformPackage }) {
         <div>
           <dt>{t('knowledgeHub.reformTracker.dossier.officialSource')}</dt>
           <dd>
-            <a href={sourceEvent?.source_url}>{sourceEvent?.source_institution ?? reformPackage.official_basis}</a>
+            <a href={sourceEvent?.source_url} {...EXTERNAL_LINK_PROPS}>
+              {sourceEvent?.source_institution ?? reformPackage.official_basis}
+            </a>
           </dd>
         </div>
         <div>
@@ -150,21 +184,29 @@ function DossierPanel({ reformPackage }: { reformPackage: ReformPackage }) {
       </section>
       <section>
         <h3>{t('knowledgeHub.reformTracker.dossier.upcomingMilestones')}</h3>
-        <ul className="compact-list">
-          {reformPackage.implementation_milestones.map((milestone) => (
-            <li key={milestone.id}>
-              <span>{milestone.label}</span>
-              <span className="mono-date">{formatDisplayDate(milestone.date)}</span>
-            </li>
-          ))}
-        </ul>
+        {milestones.length > 0 ? (
+          <ul className="compact-list">
+            {milestones.map((milestone) => (
+              <li key={milestone.id}>
+                <span>{milestone.label}</span>
+                <span className="mono-date">{formatDisplayDate(milestone.date)}</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="empty-state empty-state--compact">
+            {t('knowledgeHub.reformTracker.dossier.noUpcomingMilestones')}
+          </p>
+        )}
       </section>
       <section>
         <h3>{t('knowledgeHub.reformTracker.dossier.evidence')}</h3>
         <ul className="compact-list">
           {reformPackage.official_source_events.map((event) => (
             <li key={event.id}>
-              <a href={event.source_url}>{event.title}</a>
+              <a href={event.source_url} {...EXTERNAL_LINK_PROPS}>
+                {event.title}
+              </a>
               <span className="mono-date">{`${formatDisplayDate(event.source_published_at)} · ${trackerLabel(t, 'eventType', event.event_type)}`}</span>
             </li>
           ))}
@@ -185,7 +227,7 @@ function DossierPanel({ reformPackage }: { reformPackage: ReformPackage }) {
   )
 }
 
-function ReformPackagesView({ packages }: { packages: ReformPackage[] }) {
+function ReformPackagesView({ packages, generatedReference }: { packages: ReformPackage[]; generatedReference: number }) {
   const { t } = useTranslation()
   const [selectedPackageId, setSelectedPackageId] = useState(packages[0]?.package_id ?? '')
   const selectedPackage = packages.find((item) => item.package_id === selectedPackageId) ?? packages[0]
@@ -211,37 +253,44 @@ function ReformPackagesView({ packages }: { packages: ReformPackage[] }) {
             </tr>
           </thead>
           <tbody>
-            {packages.map((reformPackage) => (
-              <tr
-                key={reformPackage.package_id}
-                className={reformPackage.package_id === selectedPackage.package_id ? 'is-selected' : ''}
-              >
-                <td>
-                  <button
-                    type="button"
-                    className="reform-row-button"
-                    onClick={() => setSelectedPackageId(reformPackage.package_id)}
-                  >
-                    {reformPackage.title}
-                  </button>
-                </td>
-                <td>{reformPackage.policy_area}</td>
-                <td>{`${reformPackage.current_stage} · ${formatDisplayDate(reformPackage.current_stage_date)}`}</td>
-                <td>{`${reformPackage.next_milestone} · ${formatDisplayDate(reformPackage.next_milestone_date)}`}</td>
-                <td>{reformPackage.responsible_institutions.join('; ')}</td>
-                <td>{reformPackage.financing_or_incentive ?? t('format.notAvailable')}</td>
-                <td>{reformPackage.legal_basis}</td>
-                <td>
-                  <span className="ui-chip ui-chip--accent">
-                    {trackerLabel(t, 'sourceConfidence', reformPackage.source_confidence)}
-                  </span>
-                </td>
-              </tr>
-            ))}
+            {packages.map((reformPackage) => {
+              const nextMilestone = nextPublishedMilestone(reformPackage, generatedReference)
+              return (
+                <tr
+                  key={reformPackage.package_id}
+                  className={reformPackage.package_id === selectedPackage.package_id ? 'is-selected' : ''}
+                >
+                  <td>
+                    <button
+                      type="button"
+                      className="reform-row-button"
+                      onClick={() => setSelectedPackageId(reformPackage.package_id)}
+                    >
+                      {reformPackage.title}
+                    </button>
+                  </td>
+                  <td>{reformPackage.policy_area}</td>
+                  <td>{`${reformPackage.current_stage} · ${formatDisplayDate(reformPackage.current_stage_date)}`}</td>
+                  <td>
+                    {nextMilestone
+                      ? `${nextMilestone.label} · ${formatDisplayDate(nextMilestone.date)}`
+                      : t('knowledgeHub.reformTracker.table.noUpcomingMilestone')}
+                  </td>
+                  <td>{reformPackage.responsible_institutions.join('; ')}</td>
+                  <td>{reformPackage.financing_or_incentive ?? t('format.notAvailable')}</td>
+                  <td>{reformPackage.legal_basis}</td>
+                  <td>
+                    <span className="ui-chip ui-chip--accent">
+                      {trackerLabel(t, 'sourceConfidence', reformPackage.source_confidence)}
+                    </span>
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       </div>
-      <DossierPanel reformPackage={selectedPackage} />
+      <DossierPanel reformPackage={selectedPackage} generatedReference={generatedReference} />
     </section>
   )
 }
@@ -264,7 +313,9 @@ function TimelineDetail({ item }: { item: TimelineMilestone }) {
         <div>
           <dt>{t('knowledgeHub.reformTracker.timeline.source')}</dt>
           <dd>
-            <a href={item.sourceEvent?.source_url}>{item.sourceEvent?.source_institution ?? item.reformPackage.official_basis}</a>
+            <a href={item.sourceEvent?.source_url} {...EXTERNAL_LINK_PROPS}>
+              {item.sourceEvent?.source_institution ?? item.reformPackage.official_basis}
+            </a>
           </dd>
         </div>
         <div>
@@ -369,6 +420,7 @@ export function KnowledgeHubContentView({ content }: KnowledgeHubContentViewProp
   const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState<TrackerTab>('packages')
   const packages = content.reform_packages ?? []
+  const generatedReference = referenceTime(content.generated_at)
 
   return (
     <>
@@ -393,7 +445,11 @@ export function KnowledgeHubContentView({ content }: KnowledgeHubContentViewProp
           {t('knowledgeHub.reformTracker.tabs.timeline')}
         </button>
       </div>
-      {activeTab === 'packages' ? <ReformPackagesView packages={packages} /> : <ImplementationTimelineView packages={packages} />}
+      {activeTab === 'packages' ? (
+        <ReformPackagesView packages={packages} generatedReference={generatedReference} />
+      ) : (
+        <ImplementationTimelineView packages={packages} />
+      )}
       <MethodologyNote content={content} />
     </>
   )

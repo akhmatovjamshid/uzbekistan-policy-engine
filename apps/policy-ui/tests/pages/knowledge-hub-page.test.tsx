@@ -9,6 +9,9 @@ const KNOWLEDGE_HUB_PAGE_SOURCE = fileURLToPath(
 const KNOWLEDGE_HUB_CONTENT_VIEW_SOURCE = fileURLToPath(
   new URL('../../../src/components/knowledge-hub/KnowledgeHubContentView.tsx', import.meta.url),
 )
+const TIMELINE_ITEM_SOURCE = fileURLToPath(
+  new URL('../../../src/components/knowledge-hub/TimelineItem.tsx', import.meta.url),
+)
 const LOCALE_SOURCES = ['en', 'ru', 'uz'].map((locale) =>
   fileURLToPath(new URL(`../../../src/locales/${locale}/common.json`, import.meta.url)),
 )
@@ -45,6 +48,8 @@ describe('Knowledge Hub page', () => {
     assert.match(contentViewSource, /trackerLabel\(t, 'sourceConfidence'/)
     assert.match(contentViewSource, /trackerLabel\(t, 'eventType'/)
     assert.match(contentViewSource, /trackerLabel\(t, 'evidenceType'/)
+    assert.match(contentViewSource, /nextPublishedMilestone/)
+    assert.match(contentViewSource, /noUpcomingMilestone/)
 
     assert.doesNotMatch(contentViewSource, /ReformCandidateList/)
     assert.doesNotMatch(contentViewSource, /Unreviewed candidates/)
@@ -70,7 +75,9 @@ describe('Knowledge Hub page', () => {
       assert.equal(typeof locale.knowledgeHub.reformTracker.tabs.packages, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.tabs.timeline, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.table.package, 'string')
+      assert.equal(typeof locale.knowledgeHub.reformTracker.table.noUpcomingMilestone, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.dossier.measureTracks, 'string')
+      assert.equal(typeof locale.knowledgeHub.reformTracker.dossier.noUpcomingMilestones, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.timeline.relatedNext, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.labels.sourceConfidence.high, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.labels.eventType.instructions_issued, 'string')
@@ -86,5 +93,18 @@ describe('Knowledge Hub page', () => {
     assert.doesNotMatch(contentViewSource, />\s*high\s*</)
     assert.doesNotMatch(contentViewSource, />\s*instructions_issued\s*</)
     assert.doesNotMatch(contentViewSource, />\s*official_policy_announcement\s*</)
+  })
+
+  it('opens official source links outside the SPA', () => {
+    const contentViewSource = readFileSync(KNOWLEDGE_HUB_CONTENT_VIEW_SOURCE, 'utf8')
+    const timelineItemSource = readFileSync(TIMELINE_ITEM_SOURCE, 'utf8')
+
+    assert.match(contentViewSource, /target: '_blank'/)
+    assert.match(contentViewSource, /rel: 'noopener noreferrer'/)
+    assert.match(contentViewSource, /<a href=\{sourceEvent\?\.source_url\} \{\.\.\.EXTERNAL_LINK_PROPS\}>/)
+    assert.match(contentViewSource, /<a href=\{event\.source_url\} \{\.\.\.EXTERNAL_LINK_PROPS\}>/)
+    assert.match(timelineItemSource, /target: '_blank'/)
+    assert.match(timelineItemSource, /rel: 'noopener noreferrer'/)
+    assert.match(timelineItemSource, /<a href=\{item\.source_url\} \{\.\.\.EXTERNAL_LINK_PROPS\}>/)
   })
 })

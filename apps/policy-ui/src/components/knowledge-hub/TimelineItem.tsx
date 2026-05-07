@@ -11,6 +11,11 @@ const STATUS_CLASS: Record<ReformTrackerItem['status'], string> = {
   superseded: 'planned',
 }
 
+const EXTERNAL_LINK_PROPS = {
+  target: '_blank',
+  rel: 'noopener noreferrer',
+} as const
+
 export function TimelineItem({ item }: TimelineItemProps) {
   const statusClass = STATUS_CLASS[item.status]
   const caveat = item.caveats[0] ?? 'Item-level caveat pending.'
@@ -34,7 +39,9 @@ export function TimelineItem({ item }: TimelineItemProps) {
         <div>
           <dt>Source</dt>
           <dd>
-            <a href={item.source_url}>{item.source_institution}</a>
+            <a href={item.source_url} {...EXTERNAL_LINK_PROPS}>
+              {item.source_institution}
+            </a>
           </dd>
         </div>
         <div>
