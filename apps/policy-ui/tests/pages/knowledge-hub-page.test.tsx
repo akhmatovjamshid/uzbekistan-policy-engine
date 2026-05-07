@@ -49,6 +49,7 @@ describe('Knowledge Hub page', () => {
     assert.match(contentViewSource, /trackerLabel\(t, 'eventType'/)
     assert.match(contentViewSource, /trackerLabel\(t, 'evidenceType'/)
     assert.match(contentViewSource, /nextPublishedMilestone/)
+    assert.match(contentViewSource, /packageTimeline/)
     assert.match(contentViewSource, /noUpcomingMilestone/)
 
     assert.doesNotMatch(contentViewSource, /ReformCandidateList/)
@@ -78,6 +79,8 @@ describe('Knowledge Hub page', () => {
       assert.equal(typeof locale.knowledgeHub.reformTracker.table.noUpcomingMilestone, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.dossier.measureTracks, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.dossier.noUpcomingMilestones, 'string')
+      assert.equal(typeof locale.knowledgeHub.reformTracker.dossier.packageTimeline, 'string')
+      assert.equal(typeof locale.knowledgeHub.reformTracker.dossier.noPackageTimeline, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.timeline.relatedNext, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.labels.sourceConfidence.high, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.labels.eventType.instructions_issued, 'string')

@@ -929,6 +929,8 @@
         "measureTracks": "Measure tracks",
         "upcomingMilestones": "Upcoming milestones",
         "noUpcomingMilestones": "No upcoming milestone has been published for this package.",
+        "packageTimeline": "Package timeline",
+        "noPackageTimeline": "No package timeline events are available.",
         "evidence": "Evidence / source events",
         "modelRelevance": "Model relevance"
       },

@@ -191,6 +191,14 @@ describe('knowledge hub adapter', () => {
     assert.equal(content.meta.reform_packages, validation.ok ? validation.value.reform_packages.length : 0)
     assert.equal(content.meta.reforms_tracked, validation.ok ? validation.value.reform_packages.length : 0)
     assert.equal(content.extraction_mode_label, 'Configured source fetch')
+    assert.ok(content.reform_packages?.every((reformPackage) => reformPackage.implementation_milestones.length > 0))
+    assert.ok(
+      content.reform_packages?.some(
+        (reformPackage) =>
+          reformPackage.package_id === 'pkg-tax-administration-incentives-2026-04-14' &&
+          reformPackage.implementation_milestones.some((milestone) => milestone.id === 'tax-administration-incentives-financing_allocated-2026-04-14'),
+      ),
+    )
     assert.ok(content.caveats?.some((caveat) => caveat.includes('configured source URLs')))
     assert.ok(content.caveats?.some((caveat) => caveat.includes('not an official reviewed policy database')))
   })
