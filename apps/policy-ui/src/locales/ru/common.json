@@ -913,6 +913,7 @@
         "policyArea": "Сфера политики",
         "currentStage": "Текущий этап",
         "nextMilestone": "Следующий этап",
+        "noUpcomingMilestone": "Следующий этап не опубликован",
         "institution": "Ответственная организация",
         "financing": "Финансирование / стимул",
         "legalBasis": "Правовая основа",
@@ -927,6 +928,7 @@
         "whyTracked": "Почему отслеживается",
         "measureTracks": "Направления мер",
         "upcomingMilestones": "Ближайшие этапы",
+        "noUpcomingMilestones": "Для этого пакета следующий этап не опубликован.",
         "evidence": "Доказательства / события источников",
         "modelRelevance": "Связь с моделями"
       },

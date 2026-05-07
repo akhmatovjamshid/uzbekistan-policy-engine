@@ -913,6 +913,7 @@
         "policyArea": "Policy area",
         "currentStage": "Current stage",
         "nextMilestone": "Next milestone",
+        "noUpcomingMilestone": "No upcoming milestone published",
         "institution": "Responsible institution",
         "financing": "Financing / incentive",
         "legalBasis": "Legal basis",
@@ -927,6 +928,7 @@
         "whyTracked": "Why tracked",
         "measureTracks": "Measure tracks",
         "upcomingMilestones": "Upcoming milestones",
+        "noUpcomingMilestones": "No upcoming milestone has been published for this package.",
         "evidence": "Evidence / source events",
         "modelRelevance": "Model relevance"
       },

@@ -913,6 +913,7 @@
         "policyArea": "Siyosat sohasi",
         "currentStage": "Joriy bosqich",
         "nextMilestone": "Keyingi bosqich",
+        "noUpcomingMilestone": "Keyingi bosqich e'lon qilinmagan",
         "institution": "Mas'ul tashkilot",
         "financing": "Moliyalashtirish / imtiyoz",
         "legalBasis": "Huquqiy asos",
@@ -927,6 +928,7 @@
         "whyTracked": "Nega kuzatiladi",
         "measureTracks": "Chora yo'nalishlari",
         "upcomingMilestones": "Kelayotgan bosqichlar",
+        "noUpcomingMilestones": "Bu paket bo'yicha keyingi bosqich e'lon qilinmagan.",
         "evidence": "Dalillar / manba voqealari",
         "modelRelevance": "Modellar bilan bog'liqlik"
       },
