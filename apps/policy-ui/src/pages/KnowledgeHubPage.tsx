@@ -10,6 +10,13 @@ import {
 } from '../data/knowledge-hub/source.js'
 import './knowledge-hub.css'
 
+function formatHeaderDate(value: string | undefined): string | undefined {
+  if (!value) return undefined
+  const parsed = new Date(value)
+  if (!Number.isFinite(parsed.getTime())) return value
+  return parsed.toISOString().slice(0, 10)
+}
+
 export function KnowledgeHubPage() {
   const { t } = useTranslation()
   const [sourceState, setSourceState] = useState(getInitialKnowledgeHubSourceState)
@@ -34,7 +41,13 @@ export function KnowledgeHubPage() {
 
   const packageCount = sourceState.content?.meta.reform_packages ?? sourceState.content?.reform_packages?.length ?? 0
   const sourcesConfigured = sourceState.content?.meta.sources_configured ?? 0
-  const extractionModeLabel = sourceState.content?.extraction_mode_label ?? 'Tracker artifact'
+  const extractionMode = sourceState.content?.extraction_mode
+  const extractionModeLabel = extractionMode
+    ? t(`knowledgeHub.reformTracker.extractionMode.${extractionMode}`, {
+        defaultValue: sourceState.content?.extraction_mode_label ?? t('knowledgeHub.reformTracker.extractionMode.artifact'),
+      })
+    : t('knowledgeHub.reformTracker.extractionMode.artifact')
+  const lastFetchDate = formatHeaderDate(sourceState.content?.generated_at)
   const pageHeaderMeta = (
     <>
       <span className="page-header__eyebrow">{t('knowledgeHub.reformTracker.header.eyebrow')}</span>
@@ -48,7 +61,7 @@ export function KnowledgeHubPage() {
       </span>
       {sourceState.content?.generated_at ? (
         <span>
-          {t('knowledgeHub.reformTracker.header.lastFetch')} <strong>{sourceState.content.generated_at}</strong>
+          {t('knowledgeHub.reformTracker.header.lastFetch')} <strong>{lastFetchDate}</strong>
         </span>
       ) : null}
     </>
