@@ -106,8 +106,8 @@
       "description": "Read-only source, vintage, artifact, guard-check, and update-state inventory for the public frontend data layer. It does not refresh data."
     },
     "knowledgeHub": {
-      "title": "Reform Tracker",
-      "description": "Official-source reform packages and implementation milestones."
+      "title": "Knowledge Hub",
+      "description": "Reform intelligence, official sources, methodology, and model relevance."
     }
   },
   "overview": {
@@ -884,6 +884,7 @@
     },
     "reformTracker": {
       "errorUnavailable": "Knowledge Hub reform tracker artifact is unavailable.",
+      "dossierDeskAria": "Reform dossier desk",
       "header": {
         "eyebrow": "Reform tracker",
         "automaticTracker": "Automatic official-source tracker",
@@ -893,11 +894,15 @@
       },
       "metrics": {
         "aria": "Reform tracker metrics",
+        "dossiers": "reform dossiers",
         "activePackages": "Active packages",
         "upcomingMilestones": "Upcoming milestones",
         "officialSources": "Official sources",
         "verifiedLinks": "Verified links",
-        "lastFetch": "Last fetch"
+        "lastFetch": "Last fetch",
+        "lastSourceCheck": "Last source check",
+        "staticPreview": "Static source-backed preview",
+        "notRegistry": "not a legal registry"
       },
       "extractionMode": {
         "artifact": "Tracker artifact",
@@ -915,9 +920,29 @@
         "packages": "Reform Packages",
         "timeline": "Implementation Timeline"
       },
+      "filters": {
+        "aria": "Reform dossier filters",
+        "title": "Filters",
+        "clearAll": "Clear all",
+        "policyArea": "Policy area",
+        "stage": "Stage",
+        "institution": "Institution",
+        "sourceType": "Source type",
+        "allAreas": "All areas",
+        "allStages": "All stages",
+        "allInstitutions": "All institutions",
+        "allSources": "All sources"
+      },
       "packages": {
-        "aria": "Reform package table and dossier",
-        "empty": "No reform packages are available in this artifact."
+        "aria": "Reform dossier list",
+        "empty": "No reform dossiers match the current filters.",
+        "count": "{{count}} reform dossier",
+        "count_one": "{{count}} reform dossier",
+        "count_few": "{{count}} reform dossiers",
+        "count_many": "{{count}} reform dossiers",
+        "count_other": "{{count}} reform dossiers",
+        "sortRecent": "Sort by: Recent update",
+        "showing": "Showing {{count}} of {{total}} dossiers"
       },
       "table": {
         "package": "Reform package",
@@ -932,18 +957,33 @@
       },
       "dossier": {
         "aria": "Selected reform package dossier",
+        "lastUpdated": "Last updated: {{date}}",
         "status": "Status / current stage",
         "officialSource": "Official source",
+        "officialSourceBasis": "Official source basis",
+        "sourceInstitution": "Source institution",
+        "publicationDate": "Publication date",
+        "openOfficialSource": "Open official source",
         "policyArea": "Policy area",
         "financing": "Financing / incentive",
+        "whatChanged": "What changed",
         "whyTracked": "Why tracked",
         "measureTracks": "Measure tracks",
+        "measuresAndParameters": "Measures and parameters",
         "upcomingMilestones": "Upcoming milestones",
         "noUpcomingMilestones": "No upcoming milestone has been published for this package.",
         "packageTimeline": "Package timeline",
+        "implementationTimeline": "Implementation timeline",
         "noPackageTimeline": "No package timeline events are available.",
         "evidence": "Evidence / source events",
-        "modelRelevance": "Model relevance"
+        "modelRelevance": "Model relevance",
+        "responsibleInstitutions": "Responsible institutions",
+        "lead": "Lead",
+        "partner": "Partner",
+        "policyModelRelevance": "Policy and model relevance",
+        "caveats": "Caveats",
+        "staticCaveat": "This dossier is a static, source-backed preview, not a legal registry.",
+        "modelCaveat": "Use with model assumptions and scenario design; it is not model-output evidence."
       },
       "timeline": {
         "aria": "Implementation timeline",
@@ -1003,6 +1043,33 @@
         "invalidLinksBlocked_few": "{{count}} invalid links blocked",
         "invalidLinksBlocked_many": "{{count}} invalid links blocked",
         "invalidLinksBlocked_other": "{{count}} invalid links blocked"
+      }
+    },
+    "sections": {
+      "aria": "Knowledge Hub subsections",
+      "reformTracker": "Reform Tracker",
+      "policyBriefs": "Policy Briefs",
+      "sourceLibrary": "Source Library",
+      "methodology": "Methodology",
+      "modelImpactMap": "Model Impact Map",
+      "plannedStatus": "Planned"
+    },
+    "planned": {
+      "policyBriefs": {
+        "title": "Policy Briefs planned",
+        "body": "Reviewed analyst-ready notes will appear here after content governance is ready. No AI-drafted or unreviewed prose is presented as final analysis."
+      },
+      "sourceLibrary": {
+        "title": "Source Library planned",
+        "body": "This section will summarize official source coverage and source-check posture without exposing parser internals or intake diagnostics in the main flow."
+      },
+      "methodology": {
+        "title": "Methodology planned",
+        "body": "Definitions, inclusion rules, caveats, and automation boundaries will be visible here without turning the Reform Tracker into a review workflow."
+      },
+      "modelImpactMap": {
+        "title": "Model Impact Map planned",
+        "body": "This map will route reforms to analytical channels cautiously. It will not cite gated model outputs or activate model scenarios."
       }
     }
   },

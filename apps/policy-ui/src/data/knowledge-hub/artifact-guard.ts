@@ -512,6 +512,7 @@ function validateReformPackage(
   const reformPackage: ReformPackage = {
     package_id: requireString(value, 'package_id', path, issues),
     title: requireString(value, 'title', path, issues),
+    short_summary: stringValue(value.short_summary) ?? undefined,
     policy_area: requireString(value, 'policy_area', path, issues),
     reform_category: requireEnum(value, 'reform_category', path, REFORM_CATEGORY_VALUES, issues),
     current_stage: requireString(value, 'current_stage', path, issues),
@@ -525,6 +526,12 @@ function validateReformPackage(
     source_confidence: requireEnum(value, 'source_confidence', path, REFORM_SOURCE_CONFIDENCE_VALUES, issues),
     why_tracked: requireString(value, 'why_tracked', path, issues),
     model_relevance: stringArray(value.model_relevance, `${path}.model_relevance`, issues),
+    policy_channels: Array.isArray(value.policy_channels)
+      ? stringArray(value.policy_channels, `${path}.policy_channels`, issues)
+      : undefined,
+    parameters_or_amounts: Array.isArray(value.parameters_or_amounts)
+      ? stringArray(value.parameters_or_amounts, `${path}.parameters_or_amounts`, issues)
+      : undefined,
     measure_tracks: measureTracks,
     implementation_milestones: milestones,
     official_source_events: sourceEvents,
