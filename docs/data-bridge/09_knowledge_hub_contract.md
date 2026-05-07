@@ -10,6 +10,11 @@ may edit Knowledge Hub frontend components, Knowledge Hub types/guards/adapters,
 artifact shape, and reform-intake tests/rulebook while preserving the backend/API/CRUD/live-publish
 stop conditions below.
 
+2026-05-07 concept amendment: `docs/planning/knowledge-hub-v2-concept-lock.md`
+supersedes the v1 tracker document for product shape and next implementation direction. It keeps
+the strict source/citation posture, but redirects the visible product away from source-intake
+mechanics toward reform dossiers, Knowledge Hub subsections, and a reform intelligence desk.
+
 Review resolution: Claude Code required reconciliation with current schema, binding to AI governance, item-level lineage, reform-status authority, `model_refs` whitelist, `domain_tag` control, per-item citation scope, takedown/correction protocol, copyright/translation/reviewer governance, and read-only-first API.
 
 Patch review resolution: Claude Code required AI-mode canonicalization, `reviewed_by` wording reconciliation, `literature_items` reconciliation, an explicit no-edit clause, transitional `model_refs` rules, operational cross-citation checking, and default states for existing pilot items.

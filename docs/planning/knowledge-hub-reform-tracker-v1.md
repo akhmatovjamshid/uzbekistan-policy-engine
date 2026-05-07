@@ -4,6 +4,11 @@ Date: 2026-05-05
 Status: product vision and implementation guardrail; docs-only  
 Scope: Knowledge Hub reform tracker only; not research briefs, literature corpus, backend CRUD, or model implementation
 
+2026-05-07 concept supersession: `docs/planning/knowledge-hub-v2-concept-lock.md`
+supersedes this v1 document for product shape and next implementation direction. This v1
+document remains the historical rulebook/guardrail for strict source intake, weak-news
+exclusion, and source/citation discipline.
+
 ## 1. Purpose
 
 The Reform Tracker is the Knowledge Hub surface for actual Uzbekistan economic policy reforms.
