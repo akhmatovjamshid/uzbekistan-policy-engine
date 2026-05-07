@@ -65,6 +65,23 @@
   text-transform: uppercase;
 }
 
+.tracker-notice {
+  background: color-mix(in srgb, var(--color-brand) 6%, var(--color-surface));
+  border: 1px solid color-mix(in srgb, var(--color-brand) 18%, var(--color-border));
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  display: grid;
+  gap: var(--space-xs);
+  font-size: 0.86rem;
+  line-height: 1.45;
+  padding: var(--space-sm) var(--space-md);
+}
+
+.tracker-notice strong {
+  color: var(--color-text);
+  font-size: 0.88rem;
+}
+
 .tracker-tabs {
   align-items: center;
   border-bottom: 1px solid var(--color-border);
@@ -107,7 +124,7 @@
 .reform-package-table {
   background: var(--color-surface);
   border-collapse: collapse;
-  min-width: 1120px;
+  min-width: 840px;
   width: 100%;
 }
 
@@ -142,10 +159,18 @@
   border: 0;
   color: var(--color-brand);
   cursor: pointer;
+  display: grid;
+  gap: 0.2rem;
   font: inherit;
   font-weight: 680;
   padding: 0;
   text-align: left;
+}
+
+.reform-row-button__meta {
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  font-weight: 500;
 }
 
 .reform-dossier,
@@ -508,6 +533,50 @@
 
   .timeline-milestone {
     grid-template-columns: 1fr;
+  }
+
+  .reform-table-wrap {
+    border: 0;
+    overflow: visible;
+  }
+
+  .reform-package-table {
+    background: transparent;
+    min-width: 0;
+  }
+
+  .reform-package-table thead {
+    display: none;
+  }
+
+  .reform-package-table tbody {
+    display: grid;
+    gap: var(--space-sm);
+  }
+
+  .reform-package-table tr {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    display: grid;
+    padding: var(--space-sm);
+  }
+
+  .reform-package-table th,
+  .reform-package-table td {
+    border-bottom: 0;
+    display: grid;
+    gap: 0.2rem;
+    padding: 0.45rem 0;
+  }
+
+  .reform-package-table td::before {
+    color: var(--color-text-muted);
+    content: attr(data-label);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 }
 

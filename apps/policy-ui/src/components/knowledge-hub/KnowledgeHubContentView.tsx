@@ -139,6 +139,20 @@ function MetricStrip({ content, packages }: { content: KnowledgeHubContent; pack
   )
 }
 
+function TrackerNotice() {
+  const { i18n, t } = useTranslation()
+  const language = i18n.resolvedLanguage ?? i18n.language
+  const showSourceLanguageNote = !language.toLowerCase().startsWith('en')
+
+  return (
+    <section className="tracker-notice" aria-label={t('knowledgeHub.reformTracker.notice.aria')}>
+      <strong>{t('knowledgeHub.reformTracker.notice.title')}</strong>
+      <span>{t('knowledgeHub.reformTracker.notice.caveat')}</span>
+      {showSourceLanguageNote ? <span>{t('knowledgeHub.reformTracker.notice.sourceLanguage')}</span> : null}
+    </section>
+  )
+}
+
 function DossierPanel({ reformPackage }: { reformPackage: ReformPackage }) {
   const { t } = useTranslation()
   const sourceEvent = reformPackage.official_source_events[0]
@@ -249,12 +263,9 @@ function ReformPackagesView({ packages, generatedReference }: { packages: Reform
           <thead>
             <tr>
               <th>{t('knowledgeHub.reformTracker.table.package')}</th>
-              <th>{t('knowledgeHub.reformTracker.table.policyArea')}</th>
               <th>{t('knowledgeHub.reformTracker.table.currentStage')}</th>
               <th>{t('knowledgeHub.reformTracker.table.nextMilestone')}</th>
               <th>{t('knowledgeHub.reformTracker.table.institution')}</th>
-              <th>{t('knowledgeHub.reformTracker.table.financing')}</th>
-              <th>{t('knowledgeHub.reformTracker.table.legalBasis')}</th>
               <th>{t('knowledgeHub.reformTracker.table.confidence')}</th>
             </tr>
           </thead>
@@ -266,26 +277,26 @@ function ReformPackagesView({ packages, generatedReference }: { packages: Reform
                   key={reformPackage.package_id}
                   className={reformPackage.package_id === selectedPackage.package_id ? 'is-selected' : ''}
                 >
-                  <td>
+                  <td data-label={t('knowledgeHub.reformTracker.table.package')}>
                     <button
                       type="button"
                       className="reform-row-button"
                       onClick={() => setSelectedPackageId(reformPackage.package_id)}
                     >
-                      {reformPackage.title}
+                      <span>{reformPackage.title}</span>
+                      <span className="reform-row-button__meta">{reformPackage.policy_area}</span>
                     </button>
                   </td>
-                  <td>{reformPackage.policy_area}</td>
-                  <td>{`${reformPackage.current_stage} · ${formatDisplayDate(reformPackage.current_stage_date)}`}</td>
-                  <td>
+                  <td data-label={t('knowledgeHub.reformTracker.table.currentStage')}>
+                    {`${reformPackage.current_stage} · ${formatDisplayDate(reformPackage.current_stage_date)}`}
+                  </td>
+                  <td data-label={t('knowledgeHub.reformTracker.table.nextMilestone')}>
                     {nextMilestone
                       ? `${nextMilestone.label} · ${formatDisplayDate(nextMilestone.date)}`
                       : t('knowledgeHub.reformTracker.table.noUpcomingMilestone')}
                   </td>
-                  <td>{reformPackage.responsible_institutions.join('; ')}</td>
-                  <td>{reformPackage.financing_or_incentive ?? t('format.notAvailable')}</td>
-                  <td>{reformPackage.legal_basis}</td>
-                  <td>
+                  <td data-label={t('knowledgeHub.reformTracker.table.institution')}>{reformPackage.responsible_institutions.join('; ')}</td>
+                  <td data-label={t('knowledgeHub.reformTracker.table.confidence')}>
                     <span className="ui-chip ui-chip--accent">
                       {trackerLabel(t, 'sourceConfidence', reformPackage.source_confidence)}
                     </span>
@@ -431,6 +442,7 @@ export function KnowledgeHubContentView({ content }: KnowledgeHubContentViewProp
   return (
     <>
       <MetricStrip content={content} packages={packages} />
+      <TrackerNotice />
       <div className="tracker-tabs" role="tablist" aria-label={t('knowledgeHub.reformTracker.tabs.aria')}>
         <button
           type="button"

@@ -899,6 +899,17 @@
         "verifiedLinks": "Tekshirilgan havolalar",
         "lastFetch": "Oxirgi yuklash"
       },
+      "extractionMode": {
+        "artifact": "Tracker artefakti",
+        "configured-source-fetch": "Sozlangan manbalardan yuklash",
+        "fixture-demo": "Fixture demo"
+      },
+      "notice": {
+        "aria": "Islohotlar monitoringi izohi",
+        "title": "Tracker holati",
+        "caveat": "Bu rasmiy manbalarga tayangan avtomatik tracker, rasmiy huquqiy reyestr emas. Noto'g'ri, sun'iy yoki tekshirilmagan havolalar bloklanadi.",
+        "sourceLanguage": "Paket nomlari va manba voqealari matni rasmiy manba tilida ko'rsatiladi; faqat interfeys yorliqlari lokalizatsiya qilingan."
+      },
       "tabs": {
         "aria": "Islohotlar monitoringi ko'rinishlari",
         "packages": "Islohot paketlari",

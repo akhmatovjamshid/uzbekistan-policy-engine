@@ -899,6 +899,17 @@
         "verifiedLinks": "Verified links",
         "lastFetch": "Last fetch"
       },
+      "extractionMode": {
+        "artifact": "Tracker artifact",
+        "configured-source-fetch": "Configured source fetch",
+        "fixture-demo": "Fixture demo"
+      },
+      "notice": {
+        "aria": "Reform tracker caveat",
+        "title": "Tracker status",
+        "caveat": "Automatic official-source tracker, not an official legal registry. Links are blocked when invalid, synthetic, or unverified.",
+        "sourceLanguage": "Package titles and source-event prose are displayed in the official source language; only interface labels are localized."
+      },
       "tabs": {
         "aria": "Reform tracker views",
         "packages": "Reform Packages",
