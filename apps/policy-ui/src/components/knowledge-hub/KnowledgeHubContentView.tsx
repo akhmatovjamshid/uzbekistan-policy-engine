@@ -56,6 +56,12 @@ function upcomingMilestones(reformPackage: ReformPackage, reference: number): Re
     .sort((left, right) => dateSortKey(left.date).localeCompare(dateSortKey(right.date)))
 }
 
+function packageTimeline(reformPackage: ReformPackage): ReformPackageMilestone[] {
+  return [...reformPackage.implementation_milestones].sort((left, right) =>
+    dateSortKey(left.date).localeCompare(dateSortKey(right.date)),
+  )
+}
+
 function nextPublishedMilestone(reformPackage: ReformPackage, reference: number): Pick<ReformPackageMilestone, 'label' | 'date'> | undefined {
   if (isFutureDate(reformPackage.next_milestone_date, reference)) {
     return {
@@ -133,10 +139,10 @@ function MetricStrip({ content, packages }: { content: KnowledgeHubContent; pack
   )
 }
 
-function DossierPanel({ reformPackage, generatedReference }: { reformPackage: ReformPackage; generatedReference: number }) {
+function DossierPanel({ reformPackage }: { reformPackage: ReformPackage }) {
   const { t } = useTranslation()
   const sourceEvent = reformPackage.official_source_events[0]
-  const milestones = upcomingMilestones(reformPackage, generatedReference)
+  const milestones = packageTimeline(reformPackage)
 
   return (
     <aside className="reform-dossier" aria-label={t('knowledgeHub.reformTracker.dossier.aria')}>
@@ -183,7 +189,7 @@ function DossierPanel({ reformPackage, generatedReference }: { reformPackage: Re
         </ul>
       </section>
       <section>
-        <h3>{t('knowledgeHub.reformTracker.dossier.upcomingMilestones')}</h3>
+        <h3>{t('knowledgeHub.reformTracker.dossier.packageTimeline')}</h3>
         {milestones.length > 0 ? (
           <ul className="compact-list">
             {milestones.map((milestone) => (
@@ -195,7 +201,7 @@ function DossierPanel({ reformPackage, generatedReference }: { reformPackage: Re
           </ul>
         ) : (
           <p className="empty-state empty-state--compact">
-            {t('knowledgeHub.reformTracker.dossier.noUpcomingMilestones')}
+            {t('knowledgeHub.reformTracker.dossier.noPackageTimeline')}
           </p>
         )}
       </section>
@@ -290,7 +296,7 @@ function ReformPackagesView({ packages, generatedReference }: { packages: Reform
           </tbody>
         </table>
       </div>
-      <DossierPanel reformPackage={selectedPackage} generatedReference={generatedReference} />
+      <DossierPanel reformPackage={selectedPackage} />
     </section>
   )
 }

@@ -929,6 +929,8 @@
         "measureTracks": "Chora yo'nalishlari",
         "upcomingMilestones": "Kelayotgan bosqichlar",
         "noUpcomingMilestones": "Bu paket bo'yicha keyingi bosqich e'lon qilinmagan.",
+        "packageTimeline": "Paket jadvali",
+        "noPackageTimeline": "Bu paket bo'yicha jadval voqealari mavjud emas.",
         "evidence": "Dalillar / manba voqealari",
         "modelRelevance": "Modellar bilan bog'liqlik"
       },

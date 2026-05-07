@@ -929,6 +929,8 @@
         "measureTracks": "Направления мер",
         "upcomingMilestones": "Ближайшие этапы",
         "noUpcomingMilestones": "Для этого пакета следующий этап не опубликован.",
+        "packageTimeline": "График пакета",
+        "noPackageTimeline": "Для этого пакета нет событий графика.",
         "evidence": "Доказательства / события источников",
         "modelRelevance": "Связь с моделями"
       },
