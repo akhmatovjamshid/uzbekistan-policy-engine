@@ -782,7 +782,7 @@ function knowledgeHubTrackerExpression() {
       ].find((snippet) => normalizedText.includes(snippet.toLowerCase()));
       const requiredNormalizedText = [
         'automatic official-source tracker',
-        'reform packages',
+        'reform dossiers',
         'implementation timeline',
       ];
       const missingText = requiredNormalizedText.filter((snippet) => !normalizedText.includes(snippet));
