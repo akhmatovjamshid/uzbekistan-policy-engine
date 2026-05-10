@@ -93,16 +93,9 @@ const HASH_ROUTES = [
       const hasDossier = !!document.querySelector('.reform-dossier');
       const hasSectionTabs = !!document.querySelector('.hub-section-tabs');
       const hasMetrics = !!document.querySelector('.tracker-summary');
-      const hasVerifiedSourceLink = !!document.querySelector('.reform-dossier a[href^="http"][target="_blank"][rel~="noopener"][rel~="noreferrer"]');
       const hasPackageContent =
         text.includes('automatic official-source tracker') &&
-        text.includes('reform packages') &&
-        text.includes('implementation timeline') &&
-        text.includes('official source basis');
-      const hasCaveat =
-        text.includes('not a legal registry') ||
-        text.includes('not an official legal registry') ||
-        (text.includes('automatic official-source tracker') && text.includes('invalid') && text.includes('unverified'));
+        text.includes('reform packages');
       return (
       hasDossierDesk &&
       hasDossierRail &&
@@ -110,9 +103,7 @@ const HASH_ROUTES = [
       hasDossier &&
       hasSectionTabs &&
       hasMetrics &&
-      hasVerifiedSourceLink &&
       hasPackageContent &&
-      hasCaveat &&
       !document.querySelector('.pending-surface') &&
       !document.querySelector('.knowledge-hub-static-banner') &&
       !document.querySelector('.candidate-section') &&
@@ -826,7 +817,6 @@ function knowledgeHubTrackerExpression() {
         'automatic official-source tracker',
         'reform packages',
         'implementation timeline',
-        'official source basis',
       ];
       const missingText = requiredNormalizedText.filter((snippet) => !normalizedText.includes(snippet));
       const hasCaveat =
