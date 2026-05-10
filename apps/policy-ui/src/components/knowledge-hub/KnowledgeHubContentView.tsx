@@ -529,7 +529,7 @@ function ReformTrackerDesk({ content }: { content: KnowledgeHubContent }) {
   const [selectedPackageId, setSelectedPackageId] = useState(sortedPackages[0]?.package_id ?? '')
 
   const selectedPackage =
-    filteredPackages.find((item) => item.package_id === selectedPackageId) ?? filteredPackages[0] ?? sortedPackages[0]
+    filteredPackages.find((item) => item.package_id === selectedPackageId) ?? filteredPackages[0]
 
   return (
     <>
