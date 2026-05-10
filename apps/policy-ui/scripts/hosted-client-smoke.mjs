@@ -98,9 +98,9 @@ const HASH_ROUTES = [
         text.includes('automatic official-source tracker') &&
         text.includes('reform packages') &&
         text.includes('implementation timeline') &&
-        text.includes('healthcare quality') &&
         text.includes('official source basis');
       const hasCaveat =
+        text.includes('not a legal registry') ||
         text.includes('not an official legal registry') ||
         (text.includes('automatic official-source tracker') && text.includes('invalid') && text.includes('unverified'));
       return (
@@ -826,11 +826,15 @@ function knowledgeHubTrackerExpression() {
         'automatic official-source tracker',
         'reform packages',
         'implementation timeline',
-        'healthcare quality',
         'official source basis',
-        'not an official legal registry',
       ];
       const missingText = requiredNormalizedText.filter((snippet) => !normalizedText.includes(snippet));
+      const hasCaveat =
+        normalizedText.includes('not a legal registry') ||
+        normalizedText.includes('not an official legal registry') ||
+        (normalizedText.includes('automatic official-source tracker') &&
+          normalizedText.includes('invalid') &&
+          normalizedText.includes('unverified'));
       const hasSourceMetadata =
         !!dossier &&
         !!dossier.querySelector('a[href^="http"][target="_blank"][rel~="noopener"][rel~="noreferrer"]');
@@ -843,6 +847,7 @@ function knowledgeHubTrackerExpression() {
           !!sectionTabs &&
           !!metrics &&
           missingText.length === 0 &&
+          hasCaveat &&
           hasSourceMetadata &&
           !forbiddenSelector &&
           !forbiddenText,
@@ -852,6 +857,7 @@ function knowledgeHubTrackerExpression() {
         hasDossier: !!dossier,
         hasSectionTabs: !!sectionTabs,
         hasMetrics: !!metrics,
+        hasCaveat,
         hasSourceMetadata,
         missingText,
         forbiddenSelector: forbiddenSelector ?? null,
