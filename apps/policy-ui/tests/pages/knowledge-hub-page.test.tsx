@@ -15,6 +15,9 @@ const TIMELINE_ITEM_SOURCE = fileURLToPath(
 const LOCALE_SOURCES = ['en', 'ru', 'uz'].map((locale) =>
   fileURLToPath(new URL(`../../../src/locales/${locale}/common.json`, import.meta.url)),
 )
+const PUBLIC_KNOWLEDGE_HUB_ARTIFACT = fileURLToPath(
+  new URL('../../../public/data/knowledge-hub.json', import.meta.url),
+)
 
 describe('Knowledge Hub page', () => {
   it('loads and renders tracker artifact content instead of the pending surface', () => {
@@ -36,32 +39,30 @@ describe('Knowledge Hub page', () => {
     assert.doesNotMatch(source, /candidateCount/)
   })
 
-  it('renders package and implementation timeline views without a visible review queue', () => {
+  it('renders the v2 dossier desk without a visible candidate or review queue surface', () => {
     const contentViewSource = readFileSync(KNOWLEDGE_HUB_CONTENT_VIEW_SOURCE, 'utf8')
 
-    assert.match(contentViewSource, /TrackerTab = 'packages' \| 'timeline'/)
-    assert.match(contentViewSource, /ReformPackagesView/)
-    assert.match(contentViewSource, /ImplementationTimelineView/)
-    assert.match(contentViewSource, /reform-package-table/)
+    assert.match(contentViewSource, /KnowledgeHubSectionId = 'reformTracker' \| 'policyBriefs' \| 'sourceLibrary' \| 'methodology' \| 'modelImpactMap'/)
+    assert.match(contentViewSource, /ReformTrackerDesk/)
+    assert.match(contentViewSource, /DossierFiltersPanel/)
+    assert.match(contentViewSource, /DossierList/)
+    assert.match(contentViewSource, /DossierDetail/)
+    assert.match(contentViewSource, /dossier-desk/)
+    assert.match(contentViewSource, /dossier-rail/)
+    assert.match(contentViewSource, /dossier-row/)
     assert.match(contentViewSource, /reform-dossier/)
-    assert.match(contentViewSource, /timeline-milestone/)
-    assert.match(contentViewSource, /TrackerNotice/)
-    assert.match(contentViewSource, /notice\.sourceLanguage/)
-    assert.match(contentViewSource, /data-label=\{t\('knowledgeHub\.reformTracker\.table\.package'\)\}/)
-    assert.match(contentViewSource, /methodology\.included/)
-    assert.match(contentViewSource, /methodology\.excluded/)
+    assert.match(contentViewSource, /filteredPackages\.find\(\(item\) => item\.package_id === selectedPackageId\) \?\? filteredPackages\[0\]/)
+    assert.match(contentViewSource, /hub-section-tabs/)
     assert.match(contentViewSource, /trackerLabel\(t, 'sourceConfidence'/)
     assert.match(contentViewSource, /trackerLabel\(t, 'eventType'/)
     assert.match(contentViewSource, /trackerLabel\(t, 'evidenceType'/)
-    assert.match(contentViewSource, /nextPublishedMilestone/)
-    assert.match(contentViewSource, /packageTimeline/)
-    assert.match(contentViewSource, /noUpcomingMilestone/)
+    assert.match(contentViewSource, /packageMatchesFilters/)
 
     assert.doesNotMatch(contentViewSource, /ReformCandidateList/)
-    assert.doesNotMatch(contentViewSource, /table\.financing/)
-    assert.doesNotMatch(contentViewSource, /table\.legalBasis/)
+    assert.doesNotMatch(contentViewSource, /reform-package-table/)
     assert.doesNotMatch(contentViewSource, /Unreviewed candidates/)
     assert.doesNotMatch(contentViewSource, /Review Queue/)
+    assert.doesNotMatch(contentViewSource, /filteredPackages\[0\] \?\? sortedPackages\[0\]/)
     assert.doesNotMatch(contentViewSource, /\{reformPackage\.source_confidence\}/)
     assert.doesNotMatch(contentViewSource, /\{item\.milestone\.event_type\}/)
     assert.doesNotMatch(contentViewSource, /\{item\.milestone\.evidence_type\}/)
@@ -77,26 +78,74 @@ describe('Knowledge Hub page', () => {
     assert.doesNotMatch(pageSource, /hub-grid/)
   })
 
+  it('renders all 4 reform packages as dossiers from the static artifact', () => {
+    const artifact = JSON.parse(readFileSync(PUBLIC_KNOWLEDGE_HUB_ARTIFACT, 'utf8'))
+    const contentViewSource = readFileSync(KNOWLEDGE_HUB_CONTENT_VIEW_SOURCE, 'utf8')
+
+    assert.equal(artifact.reform_packages.length, 4)
+    assert.match(contentViewSource, /packages=\{filteredPackages\}/)
+    assert.match(contentViewSource, /totalCount=\{sortedPackages\.length\}/)
+    assert.match(contentViewSource, /knowledgeHub\.reformTracker\.packages\.showing/)
+    assert.ok(artifact.reform_packages.every((reformPackage: { title?: string }) => reformPackage.title))
+  })
+
+  it('selected dossier detail exposes source basis, measures, timeline, institutions, model relevance, and caveats', () => {
+    const contentViewSource = readFileSync(KNOWLEDGE_HUB_CONTENT_VIEW_SOURCE, 'utf8')
+
+    assert.match(contentViewSource, /OfficialSourceBasis/)
+    assert.match(contentViewSource, /ResponsibleInstitutions/)
+    assert.match(contentViewSource, /ImplementationTimeline/)
+    assert.match(contentViewSource, /measuresAndParameters/)
+    assert.match(contentViewSource, /policyModelRelevance/)
+    assert.match(contentViewSource, /dossier\.caveats/)
+    assert.match(contentViewSource, /reformPackage\.caveat/)
+    assert.match(contentViewSource, /parameterList/)
+    assert.match(contentViewSource, /policyChannels/)
+  })
+
+  it('subsection tabs render planned states for non-Reform Tracker sections', () => {
+    const contentViewSource = readFileSync(KNOWLEDGE_HUB_CONTENT_VIEW_SOURCE, 'utf8')
+
+    assert.match(contentViewSource, /HUB_SECTIONS/)
+    assert.match(contentViewSource, /policyBriefs/)
+    assert.match(contentViewSource, /sourceLibrary/)
+    assert.match(contentViewSource, /methodology/)
+    assert.match(contentViewSource, /modelImpactMap/)
+    assert.match(contentViewSource, /PlannedSection/)
+    assert.match(contentViewSource, /knowledgeHub\.sections\.plannedStatus/)
+    assert.match(contentViewSource, /knowledgeHub\.planned\.\$\{sectionId\}\.title/)
+  })
+
   it('covers visible Reform Tracker strings in EN, RU, and UZ locales', () => {
     for (const localePath of LOCALE_SOURCES) {
       const locale = JSON.parse(readFileSync(localePath, 'utf8'))
-      assert.equal(typeof locale.knowledgeHub.reformTracker.tabs.packages, 'string')
-      assert.equal(typeof locale.knowledgeHub.reformTracker.tabs.timeline, 'string')
+      assert.equal(typeof locale.pages.knowledgeHub.title, 'string')
+      assert.equal(typeof locale.pages.knowledgeHub.description, 'string')
+      assert.equal(typeof locale.knowledgeHub.sections.reformTracker, 'string')
+      assert.equal(typeof locale.knowledgeHub.sections.policyBriefs, 'string')
+      assert.equal(typeof locale.knowledgeHub.sections.sourceLibrary, 'string')
+      assert.equal(typeof locale.knowledgeHub.sections.methodology, 'string')
+      assert.equal(typeof locale.knowledgeHub.sections.modelImpactMap, 'string')
+      assert.equal(typeof locale.knowledgeHub.sections.plannedStatus, 'string')
+      assert.equal(typeof locale.knowledgeHub.planned.policyBriefs.title, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.extractionMode['configured-source-fetch'], 'string')
-      assert.equal(typeof locale.knowledgeHub.reformTracker.notice.caveat, 'string')
-      assert.equal(typeof locale.knowledgeHub.reformTracker.notice.sourceLanguage, 'string')
-      assert.equal(typeof locale.knowledgeHub.reformTracker.table.package, 'string')
-      assert.equal(typeof locale.knowledgeHub.reformTracker.table.noUpcomingMilestone, 'string')
-      assert.equal(typeof locale.knowledgeHub.reformTracker.dossier.measureTracks, 'string')
-      assert.equal(typeof locale.knowledgeHub.reformTracker.dossier.noUpcomingMilestones, 'string')
-      assert.equal(typeof locale.knowledgeHub.reformTracker.dossier.packageTimeline, 'string')
-      assert.equal(typeof locale.knowledgeHub.reformTracker.dossier.noPackageTimeline, 'string')
+      assert.equal(typeof locale.knowledgeHub.reformTracker.metrics.dossiers, 'string')
+      assert.equal(typeof locale.knowledgeHub.reformTracker.metrics.lastSourceCheck, 'string')
+      assert.equal(typeof locale.knowledgeHub.reformTracker.filters.policyArea, 'string')
+      assert.equal(typeof locale.knowledgeHub.reformTracker.filters.sourceType, 'string')
+      assert.equal(typeof locale.knowledgeHub.reformTracker.packages.showing, 'string')
+      assert.equal(typeof locale.knowledgeHub.reformTracker.dossier.whatChanged, 'string')
+      assert.equal(typeof locale.knowledgeHub.reformTracker.dossier.officialSourceBasis, 'string')
+      assert.equal(typeof locale.knowledgeHub.reformTracker.dossier.measuresAndParameters, 'string')
+      assert.equal(typeof locale.knowledgeHub.reformTracker.dossier.implementationTimeline, 'string')
+      assert.equal(typeof locale.knowledgeHub.reformTracker.dossier.responsibleInstitutions, 'string')
+      assert.equal(typeof locale.knowledgeHub.reformTracker.dossier.policyModelRelevance, 'string')
+      assert.equal(typeof locale.knowledgeHub.reformTracker.dossier.caveats, 'string')
+      assert.equal(typeof locale.knowledgeHub.reformTracker.dossier.staticCaveat, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.timeline.relatedNext, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.labels.sourceConfidence.high, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.labels.eventType.instructions_issued, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.labels.evidenceType.official_policy_announcement, 'string')
-      assert.equal(typeof locale.knowledgeHub.reformTracker.methodology.included, 'string')
-      assert.equal(typeof locale.knowledgeHub.reformTracker.methodology.excluded, 'string')
     }
   })
 
@@ -114,8 +163,7 @@ describe('Knowledge Hub page', () => {
 
     assert.match(contentViewSource, /target: '_blank'/)
     assert.match(contentViewSource, /rel: 'noopener noreferrer'/)
-    assert.match(contentViewSource, /<a href=\{sourceEvent\?\.source_url\} \{\.\.\.EXTERNAL_LINK_PROPS\}>/)
-    assert.match(contentViewSource, /<a href=\{event\.source_url\} \{\.\.\.EXTERNAL_LINK_PROPS\}>/)
+    assert.match(contentViewSource, /<a href=\{sourceEvent\.source_url\} \{\.\.\.EXTERNAL_LINK_PROPS\}>/)
     assert.match(timelineItemSource, /target: '_blank'/)
     assert.match(timelineItemSource, /rel: 'noopener noreferrer'/)
     assert.match(timelineItemSource, /<a href=\{item\.source_url\} \{\.\.\.EXTERNAL_LINK_PROPS\}>/)

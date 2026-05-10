@@ -106,8 +106,8 @@
       "description": "Ommaviy frontend ma'lumot qatlami uchun read-only manba, vintaj, artefakt, guard-check va yangilanish holati inventari. U ma'lumotni yangilamaydi."
     },
     "knowledgeHub": {
-      "title": "Islohotlar monitoringi",
-      "description": "Rasmiy manbalardagi islohot paketlari va amalga oshirish bosqichlari."
+      "title": "Bilimlar markazi",
+      "description": "Islohotlar bo'yicha tahliliy ma'lumot, rasmiy manbalar, metodologiya va modelga bog'liqlik."
     }
   },
   "overview": {
@@ -884,6 +884,7 @@
     },
     "reformTracker": {
       "errorUnavailable": "Islohotlar monitoringi artefakti mavjud emas.",
+      "dossierDeskAria": "Islohot dosyelari ish maydoni",
       "header": {
         "eyebrow": "Islohotlar monitoringi",
         "automaticTracker": "Rasmiy manbalar bo'yicha avtomatik monitoring",
@@ -893,11 +894,15 @@
       },
       "metrics": {
         "aria": "Islohotlar monitoringi ko'rsatkichlari",
+        "dossiers": "islohot dosyelari",
         "activePackages": "Faol paketlar",
         "upcomingMilestones": "Kelayotgan bosqichlar",
         "officialSources": "Rasmiy manbalar",
         "verifiedLinks": "Tekshirilgan havolalar",
-        "lastFetch": "Oxirgi yuklash"
+        "lastFetch": "Oxirgi yuklash",
+        "lastSourceCheck": "Oxirgi manba tekshiruvi",
+        "staticPreview": "Statik source-backed preview",
+        "notRegistry": "huquqiy reyestr emas"
       },
       "extractionMode": {
         "artifact": "Tracker artefakti",
@@ -915,9 +920,29 @@
         "packages": "Islohot paketlari",
         "timeline": "Amalga oshirish jadvali"
       },
+      "filters": {
+        "aria": "Islohot dosyelari filtrlari",
+        "title": "Filtrlar",
+        "clearAll": "Hammasini tozalash",
+        "policyArea": "Siyosat sohasi",
+        "stage": "Bosqich",
+        "institution": "Tashkilot",
+        "sourceType": "Manba turi",
+        "allAreas": "Barcha sohalar",
+        "allStages": "Barcha bosqichlar",
+        "allInstitutions": "Barcha tashkilotlar",
+        "allSources": "Barcha manbalar"
+      },
       "packages": {
-        "aria": "Islohot paketlari jadvali va dosye",
-        "empty": "Bu artefaktda islohot paketlari mavjud emas."
+        "aria": "Islohot dosyelari ro'yxati",
+        "empty": "Joriy filtrlarga mos islohot dosyelari yo'q.",
+        "count": "{{count}} ta islohot dosyesi",
+        "count_one": "{{count}} ta islohot dosyesi",
+        "count_few": "{{count}} ta islohot dosyesi",
+        "count_many": "{{count}} ta islohot dosyesi",
+        "count_other": "{{count}} ta islohot dosyesi",
+        "sortRecent": "Saralash: so'nggi yangilanish",
+        "showing": "{{total}} tadan {{count}} ta dosye ko'rsatilmoqda"
       },
       "table": {
         "package": "Islohot paketi",
@@ -932,18 +957,33 @@
       },
       "dossier": {
         "aria": "Tanlangan islohot paketi dosyesi",
+        "lastUpdated": "Yangilangan: {{date}}",
         "status": "Status / joriy bosqich",
         "officialSource": "Rasmiy manba",
+        "officialSourceBasis": "Rasmiy manba asosi",
+        "sourceInstitution": "Manba tashkiloti",
+        "publicationDate": "E'lon qilingan sana",
+        "openOfficialSource": "Rasmiy manbani ochish",
         "policyArea": "Siyosat sohasi",
         "financing": "Moliyalashtirish / imtiyoz",
+        "whatChanged": "Nima o'zgardi",
         "whyTracked": "Nega kuzatiladi",
         "measureTracks": "Chora yo'nalishlari",
+        "measuresAndParameters": "Choralar va parametrlar",
         "upcomingMilestones": "Kelayotgan bosqichlar",
         "noUpcomingMilestones": "Bu paket bo'yicha keyingi bosqich e'lon qilinmagan.",
         "packageTimeline": "Paket jadvali",
+        "implementationTimeline": "Amalga oshirish jadvali",
         "noPackageTimeline": "Bu paket bo'yicha jadval voqealari mavjud emas.",
         "evidence": "Dalillar / manba voqealari",
-        "modelRelevance": "Modellar bilan bog'liqlik"
+        "modelRelevance": "Modellar bilan bog'liqlik",
+        "responsibleInstitutions": "Mas'ul tashkilotlar",
+        "lead": "Yetakchi",
+        "partner": "Hamkor",
+        "policyModelRelevance": "Siyosat va modelga bog'liqlik",
+        "caveats": "Izohlar",
+        "staticCaveat": "Bu dosye manbaga tayangan statik preview, huquqiy reyestr emas.",
+        "modelCaveat": "Model taxminlari va stsenariy dizayni bilan birga foydalaning; bu model natijasi dalili emas."
       },
       "timeline": {
         "aria": "Amalga oshirish jadvali",
@@ -1003,6 +1043,33 @@
         "invalidLinksBlocked_few": "{{count}} ta yaroqsiz havola bloklandi",
         "invalidLinksBlocked_many": "{{count}} ta yaroqsiz havola bloklandi",
         "invalidLinksBlocked_other": "{{count}} ta yaroqsiz havola bloklandi"
+      }
+    },
+    "sections": {
+      "aria": "Bilimlar markazi bo'limlari",
+      "reformTracker": "Islohotlar monitoringi",
+      "policyBriefs": "Policy Briefs",
+      "sourceLibrary": "Manbalar kutubxonasi",
+      "methodology": "Metodologiya",
+      "modelImpactMap": "Model ta'siri xaritasi",
+      "plannedStatus": "Rejalashtirilgan"
+    },
+    "planned": {
+      "policyBriefs": {
+        "title": "Policy Briefs rejalashtirilgan",
+        "body": "Kontent governance tayyor bo'lgach, tekshirilgan analitik yozuvlar shu yerda ko'rinadi. AI qoralamalari yoki tekshirilmagan matn yakuniy tahlil sifatida ko'rsatilmaydi."
+      },
+      "sourceLibrary": {
+        "title": "Manbalar kutubxonasi rejalashtirilgan",
+        "body": "Bu bo'lim rasmiy manbalar qamrovi va tekshiruv holatini ko'rsatadi, lekin asosiy oqimda parser ichki diagnostikasini ochmaydi."
+      },
+      "methodology": {
+        "title": "Metodologiya rejalashtirilgan",
+        "body": "Ta'riflar, kiritish qoidalari, izohlar va avtomatlashtirish chegaralari ko'rinadi, ammo Reform Tracker tekshiruv workflowiga aylantirilmaydi."
+      },
+      "modelImpactMap": {
+        "title": "Model ta'siri xaritasi rejalashtirilgan",
+        "body": "Xarita islohotlarni analitik kanallarga ehtiyotkorlik bilan bog'laydi. U yopiq model natijalarini citation qilmaydi yoki model stsenariylarini faollashtirmaydi."
       }
     }
   },

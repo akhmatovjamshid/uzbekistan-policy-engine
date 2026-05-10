@@ -820,6 +820,7 @@ export type ReformPackageSourceEvent = {
 export type ReformPackage = {
   package_id: string
   title: string
+  short_summary?: string
   policy_area: string
   reform_category: ReformCategory
   current_stage: string
@@ -833,6 +834,8 @@ export type ReformPackage = {
   source_confidence: ReformSourceConfidence
   why_tracked: string
   model_relevance: string[]
+  policy_channels?: string[]
+  parameters_or_amounts?: string[]
   measure_tracks: ReformPackageMeasureTrack[]
   implementation_milestones: ReformPackageMilestone[]
   official_source_events: ReformPackageSourceEvent[]
