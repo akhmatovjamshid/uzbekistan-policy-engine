@@ -1,7 +1,7 @@
 # Knowledge Hub v2 Concept Lock
 
 Date: 2026-05-07  
-Last updated: 2026-05-10 after the v2 dossier UI and source/methodology polish landed on `main`
+Last updated: 2026-05-10 after automated official-source intake was approved
 Status: implemented product-shape guardrail; active constraints remain in force
 Scope: Knowledge Hub product shape, with Reform Tracker as the first production subsection
 
@@ -25,6 +25,7 @@ UI implementation.
 Current deployed state after the v2 dossier UI and source/methodology polish:
 
 - 13 configured official sources.
+- Daily official-source intake workflow configured for automatic publication when all gates pass.
 - 4 verified source-extracted candidates retained for internal traceability.
 - 4 reform packages:
   - healthcare quality, licensing, and private-sector participation;
@@ -48,6 +49,8 @@ What works:
 - Source Library exposes configured sources and source-check posture from artifact metadata.
 - Methodology exposes rulebook rules, evidence types, caveats, and source-language boundaries.
 - EN/RU/UZ shell labels are present while source-language content remains caveated.
+- Official-source refresh can run automatically, but only by regenerating the static artifact
+  from configured sources and passing validation before commit.
 
 What remains incomplete:
 
@@ -269,7 +272,8 @@ Allowed:
 - group events into reform dossiers;
 - propose milestones;
 - produce diagnostics;
-- regenerate static artifact through PR-reviewed changes.
+- regenerate and publish the static artifact automatically from official configured sources
+  when source fetch, link verification, tests, lint, and build all pass.
 
 Not allowed:
 
@@ -279,6 +283,16 @@ Not allowed:
 - auto-generate policy recommendations;
 - auto-promote AI prose to reviewed analysis;
 - expose weak news as reforms.
+
+Automatic publication guardrails:
+
+- The scheduled workflow may publish only from `main`.
+- The workflow may commit only `apps/policy-ui/public/data/knowledge-hub.json`.
+- Any configured-source fetch failure blocks publication.
+- Invalid or synthetic item links are blocked before artifact output.
+- Policy UI lint, tests, and build must pass before the workflow commits.
+- The post-commit `Validate`, `Deploy Pages`, and hosted smoke workflows remain the
+  deployment evidence after publication.
 
 ## 8. UI Direction
 
@@ -357,14 +371,17 @@ the v2 page shape.
 
 ## 11. Next Implementation Slices
 
-The next work should improve dossier quality and analytical usefulness, not reopen a generic
-news/source expansion lane.
+The next work should improve dossier quality, source coverage for genuinely high-value
+reforms, and analytical usefulness. Automatic intake is allowed only for official configured
+sources and must remain strict enough not to reopen a generic news/RSS lane.
 
 Scope:
 
 - keep the current official-source artifact and package assembly;
 - improve or derive `short_summary`, `parameters_or_amounts`, `policy_channels`, and source type labels where they are still thin;
-- add more verified reform packages only when the official source supports a high-value dossier;
+- add or repair official source parsers only when they support high-value hard-reform dossiers;
+- allow scheduled official-source intake to accumulate new packages automatically when all
+  workflow guardrails pass;
 - strengthen package grouping, milestone chronology, and next-milestone/no-published-next-milestone handling;
 - keep Source Library and Methodology as artifact-metadata views, not operational admin screens;
 - preserve all existing guards and link validation;
@@ -372,7 +389,7 @@ Scope:
 
 Out of scope:
 
-- adding more official sources;
+- adding non-official sources;
 - backend CRUD;
 - live user search over source sites;
 - AI-generated recommendations;
