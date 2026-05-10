@@ -63,9 +63,9 @@ const HASH_ROUTES = [
     hash: '#/data-registry',
     selector: '.data-registry-section',
     titles: {
-      en: 'Data Registry',
-      ru: '\u0420\u0435\u0435\u0441\u0442\u0440 \u0434\u0430\u043d\u043d\u044b\u0445',
-      uz: "Ma'lumotlar reyestri",
+      en: 'Data Sources',
+      ru: '\u0418\u0441\u0442\u043e\u0447\u043d\u0438\u043a\u0438 \u0434\u0430\u043d\u043d\u044b\u0445',
+      uz: "Ma'lumot manbalari",
     },
     extraExpression: `
       !document.querySelector('.data-registry-page [role="status"]') &&
