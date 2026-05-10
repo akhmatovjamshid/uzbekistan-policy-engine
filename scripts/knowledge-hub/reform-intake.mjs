@@ -161,6 +161,63 @@ export const REFORM_CATEGORIES = [
   'other_policy',
 ]
 
+const HEALTHCARE_PACKAGE_DEPTH = {
+  short_summary:
+    'Tracks a presidential instruction package for healthcare licensing, accreditation, state-funded service eligibility, private-sector participation, preferential credit, and medical PPP delivery. The dated milestones are treated as implementation commitments from the cited source, not as an independently verified legal registry.',
+  parameters_or_amounts: [
+    '200 billion soums preferential credit resources',
+    'Loans up to 10 billion soums for private healthcare participation',
+    'Revised licensing procedures from 2026-07-01',
+    'Republican medical institution licensing deadline on 2027-04-01',
+    'Insurance Fund purchasing from accredited organizations from 2028',
+    'District/city medical association licensing target by 2030-12-31',
+  ],
+  policy_channels: [
+    'Public health service purchasing',
+    'Private medical investment',
+    'Healthcare licensing and accreditation',
+    'Preferential credit and PPP delivery',
+  ],
+}
+
+const HOUSING_URBANIZATION_PACKAGE_DEPTH = {
+  short_summary:
+    'Tracks a presidential instruction package on urbanization, construction permitting, utility connection simplification, land-privatization processing, state-client KPIs, and regional housing delivery. The tracker separates dated implementation steps from the broader policy narrative in the source.',
+  parameters_or_amounts: [
+    'Single application and single payment for utility specifications from 2026-07-01',
+    'Draft resolution to reduce requirements, timelines, and payments by at least half',
+    '140,000 regional apartment commissioning target for 2026',
+    '1.4 trillion soums planned infrastructure support for Yangi Uzbekistan residential areas',
+    'State client KPI evaluation from 2026-06-01',
+  ],
+  policy_channels: [
+    'Construction permitting',
+    'Utility connection cost and timing',
+    'Public infrastructure spending',
+    'Housing supply delivery',
+  ],
+}
+
+const AGRICULTURE_SUBSIDY_PACKAGE_DEPTH = {
+  short_summary:
+    'Tracks an agriculture support package covering harvest financing, proactive subsidy delivery, the Agricultural Payments Agency, and digital subsidy administration through Agroportal and Agrosubsidy. Amounts are shown as source-reported envelopes, not as disbursement verification.',
+  parameters_or_amounts: [
+    '34.2 trillion soums planned for cotton and grain harvest financing',
+    '1.3 trillion soums of 2026 subsidies to be provided proactively',
+    'Additional 5 trillion soums proposed for agrotechnical measures',
+    'Agricultural Payments Agency implementation',
+    'Digital subsidy workflow through Agroportal and Agrosubsidy',
+  ],
+  policy_channels: [
+    'Agricultural producer finance',
+    'Subsidy delivery administration',
+    'Rural liquidity',
+    'Food-supply conditions',
+  ],
+}
+
+const NO_FUTURE_MILESTONE_LABEL = 'No future milestone published in verified source'
+
 export const FIXTURE_DEMO_REFORM_PACKAGES = [
   {
     package_id: 'pkg-healthcare-quality-licensing-private-sector-2026',
@@ -179,6 +236,7 @@ export const FIXTURE_DEMO_REFORM_PACKAGES = [
     legal_basis: 'Official presidential instruction package on healthcare quality, licensing, accreditation, and private-sector participation.',
     official_basis: 'Official website of the President of the Republic of Uzbekistan, 1 May 2026.',
     financing_or_incentive: '200 billion soums preferential credit resources; loans up to 10 billion soums',
+    ...HEALTHCARE_PACKAGE_DEPTH,
     source_confidence: 'high',
     why_tracked: 'The official source sets dated licensing, accreditation, state-funded service eligibility, credit, and institutional implementation milestones that affect health-sector service delivery and public financing channels.',
     model_relevance: ['Social spending', 'Private investment', 'Public finance', 'Service-sector productivity'],
@@ -273,6 +331,7 @@ function healthcarePackageFromSourceEvent(sourceEvent) {
     legal_basis: 'Official presidential instruction package on healthcare quality, licensing, accreditation, and private-sector participation.',
     official_basis: `${sourceEvent.source_institution}, ${sourceEvent.source_published_at}.`,
     financing_or_incentive: '200 billion soums preferential credit resources; loans up to 10 billion soums',
+    ...HEALTHCARE_PACKAGE_DEPTH,
     source_confidence: 'high',
     why_tracked: 'The official source sets dated licensing, accreditation, state-funded service eligibility, credit, and institutional implementation milestones that affect health-sector service delivery and public financing channels.',
     model_relevance: ['Social spending', 'Private investment', 'Public finance', 'Service-sector productivity'],
@@ -356,6 +415,7 @@ function housingUrbanizationPackageFromSourceEvent(sourceEvent) {
     legal_basis: 'Official presidential meeting coverage on urbanization, master plans, construction permits, land privatization, and housing delivery.',
     official_basis: `${sourceEvent.source_institution}, ${sourceEvent.source_published_at}.`,
     financing_or_incentive: 'Annual master-plan budget allocations and 1.4 trillion soums planned infrastructure support for Yangi Uzbekistan residential areas identified in source.',
+    ...HOUSING_URBANIZATION_PACKAGE_DEPTH,
     source_confidence: 'high',
     why_tracked: 'The official source sets dated instructions for master-plan preparation, online land-privatization processing, construction-permit simplification, utility-connection simplification, state-client KPIs, and housing delivery targets.',
     model_relevance: ['Investment', 'Construction output', 'Public infrastructure spending', 'Housing supply'],
@@ -450,6 +510,7 @@ function agricultureSubsidyPackageFromSourceEvent(sourceEvent) {
     legal_basis: 'Official presidential presentation coverage citing the decree on improving state support for agriculture and the Agricultural Payments Agency.',
     official_basis: `${sourceEvent.source_institution}, ${sourceEvent.source_published_at}.`,
     financing_or_incentive: '34.2 trillion soums planned for cotton and grain harvest financing; 1.3 trillion soums of 2026 subsidies to be provided proactively; additional 5 trillion soums proposed for agrotechnical measures.',
+    ...AGRICULTURE_SUBSIDY_PACKAGE_DEPTH,
     source_confidence: 'high',
     why_tracked: 'The official source identifies a new agriculture support delivery system, quantified subsidy and financing envelopes, the Agricultural Payments Agency, and digitalized subsidy procedures through Agroportal and Agrosubsidy.',
     model_relevance: ['Agricultural output', 'Food prices', 'Rural income', 'Fiscal costs'],
@@ -1509,6 +1570,37 @@ const CATEGORY_PACKAGE_DEFAULTS = {
   },
 }
 
+function topicPackageEnrichment(topic, sortedCandidates, sourceEvents) {
+  if (topic?.id !== 'tax-administration-incentives') return {}
+  const groupText = sortedCandidates.map((candidate) => `${candidate.title} ${candidate.summary}`).join(' ')
+  if (!/\bincentives?\b/i.test(groupText) || !/\binfrastructure projects?\b/i.test(groupText)) return {}
+
+  const firstEventDate = sourceEvents[0]?.source_published_at ?? packageDate(sortedCandidates[0])
+
+  return {
+    short_summary:
+      'Tracks a verified official-source event on tax incentives for investors financing infrastructure projects. The current source confirms the incentive measure but does not publish a future implementation deadline, so the tracker records the source event without inferring a forward milestone.',
+    parameters_or_amounts: [
+      'Tax incentives for investors financing infrastructure projects',
+      firstEventDate
+        ? `Verified official source event published on ${firstEventDate}`
+        : 'Verified official source event without a parsed publication date',
+      'No future implementation deadline was published in the extracted source',
+    ],
+    policy_channels: [
+      'Fiscal incentives',
+      'Private infrastructure investment',
+      'Business cost of capital',
+      'Public-private financing',
+    ],
+    financing_or_incentive: 'Tax incentives for investors financing infrastructure projects',
+    why_tracked:
+      'The verified official source records a fiscal incentive measure for investors financing infrastructure projects. It is tracked as an incentive package while avoiding any inferred implementation deadline not present in the source.',
+    measure_label: 'tax incentives for infrastructure investors',
+    milestone_label: 'tax incentive source event recorded',
+  }
+}
+
 function candidateTopic(candidate) {
   const text = `${candidate.title} ${candidate.summary} ${candidate.inclusion_reason}`.toLowerCase()
   return PACKAGE_TOPIC_DEFINITIONS.find((topic) => topic.patterns.some((pattern) => pattern.test(text))) ?? null
@@ -1547,6 +1639,33 @@ function financingOrIncentiveFromCandidates(candidates) {
   return 'Financing or incentive measure identified in verified official source event'
 }
 
+function genericPackageSummary(topic, defaults, sourceEvents) {
+  const eventCount = sourceEvents.length
+  return `Groups ${eventCount} verified official source event${eventCount > 1 ? 's' : ''} under ${topic?.policy_area ?? defaults.policy_area}. The tracker records only the source-backed measure and keeps legal/currentness interpretation limited to the cited official source.`
+}
+
+function genericPackageParameters(sortedCandidates, sourceEvents, financingOrIncentive) {
+  const parameters = []
+  if (financingOrIncentive) parameters.push(financingOrIncentive)
+  parameters.push(...sourceEvents.map((event) => `${event.title} (${event.source_published_at || 'date not parsed'})`))
+  parameters.push(`Evidence type${sourceEvents.length > 1 ? 's' : ''}: ${uniqueStrings(sourceEvents.map((event) => event.evidence_type)).join(', ')}`)
+  if (sortedCandidates.length === 1) parameters.push('No future implementation deadline was published in the extracted source')
+  return uniqueStrings(parameters)
+}
+
+function milestoneLabelForSourceEvent(event, topic, enrichment) {
+  if (enrichment.milestone_label) return enrichment.milestone_label
+  if (event.event_type === 'approved') return 'official measure approved'
+  if (event.event_type === 'amended') return 'rules amended'
+  if (event.event_type === 'implementation_milestone') return 'implementation measure recorded'
+  if (event.event_type === 'financing_allocated') {
+    return topic?.id === 'tax-administration-incentives'
+      ? 'tax incentive source event recorded'
+      : 'financing or incentive source event recorded'
+  }
+  return 'official measure recorded'
+}
+
 function genericPackageFromCandidateGroup(candidates) {
   const sortedCandidates = [...candidates].sort((left, right) => packageDate(left).localeCompare(packageDate(right)))
   const first = sortedCandidates[0]
@@ -1558,17 +1677,12 @@ function genericPackageFromCandidateGroup(candidates) {
   const currentStageDate = packageDate(latest)
   const packageSlug = topic?.id ?? slugify(`${first.reform_category}-${first.title}`)
   const confidence = sourceConfidenceForCandidates(sortedCandidates)
+  const enrichment = topicPackageEnrichment(topic, sortedCandidates, sourceEvents)
+  const fallbackFinancingOrIncentive = financingOrIncentiveFromCandidates(sortedCandidates)
+  const financingOrIncentive = enrichment.financing_or_incentive ?? fallbackFinancingOrIncentive
   const milestones = sourceEvents.map((event, index) => ({
     id: `${packageSlug}-${event.event_type}-${event.source_published_at || index + 1}`,
-    label: event.event_type === 'approved'
-      ? 'official measure approved'
-      : event.event_type === 'amended'
-        ? 'rules amended'
-        : event.event_type === 'implementation_milestone'
-          ? 'implementation measure recorded'
-          : event.event_type === 'financing_allocated'
-            ? 'financing or incentive measure recorded'
-            : 'official measure recorded',
+    label: milestoneLabelForSourceEvent(event, topic, enrichment),
     date: event.source_published_at,
     date_precision: 'day',
     event_type: event.event_type,
@@ -1588,18 +1702,24 @@ function genericPackageFromCandidateGroup(candidates) {
     reform_category: category,
     current_stage: sortedCandidates.length > 1 ? 'Multiple verified source events' : 'Verified official measure',
     current_stage_date: currentStageDate,
-    next_milestone: milestones[0]?.label ?? 'official measure recorded',
-    next_milestone_date: milestones[0]?.date ?? currentStageDate,
+    next_milestone: NO_FUTURE_MILESTONE_LABEL,
+    next_milestone_date: currentStageDate,
     responsible_institutions: uniqueStrings(sortedCandidates.map((candidate) => candidate.source_institution)),
     legal_basis: `Verified official source event${sourceEvents.length > 1 ? 's' : ''}: ${sourceEvents.map((event) => event.title).join('; ')}.`,
     official_basis: uniqueStrings(sourceEvents.map((event) => event.source_institution)).join('; '),
-    financing_or_incentive: financingOrIncentiveFromCandidates(sortedCandidates),
+    financing_or_incentive: financingOrIncentive,
+    short_summary: enrichment.short_summary ?? genericPackageSummary(topic, defaults, sourceEvents),
+    parameters_or_amounts:
+      enrichment.parameters_or_amounts ?? genericPackageParameters(sortedCandidates, sourceEvents, financingOrIncentive),
     source_confidence: confidence,
-    why_tracked: `The package is assembled from ${sourceEvents.length} verified official source event${sourceEvents.length > 1 ? 's' : ''} with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.`,
+    why_tracked:
+      enrichment.why_tracked ??
+      `The package is assembled from ${sourceEvents.length} verified official source event${sourceEvents.length > 1 ? 's' : ''} with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.`,
     model_relevance: defaults.model_relevance,
+    policy_channels: enrichment.policy_channels ?? defaults.model_relevance,
     measure_tracks: sortedCandidates.map((candidate, index) => ({
       id: `${packageSlug}-measure-${index + 1}`,
-      label: measureLabelFromCandidate(candidate),
+      label: enrichment.measure_label ?? measureLabelFromCandidate(candidate),
       status: candidateToSourceEvent(candidate).event_type === 'approved' ? 'approved' : 'source verified',
     })),
     implementation_milestones: milestones,

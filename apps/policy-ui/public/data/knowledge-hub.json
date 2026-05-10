@@ -461,6 +461,21 @@
       "legal_basis": "Official presidential instruction package on healthcare quality, licensing, accreditation, and private-sector participation.",
       "official_basis": "Official website of the President of the Republic of Uzbekistan, 2026-05-01.",
       "financing_or_incentive": "200 billion soums preferential credit resources; loans up to 10 billion soums",
+      "short_summary": "Tracks a presidential instruction package for healthcare licensing, accreditation, state-funded service eligibility, private-sector participation, preferential credit, and medical PPP delivery. The dated milestones are treated as implementation commitments from the cited source, not as an independently verified legal registry.",
+      "parameters_or_amounts": [
+        "200 billion soums preferential credit resources",
+        "Loans up to 10 billion soums for private healthcare participation",
+        "Revised licensing procedures from 2026-07-01",
+        "Republican medical institution licensing deadline on 2027-04-01",
+        "Insurance Fund purchasing from accredited organizations from 2028",
+        "District/city medical association licensing target by 2030-12-31"
+      ],
+      "policy_channels": [
+        "Public health service purchasing",
+        "Private medical investment",
+        "Healthcare licensing and accreditation",
+        "Preferential credit and PPP delivery"
+      ],
       "source_confidence": "high",
       "why_tracked": "The official source sets dated licensing, accreditation, state-funded service eligibility, credit, and institutional implementation milestones that affect health-sector service delivery and public financing channels.",
       "model_relevance": [
@@ -604,6 +619,20 @@
       "legal_basis": "Official presidential meeting coverage on urbanization, master plans, construction permits, land privatization, and housing delivery.",
       "official_basis": "Government portal of the Republic of Uzbekistan, 2026-04-15.",
       "financing_or_incentive": "Annual master-plan budget allocations and 1.4 trillion soums planned infrastructure support for Yangi Uzbekistan residential areas identified in source.",
+      "short_summary": "Tracks a presidential instruction package on urbanization, construction permitting, utility connection simplification, land-privatization processing, state-client KPIs, and regional housing delivery. The tracker separates dated implementation steps from the broader policy narrative in the source.",
+      "parameters_or_amounts": [
+        "Single application and single payment for utility specifications from 2026-07-01",
+        "Draft resolution to reduce requirements, timelines, and payments by at least half",
+        "140,000 regional apartment commissioning target for 2026",
+        "1.4 trillion soums planned infrastructure support for Yangi Uzbekistan residential areas",
+        "State client KPI evaluation from 2026-06-01"
+      ],
+      "policy_channels": [
+        "Construction permitting",
+        "Utility connection cost and timing",
+        "Public infrastructure spending",
+        "Housing supply delivery"
+      ],
       "source_confidence": "high",
       "why_tracked": "The official source sets dated instructions for master-plan preparation, online land-privatization processing, construction-permit simplification, utility-connection simplification, state-client KPIs, and housing delivery targets.",
       "model_relevance": [
@@ -764,6 +793,20 @@
       "legal_basis": "Official presidential presentation coverage citing the decree on improving state support for agriculture and the Agricultural Payments Agency.",
       "official_basis": "Government portal of the Republic of Uzbekistan, 2025-12-09.",
       "financing_or_incentive": "34.2 trillion soums planned for cotton and grain harvest financing; 1.3 trillion soums of 2026 subsidies to be provided proactively; additional 5 trillion soums proposed for agrotechnical measures.",
+      "short_summary": "Tracks an agriculture support package covering harvest financing, proactive subsidy delivery, the Agricultural Payments Agency, and digital subsidy administration through Agroportal and Agrosubsidy. Amounts are shown as source-reported envelopes, not as disbursement verification.",
+      "parameters_or_amounts": [
+        "34.2 trillion soums planned for cotton and grain harvest financing",
+        "1.3 trillion soums of 2026 subsidies to be provided proactively",
+        "Additional 5 trillion soums proposed for agrotechnical measures",
+        "Agricultural Payments Agency implementation",
+        "Digital subsidy workflow through Agroportal and Agrosubsidy"
+      ],
+      "policy_channels": [
+        "Agricultural producer finance",
+        "Subsidy delivery administration",
+        "Rural liquidity",
+        "Food-supply conditions"
+      ],
       "source_confidence": "high",
       "why_tracked": "The official source identifies a new agriculture support delivery system, quantified subsidy and financing envelopes, the Agricultural Payments Agency, and digitalized subsidy procedures through Agroportal and Agrosubsidy.",
       "model_relevance": [
@@ -873,32 +916,44 @@
       "reform_category": "fiscal_tax",
       "current_stage": "Verified official measure",
       "current_stage_date": "2026-04-14",
-      "next_milestone": "financing or incentive measure recorded",
+      "next_milestone": "No future milestone published in verified source",
       "next_milestone_date": "2026-04-14",
       "responsible_institutions": [
         "Ministry of Investment, Industry and Trade of the Republic of Uzbekistan"
       ],
       "legal_basis": "Verified official source event: Uzbekistan Expands Tax Incentives for Investors Financing Infrastructure Projects.",
       "official_basis": "Ministry of Investment, Industry and Trade of the Republic of Uzbekistan",
-      "financing_or_incentive": "Tax incentive measure identified in verified official source event",
+      "financing_or_incentive": "Tax incentives for investors financing infrastructure projects",
+      "short_summary": "Tracks a verified official-source event on tax incentives for investors financing infrastructure projects. The current source confirms the incentive measure but does not publish a future implementation deadline, so the tracker records the source event without inferring a forward milestone.",
+      "parameters_or_amounts": [
+        "Tax incentives for investors financing infrastructure projects",
+        "Verified official source event published on 2026-04-14",
+        "No future implementation deadline was published in the extracted source"
+      ],
       "source_confidence": "high",
-      "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
+      "why_tracked": "The verified official source records a fiscal incentive measure for investors financing infrastructure projects. It is tracked as an incentive package while avoiding any inferred implementation deadline not present in the source.",
       "model_relevance": [
         "Fiscal balance",
         "Investment",
         "Business costs"
       ],
+      "policy_channels": [
+        "Fiscal incentives",
+        "Private infrastructure investment",
+        "Business cost of capital",
+        "Public-private financing"
+      ],
       "measure_tracks": [
         {
           "id": "tax-administration-incentives-measure-1",
-          "label": "expanded incentives",
+          "label": "tax incentives for infrastructure investors",
           "status": "source verified"
         }
       ],
       "implementation_milestones": [
         {
           "id": "tax-administration-incentives-financing_allocated-2026-04-14",
-          "label": "financing or incentive measure recorded",
+          "label": "tax incentive source event recorded",
           "date": "2026-04-14",
           "date_precision": "day",
           "event_type": "financing_allocated",

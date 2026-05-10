@@ -301,6 +301,9 @@ describe('Knowledge Hub reform intake', () => {
     assert.equal(healthcarePackage.title, 'Healthcare quality, licensing, and private-sector participation reform')
     assert.equal(healthcarePackage.official_source_events[0].source_url_status, 'not_checked_fixture')
     assert.match(healthcarePackage.caveat, /Fixture\/demo/)
+    assert.match(healthcarePackage.short_summary, /licensing, accreditation, state-funded service eligibility/)
+    assert.ok(healthcarePackage.parameters_or_amounts.includes('200 billion soums preferential credit resources'))
+    assert.ok(healthcarePackage.policy_channels.includes('Healthcare licensing and accreditation'))
     assert.deepEqual(
       healthcarePackage.measure_tracks.map((track) => track.label),
       [
@@ -347,6 +350,9 @@ describe('Knowledge Hub reform intake', () => {
     assert.equal(diagnostics.artifact.reform_packages[0].official_source_events[0].source_url_status, 'verified')
     assert.match(diagnostics.artifact.reform_packages[0].caveat, /assembled from a verified source event/)
     assert.equal(diagnostics.artifact.reform_packages[0].financing_or_incentive, '200 billion soums preferential credit resources; loans up to 10 billion soums')
+    assert.match(diagnostics.artifact.reform_packages[0].short_summary, /preferential credit/)
+    assert.ok(diagnostics.artifact.reform_packages[0].parameters_or_amounts.includes('Loans up to 10 billion soums for private healthcare participation'))
+    assert.ok(diagnostics.artifact.reform_packages[0].policy_channels.includes('Preferential credit and PPP delivery'))
     assert.deepEqual(
       diagnostics.artifact.reform_packages[0].implementation_milestones.map((milestone) => milestone.date),
       ['2026-07-01', '2027-04-01', '2028', '2030-12-31'],
@@ -387,6 +393,9 @@ describe('Knowledge Hub reform intake', () => {
     assert.equal(packages.length, 2)
     assert.equal(packages[0].title, 'Urbanization, construction permits, and housing delivery reform')
     assert.equal(packages[0].next_milestone_date, '2026-07-01')
+    assert.match(packages[0].short_summary, /construction permitting/)
+    assert.ok(packages[0].parameters_or_amounts.includes('140,000 regional apartment commissioning target for 2026'))
+    assert.ok(packages[0].policy_channels.includes('Housing supply delivery'))
     assert.deepEqual(
       packages[0].implementation_milestones.map((milestone) => milestone.date),
       ['2026-06', '2026-06-01', '2026-07-01', '2026-07', '2026'],
@@ -394,6 +403,9 @@ describe('Knowledge Hub reform intake', () => {
     assert.equal(packages[1].title, 'Agriculture financing and subsidy delivery reform')
     assert.equal(packages[1].reform_category, 'agriculture')
     assert.equal(packages[1].financing_or_incentive.includes('34.2 trillion soums'), true)
+    assert.match(packages[1].short_summary, /Agroportal and Agrosubsidy/)
+    assert.ok(packages[1].parameters_or_amounts.includes('1.3 trillion soums of 2026 subsidies to be provided proactively'))
+    assert.ok(packages[1].policy_channels.includes('Agricultural producer finance'))
     assert.deepEqual(
       packages[1].implementation_milestones.map((milestone) => milestone.date),
       ['2025-12-09', '2026', '2026'],
@@ -429,10 +441,10 @@ describe('Knowledge Hub reform intake', () => {
   it('assembles generic packages from unrelated verified source events', () => {
     const packages = assembleReformPackagesFromCandidates([
       {
-        title: 'Resolution approved on tax administration amendments',
-        summary: 'Tax reporting rules amended.',
+        title: 'Uzbekistan Expands Tax Incentives for Investors Financing Infrastructure Projects',
+        summary: 'Tax incentives for investors financing infrastructure projects were expanded.',
         source_url: 'https://gov.uz/en/imv/news/view/161792',
-        source_title: 'Resolution approved on tax administration amendments',
+        source_title: 'Uzbekistan Expands Tax Incentives for Investors Financing Infrastructure Projects',
         source_institution: 'Ministry of Economy and Finance of Uzbekistan',
         source_published_at: '2026-05-05',
         reform_category: 'fiscal_tax',
@@ -448,7 +460,15 @@ describe('Knowledge Hub reform intake', () => {
     assert.equal(packages[0].title, 'Tax administration and investment incentive reform')
     assert.equal(packages[0].reform_category, 'fiscal_tax')
     assert.equal(packages[0].official_source_events[0].source_url_status, 'verified')
+    assert.equal(packages[0].next_milestone, 'No future milestone published in verified source')
+    assert.equal(packages[0].next_milestone_date, '2026-05-05')
+    assert.match(packages[0].short_summary, /tax incentives for investors financing infrastructure projects/)
+    assert.ok(packages[0].parameters_or_amounts.includes('Tax incentives for investors financing infrastructure projects'))
+    assert.ok(packages[0].parameters_or_amounts.includes('No future implementation deadline was published in the extracted source'))
+    assert.ok(packages[0].policy_channels.includes('Fiscal incentives'))
+    assert.equal(packages[0].measure_tracks[0].label, 'tax incentives for infrastructure investors')
     assert.equal(packages[0].implementation_milestones.length, 1)
+    assert.equal(packages[0].implementation_milestones[0].label, 'tax incentive source event recorded')
     assert.equal(packages[0].implementation_milestones[0].source_event_ids[0], packages[0].official_source_events[0].id)
   })
 

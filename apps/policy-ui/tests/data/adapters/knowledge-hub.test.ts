@@ -197,10 +197,15 @@ describe('knowledge hub adapter', () => {
     assert.ok(content.rulebook?.actual_reform_definition?.includes('legal or policy instrument'))
     assert.equal(content.extraction_mode_label, 'Configured source fetch')
     assert.ok(content.reform_packages?.every((reformPackage) => reformPackage.implementation_milestones.length > 0))
+    assert.ok(content.reform_packages?.every((reformPackage) => reformPackage.short_summary && reformPackage.short_summary.length > 60))
+    assert.ok(content.reform_packages?.every((reformPackage) => (reformPackage.parameters_or_amounts?.length ?? 0) > 0))
+    assert.ok(content.reform_packages?.every((reformPackage) => (reformPackage.policy_channels?.length ?? 0) > 0))
     assert.ok(
       content.reform_packages?.some(
         (reformPackage) =>
           reformPackage.package_id === 'pkg-tax-administration-incentives-2026-04-14' &&
+          reformPackage.next_milestone === 'No future milestone published in verified source' &&
+          reformPackage.financing_or_incentive === 'Tax incentives for investors financing infrastructure projects' &&
           reformPackage.implementation_milestones.some((milestone) => milestone.id === 'tax-administration-incentives-financing_allocated-2026-04-14'),
       ),
     )
