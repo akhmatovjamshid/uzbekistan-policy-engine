@@ -103,7 +103,7 @@ describe('Knowledge Hub page', () => {
     assert.match(contentViewSource, /policyChannels/)
   })
 
-  it('subsection tabs render planned states for non-Reform Tracker sections', () => {
+  it('subsection tabs render source library and methodology from artifact metadata', () => {
     const contentViewSource = readFileSync(KNOWLEDGE_HUB_CONTENT_VIEW_SOURCE, 'utf8')
 
     assert.match(contentViewSource, /HUB_SECTIONS/)
@@ -111,6 +111,12 @@ describe('Knowledge Hub page', () => {
     assert.match(contentViewSource, /sourceLibrary/)
     assert.match(contentViewSource, /methodology/)
     assert.match(contentViewSource, /modelImpactMap/)
+    assert.match(contentViewSource, /SourceLibrarySection/)
+    assert.match(contentViewSource, /MethodologySection/)
+    assert.match(contentViewSource, /source_diagnostics/)
+    assert.match(contentViewSource, /rulebook/)
+    assert.match(contentViewSource, /content\.sources/)
+    assert.match(contentViewSource, /content\.caveats/)
     assert.match(contentViewSource, /PlannedSection/)
     assert.match(contentViewSource, /knowledgeHub\.sections\.plannedStatus/)
     assert.match(contentViewSource, /knowledgeHub\.planned\.\$\{sectionId\}\.title/)
@@ -136,6 +142,8 @@ describe('Knowledge Hub page', () => {
       assert.equal(typeof locale.knowledgeHub.reformTracker.packages.showing, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.dossier.whatChanged, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.dossier.officialSourceBasis, 'string')
+      assert.equal(typeof locale.knowledgeHub.reformTracker.dossier.openOfficialSourceAria, 'string')
+      assert.equal(typeof locale.knowledgeHub.reformTracker.dossier.sourceLinkMeta, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.dossier.measuresAndParameters, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.dossier.implementationTimeline, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.dossier.responsibleInstitutions, 'string')
@@ -146,6 +154,14 @@ describe('Knowledge Hub page', () => {
       assert.equal(typeof locale.knowledgeHub.reformTracker.labels.sourceConfidence.high, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.labels.eventType.instructions_issued, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.labels.evidenceType.official_policy_announcement, 'string')
+      assert.equal(typeof locale.knowledgeHub.sourceLibrary.title, 'string')
+      assert.equal(typeof locale.knowledgeHub.sourceLibrary.openSourceAria, 'string')
+      assert.equal(typeof locale.knowledgeHub.sourceLibrary.invalidLinks, 'string')
+      assert.equal(typeof locale.knowledgeHub.sourceLibrary.statusMissing, 'string')
+      assert.equal(typeof locale.knowledgeHub.methodologyDetail.title, 'string')
+      assert.equal(typeof locale.knowledgeHub.methodologyDetail.definitionTitle, 'string')
+      assert.equal(typeof locale.knowledgeHub.methodologyDetail.boundaries, 'string')
+      assert.equal(typeof locale.knowledgeHub.reformTracker.notice.sourceLanguage, 'string')
     }
   })
 
@@ -163,7 +179,10 @@ describe('Knowledge Hub page', () => {
 
     assert.match(contentViewSource, /target: '_blank'/)
     assert.match(contentViewSource, /rel: 'noopener noreferrer'/)
-    assert.match(contentViewSource, /<a href=\{sourceEvent\.source_url\} \{\.\.\.EXTERNAL_LINK_PROPS\}>/)
+    assert.match(contentViewSource, /href=\{sourceEvent\.source_url\}/)
+    assert.match(contentViewSource, /openOfficialSourceAria/)
+    assert.match(contentViewSource, /sourceLinkMeta/)
+    assert.match(contentViewSource, /href=\{source\.url\}/)
     assert.match(timelineItemSource, /target: '_blank'/)
     assert.match(timelineItemSource, /rel: 'noopener noreferrer'/)
     assert.match(timelineItemSource, /<a href=\{item\.source_url\} \{\.\.\.EXTERNAL_LINK_PROPS\}>/)

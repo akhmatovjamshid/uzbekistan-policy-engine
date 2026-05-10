@@ -3,6 +3,9 @@ import { useTranslation } from 'react-i18next'
 import type { TFunction } from 'i18next'
 import type {
   KnowledgeHubContent,
+  KnowledgeHubConfiguredSource,
+  KnowledgeHubRulebookRule,
+  KnowledgeHubSourceDiagnostic,
   ReformEvidenceType,
   ReformPackage,
   ReformPackageMilestone,
@@ -14,6 +17,7 @@ type KnowledgeHubContentViewProps = {
 }
 
 type KnowledgeHubSectionId = 'reformTracker' | 'policyBriefs' | 'sourceLibrary' | 'methodology' | 'modelImpactMap'
+type PlannedKnowledgeHubSectionId = Exclude<KnowledgeHubSectionId, 'reformTracker' | 'sourceLibrary' | 'methodology'>
 type LabelNamespace = 'sourceConfidence' | 'eventType' | 'evidenceType'
 
 type DossierFilters = {
@@ -53,6 +57,24 @@ function formatDisplayDate(value: string | undefined): string {
 function referenceTime(value: string | undefined): number {
   const parsed = value ? Date.parse(value) : Number.NaN
   return Number.isFinite(parsed) ? parsed : Date.now()
+}
+
+function hostLabel(value: string | undefined): string {
+  if (!value) return 'n/a'
+  try {
+    return new URL(value).hostname.replace(/^www\./, '')
+  } catch {
+    return value
+  }
+}
+
+function formatCount(value: number | undefined): string {
+  return String(value ?? 0)
+}
+
+function scoringThreshold(value: Record<string, unknown> | undefined): string {
+  const threshold = value?.include_threshold
+  return typeof threshold === 'number' && Number.isFinite(threshold) ? String(threshold) : 'n/a'
 }
 
 function isFutureDate(value: string, reference: number): boolean {
@@ -286,17 +308,28 @@ function DossierList({
   packages,
   selectedPackageId,
   onSelect,
+  onClearFilters,
   totalCount,
 }: {
   packages: ReformPackage[]
   selectedPackageId: string
   onSelect: (packageId: string) => void
+  onClearFilters: () => void
   totalCount: number
 }) {
   const { t } = useTranslation()
 
   if (packages.length === 0) {
-    return <p className="empty-state empty-state--compact">{t('knowledgeHub.reformTracker.packages.empty')}</p>
+    return (
+      <section className="dossier-list dossier-list--empty" aria-label={t('knowledgeHub.reformTracker.packages.aria')}>
+        <p className="empty-state empty-state--compact">{t('knowledgeHub.reformTracker.packages.empty')}</p>
+        {totalCount > 0 ? (
+          <button type="button" className="ui-secondary-action" onClick={onClearFilters}>
+            {t('knowledgeHub.reformTracker.filters.clearAll')}
+          </button>
+        ) : null}
+      </section>
+    )
   }
 
   return (
@@ -401,6 +434,7 @@ function ImplementationTimeline({ reformPackage }: { reformPackage: ReformPackag
 function OfficialSourceBasis({ reformPackage }: { reformPackage: ReformPackage }) {
   const { t } = useTranslation()
   const sourceEvent = reformPackage.official_source_events[0]
+  const sourceHost = hostLabel(sourceEvent?.source_url)
 
   return (
     <section className="dossier-section dossier-section--source">
@@ -426,8 +460,16 @@ function OfficialSourceBasis({ reformPackage }: { reformPackage: ReformPackage }
               <dd>{trackerLabel(t, 'sourceConfidence', reformPackage.source_confidence)}</dd>
             </div>
           </dl>
-          <a href={sourceEvent.source_url} {...EXTERNAL_LINK_PROPS}>
-            {t('knowledgeHub.reformTracker.dossier.openOfficialSource')}
+          <a
+            href={sourceEvent.source_url}
+            className="external-source-link"
+            aria-label={t('knowledgeHub.reformTracker.dossier.openOfficialSourceAria', {
+              title: sourceEvent.title,
+            })}
+            {...EXTERNAL_LINK_PROPS}
+          >
+            <span>{t('knowledgeHub.reformTracker.dossier.openOfficialSource')}</span>
+            <span>{t('knowledgeHub.reformTracker.dossier.sourceLinkMeta', { host: sourceHost })}</span>
           </a>
         </article>
       ) : (
@@ -527,6 +569,7 @@ function ReformTrackerDesk({ content }: { content: KnowledgeHubContent }) {
     [filters, sortedPackages],
   )
   const [selectedPackageId, setSelectedPackageId] = useState(sortedPackages[0]?.package_id ?? '')
+  const clearFilters = () => setFilters({ policyArea: '', stage: '', institution: '', sourceType: '' })
 
   const selectedPackage =
     filteredPackages.find((item) => item.package_id === selectedPackageId) ?? filteredPackages[0]
@@ -541,6 +584,7 @@ function ReformTrackerDesk({ content }: { content: KnowledgeHubContent }) {
             packages={filteredPackages}
             selectedPackageId={selectedPackage?.package_id ?? ''}
             onSelect={setSelectedPackageId}
+            onClearFilters={clearFilters}
             totalCount={sortedPackages.length}
           />
         </div>
@@ -550,7 +594,214 @@ function ReformTrackerDesk({ content }: { content: KnowledgeHubContent }) {
   )
 }
 
-function PlannedSection({ sectionId }: { sectionId: Exclude<KnowledgeHubSectionId, 'reformTracker'> }) {
+function sourceRows(content: KnowledgeHubContent): Array<KnowledgeHubConfiguredSource & { diagnostic?: KnowledgeHubSourceDiagnostic }> {
+  const diagnosticsById = new Map((content.source_diagnostics ?? []).map((diagnostic) => [diagnostic.id, diagnostic]))
+  const configuredSources = content.sources ?? []
+  if (configuredSources.length > 0) {
+    return configuredSources.map((source) => ({ ...source, diagnostic: diagnosticsById.get(source.id) }))
+  }
+  return (content.source_diagnostics ?? []).map((diagnostic) => ({
+    id: diagnostic.id,
+    institution: diagnostic.institution,
+    url: diagnostic.url,
+    diagnostic,
+  }))
+}
+
+function SourceLibrarySection({ content }: { content: KnowledgeHubContent }) {
+  const { t } = useTranslation()
+  const rows = sourceRows(content)
+  const diagnostics = content.source_diagnostics ?? []
+  const checkedCount = diagnostics.filter((diagnostic) => diagnostic.ok).length
+  const issueCount = diagnostics.filter((diagnostic) => !diagnostic.ok).length
+  const candidateCount = diagnostics.reduce((sum, diagnostic) => sum + diagnostic.candidate_count, 0)
+  const excludedCount = diagnostics.reduce((sum, diagnostic) => sum + diagnostic.excluded_count, 0)
+  const invalidLinkCount = diagnostics.reduce((sum, diagnostic) => sum + diagnostic.link_invalid_count, 0)
+
+  return (
+    <section className="hub-detail-panel" aria-label={t('knowledgeHub.sourceLibrary.aria')}>
+      <header className="hub-detail-panel__head">
+        <span className="ui-chip ui-chip--blue">{t('knowledgeHub.sourceLibrary.status')}</span>
+        <div>
+          <h2>{t('knowledgeHub.sourceLibrary.title')}</h2>
+          <p>{t('knowledgeHub.sourceLibrary.description')}</p>
+        </div>
+      </header>
+
+      <div className="hub-stat-grid" aria-label={t('knowledgeHub.sourceLibrary.summaryAria')}>
+        <div className="hub-stat">
+          <strong>{formatCount(rows.length)}</strong>
+          <span>{t('knowledgeHub.sourceLibrary.sourcesConfigured')}</span>
+        </div>
+        <div className="hub-stat">
+          <strong>{formatCount(checkedCount)}</strong>
+          <span>{t('knowledgeHub.sourceLibrary.sourcesChecked')}</span>
+        </div>
+        <div className="hub-stat">
+          <strong>{formatCount(candidateCount)}</strong>
+          <span>{t('knowledgeHub.sourceLibrary.candidatesExtracted')}</span>
+        </div>
+        <div className="hub-stat">
+          <strong>{formatCount(excludedCount)}</strong>
+          <span>{t('knowledgeHub.sourceLibrary.excludedItems')}</span>
+        </div>
+        <div className="hub-stat">
+          <strong>{formatCount(invalidLinkCount)}</strong>
+          <span>{t('knowledgeHub.sourceLibrary.invalidLinks')}</span>
+        </div>
+      </div>
+
+      {issueCount > 0 ? (
+        <p className="source-library-note">
+          {t('knowledgeHub.sourceLibrary.issueCount', { count: issueCount })}
+        </p>
+      ) : null}
+
+      {rows.length > 0 ? (
+        <div className="source-library-list">
+          {rows.map((source) => {
+            const diagnostic = source.diagnostic
+            return (
+              <article key={source.id} className="source-library-card">
+                <div>
+                  <h3>{source.institution}</h3>
+                  <p>{hostLabel(source.url)}</p>
+                </div>
+                <dl>
+                  <div>
+                    <dt>{t('knowledgeHub.sourceLibrary.lastChecked')}</dt>
+                    <dd>{formatDisplayDate(diagnostic?.fetched_at)}</dd>
+                  </div>
+                  <div>
+                    <dt>{t('knowledgeHub.sourceLibrary.itemsFound')}</dt>
+                    <dd>{formatCount(diagnostic?.candidate_count)}</dd>
+                  </div>
+                  <div>
+                    <dt>{t('knowledgeHub.sourceLibrary.excluded')}</dt>
+                    <dd>{formatCount(diagnostic?.excluded_count)}</dd>
+                  </div>
+                  <div>
+                    <dt>{t('knowledgeHub.sourceLibrary.linkStatus')}</dt>
+                    <dd>
+                      <span
+                        className={`source-status${
+                          diagnostic?.ok === false ? ' source-status--issue' : diagnostic ? '' : ' source-status--pending'
+                        }`}
+                      >
+                        {diagnostic
+                          ? diagnostic.ok
+                            ? t('knowledgeHub.sourceLibrary.statusChecked')
+                            : t('knowledgeHub.sourceLibrary.statusIssue')
+                          : t('knowledgeHub.sourceLibrary.statusMissing')}
+                      </span>
+                    </dd>
+                  </div>
+                </dl>
+                <a
+                  href={source.url}
+                  className="external-source-link"
+                  aria-label={t('knowledgeHub.sourceLibrary.openSourceAria', { institution: source.institution })}
+                  {...EXTERNAL_LINK_PROPS}
+                >
+                  <span>{t('knowledgeHub.sourceLibrary.openSource')}</span>
+                  <span>{t('knowledgeHub.reformTracker.dossier.sourceLinkMeta', { host: hostLabel(source.url) })}</span>
+                </a>
+              </article>
+            )
+          })}
+        </div>
+      ) : (
+        <p className="empty-state empty-state--compact">{t('knowledgeHub.sourceLibrary.empty')}</p>
+      )}
+    </section>
+  )
+}
+
+function RuleList({ rules }: { rules: KnowledgeHubRulebookRule[] }) {
+  return (
+    <ol className="methodology-rule-list">
+      {rules.map((rule) => (
+        <li key={rule.id}>
+          <strong>{rule.label ?? rule.id}</strong>
+          {rule.description ? <span>{rule.description}</span> : null}
+        </li>
+      ))}
+    </ol>
+  )
+}
+
+function MethodologySection({ content }: { content: KnowledgeHubContent }) {
+  const { t } = useTranslation()
+  const rulebook = content.rulebook
+  const evidenceTypes = rulebook?.evidence_types ?? []
+
+  return (
+    <section className="hub-detail-panel methodology-panel" aria-label={t('knowledgeHub.methodologyDetail.aria')}>
+      <header className="hub-detail-panel__head">
+        <span className="ui-chip ui-chip--blue">{rulebook?.version ?? t('knowledgeHub.methodologyDetail.versionUnavailable')}</span>
+        <div>
+          <h2>{t('knowledgeHub.methodologyDetail.title')}</h2>
+          <p>{t('knowledgeHub.methodologyDetail.description')}</p>
+        </div>
+      </header>
+
+      <div className="methodology-definition">
+        <h3>{t('knowledgeHub.methodologyDetail.definitionTitle')}</h3>
+        <p>{rulebook?.actual_reform_definition ?? t('knowledgeHub.methodologyDetail.definitionUnavailable')}</p>
+      </div>
+
+      <div className="hub-stat-grid hub-stat-grid--methodology">
+        <div className="hub-stat">
+          <strong>{formatCount(rulebook?.include_rules.length)}</strong>
+          <span>{t('knowledgeHub.methodologyDetail.includeRules')}</span>
+        </div>
+        <div className="hub-stat">
+          <strong>{formatCount(rulebook?.exclude_rules.length)}</strong>
+          <span>{t('knowledgeHub.methodologyDetail.excludeRules')}</span>
+        </div>
+        <div className="hub-stat">
+          <strong>{scoringThreshold(rulebook?.relevance_scoring)}</strong>
+          <span>{t('knowledgeHub.methodologyDetail.threshold')}</span>
+        </div>
+      </div>
+
+      <div className="methodology-columns">
+        <section>
+          <h3>{t('knowledgeHub.methodologyDetail.includedTitle')}</h3>
+          <RuleList rules={rulebook?.include_rules ?? []} />
+        </section>
+        <section>
+          <h3>{t('knowledgeHub.methodologyDetail.excludedTitle')}</h3>
+          <RuleList rules={rulebook?.exclude_rules ?? []} />
+        </section>
+      </div>
+
+      <section className="methodology-evidence">
+        <h3>{t('knowledgeHub.methodologyDetail.evidenceTypes')}</h3>
+        <div className="chip-row">
+          {evidenceTypes.map((evidenceType) => (
+            <span key={evidenceType} className="ui-chip">
+              {trackerLabel(t, 'evidenceType', evidenceType)}
+            </span>
+          ))}
+        </div>
+      </section>
+
+      <section className="dossier-section dossier-section--caveats">
+        <h3>{t('knowledgeHub.methodologyDetail.boundaries')}</h3>
+        <ul>
+          <li>{t('knowledgeHub.reformTracker.methodology.caveat')}</li>
+          <li>{t('knowledgeHub.reformTracker.notice.sourceLanguage')}</li>
+          {(content.caveats ?? []).map((caveat) => (
+            <li key={caveat}>{caveat}</li>
+          ))}
+        </ul>
+      </section>
+    </section>
+  )
+}
+
+function PlannedSection({ sectionId }: { sectionId: PlannedKnowledgeHubSectionId }) {
   const { t } = useTranslation()
 
   return (
@@ -582,7 +833,12 @@ export function KnowledgeHubContentView({ content }: KnowledgeHubContentViewProp
           </button>
         ))}
       </div>
-      {activeSection === 'reformTracker' ? <ReformTrackerDesk content={content} /> : <PlannedSection sectionId={activeSection} />}
+      {activeSection === 'reformTracker' ? <ReformTrackerDesk content={content} /> : null}
+      {activeSection === 'sourceLibrary' ? <SourceLibrarySection content={content} /> : null}
+      {activeSection === 'methodology' ? <MethodologySection content={content} /> : null}
+      {activeSection === 'policyBriefs' || activeSection === 'modelImpactMap' ? (
+        <PlannedSection sectionId={activeSection} />
+      ) : null}
     </>
   )
 }

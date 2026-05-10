@@ -865,11 +865,40 @@ export type KnowledgeHubSourceDiagnostic = {
   error?: string
 }
 
+export type KnowledgeHubConfiguredSource = {
+  id: string
+  institution: string
+  url: string
+}
+
+export type KnowledgeHubRulebookRule = {
+  id: string
+  label?: string
+  description?: string
+  weight?: number
+  reason?: string
+  category?: string
+  evidence_types?: string[]
+}
+
+export type KnowledgeHubRulebookMetadata = {
+  version: string
+  actual_reform_definition?: string
+  include_rules: KnowledgeHubRulebookRule[]
+  exclude_rules: KnowledgeHubRulebookRule[]
+  evidence_types: string[]
+  reform_categories: string[]
+  relevance_scoring: Record<string, unknown>
+  exclusion_reasons: KnowledgeHubRulebookRule[]
+}
+
 export type KnowledgeHubContent = {
   reform_packages?: ReformPackage[]
   reforms: ReformTrackerItem[]
   briefs: ResearchBrief[]
   candidates?: ReformCandidateItem[]
+  sources?: KnowledgeHubConfiguredSource[]
+  rulebook?: KnowledgeHubRulebookMetadata
   source_diagnostics?: KnowledgeHubSourceDiagnostic[]
   caveats?: string[]
   generated_at?: string

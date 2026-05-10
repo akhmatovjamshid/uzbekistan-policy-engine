@@ -1,5 +1,8 @@
 import type {
+  KnowledgeHubConfiguredSource,
   KnowledgeHubContent,
+  KnowledgeHubRulebookMetadata,
+  KnowledgeHubRulebookRule,
   KnowledgeHubSourceDiagnostic,
   ReformCandidateItem,
   ReformPackage,
@@ -71,6 +74,8 @@ export type RawKnowledgeHubPayload = {
     sources_configured?: number
     reform_packages?: number
   }
+  sources?: KnowledgeHubConfiguredSource[]
+  rulebook?: unknown
   accepted_reforms?: RawKnowledgeHubReform[]
   reform_packages?: ReformPackage[]
   reforms?: RawKnowledgeHubReform[]
@@ -97,6 +102,41 @@ function asStringArray(value: unknown): string[] {
     return []
   }
   return value.filter((entry): entry is string => typeof entry === 'string')
+}
+
+function asRulebookRules(value: unknown): KnowledgeHubRulebookRule[] {
+  if (!Array.isArray(value)) return []
+  return value
+    .filter((entry): entry is Record<string, unknown> => typeof entry === 'object' && entry !== null)
+    .map((entry) => ({
+      id: asString(entry.id),
+      label: typeof entry.label === 'string' ? entry.label : undefined,
+      description: typeof entry.description === 'string' ? entry.description : undefined,
+      weight: typeof entry.weight === 'number' && Number.isFinite(entry.weight) ? entry.weight : undefined,
+      reason: typeof entry.reason === 'string' ? entry.reason : undefined,
+      category: typeof entry.category === 'string' ? entry.category : undefined,
+      evidence_types: asStringArray(entry.evidence_types),
+    }))
+    .filter((entry) => entry.id.length > 0)
+}
+
+function adaptRulebook(value: unknown): KnowledgeHubRulebookMetadata | undefined {
+  if (typeof value !== 'object' || value === null) return undefined
+  const record = value as Record<string, unknown>
+  return {
+    version: asString(record.version),
+    actual_reform_definition:
+      typeof record.actual_reform_definition === 'string' ? record.actual_reform_definition : undefined,
+    include_rules: asRulebookRules(record.include_rules),
+    exclude_rules: asRulebookRules(record.exclude_rules),
+    evidence_types: asStringArray(record.evidence_types),
+    reform_categories: asStringArray(record.reform_categories),
+    relevance_scoring:
+      typeof record.relevance_scoring === 'object' && record.relevance_scoring !== null
+        ? (record.relevance_scoring as Record<string, unknown>)
+        : {},
+    exclusion_reasons: asRulebookRules(record.exclusion_reasons),
+  }
 }
 
 function asReformStatus(
@@ -203,6 +243,7 @@ export function toKnowledgeHubContent(raw: RawKnowledgeHubPayload): KnowledgeHub
   const reforms = Array.isArray(rawReforms) ? rawReforms.map(adaptReform) : []
   const briefs = Array.isArray(raw.briefs) ? raw.briefs.map(adaptBrief) : []
   const candidates = Array.isArray(raw.candidates) ? raw.candidates : []
+  const sources = Array.isArray(raw.sources) ? raw.sources : []
   const sourceDiagnostics = Array.isArray(raw.source_diagnostics) ? raw.source_diagnostics : []
   const meta = raw.meta ?? {}
   return {
@@ -210,6 +251,8 @@ export function toKnowledgeHubContent(raw: RawKnowledgeHubPayload): KnowledgeHub
     reforms,
     briefs,
     candidates,
+    sources,
+    rulebook: adaptRulebook(raw.rulebook),
     source_diagnostics: sourceDiagnostics,
     caveats: asStringArray(raw.caveats),
     generated_at: typeof raw.generated_at === 'string' ? raw.generated_at : undefined,
@@ -233,6 +276,8 @@ export function knowledgeHubArtifactToContent(artifact: KnowledgeHubArtifact): K
     extraction_mode: artifact.extraction_mode,
     extraction_mode_label: artifact.extraction_mode_label,
     source_artifact: '/data/knowledge-hub.json',
+    sources: artifact.sources,
+    rulebook: artifact.rulebook,
     reform_packages: artifact.reform_packages,
     accepted_reforms: artifact.accepted_reforms,
     candidates: artifact.candidates,
