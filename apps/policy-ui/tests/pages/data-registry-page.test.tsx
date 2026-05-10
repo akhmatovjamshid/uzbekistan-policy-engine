@@ -90,8 +90,8 @@ async function createTestI18n() {
         common: {
           trustState: {
             labels: {
-              artifactGuardChecked: 'Artifact guard-checked',
-              planned: 'Planned',
+              artifactGuardChecked: 'Format checked',
+              planned: 'Not active',
               lastValidationCheck: 'Last validation check',
             },
           },
@@ -101,69 +101,68 @@ async function createTestI18n() {
             filters: {
               aria: 'filters',
               all: 'All',
-              active: 'Active artifacts',
+              active: 'Active files',
               warnings: 'Warnings',
-              planned: 'Planned',
+              planned: 'Not active',
               missingUnavailable: 'Missing / unavailable',
-              empty: 'No registry records match this filter.',
+              empty: 'No records match this filter.',
             },
             legend: {
               title: 'Status legend',
               valid: {
-                label: 'Artifact guard-checked',
+                label: 'Format checked',
                 description:
-                  'Public artifact loaded and passed frontend guard checks. This is not economic or model validation.',
+                  'Data file loaded and passed format checks. This is not economic or model validation.',
               },
               warning: {
                 label: 'Warning',
-                description: 'Artifact loaded, but caveats or timestamp warnings exist.',
+                description: 'Data file loaded, but caveats or date warnings exist.',
               },
               planned: {
-                label: 'Planned',
-                description: 'Intentionally absent in this foundation bundle.',
+                label: 'Not active',
+                description: 'Intentionally absent in this release.',
               },
               lastValidationCheck: {
-                description:
-                  'Timestamp when the frontend registry last loaded artifacts and ran shape guards.',
+                description: 'Last time this page checked the data files.',
               },
             },
             status: {
-              valid: 'Artifact guard-checked',
+              valid: 'Format checked',
               warning: 'Warning',
               failed: 'Failed',
               missing: 'Missing',
               unavailable: 'Unavailable',
-              planned: 'Planned',
+              planned: 'Not active',
             },
             sections: {
               dataSources: { title: 'Data sources', description: 'Sources.' },
               modelInputs: { title: 'Model inputs', description: 'Inputs.' },
-              bridgeOutputs: { title: 'Bridge outputs', description: 'Artifacts.' },
-              plannedArtifacts: { title: 'Planned artifacts', description: 'Planned records.' },
+              bridgeOutputs: { title: 'Model outputs', description: 'Outputs.' },
+              plannedArtifacts: { title: 'Not active yet', description: 'Inactive records.' },
               vintages: { title: 'Vintages', description: 'Vintages.' },
-              validation: { title: 'Validation/update status', description: 'Validation.' },
+              validation: { title: 'Update status', description: 'Validation.' },
               warnings: { title: 'Stale/missing warnings', description: 'Warnings.' },
             },
             table: {
-              type: 'Registry type',
+              type: 'Type',
               domain: 'Domain',
               status: 'Status',
-              vintage: 'Source vintage',
-              export: 'Export timestamp',
-              source: 'Source/artifact',
+              vintage: 'Source date',
+              export: 'Updated',
+              source: 'Source',
               owner: 'Owner / source system',
               notes: 'Notes',
             },
             registryType: {
               source_series: 'Source series',
               model_input: 'Model input',
-              bridge_output: 'Bridge output',
-              planned_artifact: 'Planned artifact',
+              bridge_output: 'Model output',
+              planned_artifact: 'Not active',
             },
             artifact: {
-              dataVintage: 'Data vintage',
-              exportTimestamp: 'Export timestamp',
-              sourceVintage: 'Source vintage',
+              dataVintage: 'Source date',
+              exportTimestamp: 'Updated',
+              sourceVintage: 'Source date',
               lastValidationCheck: 'Last validation check',
               owner: 'Owner',
               sourceSystem: 'Source system',
@@ -172,13 +171,13 @@ async function createTestI18n() {
               consumers: 'Consumer surfaces',
             },
             detail: {
-              summary: 'Inspect guard and freshness scope',
+              summary: 'View checks',
               validationScope: 'Validation scope',
               freshnessRule: 'Freshness rule',
               caveats: 'Caveats',
-              sourceVsExport: 'Source vs export',
+              sourceVsExport: 'Source date vs update',
             },
-            vintages: { boundary: 'Source vintage and export timestamp are different.' },
+            vintages: { boundary: 'The source date and update time can differ.' },
             warnings: { empty: 'No warnings.' },
             links: { modelExplorer: 'Model Explorer methodology' },
           },
@@ -231,28 +230,28 @@ describe('Data Registry page', () => {
         <MemoryRouter>
           <DataRegistryContent
             registry={registry}
-            title="Data Registry"
+            title="Data Sources"
             description="Source health."
-            loadingLabel="Loading data registry..."
+            loadingLabel="Loading data sources..."
           />
         </MemoryRouter>
       </I18nextProvider>,
     )
 
-    assert.match(markup, /Data Registry/)
+    assert.match(markup, /Data Sources/)
     assert.match(markup, /Status legend/)
-    assert.match(markup, /Active artifacts/)
+    assert.match(markup, /Active files/)
     assert.match(markup, /Missing \/ unavailable/)
-    assert.match(markup, /Artifact guard-checked/)
+    assert.match(markup, /Format checked/)
     assert.match(markup, /not economic or model validation/)
-    assert.match(markup, /Intentionally absent in this foundation bundle/)
+    assert.match(markup, /Intentionally absent in this release/)
     assert.match(markup, /Last validation check/)
     assert.match(markup, /Data sources/)
     assert.match(markup, /Model inputs/)
-    assert.match(markup, /Bridge outputs/)
-    assert.match(markup, /Planned artifacts/)
+    assert.match(markup, /Model outputs/)
+    assert.match(markup, /Not active yet/)
     assert.match(markup, /Vintages/)
-    assert.match(markup, /Validation\/update status/)
+    assert.match(markup, /Update status/)
     assert.match(markup, /Stale\/missing warnings/)
     assert.match(markup, /\/data\/qpm\.json/)
     assert.match(markup, /\/data\/dfm\.json/)
@@ -261,16 +260,16 @@ describe('Data Registry page', () => {
     assert.match(markup, /PE Trade Shock/)
     assert.match(markup, /CGE Reform Shock/)
     assert.match(markup, /FPP Fiscal Path/)
-    assert.match(markup, /Planned/)
+    assert.match(markup, /Not active/)
     assert.match(markup, /Source series/)
     assert.match(markup, /Model input/)
-    assert.match(markup, /Bridge output/)
-    assert.match(markup, /Planned artifact/)
+    assert.match(markup, /Model output/)
+    assert.match(markup, /Not active/)
     assert.match(markup, /Owner \/ source system/)
-    assert.match(markup, /Inspect guard and freshness scope/)
+    assert.match(markup, /View checks/)
     assert.match(markup, /Validation scope/)
     assert.match(markup, /Freshness rule/)
-    assert.match(markup, /Source vs export/)
-    assert.match(markup, /Data Registry/)
+    assert.match(markup, /Source date vs update/)
+    assert.match(markup, /Data Sources/)
   })
 })

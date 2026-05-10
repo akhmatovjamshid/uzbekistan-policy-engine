@@ -48,8 +48,8 @@ async function createTestI18n() {
               noPrior: 'No prior',
               notAvailable: 'n/a',
               freshness: 'Metric timestamp {{date}}',
-              smePendingChip: 'SME content pending',
-              smePendingAria: 'SME pending',
+              smePendingChip: 'Review needed',
+              smePendingAria: 'Context note needs review',
               provenance: {
                 observed: 'Observed',
                 nowcast: 'Nowcast',
@@ -101,7 +101,7 @@ function buildMetric(overrides: Partial<HeadlineMetric> = {}): HeadlineMetric {
 }
 
 describe('KpiStrip', () => {
-  it('renders SME-pending warn chip when context_note is the sentinel', async () => {
+  it('renders review-needed warn chip when context_note is the sentinel', async () => {
     const i18n = await createTestI18n()
     const metric = buildMetric({ context_note: '[SME content pending]' })
     const markup = renderToStaticMarkup(
@@ -111,7 +111,7 @@ describe('KpiStrip', () => {
     )
 
     assert.match(markup, /ui-chip--warn/)
-    assert.match(markup, /SME content pending/)
+    assert.match(markup, /Review needed/)
   })
 
   it('renders plain context_note when a non-sentinel value is present', async () => {
