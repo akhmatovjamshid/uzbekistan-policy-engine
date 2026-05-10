@@ -6,7 +6,6 @@ import type {
   KnowledgeHubConfiguredSource,
   KnowledgeHubRulebookRule,
   KnowledgeHubSourceDiagnostic,
-  ReformEvidenceType,
   ReformPackage,
   ReformPackageMilestone,
   ReformPackageSourceEvent,
@@ -16,15 +15,13 @@ type KnowledgeHubContentViewProps = {
   content: KnowledgeHubContent
 }
 
-type KnowledgeHubSectionId = 'reformTracker' | 'policyBriefs' | 'sourceLibrary' | 'methodology' | 'modelImpactMap'
-type PlannedKnowledgeHubSectionId = Exclude<KnowledgeHubSectionId, 'reformTracker' | 'sourceLibrary' | 'methodology'>
-type LabelNamespace = 'sourceConfidence' | 'eventType' | 'evidenceType'
+type KnowledgeHubSectionId = 'reformTracker' | 'sourceLibrary' | 'methodology'
+type LabelNamespace = 'eventType'
 
 type DossierFilters = {
   policyArea: string
   stage: string
   institution: string
-  sourceType: string
 }
 
 const EXTERNAL_LINK_PROPS = {
@@ -32,13 +29,7 @@ const EXTERNAL_LINK_PROPS = {
   rel: 'noopener noreferrer',
 } as const
 
-const HUB_SECTIONS: KnowledgeHubSectionId[] = [
-  'reformTracker',
-  'policyBriefs',
-  'sourceLibrary',
-  'methodology',
-  'modelImpactMap',
-]
+const HUB_SECTIONS: KnowledgeHubSectionId[] = ['reformTracker', 'sourceLibrary', 'methodology']
 
 function dateSortKey(value: string): string {
   if (/^\d{4}$/.test(value)) return `${value}-01-01`
@@ -72,11 +63,6 @@ function formatCount(value: number | undefined): string {
   return String(value ?? 0)
 }
 
-function scoringThreshold(value: Record<string, unknown> | undefined): string {
-  const threshold = value?.include_threshold
-  return typeof threshold === 'number' && Number.isFinite(threshold) ? String(threshold) : 'n/a'
-}
-
 function isFutureDate(value: string, reference: number): boolean {
   const parsed = Date.parse(dateSortKey(value))
   return Number.isFinite(parsed) && parsed > reference
@@ -108,20 +94,11 @@ function uniqueSorted(values: string[]): string[] {
   )
 }
 
-function evidenceTypesForPackage(reformPackage: ReformPackage): ReformEvidenceType[] {
-  return uniqueSorted([
-    ...reformPackage.official_source_events.map((event) => event.evidence_type),
-    ...reformPackage.implementation_milestones.map((milestone) => milestone.evidence_type),
-  ]) as ReformEvidenceType[]
-}
-
 function packageMatchesFilters(reformPackage: ReformPackage, filters: DossierFilters): boolean {
-  const sourceTypes = evidenceTypesForPackage(reformPackage)
   return (
     (!filters.policyArea || reformPackage.policy_area === filters.policyArea) &&
     (!filters.stage || reformPackage.current_stage === filters.stage) &&
-    (!filters.institution || reformPackage.responsible_institutions.includes(filters.institution)) &&
-    (!filters.sourceType || sourceTypes.includes(filters.sourceType as ReformEvidenceType))
+    (!filters.institution || reformPackage.responsible_institutions.includes(filters.institution))
   )
 }
 
@@ -132,11 +109,31 @@ function splitSentences(value: string): string[] {
     .filter(Boolean)
 }
 
+function cleanDossierText(value: string): string {
+  const withoutTrackerLead = value.replace(/^Tracks an?\s+/i, (match) =>
+    /^Tracks an/i.test(match) ? 'An ' : 'A ',
+  )
+  const usefulSentences = splitSentences(withoutTrackerLead).filter(
+    (sentence) =>
+      !/not as an independently verified legal registry/i.test(sentence) &&
+      !/not an official legal registry/i.test(sentence) &&
+      !/not as disbursement verification/i.test(sentence),
+  )
+  return usefulSentences.join(' ')
+}
+
 function dossierSummary(reformPackage: ReformPackage): string {
-  if (reformPackage.short_summary) return reformPackage.short_summary
+  if (reformPackage.short_summary) return cleanDossierText(reformPackage.short_summary)
   const sourceSummary = splitSentences(reformPackage.official_source_events[0]?.summary ?? '')
   const summary = sourceSummary.slice(0, 2).join(' ')
   return summary || reformPackage.why_tracked
+}
+
+function compactUniqueList(values: string[]): string[] {
+  return uniqueSorted(values).filter((value, index, entries) => {
+    const normalized = value.toLowerCase()
+    return !entries.some((other, otherIndex) => otherIndex !== index && other.toLowerCase().includes(normalized))
+  })
 }
 
 function parameterList(reformPackage: ReformPackage): string[] {
@@ -145,7 +142,7 @@ function parameterList(reformPackage: ReformPackage): string[] {
     reformPackage.financing_or_incentive,
     ...reformPackage.measure_tracks.map((track) => (track.status ? `${track.label}: ${track.status}` : track.label)),
   ]
-  return uniqueSorted([...parameters, ...derived].filter((value): value is string => Boolean(value)))
+  return compactUniqueList([...parameters, ...derived].filter((value): value is string => Boolean(value)))
 }
 
 function policyChannels(reformPackage: ReformPackage): string[] {
@@ -200,16 +197,6 @@ function MetricStrip({ content, packages }: { content: KnowledgeHubContent; pack
       label: t('knowledgeHub.reformTracker.metrics.upcomingMilestones'),
       value: String(upcomingMilestones),
     },
-    {
-      icon: 'clock' as const,
-      label: t('knowledgeHub.reformTracker.metrics.lastSourceCheck'),
-      value: formatDisplayDate(content.generated_at),
-    },
-    {
-      icon: 'info' as const,
-      label: t('knowledgeHub.reformTracker.metrics.staticPreview'),
-      value: t('knowledgeHub.reformTracker.metrics.notRegistry'),
-    },
   ]
 
   return (
@@ -238,7 +225,6 @@ function DossierFiltersPanel({
   const policyAreas = uniqueSorted(packages.map((item) => item.policy_area))
   const stages = uniqueSorted(packages.map((item) => item.current_stage))
   const institutions = uniqueSorted(packages.flatMap((item) => item.responsible_institutions))
-  const sourceTypes = uniqueSorted(packages.flatMap((item) => evidenceTypesForPackage(item)))
 
   function updateFilter(key: keyof DossierFilters, value: string) {
     onFiltersChange({ ...filters, [key]: value })
@@ -251,7 +237,7 @@ function DossierFiltersPanel({
         <button
           type="button"
           className="dossier-filters__clear"
-          onClick={() => onFiltersChange({ policyArea: '', stage: '', institution: '', sourceType: '' })}
+          onClick={() => onFiltersChange({ policyArea: '', stage: '', institution: '' })}
         >
           {t('knowledgeHub.reformTracker.filters.clearAll')}
         </button>
@@ -285,17 +271,6 @@ function DossierFiltersPanel({
           {institutions.map((institution) => (
             <option key={institution} value={institution}>
               {institution}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label>
-        <span>{t('knowledgeHub.reformTracker.filters.sourceType')}</span>
-        <select value={filters.sourceType} onChange={(event) => updateFilter('sourceType', event.target.value)}>
-          <option value="">{t('knowledgeHub.reformTracker.filters.allSources')}</option>
-          {sourceTypes.map((sourceType) => (
-            <option key={sourceType} value={sourceType}>
-              {trackerLabel(t, 'evidenceType', sourceType)}
             </option>
           ))}
         </select>
@@ -340,7 +315,6 @@ function DossierList({
       </div>
       <div className="dossier-list__items">
         {packages.map((reformPackage) => {
-          const sourceTypes = evidenceTypesForPackage(reformPackage).slice(0, 2)
           return (
             <button
               key={reformPackage.package_id}
@@ -357,14 +331,7 @@ function DossierList({
                 <span className={`ui-chip ui-chip--${stageTone(reformPackage.current_stage)}`}>
                   {reformPackage.current_stage}
                 </span>
-                {sourceTypes.map((sourceType) => (
-                  <span key={sourceType} className="ui-chip">
-                    {trackerLabel(t, 'evidenceType', sourceType)}
-                  </span>
-                ))}
-              </span>
-              <span className="dossier-row__confidence">
-                {trackerLabel(t, 'sourceConfidence', reformPackage.source_confidence)}
+                <span className="ui-chip">{t('knowledgeHub.reformTracker.packages.officialSource')}</span>
               </span>
             </button>
           )
@@ -438,7 +405,7 @@ function OfficialSourceBasis({ reformPackage }: { reformPackage: ReformPackage }
 
   return (
     <section className="dossier-section dossier-section--source">
-      <h3>{t('knowledgeHub.reformTracker.dossier.officialSourceBasis')}</h3>
+      <h3>{t('knowledgeHub.reformTracker.dossier.source')}</h3>
       {sourceEvent ? (
         <article className="source-basis">
           <h4>{sourceEvent.title}</h4>
@@ -450,14 +417,6 @@ function OfficialSourceBasis({ reformPackage }: { reformPackage: ReformPackage }
             <div>
               <dt>{t('knowledgeHub.reformTracker.dossier.publicationDate')}</dt>
               <dd>{formatDisplayDate(sourceEvent.source_published_at)}</dd>
-            </div>
-            <div>
-              <dt>{t('knowledgeHub.reformTracker.timeline.evidenceType')}</dt>
-              <dd>{trackerLabel(t, 'evidenceType', sourceEvent.evidence_type)}</dd>
-            </div>
-            <div>
-              <dt>{t('knowledgeHub.reformTracker.timeline.confidence')}</dt>
-              <dd>{trackerLabel(t, 'sourceConfidence', reformPackage.source_confidence)}</dd>
             </div>
           </dl>
           <a
@@ -493,7 +452,6 @@ function DossierDetail({ reformPackage }: { reformPackage: ReformPackage }) {
         </div>
         <div className="reform-dossier__badges">
           <span className={`ui-chip ui-chip--${stageTone(reformPackage.current_stage)}`}>{reformPackage.current_stage}</span>
-          <span className="ui-chip ui-chip--blue">{trackerLabel(t, 'sourceConfidence', reformPackage.source_confidence)}</span>
           <span className="ui-chip">{reformPackage.policy_area}</span>
         </div>
       </header>
@@ -506,7 +464,7 @@ function DossierDetail({ reformPackage }: { reformPackage: ReformPackage }) {
           </section>
 
           <section className="dossier-section">
-            <h3>{t('knowledgeHub.reformTracker.dossier.measuresAndParameters')}</h3>
+            <h3>{t('knowledgeHub.reformTracker.dossier.keyMeasures')}</h3>
             <ul className="measure-list">
               {parameters.map((parameter) => (
                 <li key={parameter}>{parameter}</li>
@@ -524,8 +482,8 @@ function DossierDetail({ reformPackage }: { reformPackage: ReformPackage }) {
         <ImplementationTimeline reformPackage={reformPackage} />
 
         <section className="dossier-section dossier-section--model">
-          <h3>{t('knowledgeHub.reformTracker.dossier.policyModelRelevance')}</h3>
-          <p>{reformPackage.why_tracked}</p>
+          <h3>{t('knowledgeHub.reformTracker.dossier.policyChannels')}</h3>
+          <p>{cleanDossierText(reformPackage.why_tracked)}</p>
           <div className="chip-row">
             {channels.map((channel) => (
               <span key={channel} className="attribution-badge">
@@ -536,12 +494,8 @@ function DossierDetail({ reformPackage }: { reformPackage: ReformPackage }) {
         </section>
 
         <section className="dossier-section dossier-section--caveats">
-          <h3>{t('knowledgeHub.reformTracker.dossier.caveats')}</h3>
-          <ul>
-            <li>{reformPackage.caveat}</li>
-            <li>{t('knowledgeHub.reformTracker.dossier.staticCaveat')}</li>
-            <li>{t('knowledgeHub.reformTracker.dossier.modelCaveat')}</li>
-          </ul>
+          <h3>{t('knowledgeHub.reformTracker.dossier.note')}</h3>
+          <p>{t('knowledgeHub.reformTracker.dossier.registryNote')}</p>
         </section>
       </div>
     </article>
@@ -555,7 +509,6 @@ function ReformTrackerDesk({ content }: { content: KnowledgeHubContent }) {
     policyArea: '',
     stage: '',
     institution: '',
-    sourceType: '',
   })
   const sortedPackages = useMemo(
     () =>
@@ -569,7 +522,7 @@ function ReformTrackerDesk({ content }: { content: KnowledgeHubContent }) {
     [filters, sortedPackages],
   )
   const [selectedPackageId, setSelectedPackageId] = useState(sortedPackages[0]?.package_id ?? '')
-  const clearFilters = () => setFilters({ policyArea: '', stage: '', institution: '', sourceType: '' })
+  const clearFilters = () => setFilters({ policyArea: '', stage: '', institution: '' })
 
   const selectedPackage =
     filteredPackages.find((item) => item.package_id === selectedPackageId) ?? filteredPackages[0]
@@ -621,7 +574,6 @@ function SourceLibrarySection({ content }: { content: KnowledgeHubContent }) {
   return (
     <section className="hub-detail-panel" aria-label={t('knowledgeHub.sourceLibrary.aria')}>
       <header className="hub-detail-panel__head">
-        <span className="ui-chip ui-chip--blue">{t('knowledgeHub.sourceLibrary.status')}</span>
         <div>
           <h2>{t('knowledgeHub.sourceLibrary.title')}</h2>
           <p>{t('knowledgeHub.sourceLibrary.description')}</p>
@@ -733,12 +685,10 @@ function RuleList({ rules }: { rules: KnowledgeHubRulebookRule[] }) {
 function MethodologySection({ content }: { content: KnowledgeHubContent }) {
   const { t } = useTranslation()
   const rulebook = content.rulebook
-  const evidenceTypes = rulebook?.evidence_types ?? []
 
   return (
     <section className="hub-detail-panel methodology-panel" aria-label={t('knowledgeHub.methodologyDetail.aria')}>
       <header className="hub-detail-panel__head">
-        <span className="ui-chip ui-chip--blue">{rulebook?.version ?? t('knowledgeHub.methodologyDetail.versionUnavailable')}</span>
         <div>
           <h2>{t('knowledgeHub.methodologyDetail.title')}</h2>
           <p>{t('knowledgeHub.methodologyDetail.description')}</p>
@@ -750,65 +700,27 @@ function MethodologySection({ content }: { content: KnowledgeHubContent }) {
         <p>{rulebook?.actual_reform_definition ?? t('knowledgeHub.methodologyDetail.definitionUnavailable')}</p>
       </div>
 
-      <div className="hub-stat-grid hub-stat-grid--methodology">
-        <div className="hub-stat">
-          <strong>{formatCount(rulebook?.include_rules.length)}</strong>
-          <span>{t('knowledgeHub.methodologyDetail.includeRules')}</span>
+      <details className="methodology-rules">
+        <summary>{t('knowledgeHub.methodologyDetail.showFullRules')}</summary>
+        <div className="methodology-columns">
+          <section>
+            <h3>{t('knowledgeHub.methodologyDetail.includedTitle')}</h3>
+            <RuleList rules={rulebook?.include_rules ?? []} />
+          </section>
+          <section>
+            <h3>{t('knowledgeHub.methodologyDetail.excludedTitle')}</h3>
+            <RuleList rules={rulebook?.exclude_rules ?? []} />
+          </section>
         </div>
-        <div className="hub-stat">
-          <strong>{formatCount(rulebook?.exclude_rules.length)}</strong>
-          <span>{t('knowledgeHub.methodologyDetail.excludeRules')}</span>
-        </div>
-        <div className="hub-stat">
-          <strong>{scoringThreshold(rulebook?.relevance_scoring)}</strong>
-          <span>{t('knowledgeHub.methodologyDetail.threshold')}</span>
-        </div>
-      </div>
-
-      <div className="methodology-columns">
-        <section>
-          <h3>{t('knowledgeHub.methodologyDetail.includedTitle')}</h3>
-          <RuleList rules={rulebook?.include_rules ?? []} />
-        </section>
-        <section>
-          <h3>{t('knowledgeHub.methodologyDetail.excludedTitle')}</h3>
-          <RuleList rules={rulebook?.exclude_rules ?? []} />
-        </section>
-      </div>
-
-      <section className="methodology-evidence">
-        <h3>{t('knowledgeHub.methodologyDetail.evidenceTypes')}</h3>
-        <div className="chip-row">
-          {evidenceTypes.map((evidenceType) => (
-            <span key={evidenceType} className="ui-chip">
-              {trackerLabel(t, 'evidenceType', evidenceType)}
-            </span>
-          ))}
-        </div>
-      </section>
+      </details>
 
       <section className="dossier-section dossier-section--caveats">
-        <h3>{t('knowledgeHub.methodologyDetail.boundaries')}</h3>
+        <h3>{t('knowledgeHub.methodologyDetail.note')}</h3>
         <ul>
           <li>{t('knowledgeHub.reformTracker.methodology.caveat')}</li>
           <li>{t('knowledgeHub.reformTracker.notice.sourceLanguage')}</li>
-          {(content.caveats ?? []).map((caveat) => (
-            <li key={caveat}>{caveat}</li>
-          ))}
         </ul>
       </section>
-    </section>
-  )
-}
-
-function PlannedSection({ sectionId }: { sectionId: PlannedKnowledgeHubSectionId }) {
-  const { t } = useTranslation()
-
-  return (
-    <section className="hub-planned-state" aria-label={t(`knowledgeHub.sections.${sectionId}`)}>
-      <span className="ui-chip ui-chip--amber">{t('knowledgeHub.sections.plannedStatus')}</span>
-      <h2>{t(`knowledgeHub.planned.${sectionId}.title`)}</h2>
-      <p>{t(`knowledgeHub.planned.${sectionId}.body`)}</p>
     </section>
   )
 }
@@ -836,9 +748,6 @@ export function KnowledgeHubContentView({ content }: KnowledgeHubContentViewProp
       {activeSection === 'reformTracker' ? <ReformTrackerDesk content={content} /> : null}
       {activeSection === 'sourceLibrary' ? <SourceLibrarySection content={content} /> : null}
       {activeSection === 'methodology' ? <MethodologySection content={content} /> : null}
-      {activeSection === 'policyBriefs' || activeSection === 'modelImpactMap' ? (
-        <PlannedSection sectionId={activeSection} />
-      ) : null}
     </>
   )
 }
