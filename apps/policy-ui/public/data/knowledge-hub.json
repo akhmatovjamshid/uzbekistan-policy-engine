@@ -1,6 +1,6 @@
 {
   "schema_version": "knowledge-hub-reform-tracker.v1",
-  "generated_at": "2026-05-10T16:02:42.327Z",
+  "generated_at": "2026-05-10T16:09:08.318Z",
   "generated_by": "scripts/knowledge-hub/generate-source-fetch-artifact.mjs",
   "extraction_mode": "configured-source-fetch",
   "extraction_mode_label": "Configured source fetch",
@@ -296,7 +296,7 @@
       "candidate_count": 0,
       "excluded_count": 13,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-10T16:02:42.327Z"
+      "fetched_at": "2026-05-10T16:09:08.318Z"
     },
     {
       "id": "president-reform-news",
@@ -308,7 +308,7 @@
       "candidate_count": 0,
       "excluded_count": 14,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-10T16:02:42.327Z"
+      "fetched_at": "2026-05-10T16:09:08.318Z"
     },
     {
       "id": "president-healthcare-reform-detail",
@@ -320,7 +320,7 @@
       "candidate_count": 1,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-10T16:02:42.327Z"
+      "fetched_at": "2026-05-10T16:09:08.318Z"
     },
     {
       "id": "gov-housing-urbanization-detail",
@@ -332,7 +332,7 @@
       "candidate_count": 1,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-10T16:02:42.327Z"
+      "fetched_at": "2026-05-10T16:09:08.318Z"
     },
     {
       "id": "gov-agriculture-subsidy-detail",
@@ -344,7 +344,7 @@
       "candidate_count": 1,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-10T16:02:42.327Z"
+      "fetched_at": "2026-05-10T16:09:08.318Z"
     },
     {
       "id": "gov-portal-reform-news",
@@ -356,7 +356,7 @@
       "candidate_count": 0,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-10T16:02:42.327Z"
+      "fetched_at": "2026-05-10T16:09:08.318Z"
     },
     {
       "id": "cbu-policy-news",
@@ -368,7 +368,7 @@
       "candidate_count": 0,
       "excluded_count": 347,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-10T16:02:42.327Z"
+      "fetched_at": "2026-05-10T16:09:08.318Z"
     },
     {
       "id": "customs-committee-news",
@@ -380,7 +380,7 @@
       "candidate_count": 0,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-10T16:02:42.327Z"
+      "fetched_at": "2026-05-10T16:09:08.318Z"
     },
     {
       "id": "mef-policy-news",
@@ -392,7 +392,7 @@
       "candidate_count": 0,
       "excluded_count": 12,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-10T16:02:42.327Z"
+      "fetched_at": "2026-05-10T16:09:08.318Z"
     },
     {
       "id": "tax-committee-news",
@@ -404,7 +404,7 @@
       "candidate_count": 0,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-10T16:02:42.327Z"
+      "fetched_at": "2026-05-10T16:09:08.318Z"
     },
     {
       "id": "energy-ministry-news",
@@ -416,7 +416,7 @@
       "candidate_count": 0,
       "excluded_count": 12,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-10T16:02:42.327Z"
+      "fetched_at": "2026-05-10T16:09:08.318Z"
     },
     {
       "id": "investment-trade-ministry-news",
@@ -428,7 +428,7 @@
       "candidate_count": 1,
       "excluded_count": 11,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-10T16:02:42.327Z"
+      "fetched_at": "2026-05-10T16:09:08.318Z"
     },
     {
       "id": "justice-ministry-news",
@@ -440,7 +440,7 @@
       "candidate_count": 0,
       "excluded_count": 12,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-10T16:02:42.327Z"
+      "fetched_at": "2026-05-10T16:09:08.318Z"
     }
   ],
   "reform_packages": [
@@ -596,7 +596,7 @@
           "event_type": "instructions_issued",
           "summary": "President Shavkat Mirziyoyev reviewed measures for the further development of the healthcare system, enhancement of the quality of medical services, and expansion of private sector participation. Consistent efforts are underway nationwide to provide the population with high-quality, modern medical care, improve management efficiency in the sector, make broader use of private sector potential, and elevate regional healthcare infrastructure to a new level. The role of the private sector in advancing the industry, along with the opportunities available in this area, was also examined. As noted, while 3,200 private clinics were operating in the country in 2016, their number is expected to reach ",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-10T16:02:42.327Z"
+          "extracted_at": "2026-05-10T16:09:08.318Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from a verified source event. It is not an official legal registry and does not assert legal force beyond the cited official source."
@@ -771,7 +771,7 @@
           "event_type": "instructions_issued",
           "summary": "More than 500 industry representatives, including entrepreneurs, construction professionals, designers, architects, and urban plannersparticipated via regional studios. The Head of State emphasized that the construction sector plays a special role in achieving the ambitious goals set to ensure high economic growth across all sectors and regions. According to studies, each dollar invested in construction can generate an additional two to three dollars for the economy, while each job created in the sector leads to up to five new jobs in other industries. Over the past nine years, nearly 10,000 new construction enterprises have been established in the country. Twenty large companies with an ann",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-10T16:02:42.327Z"
+          "extracted_at": "2026-05-10T16:09:08.318Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from a verified source event. It is not an official legal registry and does not assert legal force beyond the cited official source."
@@ -904,7 +904,7 @@
           "event_type": "financing_allocated",
           "summary": "The presentation began with an overview of the funds allocated to the sector this year and their effectiveness. It was noted that 29 trillion soums were allocated for financing cotton and grain cultivation, purchasing agricultural machinery, and implementing water-saving technologies. Furthermore, 2,35 trillion soums in subsidies were directed to the sector. Allocating subsidies equivalent to 10 percent of the cotton value to 3,430 farms and clusters enabled them to cultivate cotton on 151 thousand hectares using their own funds, resulting in savings of 1,9 trillion soums. Moreover, farmers who fully repaid their loans for cotton cultivation this year were offered a reimbursement of 4 percen",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-10T16:02:42.327Z"
+          "extracted_at": "2026-05-10T16:09:08.318Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from a verified source event. It is not an official legal registry and does not assert legal force beyond the cited official source."
@@ -978,7 +978,7 @@
           "event_type": "financing_allocated",
           "summary": "Source API did not expose a summary for this configured extraction item.",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-10T16:02:42.327Z"
+          "extracted_at": "2026-05-10T16:09:08.318Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
@@ -1022,8 +1022,8 @@
       "source_owner": "Official website of the President of the Republic of Uzbekistan",
       "source_url": "https://president.uz/en/lists/view/9164",
       "source_published_at": "2026-05-01",
-      "retrieved_at": "2026-05-10T16:02:42.327Z",
-      "extracted_at": "2026-05-10T16:02:42.327Z",
+      "retrieved_at": "2026-05-10T16:09:08.318Z",
+      "extracted_at": "2026-05-10T16:09:08.318Z",
       "citation_permission": "pending",
       "license_class": "unknown",
       "translation_review_state": "not_translated",
@@ -1033,7 +1033,7 @@
       ],
       "extraction_mode": "configured-source-fetch",
       "source_url_status": "verified",
-      "source_url_verified_at": "2026-05-10T16:02:42.327Z"
+      "source_url_verified_at": "2026-05-10T16:09:08.318Z"
     },
     {
       "id": "gov-housing-urbanization-detail-2026-04-15-detail-progress-and-priorities-in-housing-construction-and-urbanizati",
@@ -1070,8 +1070,8 @@
       "source_owner": "Government portal of the Republic of Uzbekistan",
       "source_url": "https://gov.uz/en/news/view/153724",
       "source_published_at": "2026-04-15",
-      "retrieved_at": "2026-05-10T16:02:42.327Z",
-      "extracted_at": "2026-05-10T16:02:42.327Z",
+      "retrieved_at": "2026-05-10T16:09:08.318Z",
+      "extracted_at": "2026-05-10T16:09:08.318Z",
       "citation_permission": "pending",
       "license_class": "unknown",
       "translation_review_state": "not_translated",
@@ -1081,7 +1081,7 @@
       ],
       "extraction_mode": "configured-source-fetch",
       "source_url_status": "verified",
-      "source_url_verified_at": "2026-05-10T16:02:42.327Z"
+      "source_url_verified_at": "2026-05-10T16:09:08.318Z"
     },
     {
       "id": "investment-trade-ministry-news-2026-04-14-10-20-00-153388-uzbekistan-expands-tax-incentives-for-investors-finan",
@@ -1117,8 +1117,8 @@
       "source_owner": "Ministry of Investment, Industry and Trade of the Republic of Uzbekistan",
       "source_url": "https://gov.uz/en/miit/news/view/153388",
       "source_published_at": "2026-04-14 10:20:00",
-      "retrieved_at": "2026-05-10T16:02:42.327Z",
-      "extracted_at": "2026-05-10T16:02:42.327Z",
+      "retrieved_at": "2026-05-10T16:09:08.318Z",
+      "extracted_at": "2026-05-10T16:09:08.318Z",
       "citation_permission": "pending",
       "license_class": "unknown",
       "translation_review_state": "not_translated",
@@ -1128,7 +1128,7 @@
       ],
       "extraction_mode": "configured-source-fetch",
       "source_url_status": "verified",
-      "source_url_verified_at": "2026-05-10T16:02:42.327Z"
+      "source_url_verified_at": "2026-05-10T16:09:08.318Z"
     },
     {
       "id": "gov-agriculture-subsidy-detail-2025-12-09-detail-financing-and-subsidy-plans-for-the-agricultural-sector-review",
@@ -1169,8 +1169,8 @@
       "source_owner": "Government portal of the Republic of Uzbekistan",
       "source_url": "https://gov.uz/en/news/view/109178",
       "source_published_at": "2025-12-09",
-      "retrieved_at": "2026-05-10T16:02:42.327Z",
-      "extracted_at": "2026-05-10T16:02:42.327Z",
+      "retrieved_at": "2026-05-10T16:09:08.318Z",
+      "extracted_at": "2026-05-10T16:09:08.318Z",
       "citation_permission": "pending",
       "license_class": "unknown",
       "translation_review_state": "not_translated",
@@ -1180,7 +1180,7 @@
       ],
       "extraction_mode": "configured-source-fetch",
       "source_url_status": "verified",
-      "source_url_verified_at": "2026-05-10T16:02:42.327Z"
+      "source_url_verified_at": "2026-05-10T16:09:08.318Z"
     }
   ],
   "caveats": [
