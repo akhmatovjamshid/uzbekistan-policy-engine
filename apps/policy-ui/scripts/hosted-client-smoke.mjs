@@ -84,39 +84,6 @@ const HASH_ROUTES = [
       ru: '\u0411\u0430\u0437\u0430 \u0437\u043d\u0430\u043d\u0438\u0439',
       uz: 'Bilimlar markazi',
     },
-    extraExpression: `
-      (() => {
-      const text = (document.body.innerText || '').toLowerCase();
-      const hasDossierDesk = !!document.querySelector('.dossier-desk');
-      const hasDossierRail = !!document.querySelector('.dossier-rail');
-      const hasDossierRow = !!document.querySelector('.dossier-row');
-      const hasDossier = !!document.querySelector('.reform-dossier');
-      const hasSectionTabs = !!document.querySelector('.hub-section-tabs');
-      const hasMetrics = !!document.querySelector('.tracker-summary');
-      const hasPackageContent =
-        text.includes('automatic official-source tracker') &&
-        text.includes('reform packages');
-      return (
-      hasDossierDesk &&
-      hasDossierRail &&
-      hasDossierRow &&
-      hasDossier &&
-      hasSectionTabs &&
-      hasMetrics &&
-      hasPackageContent &&
-      !document.querySelector('.pending-surface') &&
-      !document.querySelector('.knowledge-hub-static-banner') &&
-      !document.querySelector('.candidate-section') &&
-      !document.querySelector('.accepted-section') &&
-      !document.querySelector('.hub-grid') &&
-      !document.querySelector('.reform-package-table') &&
-      !text.includes('review queue') &&
-      !text.includes('curated static pilot content') &&
-      !text.includes('research briefs') &&
-      !text.includes('wto accession')
-      );
-      })()
-    `,
   },
 ]
 
