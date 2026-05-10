@@ -107,7 +107,7 @@
     },
     "knowledgeHub": {
       "title": "Bilimlar markazi",
-      "description": "Islohotlar bo'yicha tahliliy ma'lumot, rasmiy manbalar, metodologiya va modelga bog'liqlik."
+      "description": "Rasmiy islohot paketlari, muddatlar, manba havolalari va siyosat kanallari."
     }
   },
   "overview": {
@@ -883,37 +883,38 @@
       }
     },
     "reformTracker": {
-      "errorUnavailable": "Islohotlar monitoringi artefakti mavjud emas.",
-      "dossierDeskAria": "Islohot dosyelari ish maydoni",
+      "errorUnavailable": "Bilimlar markazi ma'lumoti mavjud emas.",
+      "dossierDeskAria": "Islohotlar ro'yxati va tafsilotlari",
       "header": {
         "eyebrow": "Islohotlar monitoringi",
-        "automaticTracker": "Rasmiy manbalar bo'yicha avtomatik monitoring",
-        "sources": "Manbalar",
-        "packages": "Paketlar",
-        "lastFetch": "Oxirgi yuklash"
+        "automaticTracker": "Rasmiy manbalar monitoringi",
+        "sources": "rasmiy manba",
+        "packages": "islohot",
+        "lastFetch": "Oxirgi yuklash",
+        "updated": "Yangilandi"
       },
       "metrics": {
         "aria": "Islohotlar monitoringi ko'rsatkichlari",
-        "dossiers": "islohot dosyelari",
+        "dossiers": "Islohotlar",
         "activePackages": "Faol paketlar",
         "upcomingMilestones": "Kelayotgan bosqichlar",
         "officialSources": "Rasmiy manbalar",
         "verifiedLinks": "Tekshirilgan havolalar",
         "lastFetch": "Oxirgi yuklash",
-        "lastSourceCheck": "Oxirgi manba tekshiruvi",
-        "staticPreview": "Statik source-backed preview",
+        "lastSourceCheck": "Yangilandi",
+        "staticPreview": "Manba xulosasi",
         "notRegistry": "huquqiy reyestr emas"
       },
       "extractionMode": {
-        "artifact": "Tracker artefakti",
-        "configured-source-fetch": "Sozlangan manbalardan yuklash",
-        "fixture-demo": "Fixture demo"
+        "artifact": "Saqlangan ma'lumot",
+        "configured-source-fetch": "Manba yangilanishi",
+        "fixture-demo": "Demo ma'lumot"
       },
       "notice": {
         "aria": "Islohotlar monitoringi izohi",
         "title": "Tracker holati",
-        "caveat": "Bu rasmiy manbalarga tayangan avtomatik tracker, rasmiy huquqiy reyestr emas. Noto'g'ri, sun'iy yoki tekshirilmagan havolalar bloklanadi.",
-        "sourceLanguage": "Paket nomlari va manba voqealari matni rasmiy manba tilida ko'rsatiladi; faqat interfeys yorliqlari lokalizatsiya qilingan."
+        "caveat": "Xulosalar rasmiy manba havolalariga tayangan. Bu sahifa huquqiy reyestr emas.",
+        "sourceLanguage": "Paket nomlari va manba parchasi manba tilida qoladi; interfeys yorliqlari tarjima qilinadi."
       },
       "tabs": {
         "aria": "Islohotlar monitoringi ko'rinishlari",
@@ -927,7 +928,7 @@
         "policyArea": "Siyosat sohasi",
         "stage": "Bosqich",
         "institution": "Tashkilot",
-        "sourceType": "Manba turi",
+        "sourceType": "Asos",
         "allAreas": "Barcha sohalar",
         "allStages": "Barcha bosqichlar",
         "allInstitutions": "Barcha tashkilotlar",
@@ -935,14 +936,15 @@
       },
       "packages": {
         "aria": "Islohot dosyelari ro'yxati",
-        "empty": "Joriy filtrlarga mos islohot dosyelari yo'q. Barcha manbaga tayangan dosyelarga qaytish uchun filtrlarni tozalang.",
-        "count": "{{count}} ta islohot dosyesi",
-        "count_one": "{{count}} ta islohot dosyesi",
-        "count_few": "{{count}} ta islohot dosyesi",
-        "count_many": "{{count}} ta islohot dosyesi",
-        "count_other": "{{count}} ta islohot dosyesi",
-        "sortRecent": "Saralash: so'nggi yangilanish",
-        "showing": "{{total}} tadan {{count}} ta dosye ko'rsatilmoqda"
+        "empty": "Joriy filtrlarga mos islohot yo'q.",
+        "count": "{{count}} ta islohot",
+        "count_one": "{{count}} ta islohot",
+        "count_few": "{{count}} ta islohot",
+        "count_many": "{{count}} ta islohot",
+        "count_other": "{{count}} ta islohot",
+        "sortRecent": "So'nggi yangilanishlar",
+        "showing": "{{total}} tadan {{count}} ta ko'rsatilmoqda",
+        "officialSource": "Rasmiy manba"
       },
       "table": {
         "package": "Islohot paketi",
@@ -956,12 +958,13 @@
         "confidence": "Manba ishonchi"
       },
       "dossier": {
-        "aria": "Tanlangan islohot paketi dosyesi",
+        "aria": "Tanlangan islohot",
         "lastUpdated": "Yangilangan: {{date}}",
         "status": "Status / joriy bosqich",
         "officialSource": "Rasmiy manba",
-        "officialSourceBasis": "Rasmiy manba asosi",
-        "sourceInstitution": "Manba tashkiloti",
+        "officialSourceBasis": "Manba",
+        "source": "Manba",
+        "sourceInstitution": "Nashr qilgan",
         "publicationDate": "E'lon qilingan sana",
         "openOfficialSource": "Rasmiy manbani ochish",
         "openOfficialSourceAria": "{{title}} uchun rasmiy manbani yangi oynada ochish",
@@ -971,7 +974,8 @@
         "whatChanged": "Nima o'zgardi",
         "whyTracked": "Nega kuzatiladi",
         "measureTracks": "Chora yo'nalishlari",
-        "measuresAndParameters": "Choralar va parametrlar",
+        "measuresAndParameters": "Asosiy choralar",
+        "keyMeasures": "Asosiy choralar",
         "upcomingMilestones": "Kelayotgan bosqichlar",
         "noUpcomingMilestones": "Bu paket bo'yicha keyingi bosqich e'lon qilinmagan.",
         "packageTimeline": "Paket jadvali",
@@ -982,14 +986,17 @@
         "responsibleInstitutions": "Mas'ul tashkilotlar",
         "lead": "Yetakchi",
         "partner": "Hamkor",
-        "policyModelRelevance": "Siyosat va modelga bog'liqlik",
-        "caveats": "Izohlar",
-        "staticCaveat": "Bu dosye manbaga tayangan statik preview, huquqiy reyestr emas.",
-        "modelCaveat": "Model taxminlari va stsenariy dizayni bilan birga foydalaning; bu model natijasi dalili emas."
+        "policyModelRelevance": "Siyosat kanallari",
+        "policyChannels": "Siyosat kanallari",
+        "caveats": "Izoh",
+        "note": "Izoh",
+        "staticCaveat": "Manba xulosasi, huquqiy reyestr emas.",
+        "modelCaveat": "Stsenariylar uchun kontekst sifatida foydalaning.",
+        "registryNote": "Manba xulosasi. Iqtibos yoki huquqiy foydalanishdan oldin rasmiy havolani tekshiring."
       },
       "timeline": {
         "aria": "Amalga oshirish jadvali",
-        "empty": "Bu artefaktda amalga oshirish bosqichlari mavjud emas.",
+        "empty": "Amalga oshirish bosqichlari mavjud emas.",
         "detailAria": "Tanlangan bosqich tafsiloti",
         "package": "Islohot paketi",
         "source": "Manba",
@@ -1033,8 +1040,8 @@
         "included": "Rasmiy siyosat choralari, farmonlar, amalga oshirish muddatlari, moliyalashtirish mexanizmlari va institutsional islohotlar.",
         "excludedTitle": "Kiritilmaydi",
         "excluded": "Siyosat chorasi bo'lmagan uchrashuvlar, nutqlar, treninglar, umumiy hamkorlik yangiliklari va tahliliy hisobotlar.",
-        "caveat": "Rasmiy manbalar bo'yicha avtomatik monitoring, rasmiy huquqiy reyestr emas. Production artefaktlarida paket havolalari yaroqsiz, sintetik yoki tekshirilmagan bo'lsa bloklanadi.",
-        "diagnostics": "Ichki manba diagnostikasi",
+        "caveat": "Sahifa rasmiy manbalarni qisqacha jamlaydi. Bu huquqiy reyestr emas.",
+        "diagnostics": "Manba tekshiruvlari",
         "sourcesChecked": "{{count}} ta manba tekshirildi",
         "sourcesChecked_one": "{{count}} ta manba tekshirildi",
         "sourcesChecked_few": "{{count}} ta manba tekshirildi",
@@ -1049,20 +1056,20 @@
     },
     "sourceLibrary": {
       "aria": "Bilimlar markazi manbalar kutubxonasi",
-      "status": "Artefakt diagnostikasi",
-      "title": "Manbalar kutubxonasi",
-      "description": "Statik artefakt yuklagan sozlangan rasmiy manbalar, so'nggi guard-checked eksportdagi tekshiruv holati va hisoblar.",
+      "status": "Manbalar",
+      "title": "Manbalar",
+      "description": "Oxirgi yangilanishda tekshirilgan rasmiy saytlar.",
       "summaryAria": "Manbalar kutubxonasi xulosasi",
-      "sourcesConfigured": "Sozlangan manbalar",
+      "sourcesConfigured": "Manbalar",
       "sourcesChecked": "Tekshirilgan manbalar",
-      "candidatesExtracted": "Ajratilgan elementlar",
-      "excludedItems": "Qabul qoidalari bo'yicha chiqarildi",
+      "candidatesExtracted": "Topilganlar",
+      "excludedItems": "O'tkazib yuborildi",
       "invalidLinks": "Yaroqsiz havolalar bloklandi",
-      "issueCount": "{{count}} ta sozlangan manba so'nggi artefaktda muammo haqida xabar berdi.",
-      "issueCount_one": "{{count}} ta sozlangan manba so'nggi artefaktda muammo haqida xabar berdi.",
-      "issueCount_few": "{{count}} ta sozlangan manba so'nggi artefaktda muammo haqida xabar berdi.",
-      "issueCount_many": "{{count}} ta sozlangan manba so'nggi artefaktda muammo haqida xabar berdi.",
-      "issueCount_other": "{{count}} ta sozlangan manba so'nggi artefaktda muammo haqida xabar berdi.",
+      "issueCount": "{{count}} ta manba muammo haqida xabar berdi.",
+      "issueCount_one": "{{count}} ta manba muammo haqida xabar berdi.",
+      "issueCount_few": "{{count}} ta manba muammo haqida xabar berdi.",
+      "issueCount_many": "{{count}} ta manba muammo haqida xabar berdi.",
+      "issueCount_other": "{{count}} ta manba muammo haqida xabar berdi.",
       "lastChecked": "Oxirgi tekshiruv",
       "itemsFound": "Topilganlar",
       "excluded": "Chiqarilgan",
@@ -1072,30 +1079,32 @@
       "statusMissing": "Tekshirilmagan",
       "openSource": "Manba saytini ochish",
       "openSourceAria": "{{institution}} manba saytini yangi oynada ochish",
-      "empty": "Bu artefaktda sozlangan manba diagnostikasi mavjud emas."
+      "empty": "Manba tekshiruvlari mavjud emas."
     },
     "methodologyDetail": {
       "aria": "Bilimlar markazi metodologiyasi",
-      "title": "Metodologiya",
-      "description": "Rasmiy manba elementlarini islohot dosyelariga tasniflash uchun ishlatiladigan rulebook metama'lumotlari. Bu intake rulebook, huquqiy maslahat yoki model natijasi emas.",
+      "title": "Usul",
+      "description": "Sahifa rasmiy manba materiali islohot ekanini qanday ajratishini ko'rsatadi.",
       "versionUnavailable": "Versiya mavjud emas",
-      "definitionTitle": "Haqiqiy islohot ta'rifi",
-      "definitionUnavailable": "Bu artefaktda islohot ta'rifi mavjud emas.",
+      "definitionTitle": "Nima islohot hisoblanadi",
+      "definitionUnavailable": "Islohot ta'rifi mavjud emas.",
       "includeRules": "Kiritish qoidalari",
       "excludeRules": "Chiqarish qoidalari",
       "threshold": "Kiritish chegarasi",
-      "includedTitle": "Rulebook bo'yicha kiritiladi",
-      "excludedTitle": "Rulebook bo'yicha chiqariladi",
+      "includedTitle": "Kiritiladi",
+      "excludedTitle": "Chiqariladi",
       "evidenceTypes": "Dalil turlari",
-      "boundaries": "Chegaralar"
+      "boundaries": "Chegaralar",
+      "showFullRules": "To'liq qoidalarni ko'rsatish",
+      "note": "Izoh"
     },
     "sections": {
       "aria": "Bilimlar markazi bo'limlari",
-      "reformTracker": "Islohotlar monitoringi",
-      "policyBriefs": "Policy Briefs",
-      "sourceLibrary": "Manbalar kutubxonasi",
-      "methodology": "Metodologiya",
-      "modelImpactMap": "Model ta'siri xaritasi",
+      "reformTracker": "Islohotlar",
+      "policyBriefs": "Qisqa tahlillar",
+      "sourceLibrary": "Manbalar",
+      "methodology": "Usul",
+      "modelImpactMap": "Model aloqalari",
       "plannedStatus": "Rejalashtirilgan"
     },
     "planned": {

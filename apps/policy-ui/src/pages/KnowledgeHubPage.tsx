@@ -41,27 +41,19 @@ export function KnowledgeHubPage() {
 
   const packageCount = sourceState.content?.meta.reform_packages ?? sourceState.content?.reform_packages?.length ?? 0
   const sourcesConfigured = sourceState.content?.meta.sources_configured ?? 0
-  const extractionMode = sourceState.content?.extraction_mode
-  const extractionModeLabel = extractionMode
-    ? t(`knowledgeHub.reformTracker.extractionMode.${extractionMode}`, {
-        defaultValue: sourceState.content?.extraction_mode_label ?? t('knowledgeHub.reformTracker.extractionMode.artifact'),
-      })
-    : t('knowledgeHub.reformTracker.extractionMode.artifact')
   const lastFetchDate = formatHeaderDate(sourceState.content?.generated_at)
   const pageHeaderMeta = (
     <>
       <span className="page-header__eyebrow">{t('knowledgeHub.reformTracker.header.eyebrow')}</span>
-      <span>{extractionModeLabel}</span>
-      <span>{t('knowledgeHub.reformTracker.header.automaticTracker')}</span>
       <span>
-        {t('knowledgeHub.reformTracker.header.sources')} <strong>{sourcesConfigured}</strong>
+        <strong>{packageCount}</strong> {t('knowledgeHub.reformTracker.header.packages')}
       </span>
       <span>
-        {t('knowledgeHub.reformTracker.header.packages')} <strong>{packageCount}</strong>
+        <strong>{sourcesConfigured}</strong> {t('knowledgeHub.reformTracker.header.sources')}
       </span>
       {sourceState.content?.generated_at ? (
         <span>
-          {t('knowledgeHub.reformTracker.header.lastFetch')} <strong>{lastFetchDate}</strong>
+          {t('knowledgeHub.reformTracker.header.updated')} <strong>{lastFetchDate}</strong>
         </span>
       ) : null}
     </>
