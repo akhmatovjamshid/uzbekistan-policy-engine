@@ -27,10 +27,10 @@ async function createTestI18n() {
               modelListFallback: 'MODEL SET',
               draftedFrom: 'State narrative · drafted from {{models}} baseline',
               updatedAt: 'Updated {{date}}',
-              artifactStrap: 'Overview artifact · {{date}} · {{count}} provisional metric',
-              artifactStrapPlural: 'Overview artifact · {{date}} · {{count}} provisional metrics',
-              artifactSummaryMeta: 'Artifact metadata · {{count}} summary slots',
-              staticFallbackNotice: 'Static fallback summary · current artifact unavailable',
+              artifactStrap: 'Snapshot · {{date}} · {{count}} review note',
+              artifactStrapPlural: 'Snapshot · {{date}} · {{count}} review notes',
+              artifactSummaryMeta: 'Snapshot summary · {{count}} metrics',
+              staticFallbackNotice: 'Reference summary · current snapshot unavailable',
               summary: {
                 template: '{{items}}.',
                 item: '{{label}} {{value}} {{unit}}{{qualifier}}',
@@ -84,7 +84,7 @@ describe('EconomicStateHeader', () => {
     )
 
     assert.match(markup, /class="state-header__meta/)
-    assert.match(markup, /Static fallback summary · current artifact unavailable/)
+    assert.match(markup, /Reference summary · current snapshot unavailable/)
     assert.match(markup, /Updated/)
     assert.match(markup, /Prepare snapshot brief/)
   })
@@ -155,8 +155,8 @@ describe('EconomicStateHeader', () => {
     assert.match(markup, /CPI[\s\S]*8\.1 % YoY \/ 0\.7 % MoM/)
     assert.match(markup, /Trade balance[\s\S]*USD 1\.20bn deficit/)
     assert.match(markup, /USD\/UZS[\s\S]*12,680 UZS\/USD · UZS weaker 1\.4%/)
-    assert.match(markup, /Artifact metadata · 2 summary slots/)
-    assert.doesNotMatch(markup, /Overview artifact · Apr 2026 · 5 provisional metrics/)
+    assert.match(markup, /Snapshot summary · 2 metrics/)
+    assert.doesNotMatch(markup, /Snapshot · Apr 2026 · 5 review notes/)
     assert.doesNotMatch(markup, /AI-assisted/)
     assert.doesNotMatch(markup, /DFM \+ QPM/)
     assert.doesNotMatch(markup, /reviewed by/i)

@@ -49,16 +49,16 @@ async function createTestI18n() {
             },
             validation: { title: 'Validation summary' },
             bridgeEvidence: {
-              title: 'Bridge evidence',
-              sourceArtifact: 'Source artifact',
-              dataVintage: 'Data vintage',
-              exportedAt: 'Exported',
+              title: 'Model evidence',
+              sourceArtifact: 'Source file',
+              dataVintage: 'Data date',
+              exportedAt: 'Updated',
               solverVersion: 'Solver',
               sectorCount: 'Sectors',
               framework: 'Framework',
               units: 'Units',
               linkageCounts: 'Linkage classes',
-              caveats: 'Bridge caveats',
+              caveats: 'Limitations',
             },
           },
         },
@@ -68,8 +68,8 @@ async function createTestI18n() {
   return instance
 }
 
-describe('ModelDetail IO bridge evidence', () => {
-  it('renders the bridge evidence section on an enriched I-O detail entry', async () => {
+describe('ModelDetail IO model evidence', () => {
+  it('renders the model evidence section on an enriched I-O detail entry', async () => {
     const ioEntry = modelCatalogEntries.find((entry) => entry.id === 'io-model')!
     const enrichedEntry: ModelCatalogEntry = {
       ...ioEntry,
@@ -99,7 +99,7 @@ describe('ModelDetail IO bridge evidence', () => {
       </I18nextProvider>,
     )
 
-    assert.match(markup, /Bridge evidence/)
+    assert.match(markup, /Model evidence/)
     assert.match(markup, /io_model\/io_data\.json/)
     assert.match(markup, /136/)
     assert.match(markup, /Type II arrays are not part of this bridge payload/)

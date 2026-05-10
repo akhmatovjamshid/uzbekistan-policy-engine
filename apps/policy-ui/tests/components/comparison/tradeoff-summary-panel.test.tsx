@@ -23,8 +23,8 @@ async function createTestI18n() {
           comparison: {
             tradeoff: {
               title: 'Trade-off summary',
-              smePendingChip: 'SME content pending',
-              smePendingAria: 'Trade-off summary — SME content pending',
+              smePendingChip: 'Review needed',
+              smePendingAria: 'Trade-off summary needs review',
             },
           },
         },
@@ -61,10 +61,10 @@ describe('TradeoffSummaryPanel', () => {
     )
 
     assert.match(markup, /<em>Fiscal consolidation<\/em>/)
-    assert.doesNotMatch(markup, /SME content pending/)
+    assert.doesNotMatch(markup, /Review needed/)
   })
 
-  it('renders the SME-pending warn chip when mode is empty', async () => {
+  it('renders the review-needed warn chip when mode is empty', async () => {
     const i18n = await createTestI18n()
     const tradeoff: TradeoffSummary = { mode: 'empty' }
 
@@ -75,6 +75,6 @@ describe('TradeoffSummaryPanel', () => {
     )
 
     assert.match(markup, /ui-chip--warn/)
-    assert.match(markup, /SME content pending/)
+    assert.match(markup, /Review needed/)
   })
 })

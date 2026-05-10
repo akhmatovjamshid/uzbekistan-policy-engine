@@ -9,9 +9,6 @@ const KNOWLEDGE_HUB_PAGE_SOURCE = fileURLToPath(
 const KNOWLEDGE_HUB_CONTENT_VIEW_SOURCE = fileURLToPath(
   new URL('../../../src/components/knowledge-hub/KnowledgeHubContentView.tsx', import.meta.url),
 )
-const TIMELINE_ITEM_SOURCE = fileURLToPath(
-  new URL('../../../src/components/knowledge-hub/TimelineItem.tsx', import.meta.url),
-)
 const LOCALE_SOURCES = ['en', 'ru', 'uz'].map((locale) =>
   fileURLToPath(new URL(`../../../src/locales/${locale}/common.json`, import.meta.url)),
 )
@@ -191,7 +188,6 @@ describe('Knowledge Hub page', () => {
 
   it('opens official source links outside the SPA', () => {
     const contentViewSource = readFileSync(KNOWLEDGE_HUB_CONTENT_VIEW_SOURCE, 'utf8')
-    const timelineItemSource = readFileSync(TIMELINE_ITEM_SOURCE, 'utf8')
 
     assert.match(contentViewSource, /target: '_blank'/)
     assert.match(contentViewSource, /rel: 'noopener noreferrer'/)
@@ -199,8 +195,5 @@ describe('Knowledge Hub page', () => {
     assert.match(contentViewSource, /openOfficialSourceAria/)
     assert.match(contentViewSource, /sourceLinkMeta/)
     assert.match(contentViewSource, /href=\{source\.url\}/)
-    assert.match(timelineItemSource, /target: '_blank'/)
-    assert.match(timelineItemSource, /rel: 'noopener noreferrer'/)
-    assert.match(timelineItemSource, /<a href=\{item\.source_url\} \{\.\.\.EXTERNAL_LINK_PROPS\}>/)
   })
 })

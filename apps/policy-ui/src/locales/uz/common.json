@@ -1,19 +1,19 @@
 {
   "trustState": {
     "labels": {
-      "mockFixture": "Test fikstura",
-      "liveBridgeJson": "Faol ko'prik JSON",
-      "fallbackMock": "Zaxira fikstura",
-      "staticCuratedContent": "Statik kuratsiya kontenti",
-      "localBrowserDraft": "Mahalliy brauzer qoralamasi",
-      "planned": "Rejada",
-      "artifactGuardChecked": "Artefakt guard-checked",
-      "sourceVintage": "Manba vintaji",
-      "artifactExport": "Artefakt eksporti",
-      "registryGenerated": "Reyestr tuzildi",
-      "lastValidationCheck": "Oxirgi validatsiya tekshiruvi",
-      "overviewArtifact": "Umumiy ko'rinish artefakti",
-      "staticOverviewFallback": "Statik zaxira sharh"
+      "mockFixture": "Ma'lumot namunasi",
+      "liveBridgeJson": "Joriy ma'lumot",
+      "fallbackMock": "Ma'lumot namunasi",
+      "staticCuratedContent": "Saralangan kontent",
+      "localBrowserDraft": "Shu brauzerda saqlangan",
+      "planned": "Faol emas",
+      "artifactGuardChecked": "Format tekshirildi",
+      "sourceVintage": "Manba sanasi",
+      "artifactExport": "Saqlangan kesim",
+      "registryGenerated": "Oxirgi tekshiruv",
+      "lastValidationCheck": "Oxirgi tekshiruv",
+      "overviewArtifact": "Joriy kesim",
+      "staticOverviewFallback": "Namuna xulosa"
     }
   },
   "format": {
@@ -51,7 +51,7 @@
     "scenarioLab": "Stsenariy simulyatori",
     "comparison": "Stsenariylarni solishtirish",
     "modelExplorer": "Model katalogi",
-    "dataRegistry": "Ma'lumotlar reyestri",
+    "dataRegistry": "Ma'lumot manbalari",
     "knowledgeHub": "Bilimlar markazi",
     "pending": "Kutilmoqda"
   },
@@ -73,7 +73,7 @@
       "description": "Har bir natija ortidagi mexanikani ko'ring. Har bir model nima qiladi va nima qilmasligini ochiq ko'rsatadi.",
       "catalogTitle": "Model katalogi",
       "catalogHint": "Texnik taxminlar va cheklovlarni ko'rish uchun bitta modelni tanlang.",
-      "emptyState": "Ushbu ish maydonida model metama'lumotlari mavjud emas.",
+      "emptyState": "Bu ish maydonida model ma'lumoti mavjud emas.",
       "detailTabsAria": "Model tafsilotlari tablari",
       "tabs": {
         "assumptions": "Taxminlar",
@@ -102,8 +102,8 @@
       }
     },
     "dataRegistry": {
-      "title": "Ma'lumotlar reyestri",
-      "description": "Ommaviy frontend ma'lumot qatlami uchun read-only manba, vintaj, artefakt, guard-check va yangilanish holati inventari. U ma'lumotni yangilamaydi."
+      "title": "Ma'lumot manbalari",
+      "description": "Ommaviy ma'lumot fayllari, manba sanalari, yangilanish holati va ma'lum cheklovlar bo'yicha ro'yxat."
     },
     "knowledgeHub": {
       "title": "Bilimlar markazi",
@@ -148,26 +148,26 @@
       "freshness": "Ma'lumotlar · {{days}} kun oldin"
     },
     "meta": {
-      "eyebrow": "Umumiy ko'rinish metama'lumoti",
+      "eyebrow": "Umumiy kesim",
       "vintageLabel": "Vintaj",
       "modelsLabel": "Modellar",
       "modelsLive": "{{count}} ta faol",
-      "lastRefreshLabel": "Artefakt eksporti"
+      "lastRefreshLabel": "Yangilangan"
     },
     "header": {
       "kicker": "Iqtisodiy holat",
       "modelListFallback": "MODELLAR TO'PLAMI",
       "draftedFrom": "Holat narrativi · {{models}} bazasidan tuzilgan",
       "updatedAt": "Holat narrativi tekshirildi: {{date}}",
-      "artifactStrap": "Overview artefakti · {{date}} · {{count}} dastlabki metrika",
-      "artifactStrapPlural": "Overview artefakti · {{date}} · {{count}} dastlabki metrika",
-      "artifactSummaryMeta": "Artefakt metama'lumoti · {{count}} xulosa sloti",
-      "staticFallbackNotice": "Statik fallback xulosa · joriy artefakt mavjud emas",
+      "artifactStrap": "Kesim · {{date}} · {{count}} ko'rib chiqish eslatmasi",
+      "artifactStrapPlural": "Kesim · {{date}} · {{count}} ko'rib chiqish eslatmasi",
+      "artifactSummaryMeta": "Kesim xulosasi · {{count}} ko'rsatkich",
+      "staticFallbackNotice": "Namuna xulosa · joriy kesim mavjud emas",
       "summary": {
         "template": "{{items}}.",
         "item": "{{label}} {{value}} {{unit}}{{qualifier}}",
         "provisional": "dastlabki",
-        "unavailable": "Umumiy ko'rinish artefakti yuklandi, lekin xulosa uchun valid ko'rsatkichlar mavjud emas.",
+        "unavailable": "Kesim yuklandi, lekin xulosa uchun valid ko'rsatkichlar mavjud emas.",
         "labels": {
           "gdp": "YaIM",
           "cpi": "CPI",
@@ -182,8 +182,8 @@
         "aiAssisted": "AI yordamida",
         "humanAuthored": "Mutaxassis tomonidan",
         "reviewedAt": "taqriz {{date}}",
-        "reviewerPendingChip": "Taqrizchi kutilmoqda",
-        "reviewerPendingAria": "Taqrizchi ismi kutilmoqda — SME kontenti kutilmoqda"
+        "reviewerPendingChip": "Ko'rib chiqish kerak",
+        "reviewerPendingAria": "Ko'rib chiquvchi nomi hali kiritilmagan"
       }
     },
     "kpi": {
@@ -194,8 +194,8 @@
       "noPrior": "Oldingi qiymat yo'q",
       "notAvailable": "mavjud emas",
       "freshness": "Ko'rsatkich vaqti: {{date}}",
-      "smePendingChip": "SME kontenti kutilmoqda",
-      "smePendingAria": "Kontekstli izoh — SME kontenti kutilmoqda",
+      "smePendingChip": "Ko'rib chiqish kerak",
+      "smePendingAria": "Kontekst eslatmasi ko'rib chiqilishi kerak",
       "provenance": {
         "observed": "Kuzatilgan",
         "nowcast": "Nowcast",
@@ -346,17 +346,17 @@
     },
     "dataNotes": {
       "title": "Ma'lumot izohlari",
-      "description": "Ixcham governance ko'rinishi; barcha artefakt ogohlantirishlari va caveatlari uchun oching.",
+      "description": "Yuqoridagi ko'rsatkichlar uchun manba eslatmalari va cheklovlar.",
       "warningMetricCount": "{{count}} ogohlantirishli metrika",
       "warningMetricCountPlural": "{{count}} ogohlantirishli metrika",
       "noteCount": "{{count}} manba izohi",
       "noteCountPlural": "{{count}} manba izohi",
       "severityCounts": "{{critical}} kritik · {{warning}} ogohl. · {{info}} info",
-      "exportedAt": "Eksport {{date}}"
+      "exportedAt": "Yangilangan {{date}}"
     },
     "references": {
       "title": "Manbalar va havolalar",
-      "summary": "{{count}} manba · eksport {{date}}"
+      "summary": "{{count}} manba · yangilangan {{date}}"
     }
   },
   "buttons": {
@@ -377,7 +377,7 @@
       "meta": {
         "activeModelsLabel": "Faol modellar",
         "runLifecycleLabel": "Ishga tushirish sikli",
-        "dataVintageLabel": "Manba vintaji",
+        "dataVintageLabel": "Ma'lumot sanasi",
         "runLifecycleStatus": {
           "loading": "Ishlamoqda",
           "ready": "Tayyor",
@@ -387,7 +387,7 @@
     },
     "context": {
       "label": "Kontekst:",
-      "dataVintage": "manba vintaji",
+      "dataVintage": "ma'lumot sanasi",
       "lane": {
         "macroScenario": "Makro stsenariy",
         "sectorLinkage": "Sektor bog'lanishi"
@@ -410,38 +410,38 @@
       "title": "Tahlil tablari",
       "description": "Har bir modelning natija chegarasini saqlagan holda modelga xos stsenariylarni bitta ish maydonida ishlating.",
       "tabsAria": "Stsenariy simulyatori model tablari",
-      "plannedTitle": "Rejadagi model yo'nalishlari",
-      "plannedDescription": "Keyingi bosqich. Bu yo'nalishlar faqat orientir uchun ko'rsatilgan va ushbu previewda model ishga tushirmaydi.",
+      "plannedTitle": "Faol bo'lmagan model yo'nalishlari",
+      "plannedDescription": "Bu tahlil yo'nalishlari faqat orientir uchun ko'rsatilgan va hozircha ishga tushmaydi.",
       "macroQpm": "Makro / QPM",
       "ioSectorShock": "I-O sektor shoki",
       "peTradeShock": "PE savdo shoki",
       "cgeReformShock": "CGE islohot shoki",
       "fppFiscalPath": "FPP fiskal trayektoriya",
       "savedRuns": "Saqlangan ishlar",
-      "synthesisPreview": "Sintez preview",
+      "synthesisPreview": "Sintez",
       "subtitle": {
         "macroQpm": "Makro stsenariy simulyatsiyasi",
         "ioSectorShock": "Sektor bog'lanishi tahlili",
-        "peTradeShock": "Savdo ta'sirlanishi, rejada",
-        "cgeReformShock": "Umumiy muvozanat islohoti tahlili, rejada",
-        "fppFiscalPath": "Fiskal izchillik, rejada",
+        "peTradeShock": "Savdo ta'siri, faol emas",
+        "cgeReformShock": "Umumiy muvozanat islohot tahlili, faol emas",
+        "fppFiscalPath": "Fiskal moslik, faol emas",
         "savedRuns": "Saqlangan analitik ishlar",
-        "synthesisPreview": "Modellararo sintez, rejada"
+        "synthesisPreview": "Kross-model sintez, faol emas"
       },
       "status": {
         "active": "Faol",
         "next": "Keyingi",
-        "bridgePilot": "Ko'prik tekshiruvi",
-        "shell": "Karkas",
-        "planned": "Rejada"
+        "bridgePilot": "Joriy ma'lumot",
+        "shell": "Kontur",
+        "planned": "Faol emas"
       }
     },
     "modelTabShell": {
       "eyebrow": "Model tabi",
-      "plannedStatus": "Rejada / hisoblash o'chirilgan",
+      "plannedStatus": "Faol emas",
       "io": {
         "title": "I-O sektor shoki",
-        "description": "Bu tab MCP bilan mos I-O analytics contract asosida yakuniy talabning sektorlar bo'ylab uzatilishini tahlil qiladi.",
+        "description": "Bu tab I-O ma'lumot qatlami orqali yakuniy talabning sektorlar bo'ylab uzatilishini hisoblaydi.",
         "items": {
           "inputs": "Kirishlar: talab turi, mlrd so'mdagi miqdor, taqsimlash rejimi va ixtiyoriy sektor tanlovi.",
           "outputs": "Chiqishlar: ishlab chiqarish, qo'shilgan qiymat, bandlik ta'sirlari, eng ko'p ta'sirlangan sektorlar va linkage klasslari.",
@@ -450,25 +450,25 @@
       },
       "pe": {
         "title": "PE savdo shoki",
-        "description": "Rejalashtirilgan qisman muvozanat savdo tahlili. Bu sprintda tarif yoki savdo hisob-kitobi faol emas.",
+        "description": "Savdo ta'siri tahlili hozircha faol emas.",
         "items": {
           "inputs": "Kutiladigan kirishlar: tarif yoki import narxi shoki, HS/mahsulot guruhi, hamkor, elastiklik to'plami va stsenariy yorlig'i.",
           "outputs": "Kutiladigan chiqishlar: bevosita import/eksport miqdor ta'sirlari, narxlar, ta'sirlangan mahsulot guruhlari va elastiklik sezgirligi.",
-          "boundary": "Integratsiya chegarasi: I-O, CGE yoki sintez kontraktlariga uzatilmaguncha faqat bevosita savdo kanali dalili."
+          "boundary": "Chegara: I-O, CGE yoki sintez bilan bog'lanmaguncha faqat bevosita savdo kanali dalillari."
         }
       },
       "cge": {
         "title": "CGE islohot shoki",
-        "description": "Rejalashtirilgan butun iqtisodiyot bo'yicha islohot tahlili. Tab tayyorgarlik placeholderi va CGE modelini ishga tushirmaydi.",
+        "description": "Butun iqtisodiyot bo'yicha islohot tahlili hozircha faol emas.",
         "items": {
           "inputs": "Kutiladigan kirishlar: unumdorlik, soliqlar, tariflar, energiya, mehnat, kapital va yopilish taxminlari.",
           "outputs": "Kutiladigan chiqishlar: farovonlik, real YaIM, sektorlar qayta taqsimoti, narxlar va mavjud bo'lsa taqsimot ko'rsatkichlari.",
-          "boundary": "Integratsiya chegarasi: umumiy muvozanat natijalari faollashishdan oldin CGE kontrakti va kalibrlangan SAM talab qiladi."
+          "boundary": "Chegara: umumiy muvozanat natijalari kalibrlangan SAM va model egasi tasdig'ini talab qiladi."
         }
       },
       "fpp": {
         "title": "FPP fiskal trayektoriya",
-        "description": "Rejalashtirilgan fiskal dasturlash trayektoriyasi. Fiskal kontrakt tayyor bo'lmaguncha hisoblash o'chirilgan.",
+        "description": "Fiskal trayektoriya tahlili hozircha faol emas.",
         "items": {
           "inputs": "Kutiladigan kirishlar: daromad, xarajat, moliyalashtirish, qarz zaxirasi, foiz stavkasi va o'sish taxminlari.",
           "outputs": "Kutiladigan chiqishlar: defitsit, qarz trayektoriyasi, moliyalashtirish bo'shlig'i, fiskal buferlar va risk flaglari.",
@@ -485,8 +485,8 @@
         }
       },
       "synthesis": {
-        "title": "Sintez preview",
-        "description": "Model kontraktlari tayyor bo'lmaguncha kross-model muvofiqlashtirish reja holatida qoladi.",
+        "title": "Sintez",
+        "description": "Kross-model muvofiqlashtirish hozircha faol emas.",
         "items": {
           "chain": "Maqsadli zanjir: PE savdo shoki -> I-O sektor uzatishi -> CGE qayta taqsimlash -> FPP fiskal trayektoriya.",
           "layers": "QPM va DFM makro moslik va nowcast qatlamlari sifatida ulanadi.",
@@ -496,7 +496,7 @@
     },
     "ioShock": {
       "title": "I-O sektor shoki",
-      "description": "Yakuniy talab shokini validatsiyadan o'tgan I-O bridge orqali ishlating va sektor ishlab chiqarishi hamda qo'shilgan qiymat uzatilishini ko'ring.",
+      "description": "Yakuniy talab shokini I-O ma'lumot qatlami orqali ishga tushiring va sektor ishlab chiqarishi hamda qo'shilgan qiymat uzatilishini ko'ring.",
       "loading": "I-O analytics ma'lumotlari yuklanmoqda...",
       "unavailable": "I-O analytics ma'lumotlari mavjud emas. Scenario Lab'ning mavjud ishlashi o'zgarmaydi.",
       "controlsAria": "I-O sektor shoki boshqaruvlari",
@@ -515,7 +515,7 @@
       "savedTitle": "I-O {{bucket}} shoki · {{amount}} {{currency}}",
       "savedDescription": "Sektor uzatish tahlili uchun saqlangan I-O sektor shoki.",
       "convertedShock": "Konvertatsiya qilingan talab shoki: {{amount}}",
-      "sourceLabelNote": "Sektor nomlari {{artifact}} manbasidagi asl yorliqlar sifatida ko'rsatiladi va bu yerda tarjima qilinmaydi.",
+      "sourceLabelNote": "Sektor nomlari asl manba nomlarida ko'rsatiladi va bu yerda tarjima qilinmaydi.",
       "units": {
         "employmentEstimate": "bandlik soni bahosi"
       },
@@ -551,7 +551,7 @@
         "fx": "FX taxmini",
         "distribution": "Taqsimlash rejimi",
         "selectedSector": "Tanlangan sektor",
-        "dataVintage": "Manba vintaji"
+        "dataVintage": "Ma'lumot sanasi"
       },
       "kpis": {
         "output": "Ishlab chiqarish ta'siri",
@@ -595,10 +595,10 @@
       },
       "fields": {
         "type": "Tur",
-        "data": "Manba vintaji",
-        "source": "Manba vintaji",
-        "sourceVintage": "Manba vintaji",
-        "sourceArtifact": "Manba artefakti",
+        "data": "Ma'lumot sanasi",
+        "source": "Ma'lumot sanasi",
+        "sourceVintage": "Ma'lumot sanasi",
+        "sourceArtifact": "Manba fayli",
         "saved": "Saqlangan"
       }
     },
@@ -650,9 +650,9 @@
         "fiscalEffects": "Fiskal ta'sirlar"
       },
       "impulseResponseEyebrow": "IMPULS RESPONSI",
-      "impulseResponseCaption": "Scenario Lab mock dvigateli natijasi: 12 chorak davomida bazaviydan og'ishlar, foiz punktlarida. Jonli prognoz sifatida keltirilmasin.",
+      "impulseResponseCaption": "Scenario Lab namunaviy hisobi: 12 chorak davomida bazaviydan og'ishlar, foiz punktlarida. Jonli prognoz sifatida keltirilmasin.",
       "explanations": {
-        "headlineImpact": "Tanlangan stsenariy 12 chorak davomida bazaviydan qanday og'ishini ko'rsatadi; qiymatlar Scenario Lab mock dvigatelidan foiz punktlaridagi og'ishlardir.",
+        "headlineImpact": "Tanlangan stsenariy 12 chorak davomida bazaviydan qanday og'ishini ko'rsatadi; qiymatlar namunaviy hisobdan foiz punktlaridagi og'ishlardir.",
         "macroPath": "Jadval xom chiqish emas, taqqoslash sifatida o'qilishi uchun stsenariy trayektoriyasini bazaviy trayektoriya yonida ko'rsatadi.",
         "externalBalance": "Joriy taxminlar ostida tashqi balans stsenariy trayektoriyasini ko'rsatadi; birliklar YaIM foizida saqlanadi.",
         "fiscalEffects": "Tanlangan stsenariy taxminlari ostidagi fiskal hisob-kitobni ko'rsatadi; bu yangi fiskal model ishga tushirilishi emas."
@@ -731,15 +731,15 @@
     "ioEvidence": {
       "title": "I-O sektor dalillari",
       "status": "Validatsiyadan o'tgan",
-      "note": "Bu panel I-O bridge orqali olingan strukturaviy sektor uzatish dalillarini tavsiflaydi. Bu makro prognoz, stsenariy deltasi yoki yuqoridagi stsenariylarning sababiy ta'siri emas.",
-      "sourceArtifact": "Manba artefakti",
-      "dataVintage": "Manba vintaji",
-      "exportedAt": "Artefakt eksporti",
+      "note": "Bu panel I-O ma'lumot qatlami orqali olingan strukturaviy sektor uzatishini tavsiflaydi. Bu makro prognoz, stsenariy deltasi yoki yuqoridagi stsenariylarning sababiy ta'siri emas.",
+      "sourceArtifact": "Manba fayli",
+      "dataVintage": "Ma'lumot sanasi",
+      "exportedAt": "Yangilangan",
       "sectorCount": "Sektorlar",
       "framework": "Metod",
       "units": "Birliklar",
       "linkageCounts": "Bog'lanish sinflari",
-      "caveats": "Bridge cheklovlari",
+      "caveats": "Cheklovlar",
       "linkageClass": {
         "key": "Asosiy",
         "backward": "Faqat orqaga",
@@ -827,8 +827,8 @@
     },
     "tradeoff": {
       "title": "Trade-off xulosasi",
-      "smePendingChip": "SME kontenti kutilmoqda",
-      "smePendingAria": "Kompromisslar xulosasi — SME kontenti kutilmoqda",
+      "smePendingChip": "Ko'rib chiqish kerak",
+      "smePendingAria": "Trade-off xulosasi ko'rib chiqilishi kerak",
       "description": "Har bir muqobil stsenariy uchun shablon asosidagi qiyosiy jumlalar.",
       "empty": "Xulosani yaratish uchun bazaviy va kamida bitta muqobil stsenariyni tanlang.",
       "shifts": "siljitadi",
@@ -1128,123 +1128,123 @@
   },
   "dataRegistry": {
     "header": {
-      "eyebrow": "Manbalar · Vintajlar · Validatsiya",
-        "meta": {
-          "expectedArtifacts": "Kutilgan artefaktlar",
-          "plannedFamilies": "Rejadagi oilalar",
-          "generated": "Reyestr tuzildi",
-          "metadataSource": "Metama'lumot manbasi"
-        }
-      },
-      "metadataSource": {
-        "api": "API metama'lumoti",
-        "static-fallback": "Statik fallback"
-      },
+      "eyebrow": "Manbalar · Sanalar · Tekshiruvlar",
+      "meta": {
+        "expectedArtifacts": "Kutilgan fayllar",
+        "plannedFamilies": "Faol emas",
+        "generated": "Oxirgi tekshiruv",
+        "metadataSource": "Ma'lumot rejimi"
+      }
+    },
+    "metadataSource": {
+      "api": "API",
+      "static-fallback": "Statik fayl"
+    },
     "summary": {
-      "aria": "Ma'lumotlar reyestri status xulosasi"
+      "aria": "Ma'lumot manbalari holati xulosasi"
     },
     "filters": {
-      "aria": "Ma'lumotlar reyestri status filtrlari",
+      "aria": "Ma'lumot manbalari holati filtrlari",
       "all": "Hammasi",
-      "active": "Faol artefaktlar",
+      "active": "Faol fayllar",
       "warnings": "Ogohlantirishlar",
-      "planned": "Rejada",
+      "planned": "Faol emas",
       "missingUnavailable": "Yo'q / mavjud emas",
-      "empty": "Bu filtrga mos reyestr yozuvlari yo'q."
+      "empty": "Bu filtr bo'yicha yozuv yo'q."
     },
     "legend": {
       "title": "Status izohi",
       "valid": {
-        "label": "Artefakt guard-checked",
-        "description": "Public artefakt yuklandi va frontend guard checksdan o'tdi. Bu iqtisodiy yoki model validatsiyasi emas."
+        "label": "Format tekshirildi",
+        "description": "Ma'lumot fayli yuklandi va format tekshiruvidan o'tdi. Bu iqtisodiy yoki model validatsiyasi emas."
       },
       "warning": {
         "label": "Warning",
-        "description": "Artefakt yuklandi, lekin caveat yoki vaqt bo'yicha ogohlantirishlar bor."
+        "description": "Ma'lumot fayli yuklandi, lekin cheklovlar yoki sana ogohlantirishlari mavjud."
       },
       "planned": {
-        "label": "Rejada",
-        "description": "Ushbu foundation bundle'da ataylab yo'q."
+        "label": "Faol emas",
+        "description": "Ushbu relizda ataylab kiritilmagan."
       },
       "lastValidationCheck": {
-        "description": "Frontend reyestr artefaktlarni oxirgi marta yuklab, shape guardlarni ishga tushirgan vaqt."
+        "description": "Bu sahifa ma'lumot fayllarini oxirgi marta tekshirgan vaqt."
       }
     },
     "status": {
-      "valid": "Artefakt guard-checked",
+      "valid": "Format tekshirildi",
       "warning": "Ogohlantirish",
       "failed": "Xato",
       "missing": "Yo'q",
       "unavailable": "Mavjud emas",
-      "planned": "Rejada"
+      "planned": "Faol emas"
     },
     "sections": {
       "dataSources": {
         "title": "Ma'lumot manbalari",
-        "description": "Manba domenlari, vintajlar, eksport vaqtlari va rejalashtirilgan model oilalari."
+        "description": "Manba domenlari, manba sanalari, yangilanish vaqtlari va model oilalari."
       },
       "modelInputs": {
         "title": "Model kirishlari",
-        "description": "Qaysi model oilalarida frontend kirishlari borligi va qaysilari rejada qolayotgani."
+        "description": "Frontend kirishlari mavjud model oilalari va hozircha faol bo'lmaganlari."
       },
       "bridgeOutputs": {
-        "title": "Bridge chiqishlari",
-        "description": "Mavjud bridge client va guard'lar orqali yuklangan ommaviy JSON artefaktlar."
+        "title": "Model natijalari",
+        "description": "Frontend ma'lumot klientlari yuklaydigan ommaviy JSON fayllar."
       },
       "plannedArtifacts": {
-        "title": "Rejadagi artefaktlar",
-        "description": "Kelajakdagi manba shartnomalarigacha ataylab mavjud bo'lmagan kategoriyalar. Bular amalga oshirilgan artefakt xatosi emas."
+        "title": "Hozircha faol emas",
+        "description": "Kelajakdagi manba qamrovi uchun ajratilgan kategoriyalar. Bular ma'lumot fayli xatosi emas."
       },
       "vintages": {
         "title": "Vintajlar",
-        "description": "Manba snapshotlari va eksport vaqtlari alohida ko'rsatiladi."
+        "description": "Manba sanalari va yangilanish vaqtlari alohida ko'rsatiladi."
       },
       "validation": {
-        "title": "Validatsiya va yangilanish holati",
-        "description": "Bridge guard'lariga asoslangan frontend ishonch holati va ehtiyotkor yangilanish izohi."
+        "title": "Yangilanish holati",
+        "description": "Har bir ommaviy ma'lumot faylining tayyorlik va yangilik holati."
       },
       "warnings": {
         "title": "Eskirgan/yo'q ogohlantirishlari",
-        "description": "Ogohlantirishlar faqat artefakt mavjudligi, guard xatolari, izohlar va vaqt chegaralaridan olinadi."
+        "description": "Ogohlantirishlar yo'q fayllar, eskirgan sanalar yoki ma'lum cheklovlardan olinadi."
       }
     },
     "table": {
-      "type": "Reyestr turi",
+      "type": "Turi",
       "domain": "Domen",
       "status": "Status",
-      "vintage": "Manba vintaji",
-      "export": "Artefakt eksporti",
-      "source": "Manba/artefakt",
+      "vintage": "Manba sanasi",
+      "export": "Yangilangan",
+      "source": "Manba",
       "owner": "Ega / manba tizimi",
       "notes": "Izohlar"
     },
     "registryType": {
       "source_series": "Manba qatori",
       "model_input": "Model kirishi",
-      "bridge_output": "Bridge chiqishi",
-      "planned_artifact": "Rejadagi artefakt"
+      "bridge_output": "Model natijasi",
+      "planned_artifact": "Faol emas"
     },
-      "artifact": {
-        "dataVintage": "Manba vintaji",
-        "exportTimestamp": "Artefakt eksporti",
-        "sourceVintage": "Manba vintaji",
-        "lastValidationCheck": "Oxirgi validatsiya tekshiruvi",
-        "checksum": "Checksum",
-        "owner": "Ega",
+    "artifact": {
+      "dataVintage": "Manba sanasi",
+      "exportTimestamp": "Yangilangan",
+      "sourceVintage": "Manba sanasi",
+      "lastValidationCheck": "Oxirgi validatsiya tekshiruvi",
+      "checksum": "Checksum",
+      "owner": "Ega",
       "sourceSystem": "Manba tizimi",
       "solver": "Solver",
       "caveats": "Izohlar",
       "consumers": "Iste'molchi sahifalar"
     },
     "detail": {
-      "summary": "Guard va yangilik scope'ini ko'rish",
+      "summary": "Tekshiruvlarni ko'rish",
       "validationScope": "Tekshiruv scope'i",
       "freshnessRule": "Yangilik qoidasi",
       "caveats": "Izohlar",
-      "sourceVsExport": "Manba va eksport"
+      "sourceVsExport": "Manba sanasi va yangilanish"
     },
     "vintages": {
-      "boundary": "Manba vintaji va eksport vaqti boshqa-boshqa. Hozirgi eksport eskiroq manba jadvalini ham o'z ichiga olishi mumkin."
+      "boundary": "Manba sanasi va yangilanish vaqti farq qilishi mumkin. Yaqinda yangilangan faylda eskiroq manba jadvali bo'lishi mumkin."
     },
     "warnings": {
       "empty": "Hozir eskirish, yo'qlik, mavjud emaslik yoki validatsiya bo'yicha ogohlantirish ko'rinmayapti."
@@ -1259,9 +1259,9 @@
       "meta": {
         "modelsLabel": "Modellar",
         "modelsLive": "{{count}} faol",
-        "bridgeBackedLabel": "Bridge-backed",
+        "bridgeBackedLabel": "Joriy ma'lumotli modellar",
         "bridgeBackedModels": "QPM, DFM, I-O",
-        "plannedLimitedLabel": "Rejada/cheklangan",
+        "plannedLimitedLabel": "Faol emas",
         "plannedLimitedModels": "PE, CGE, FPP",
         "lastAuditLabel": "Oxirgi kalibrlash auditi",
         "openIssuesLabel": "Ochiq metodologik masalalar"
@@ -1280,8 +1280,8 @@
     },
     "equations": {
       "title": "Asosiy tenglamalar",
-      "smePendingChip": "SME kontenti kutilmoqda",
-      "smePendingAria": "Tenglama rendering — SME kontenti kutilmoqda"
+      "smePendingChip": "Ko'rib chiqish kerak",
+      "smePendingAria": "Tenglamalar ko'rinishi ko'rib chiqilishi kerak"
     },
     "parameters": {
       "title": "Asosiy parametrlar",
@@ -1303,35 +1303,35 @@
     },
     "validation": {
       "title": "Validatsiya xulosasi",
-      "smePendingChip": "SME kontenti kutilmoqda",
-      "smePendingAria": "Validatsiya xulosasi — SME kontenti kutilmoqda"
+      "smePendingChip": "Ko'rib chiqish kerak",
+      "smePendingAria": "Validatsiya xulosasi ko'rib chiqilishi kerak"
     },
     "bridgeEvidence": {
-      "title": "Bridge dalillari",
-      "sourceArtifact": "Manba artefakti",
-      "dataVintage": "Manba vintaji",
-      "exportedAt": "Artefakt eksporti",
+      "title": "Model dalillari",
+      "sourceArtifact": "Manba fayli",
+      "dataVintage": "Ma'lumot sanasi",
+      "exportedAt": "Yangilangan",
       "solverVersion": "Solver",
       "sectorCount": "Sektorlar",
       "framework": "Metod",
       "units": "Birliklar",
       "linkageCounts": "Bog'lanish sinflari",
-      "caveats": "Bridge cheklovlari"
-      }
-    },
+      "caveats": "Cheklovlar"
+    }
+  },
   "states": {
     "loading": {
       "overview": "So'nggi sharh holati yuklanmoqda...",
       "comparison": "Solishtirish ish maydoni yuklanmoqda...",
-      "modelExplorer": "Model metama'lumotlari yuklanmoqda...",
-      "dataRegistry": "Ma'lumotlar reyestri yuklanmoqda...",
+      "modelExplorer": "Model ma'lumoti yuklanmoqda...",
+      "dataRegistry": "Ma'lumot manbalari yuklanmoqda...",
       "scenarioLabRun": "Joriy taxminlar bilan stsenariy ishga tushirilmoqda...",
       "knowledgeHub": "Bilimlar markazi yuklanmoqda..."
     },
     "error": {
       "overviewUnavailable": "Sharh ma'lumotlari hozircha mavjud emas.",
       "comparisonUnavailable": "Solishtirish ma'lumotlari hozircha mavjud emas.",
-      "modelExplorerUnavailable": "Model metama'lumotlari hozircha mavjud emas.",
+      "modelExplorerUnavailable": "Model ma'lumoti hozircha mavjud emas.",
       "scenarioRunFailed": "Stsenariy ishga tushmadi. Iltimos, qayta urinib ko'ring.",
       "scenarioSaveFailed": "Stsenariyni localStorage'ga saqlab bo'lmadi.",
       "savedScenarioLoadFailed": "Saqlangan stsenariyni yuklab bo'lmadi.",
