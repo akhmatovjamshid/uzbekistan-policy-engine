@@ -1,7 +1,7 @@
 # Knowledge Hub Source / Citation Contract
 
 Date: 2026-04-27  
-Status: planning contract only; docs-only; no edits to `apps/policy-ui/**`; no edits to `apps/policy-ui/src/contracts/data-contract.ts`; no edits to `apps/policy-ui/src/data/mock/knowledge-hub.ts`; no backend code; no data files; no mock data changes; no source CRUD or schema edits authorized  
+Status: source/citation governance contract with later frontend/static-artifact amendments; no backend code, source CRUD, live ingest, accepted-public citation, external export, reviewed briefs, or model-output citation authorized
 Scope: governance contract for the current static Knowledge Hub and future source/citation lineage
 
 2026-05-05 implementation amendment: `docs/planning/knowledge-hub-reform-tracker-v1.md`
@@ -14,6 +14,11 @@ stop conditions below.
 supersedes the v1 tracker document for product shape and next implementation direction. It keeps
 the strict source/citation posture, but redirects the visible product away from source-intake
 mechanics toward reform dossiers, Knowledge Hub subsections, and a reform intelligence desk.
+
+2026-05-10 implementation note: the v2 dossier UI, Source Library, and Methodology subsections
+are implemented as static/public-artifact preview surfaces. This does not clear backend/API CRUD,
+live ingest, accepted-public citation, external export, reviewed briefs, or model-output citation
+gates.
 
 Review resolution: Claude Code required reconciliation with current schema, binding to AI governance, item-level lineage, reform-status authority, `model_refs` whitelist, `domain_tag` control, per-item citation scope, takedown/correction protocol, copyright/translation/reviewer governance, and read-only-first API.
 
@@ -31,13 +36,20 @@ Knowledge Hub is not:
 - a model-output authority;
 - a substitute for source institutions, model owners, or reviewed analytical outputs.
 
-The current seeded content remains static pilot content and is the fallback/current surface. It may support internal-preview workflow and trust review, but it must not be described as legally current, live-updated, externally citeable by default, or reviewed model authority.
+The current surface is a static public-artifact preview. It may support internal-preview workflow
+and trust review, but it must not be described as legally current, live-updated, externally
+citeable by default, or reviewed model authority.
 
 ## 2. Existing Schema Reconciliation
 
-This contract reconciles with the existing app schema in `apps/policy-ui/src/contracts/data-contract.ts`. It does not create a parallel production schema and does not authorize editing `data-contract.ts`.
+This contract reconciles with the existing app schema in `apps/policy-ui/src/contracts/data-contract.ts`.
+It does not create a parallel production schema. Later amendments authorized the narrow
+Knowledge Hub frontend/static-artifact schema work needed for the Reform Tracker preview.
 
-The authoritative current surface is the mock-only loader at `apps/policy-ui/src/data/knowledge-hub/source.ts`, which always resolves `KnowledgeHubDataMode` to `mock` and returns `knowledgeHubContentMock` from `apps/policy-ui/src/data/mock/knowledge-hub.ts`.
+The authoritative current surface is the static artifact loader at
+`apps/policy-ui/src/data/knowledge-hub/source.ts`, which resolves `KnowledgeHubDataMode` to
+`artifact` and adapts `apps/policy-ui/public/data/knowledge-hub.json` through the
+Knowledge Hub artifact guard and adapter.
 
 Governance state vocabulary:
 

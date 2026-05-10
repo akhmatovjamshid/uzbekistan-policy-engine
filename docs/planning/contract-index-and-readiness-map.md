@@ -17,7 +17,7 @@ Operational-preview planning freeze: no new planning, contract, or readiness doc
 - FPP: gated - pending final workbook freeze/signoff - forbidden: frontend integration
 - PE: gated - pending accepted implementation gate - forbidden: PE artifact or `pe_data.js` regeneration
 - CGE: gated - pending accepted implementation gate - forbidden: active-preview implementation
-- Knowledge Hub: static preview implemented; v2 concept locked - next: rebuild visible Reform Tracker around reform dossiers, not source-intake mechanics - forbidden: backend/API CRUD, live ingest, or external citation
+- Knowledge Hub: static preview implemented; v2 dossier UI and concept locked - next: deepen verified reform package quality and analytical usefulness - forbidden: backend/API CRUD, live ingest, or external citation
 - Backend artifact registry: gated - pending operations/fallback acceptance - forbidden: FastAPI/Postgres implementation
 - Registry API/static fallback adapter: gated - next: owner acceptance of API/static precedence and source-state labels - forbidden: frontend API wiring
 - Data Registry: implemented - next: preserve static/read-only registry semantics and update source docs with contract changes - forbidden: backend authority, scheduler status, or source CRUD claims
@@ -100,12 +100,12 @@ STOP conditions must be quoted or line-referenced from source contracts where po
 ### Knowledge Hub
 
 - Status: `static-preview-implemented / backend-and-citation-gated`
-- Last verified: 2026-05-07 on `main` after Knowledge Hub source package expansion and v2 concept lock.
+- Last verified: 2026-05-10 on `main` after Knowledge Hub v2 dossier UI, Source Library, and Methodology polish.
 - Source-of-truth doc path: `docs/data-bridge/09_knowledge_hub_contract.md`; product-shape lock: `docs/planning/knowledge-hub-v2-concept-lock.md`; historical v1 intake guardrail: `docs/planning/knowledge-hub-reform-tracker-v1.md`.
-- Current implementation status: Knowledge Hub now renders a static/public-artifact Reform Tracker preview with verified source-backed reform packages and timeline events. It remains a static preview and must not be described as a legal registry, live official tracker, externally citeable database, or reviewed analytical corpus. The next product step is a v2 UI/data-shape rebuild around reform dossiers and broader Knowledge Hub subsections, not another source expansion.
+- Current implementation status: Knowledge Hub now renders a static/public-artifact Reform Tracker dossier desk with verified source-backed reform packages, timeline events, Source Library, and Methodology subsections. Policy Briefs and Model Impact Map remain planned. It remains a static preview and must not be described as a legal registry, live official tracker, externally citeable database, or reviewed analytical corpus. The next product step is package quality/content depth and cautious analytical relevance, not a generic source expansion.
 - Blocking STOP conditions: backend/API CRUD, live ingest, external citation/export, accepted-public citation workflow, reviewed research briefs, and model-output citation remain blocked by the source/citation contract: schema governance, AI governance binding, source/citation lineage, reform-status authority, model-ref whitelist, citation scope, correction/takedown, RU/UZ review, reviewer sign-off, static/legal-currentness caveats, and read-only API/static fallback acceptance.
 - Blocks / blocked-by: blocks Knowledge Hub backend/API CRUD, external citation/export, live ingest, reviewed briefs, and model-output citation; blocked by source/citation schema acceptance, AI governance binding, reviewer-of-record model, RU/UZ review process, model-ref whitelist, and backend ops/fallback acceptance before API work.
-- Next allowed action: implement the v2 Reform Tracker rebuild from `docs/planning/knowledge-hub-v2-concept-lock.md`, keeping static-artifact source validation and item-level caveats.
+- Next allowed action: improve verified reform package depth and analytical usefulness under `docs/planning/knowledge-hub-v2-concept-lock.md`, keeping static-artifact source validation, source-language caveats, and item-level caveats.
 - Next forbidden action: add more source expansion as the primary lane, implement Knowledge Hub API wiring/backend CRUD/live ingest, or claim external citation/reviewed legal currentness without item-level lineage and review.
 - Owner decision needed: Knowledge Hub content owner/reviewer-of-record: "Who signs off each item class, what citation permission/license class applies, and which items are accepted for external citation versus internal-only preview?"
 

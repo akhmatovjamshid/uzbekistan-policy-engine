@@ -1,35 +1,41 @@
 # Knowledge Hub v2 Concept Lock
 
 Date: 2026-05-07  
-Status: product concept and implementation guardrail  
+Last updated: 2026-05-10 after the v2 dossier UI and source/methodology polish landed on `main`
+Status: implemented product-shape guardrail; active constraints remain in force
 Scope: Knowledge Hub product shape, with Reform Tracker as the first production subsection
 
 ## 1. Why This Reset Exists
 
-The current Knowledge Hub is technically functional, but the product shape has drifted.
-It now behaves like a verified-source reform package table assembled from official pages.
-That is useful infrastructure, but it is not yet the intended Knowledge Hub experience.
+At the time this reset was written, Knowledge Hub was technically functional but the
+product shape had drifted toward a verified-source reform package table assembled from
+official pages. That infrastructure was useful, but it was not yet the intended Knowledge
+Hub experience.
 
 The intended product is a policy intelligence section for economists and policy analysts:
 it should explain what reforms are, where they stand, what official evidence supports them,
 what institutions are responsible, what milestones matter next, and which parts of the
 policy engine they may affect.
 
-This document locks the v2 concept before further implementation.
+This document locks the v2 concept and remains the product guardrail after the v2 dossier
+UI implementation.
 
 ## 2. Current-State Audit
 
-Current deployed state after the source-package expansion:
+Current deployed state after the v2 dossier UI and source/methodology polish:
 
 - 13 configured official sources.
-- 4 verified source-extracted candidates.
+- 4 verified source-extracted candidates retained for internal traceability.
 - 4 reform packages:
   - healthcare quality, licensing, and private-sector participation;
   - urbanization, construction permits, and housing delivery;
   - agriculture financing and subsidy delivery;
   - tax administration and investment incentives.
 - 0 accepted reforms.
-- User-facing page has two tabs: Reform Packages and Implementation Timeline.
+- User-facing Reform Tracker uses a dossier desk: filter/list rail plus selected reform
+  detail pane.
+- User-facing subsections include Reform Tracker, Source Library, and Methodology.
+- Policy Briefs and Model Impact Map remain planned states.
 - Review queue and raw candidates are hidden from the visible route.
 
 What works:
@@ -38,18 +44,22 @@ What works:
 - Official source links are verified before publication.
 - The tracker has package-level records and dated milestones.
 - Weak reports, training, cooperation news, and unusable links are filtered.
-- The UI has a credible first working slice.
+- The default Reform Tracker now reads as a reform dossier desk, not a source-intake table.
+- Source Library exposes configured sources and source-check posture from artifact metadata.
+- Methodology exposes rulebook rules, evidence types, caveats, and source-language boundaries.
+- EN/RU/UZ shell labels are present while source-language content remains caveated.
 
-What is still wrong:
+What remains incomplete:
 
-- The page still exposes the mechanics of the intake pipeline more than the analyst story.
-- It treats each package as a row plus side dossier, not as a reform intelligence object.
-- It does not yet make the difference between legal act, implementation step, financing,
-  deadline, and status update obvious enough.
-- The broader Knowledge Hub product is collapsed into only one subsection.
+- Package content is still thin and should become more analytically useful before external
+  demo use.
 - Policy implications and model relevance are shallow labels, not a useful analytical map.
-- The page does not yet feel like the final "reform desk" that a policy analyst would use
-  before a meeting.
+- Policy Briefs and Model Impact Map are still planned, not implemented.
+- There are still 0 accepted-public reforms; all visible dossiers remain static preview
+  content, not externally citeable reviewed records.
+- Backend/API CRUD, live ingest, external citation, accepted-public citation workflow,
+  reviewed research briefs, and model-output citation remain blocked by the source/citation
+  contract.
 
 ## 3. Product Definition
 
@@ -107,8 +117,9 @@ Purpose: expose the official source basis behind Knowledge Hub records.
 Primary question: "Which official sources does the system rely on, and when were they last
 checked?"
 
-This should be readable by users, but diagnostics such as rejected candidates and parser
-internals should remain internal unless deliberately exposed as methodology.
+This is implemented as a visible subsection from artifact metadata. It should stay readable
+by users. Counts and source-check posture may be shown; rejected candidates and parser internals
+should remain internal unless deliberately exposed as methodology.
 
 ### 4.4 Methodology Notes
 
@@ -116,7 +127,8 @@ Purpose: explain definitions, inclusion rules, caveats, and how automation is us
 
 Primary question: "How does the system decide what is in scope and what the labels mean?"
 
-This should be visible enough to build trust, but it should not dominate the main workflow.
+This is implemented as a visible subsection from artifact metadata. It should be visible
+enough to build trust, but it should not dominate the main workflow.
 
 ### 4.5 Model Impact Map
 
@@ -270,9 +282,8 @@ Not allowed:
 
 ## 8. UI Direction
 
-The Reform Tracker should move away from the current table-first layout.
-
-Recommended v2 layout:
+The Reform Tracker has moved away from the earlier table-first layout. The implemented v2
+baseline follows this layout:
 
 1. Top: compact institutional header with package count, latest source date, sources monitored,
    and caveat.
@@ -283,7 +294,7 @@ Recommended v2 layout:
    responsible agencies, and model relevance.
 5. Timeline mode: a secondary view that groups milestones by quarter/month and links each event
    back to its dossier.
-6. Methodology/source drawer: optional; not a primary tab for ordinary use.
+6. Source Library and Methodology subsections: visible, but secondary to the Reform Tracker.
 
 Visual style:
 
@@ -326,7 +337,7 @@ not render them.
 
 ## 10. Acceptance Criteria For v2 Rebuild
 
-The v2 Reform Tracker is acceptable when:
+The v2 Reform Tracker rebuild is accepted as implemented when:
 
 - the default page reads as reform intelligence, not source diagnostics;
 - each displayed reform has a clear dossier;
@@ -340,19 +351,24 @@ The v2 Reform Tracker is acceptable when:
 - mobile layout remains usable without horizontal table dependence;
 - model relevance is cautious and does not cite gated models as accepted evidence.
 
-## 11. Next Implementation Slice
+Implementation status: the UI/product-shape criteria above are implemented on `main`.
+The content-depth and model-relevance criteria remain improvement lanes, not blockers to
+the v2 page shape.
 
-The next PR should be a v2 UI/data-shape rebuild, not another source expansion.
+## 11. Next Implementation Slices
+
+The next work should improve dossier quality and analytical usefulness, not reopen a generic
+news/source expansion lane.
 
 Scope:
 
 - keep the current official-source artifact and package assembly;
-- add or derive `short_summary`, `parameters_or_amounts`, `policy_channels`, and clearer source type labels;
-- redesign `KnowledgeHubContentView` around dossier rows and a detail pane;
-- keep the timeline view, but make it secondary and dossier-linked;
-- hide source diagnostics from the primary page, with only a compact methodology/source note;
+- improve or derive `short_summary`, `parameters_or_amounts`, `policy_channels`, and source type labels where they are still thin;
+- add more verified reform packages only when the official source supports a high-value dossier;
+- strengthen package grouping, milestone chronology, and next-milestone/no-published-next-milestone handling;
+- keep Source Library and Methodology as artifact-metadata views, not operational admin screens;
 - preserve all existing guards and link validation;
-- add tests for no visible candidate/review queue, dossier fields, timeline linkage, and mobile/table-free layout hooks.
+- add tests for package quality, timeline linkage, no visible candidate/review queue, and source-language caveats.
 
 Out of scope:
 
@@ -366,7 +382,7 @@ Out of scope:
 
 ## 12. Decision
 
-Lock this concept before writing the next UI rebuild.
+Keep this concept locked as the current Knowledge Hub v2 product guardrail.
 
-If a future request asks to add more sources before the v2 rebuild, treat that as lower priority
-unless the source is necessary to support an already chosen dossier.
+If a future request asks to add more sources as a generic expansion, treat that as lower
+priority unless the source is necessary to support an already chosen high-value dossier.
