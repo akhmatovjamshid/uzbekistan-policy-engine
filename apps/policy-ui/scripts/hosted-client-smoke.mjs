@@ -78,34 +78,38 @@ const HASH_ROUTES = [
   },
   {
     hash: '#/knowledge-hub',
-    selector: '.reform-packages-layout',
+    selector: '.dossier-desk',
     titles: {
-      en: 'Reform Tracker',
-      ru: '\u0422\u0440\u0435\u043a\u0435\u0440 \u0440\u0435\u0444\u043e\u0440\u043c',
-      uz: 'Islohotlar monitoringi',
+      en: 'Knowledge Hub',
+      ru: '\u0411\u0430\u0437\u0430 \u0437\u043d\u0430\u043d\u0438\u0439',
+      uz: 'Bilimlar markazi',
     },
     extraExpression: `
       (() => {
       const text = (document.body.innerText || '').toLowerCase();
-      const hasPackagesLayout = !!document.querySelector('.reform-packages-layout');
-      const hasPackageTable = !!document.querySelector('.reform-package-table');
+      const hasDossierDesk = !!document.querySelector('.dossier-desk');
+      const hasDossierRail = !!document.querySelector('.dossier-rail');
+      const hasDossierRow = !!document.querySelector('.dossier-row');
       const hasDossier = !!document.querySelector('.reform-dossier');
-      const hasTrackerTabs = !!document.querySelector('.tracker-tabs');
-      const hasVerifiedSourceLink = !!document.querySelector('.reform-dossier a[href^="http"]');
+      const hasSectionTabs = !!document.querySelector('.hub-section-tabs');
+      const hasMetrics = !!document.querySelector('.tracker-summary');
+      const hasVerifiedSourceLink = !!document.querySelector('.reform-dossier a[href^="http"][target="_blank"][rel~="noopener"][rel~="noreferrer"]');
       const hasPackageContent =
         text.includes('automatic official-source tracker') &&
         text.includes('reform packages') &&
         text.includes('implementation timeline') &&
         text.includes('healthcare quality') &&
-        text.includes('verified links');
+        text.includes('official source basis');
       const hasCaveat =
         text.includes('not an official legal registry') ||
         (text.includes('automatic official-source tracker') && text.includes('invalid') && text.includes('unverified'));
       return (
-      hasPackagesLayout &&
-      hasPackageTable &&
+      hasDossierDesk &&
+      hasDossierRail &&
+      hasDossierRow &&
       hasDossier &&
-      hasTrackerTabs &&
+      hasSectionTabs &&
+      hasMetrics &&
       hasVerifiedSourceLink &&
       hasPackageContent &&
       hasCaveat &&
@@ -114,6 +118,7 @@ const HASH_ROUTES = [
       !document.querySelector('.candidate-section') &&
       !document.querySelector('.accepted-section') &&
       !document.querySelector('.hub-grid') &&
+      !document.querySelector('.reform-package-table') &&
       !text.includes('review queue') &&
       !text.includes('curated static pilot content') &&
       !text.includes('research briefs') &&
@@ -792,17 +797,19 @@ function languageSwitchExpression(language, expectedTitle) {
 function knowledgeHubTrackerExpression() {
   return `
     (() => {
-      const packagesLayout = document.querySelector('.knowledge-hub-page .reform-packages-layout');
-      const packageTable = document.querySelector('.knowledge-hub-page .reform-package-table');
+      const dossierDesk = document.querySelector('.knowledge-hub-page .dossier-desk');
+      const dossierRail = document.querySelector('.knowledge-hub-page .dossier-rail');
+      const dossierRow = document.querySelector('.knowledge-hub-page .dossier-row');
       const dossier = document.querySelector('.knowledge-hub-page .reform-dossier');
-      const trackerTabs = document.querySelector('.knowledge-hub-page .tracker-tabs');
-      const methodology = document.querySelector('.knowledge-hub-page .tracker-methodology');
+      const sectionTabs = document.querySelector('.knowledge-hub-page .hub-section-tabs');
+      const metrics = document.querySelector('.knowledge-hub-page .tracker-summary');
       const forbiddenSelectors = [
         '.pending-surface',
         '.knowledge-hub-static-banner',
         '.candidate-section',
         '.accepted-section',
         '.hub-grid',
+        '.reform-package-table',
       ];
       const forbiddenSelector = forbiddenSelectors.find((selector) => document.querySelector(selector));
       const text = document.body.innerText || '';
@@ -820,28 +827,31 @@ function knowledgeHubTrackerExpression() {
         'reform packages',
         'implementation timeline',
         'healthcare quality',
-        'official website of the president',
-        'verified links',
+        'official source basis',
         'not an official legal registry',
       ];
       const missingText = requiredNormalizedText.filter((snippet) => !normalizedText.includes(snippet));
-      const hasSourceMetadata = !!dossier && !!dossier.querySelector('a[href^="http"]');
+      const hasSourceMetadata =
+        !!dossier &&
+        !!dossier.querySelector('a[href^="http"][target="_blank"][rel~="noopener"][rel~="noreferrer"]');
       return {
         ok:
-          !!packagesLayout &&
-          !!packageTable &&
+          !!dossierDesk &&
+          !!dossierRail &&
+          !!dossierRow &&
           !!dossier &&
-          !!trackerTabs &&
-          !!methodology &&
+          !!sectionTabs &&
+          !!metrics &&
           missingText.length === 0 &&
           hasSourceMetadata &&
           !forbiddenSelector &&
           !forbiddenText,
-        hasPackagesLayout: !!packagesLayout,
-        hasPackageTable: !!packageTable,
+        hasDossierDesk: !!dossierDesk,
+        hasDossierRail: !!dossierRail,
+        hasDossierRow: !!dossierRow,
         hasDossier: !!dossier,
-        hasTrackerTabs: !!trackerTabs,
-        hasMethodology: !!methodology,
+        hasSectionTabs: !!sectionTabs,
+        hasMetrics: !!metrics,
         hasSourceMetadata,
         missingText,
         forbiddenSelector: forbiddenSelector ?? null,
