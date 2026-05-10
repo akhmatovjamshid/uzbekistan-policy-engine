@@ -291,9 +291,11 @@ Automatic publication guardrails:
 - Any configured-source fetch failure blocks publication.
 - Invalid or synthetic item links are blocked before artifact output.
 - Policy UI lint, tests, and build must pass before the workflow commits.
-- After the workflow commits, it explicitly dispatches `Validate` and `Deploy Pages`
-  because GitHub-token pushes do not automatically trigger push workflows.
-- The post-commit `Validate`, `Deploy Pages`, and hosted smoke workflows remain the
+- After the workflow commits, it explicitly dispatches and waits for `Validate`,
+  `Deploy Pages`, and `Policy UI Hosted Smoke`, because GitHub-token pushes and
+  token-dispatched workflows do not reliably chain through the normal push/workflow-run
+  triggers.
+- The post-commit `Validate`, `Deploy Pages`, and hosted smoke runs remain the
   deployment evidence after publication.
 
 ## 8. UI Direction

@@ -161,13 +161,58 @@ jobs:
           git commit -m "data(knowledge-hub): official source intake $(date -u +%Y-%m-%d)"
           git push
 
-      - name: Dispatch post-publication validation and deploy
+      - name: Dispatch and verify post-publication workflows
         if: steps.diff.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          published_sha="$(git rev-parse HEAD)"
+
+          find_run_id() {
+            workflow_file="$1"
+            for _ in $(seq 1 24); do
+              run_id="$(
+                gh run list \
+                  --workflow "$workflow_file" \
+                  --branch main \
+                  --event workflow_dispatch \
+                  --limit 25 \
+                  --json databaseId,headSha,createdAt \
+                  --jq "map(select(.headSha == \"$published_sha\")) | sort_by(.createdAt) | reverse | .[0].databaseId // empty"
+              )"
+              if [ -n "$run_id" ]; then
+                printf '%s\n' "$run_id"
+                return 0
+              fi
+              sleep 5
+            done
+            echo "::error::Could not find dispatched run for $workflow_file at $published_sha."
+            return 1
+          }
+
+          require_success() {
+            run_id="$1"
+            label="$2"
+            gh run watch "$run_id" --interval 10
+            conclusion="$(gh run view "$run_id" --json conclusion --jq '.conclusion')"
+            if [ "$conclusion" != "success" ]; then
+              echo "::error::$label concluded with $conclusion."
+              exit 1
+            fi
+          }
+
           gh workflow run validate.yml --ref main
           gh workflow run pages.yml --ref main
+
+          validate_run_id="$(find_run_id validate.yml)"
+          pages_run_id="$(find_run_id pages.yml)"
+
+          require_success "$validate_run_id" "Validate"
+          require_success "$pages_run_id" "Deploy Pages"
+
+          gh workflow run policy-ui-hosted-smoke.yml --ref main -f base_url=hosted
+          smoke_run_id="$(find_run_id policy-ui-hosted-smoke.yml)"
+          require_success "$smoke_run_id" "Policy UI Hosted Smoke"
 
       - name: Upload generated Knowledge Hub artifact bundle
         if: always()
