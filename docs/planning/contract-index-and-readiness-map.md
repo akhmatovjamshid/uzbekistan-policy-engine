@@ -17,7 +17,7 @@ Operational-preview planning freeze: no new planning, contract, or readiness doc
 - FPP: gated - pending final workbook freeze/signoff - forbidden: frontend integration
 - PE: gated - pending accepted implementation gate - forbidden: PE artifact or `pe_data.js` regeneration
 - CGE: gated - pending accepted implementation gate - forbidden: active-preview implementation
-- Knowledge Hub: gated - current implementation is pending-only; internal-preview route has mock content hidden - next: accept source/citation schema and reviewer model - forbidden: backend/API CRUD or external citation
+- Knowledge Hub: static preview implemented; v2 dossier UI and concept locked - next: deepen verified reform package quality and analytical usefulness - forbidden: backend/API CRUD, live ingest, or external citation
 - Backend artifact registry: gated - pending operations/fallback acceptance - forbidden: FastAPI/Postgres implementation
 - Registry API/static fallback adapter: gated - next: owner acceptance of API/static precedence and source-state labels - forbidden: frontend API wiring
 - Data Registry: implemented - next: preserve static/read-only registry semantics and update source docs with contract changes - forbidden: backend authority, scheduler status, or source CRUD claims
@@ -99,14 +99,14 @@ STOP conditions must be quoted or line-referenced from source contracts where po
 
 ### Knowledge Hub
 
-- Status: `gated`
-- Last verified: 2026-04-27 on `epic/replatform-execution` at `efb889f`
-- Source-of-truth doc path: `docs/data-bridge/09_knowledge_hub_contract.md`
-- Current implementation status: Knowledge Hub remains route-visible but pending-only for the operational internal preview; seeded static reform/brief/literature content is hidden behind the shared pending surface. Governed source/citation workflow, backend/API source records, external citation, live ingest, and CRUD remain gated.
-- Blocking STOP conditions: `docs/data-bridge/09_knowledge_hub_contract.md:405-426` says stop before app code, backend work, API wiring, CRUD, live ingest, content expansion, external citation, or export if schema governance, AI governance binding, source/citation lineage, reform-status authority, model-ref whitelist, citation scope, correction/takedown, RU/UZ review, reviewer sign-off, static/legal-currentness caveats, and read-only API/static fallback acceptance remain unresolved. `docs/data-bridge/09_knowledge_hub_contract.md:121-125` blocks external citation/export of AI-drafted content without reviewed/accepted source state and actual reviewer sign-off.
-- Blocks / blocked-by: blocks Knowledge Hub backend/API CRUD, source records, external citation/export, live ingest, and content expansion; blocked by source/citation schema acceptance, AI governance binding, reviewer-of-record model, RU/UZ review process, model-ref whitelist, and backend ops/fallback acceptance before API work.
-- Next allowed action: accept the source/citation schema, reviewer-of-record process, and static/legal-currentness caveat model.
-- Next forbidden action: implement Knowledge Hub API wiring, backend CRUD, live ingest, external citation/export, or broaden content without item-level lineage and review.
+- Status: `static-preview-implemented / backend-and-citation-gated`
+- Last verified: 2026-05-10 on `main` after Knowledge Hub v2 dossier UI, Source Library, and Methodology polish.
+- Source-of-truth doc path: `docs/data-bridge/09_knowledge_hub_contract.md`; product-shape lock: `docs/planning/knowledge-hub-v2-concept-lock.md`; historical v1 intake guardrail: `docs/planning/knowledge-hub-reform-tracker-v1.md`.
+- Current implementation status: Knowledge Hub now renders a static/public-artifact Reform Tracker dossier desk with verified source-backed reform packages, timeline events, Source Library, and Methodology subsections. Policy Briefs and Model Impact Map remain planned. It remains a static preview and must not be described as a legal registry, live official tracker, externally citeable database, or reviewed analytical corpus. The next product step is package quality/content depth and cautious analytical relevance, not a generic source expansion.
+- Blocking STOP conditions: backend/API CRUD, live ingest, external citation/export, accepted-public citation workflow, reviewed research briefs, and model-output citation remain blocked by the source/citation contract: schema governance, AI governance binding, source/citation lineage, reform-status authority, model-ref whitelist, citation scope, correction/takedown, RU/UZ review, reviewer sign-off, static/legal-currentness caveats, and read-only API/static fallback acceptance.
+- Blocks / blocked-by: blocks Knowledge Hub backend/API CRUD, external citation/export, live ingest, reviewed briefs, and model-output citation; blocked by source/citation schema acceptance, AI governance binding, reviewer-of-record model, RU/UZ review process, model-ref whitelist, and backend ops/fallback acceptance before API work.
+- Next allowed action: improve verified reform package depth and analytical usefulness under `docs/planning/knowledge-hub-v2-concept-lock.md`, keeping static-artifact source validation, source-language caveats, and item-level caveats.
+- Next forbidden action: add more source expansion as the primary lane, implement Knowledge Hub API wiring/backend CRUD/live ingest, or claim external citation/reviewed legal currentness without item-level lineage and review.
 - Owner decision needed: Knowledge Hub content owner/reviewer-of-record: "Who signs off each item class, what citation permission/license class applies, and which items are accepted for external citation versus internal-only preview?"
 
 ### Backend Artifact Registry
