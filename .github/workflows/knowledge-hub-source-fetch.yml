@@ -13,6 +13,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: knowledge-hub-official-source-intake
@@ -159,6 +160,14 @@ jobs:
           git add "$PUBLIC_ARTIFACT_PATH"
           git commit -m "data(knowledge-hub): official source intake $(date -u +%Y-%m-%d)"
           git push
+
+      - name: Dispatch post-publication validation and deploy
+        if: steps.diff.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run validate.yml --ref main
+          gh workflow run pages.yml --ref main
 
       - name: Upload generated Knowledge Hub artifact bundle
         if: always()
