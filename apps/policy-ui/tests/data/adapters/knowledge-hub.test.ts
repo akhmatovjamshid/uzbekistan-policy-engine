@@ -190,6 +190,11 @@ describe('knowledge hub adapter', () => {
     assert.equal(content.meta.sources_configured, 13)
     assert.equal(content.meta.reform_packages, validation.ok ? validation.value.reform_packages.length : 0)
     assert.equal(content.meta.reforms_tracked, validation.ok ? validation.value.reform_packages.length : 0)
+    assert.equal(content.sources?.length, 13)
+    assert.equal(content.rulebook?.version, 'knowledge-hub-reform-intake-rulebook.v2')
+    assert.ok(content.rulebook?.include_rules.some((rule) => rule.id === 'legal-or-regulatory-change'))
+    assert.ok(content.rulebook?.exclude_rules.some((rule) => rule.id === 'routine-meeting-without-policy-measure'))
+    assert.ok(content.rulebook?.actual_reform_definition?.includes('legal or policy instrument'))
     assert.equal(content.extraction_mode_label, 'Configured source fetch')
     assert.ok(content.reform_packages?.every((reformPackage) => reformPackage.implementation_milestones.length > 0))
     assert.ok(
