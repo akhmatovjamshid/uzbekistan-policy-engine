@@ -1899,17 +1899,28 @@ export async function buildKnowledgeHubCandidateArtifactWithDiagnostics(options 
     : fetchSource
       ? assembleReformPackagesFromCandidates(candidates)
       : FIXTURE_DEMO_REFORM_PACKAGES
+  const includeCandidatesInArtifact = options.includeCandidatesInArtifact !== false
+  const artifactCandidates = includeCandidatesInArtifact ? candidates : []
   const sourceFailures = sourceResults
     .filter((result) => !result.ok)
     .map(({ id, institution, url, parser, fetch_url, error }) => ({ id, institution, url, parser, fetch_url, error }))
-  const caveats = [
-    'This is a deterministic reform-candidate intake artifact.',
-    fetchSource
-      ? 'Generated from configured source URLs at artifact build time.'
-      : 'Fixture/demo mode: generated from checked-in HTML fixtures for deterministic review and smoke testing.',
-    'Items are source-extracted and unreviewed; this is not an official reviewed policy database.',
-    'The frontend loads this static JSON artifact only and does not scrape source pages in the browser.',
-  ]
+  const caveats = includeCandidatesInArtifact
+    ? [
+        'This is a deterministic reform-candidate intake artifact.',
+        fetchSource
+          ? 'Generated from configured source URLs at artifact build time.'
+          : 'Fixture/demo mode: generated from checked-in HTML fixtures for deterministic review and smoke testing.',
+        'Items are source-extracted and unreviewed; this is not an official reviewed policy database.',
+        'The frontend loads this static JSON artifact only and does not scrape source pages in the browser.',
+      ]
+    : [
+        'This is a deterministic official-source reform package artifact.',
+        fetchSource
+          ? 'Generated from configured source URLs at artifact build time.'
+          : 'Fixture/demo mode: generated from checked-in HTML fixtures for deterministic review and smoke testing.',
+        'Public packages are assembled only from source events whose official links passed validation.',
+        'The frontend loads this static JSON artifact only and does not scrape source pages in the browser.',
+      ]
 
   if (sourceFailures.length > 0) {
     caveats.push('One or more configured sources failed during this manual intake run; inspect the workflow report before review.')
@@ -1926,7 +1937,7 @@ export async function buildKnowledgeHubCandidateArtifactWithDiagnostics(options 
     source_diagnostics: sourceResults.map(sourceResultToArtifactDiagnostic),
     reform_packages: reformPackages,
     accepted_reforms: [],
-    candidates,
+    candidates: artifactCandidates,
     caveats,
   }
 

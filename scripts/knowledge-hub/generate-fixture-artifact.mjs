@@ -35,9 +35,10 @@ try {
     fetchSource: false,
     extractedAt: args.extractedAt,
     generatedBy: 'scripts/knowledge-hub/generate-fixture-artifact.mjs',
+    includeCandidatesInArtifact: false,
   })
   writeFileSync(args.output, `${JSON.stringify(artifact, null, 2)}\n`, 'utf8')
-  console.log(`Wrote fixture/demo Knowledge Hub candidate artifact: ${args.output}`)
+  console.log(`Wrote fixture/demo Knowledge Hub package artifact: ${args.output}`)
 } catch (error) {
   console.error(error instanceof Error ? error.message : String(error))
   process.exitCode = 1

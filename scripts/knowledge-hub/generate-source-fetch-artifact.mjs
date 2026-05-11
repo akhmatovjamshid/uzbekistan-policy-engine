@@ -50,7 +50,7 @@ function workflowSummary(diagnostics, outputPath) {
   const sourceRows = diagnostics.source_results
     .map((source) => {
       const status = source.ok ? 'ok' : `failed: ${source.error}`
-      return `| ${source.id} | ${source.institution} | ${source.candidate_count} | ${status} |`
+      return `| ${source.id} | ${source.institution} | ${source.candidate_count} | ${source.link_invalid_count} | ${status} |`
     })
     .join('\n')
 
@@ -59,14 +59,14 @@ function workflowSummary(diagnostics, outputPath) {
     '',
     `- Output: \`${outputPath}\``,
     `- Extraction mode: \`${diagnostics.artifact.extraction_mode}\``,
-    `- Candidate count: ${diagnostics.candidate_count}`,
+    `- Verified source item count: ${diagnostics.candidate_count}`,
     `- Source failures: ${diagnostics.source_failures.length}`,
     '',
-    '| Source | Institution | Candidates | Status |',
-    '| --- | --- | ---: | --- |',
+    '| Source | Institution | Verified items | Invalid links blocked | Status |',
+    '| --- | --- | ---: | ---: | --- |',
     sourceRows,
     '',
-    'This manual run only prepares a static candidate artifact for review. It does not publish Pages, create admin CRUD, call a backend API, or make official reviewed policy database claims.',
+    'This run prepares a static package-based public artifact after source-link validation. It does not publish Pages directly, create admin CRUD, call a backend API, or make official legal-registry claims.',
     '',
   ].join('\n')
 }
@@ -77,6 +77,7 @@ try {
     fetchSource: true,
     extractedAt: args.extractedAt,
     generatedBy: 'scripts/knowledge-hub/generate-source-fetch-artifact.mjs',
+    includeCandidatesInArtifact: false,
   })
   writeJson(args.output, diagnostics.artifact)
   if (args.report) writeJson(args.report, diagnostics)
@@ -84,11 +85,11 @@ try {
     ensureParent(args.summary)
     writeFileSync(args.summary, workflowSummary(diagnostics, args.output), 'utf8')
   }
-  console.log(`Wrote fetched-source Knowledge Hub candidate artifact: ${args.output}`)
-  console.log(`Candidate count: ${diagnostics.candidate_count}`)
+  console.log(`Wrote fetched-source Knowledge Hub package artifact: ${args.output}`)
+  console.log(`Verified source item count: ${diagnostics.candidate_count}`)
   for (const source of diagnostics.source_results) {
     if (source.ok) {
-      console.log(`Source ${source.id}: ${source.candidate_count} candidate(s)`)
+      console.log(`Source ${source.id}: ${source.candidate_count} verified item(s), ${source.link_invalid_count} invalid link(s) blocked`)
     } else {
       console.error(`Source ${source.id} failed: ${source.error}`)
     }

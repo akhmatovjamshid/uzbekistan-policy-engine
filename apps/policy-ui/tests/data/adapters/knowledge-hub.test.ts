@@ -144,7 +144,7 @@ describe('knowledge hub adapter', () => {
     assert.equal(planned[0].title, 'WTO accession · final tariff schedule')
   })
 
-  it('validates and adapts the generated public candidate artifact', () => {
+  it('validates and adapts the generated public package artifact', () => {
     const artifact = JSON.parse(readFileSync(PUBLIC_KNOWLEDGE_HUB_ARTIFACT_PATH, 'utf8'))
     const validation = validateKnowledgeHubArtifact(artifact)
 
@@ -165,28 +165,16 @@ describe('knowledge hub adapter', () => {
         ),
     )
     assert.ok(validation.ok && validation.value.accepted_reforms.length === 0)
-    assert.ok(validation.ok && validation.value.candidates.every((candidate) => candidate.extraction_state === 'source_extracted'))
-    assert.ok(validation.ok && validation.value.candidates.every((candidate) => candidate.extraction_mode === 'configured-source-fetch'))
-    assert.ok(validation.ok && validation.value.candidates.every((candidate) => candidate.review_state === 'candidate'))
-    assert.ok(validation.ok && validation.value.candidates.every((candidate) => candidate.review_status === 'needs_review'))
-    assert.ok(validation.ok && validation.value.candidates.every((candidate) => candidate.status === 'unknown'))
-    assert.ok(validation.ok && validation.value.candidates.every((candidate) => candidate.source_url_status === 'verified'))
-    assert.ok(validation.ok && validation.value.candidates.every((candidate) => candidate.inclusion_reason.length > 0))
-    assert.ok(validation.ok && validation.value.candidates.every((candidate) => candidate.evidence_types.length > 0))
-    assert.ok(validation.ok && validation.value.candidates.every((candidate) => candidate.matched_rules.length > 0))
-    assert.ok(validation.ok && validation.value.candidates.every((candidate) => candidate.source_institution.length > 0))
-    assert.ok(validation.ok && validation.value.candidates.every((candidate) => candidate.source_title.length > 0))
-    assert.ok(validation.ok && validation.value.candidates.every((candidate) => candidate.caveats.length > 0))
-    assert.ok(validation.ok && validation.value.candidates.every((candidate) => candidate.source_url.startsWith('https://')))
+    assert.ok(validation.ok && validation.value.candidates.length === 0)
 
     const content = knowledgeHubArtifactToContent(validation.ok ? validation.value : artifact)
     assert.equal(content.reform_packages?.length, validation.ok ? validation.value.reform_packages.length : 0)
     assert.ok(content.reform_packages?.some((reformPackage) => reformPackage.title.length > 0))
     assert.equal(content.reforms.length, 0)
     assert.equal(content.briefs.length, 0)
-    assert.equal(content.candidates?.length, validation.ok ? validation.value.candidates.length : 0)
+    assert.equal(content.candidates?.length, 0)
     assert.equal(content.source_diagnostics?.length, validation.ok ? validation.value.source_diagnostics.length : 0)
-    assert.equal(content.meta.candidate_items, validation.ok ? validation.value.candidates.length : 0)
+    assert.equal(content.meta.candidate_items, 0)
     assert.equal(content.meta.sources_configured, 13)
     assert.equal(content.meta.reform_packages, validation.ok ? validation.value.reform_packages.length : 0)
     assert.equal(content.meta.reforms_tracked, validation.ok ? validation.value.reform_packages.length : 0)
@@ -212,7 +200,7 @@ describe('knowledge hub adapter', () => {
     assert.ok(content.reform_packages?.some((reformPackage) => reformPackage.package_id === 'pkg-urbanization-construction-permits-housing-2026'))
     assert.ok(content.reform_packages?.some((reformPackage) => reformPackage.package_id === 'pkg-agriculture-subsidy-financing-digital-delivery-2026'))
     assert.ok(content.caveats?.some((caveat) => caveat.includes('configured source URLs')))
-    assert.ok(content.caveats?.some((caveat) => caveat.includes('not an official reviewed policy database')))
+    assert.ok(content.caveats?.some((caveat) => caveat.includes('official links passed validation')))
   })
 
   it('validates reform packages and rejects invalid package source links', () => {
@@ -241,6 +229,66 @@ describe('knowledge hub adapter', () => {
     assert.ok(invalidValidation.issues.some((issue) => issue.message.includes('synthetic or local links')))
   })
 
+  it('rejects configured-source public artifacts that expose candidate or review records', () => {
+    const artifact = JSON.parse(readFileSync(PUBLIC_KNOWLEDGE_HUB_ARTIFACT_PATH, 'utf8'))
+    const sourceEvent = artifact.reform_packages[0].official_source_events[0]
+    const invalidArtifact = JSON.parse(JSON.stringify(artifact))
+    invalidArtifact.candidates = [
+      {
+        id: 'candidate-public-leak',
+        extraction_state: 'source_extracted',
+        extraction_mode: 'configured-source-fetch',
+        review_state: 'candidate',
+        review_status: 'needs_review',
+        status: 'unknown',
+        title: sourceEvent.title,
+        summary: sourceEvent.summary,
+        domain_tag: 'Policy',
+        domain_tags: ['Policy'],
+        reform_category: artifact.reform_packages[0].reform_category,
+        evidence_types: [sourceEvent.evidence_type],
+        relevance_score: 100,
+        inclusion_reason: 'Synthetic guard fixture.',
+        matched_rules: ['legal-or-regulatory-change'],
+        matched_include_rules: ['legal-or-regulatory-change'],
+        source_title: sourceEvent.title,
+        source_institution: sourceEvent.source_institution,
+        source_owner: sourceEvent.source_institution,
+        source_url: sourceEvent.source_url,
+        source_published_at: sourceEvent.source_published_at,
+        retrieved_at: artifact.generated_at,
+        extracted_at: artifact.generated_at,
+        source_url_status: 'verified',
+        source_url_verified_at: artifact.generated_at,
+        citation_permission: 'pending',
+        license_class: 'unknown',
+        translation_review_state: 'not_translated',
+        caveats: ['Synthetic guard fixture.'],
+      },
+    ]
+    invalidArtifact.accepted_reforms = [
+      {
+        ...invalidArtifact.candidates[0],
+        extraction_state: 'source_extracted',
+        review_state: 'accepted_public',
+        review_status: 'public_cleared',
+        status: 'planned',
+        as_of_date: sourceEvent.source_published_at,
+        status_authority: sourceEvent.source_institution,
+        reviewer_of_record: 'Synthetic reviewer',
+        review_date: artifact.generated_at,
+        review_scope: 'Synthetic guard fixture.',
+        model_refs: [],
+      },
+    ]
+
+    const invalidValidation = validateKnowledgeHubArtifact(invalidArtifact)
+
+    assert.equal(invalidValidation.ok, false)
+    assert.ok(invalidValidation.issues.some((issue) => issue.message.includes('cannot expose candidate records')))
+    assert.ok(invalidValidation.issues.some((issue) => issue.message.includes('cannot expose review records')))
+  })
+
   it('loads Knowledge Hub from the static artifact and does not import hidden mock content', async () => {
     const source = readFileSync(KNOWLEDGE_HUB_SOURCE_PATH, 'utf8')
     const beforeMockSnapshot = JSON.stringify(knowledgeHubContentMock)
@@ -265,14 +313,14 @@ describe('knowledge hub adapter', () => {
     assert.equal(state.content?.meta.reform_packages, artifact.reform_packages.length)
     assert.equal(state.content?.meta.research_briefs, 0)
     assert.equal(state.content?.meta.literature_items, 0)
-    assert.equal(state.content?.meta.candidate_items, artifact.candidates.length)
+    assert.equal(state.content?.meta.candidate_items, 0)
     assert.equal(state.content?.reforms.length, 0)
     assert.equal(state.content?.reform_packages?.length, artifact.reform_packages.length)
     assert.ok(state.content?.reform_packages?.[0].title)
     assert.equal(state.content?.briefs.length, 0)
     assert.equal(state.content?.extraction_mode, 'configured-source-fetch')
     assert.equal(state.content?.extraction_mode_label, 'Configured source fetch')
-    assert.equal(state.content?.candidates?.[0].extraction_state, 'source_extracted')
+    assert.equal(state.content?.candidates?.length, 0)
     assert.equal(JSON.stringify(knowledgeHubContentMock), beforeMockSnapshot)
   })
 

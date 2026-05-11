@@ -438,6 +438,36 @@ describe('Knowledge Hub reform intake', () => {
     assert.equal(diagnostics.source_results[0].link_invalid_count, 1)
   })
 
+  it('can build package-only public artifacts while retaining intake diagnostics', async () => {
+    const diagnostics = await buildKnowledgeHubCandidateArtifactWithDiagnostics({
+      fetchSource: true,
+      includeCandidatesInArtifact: false,
+      extractedAt: '2026-05-05T08:00:00.000Z',
+      sources: [
+        {
+          id: 'president-reform-news',
+          institution: 'Official website of the President of the Republic of Uzbekistan',
+          url: 'https://president.uz/en/lists/news',
+          parser: 'president-uz-list',
+        },
+      ],
+      fetchImpl: async (url) => {
+        if (String(url).includes('/lists/view/9164')) return new Response('<html>ok</html>')
+        return new Response(`
+          <a href="/en/lists/view/9164">Healthcare quality, licensing, and private-sector participation reform package approved</a>
+          <span>01-05-2026</span>
+        `)
+      },
+    })
+
+    assert.equal(diagnostics.candidate_count, 1)
+    assert.equal(diagnostics.artifact.candidates.length, 0)
+    assert.equal(diagnostics.artifact.accepted_reforms.length, 0)
+    assert.equal(diagnostics.artifact.reform_packages.length, 1)
+    assert.equal(diagnostics.artifact.reform_packages[0].official_source_events[0].source_url_status, 'verified')
+    assert.ok(diagnostics.artifact.caveats.some((caveat) => caveat.includes('official links passed validation')))
+  })
+
   it('assembles generic packages from unrelated verified source events', () => {
     const packages = assembleReformPackagesFromCandidates([
       {

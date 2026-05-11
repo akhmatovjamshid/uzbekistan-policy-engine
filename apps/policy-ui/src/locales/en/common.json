@@ -1066,7 +1066,7 @@
       "summaryAria": "Source library summary",
       "sourcesConfigured": "Sources",
       "sourcesChecked": "Sources checked",
-      "candidatesExtracted": "Items found",
+      "verifiedItems": "Verified items",
       "excludedItems": "Skipped",
       "invalidLinks": "Invalid links blocked",
       "issueCount": "{{count}} source reported an issue.",

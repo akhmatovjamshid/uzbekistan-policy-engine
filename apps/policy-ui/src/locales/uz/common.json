@@ -1066,7 +1066,7 @@
       "summaryAria": "Manbalar kutubxonasi xulosasi",
       "sourcesConfigured": "Manbalar",
       "sourcesChecked": "Tekshirilgan manbalar",
-      "candidatesExtracted": "Topilganlar",
+      "verifiedItems": "Tekshirilgan materiallar",
       "excludedItems": "O'tkazib yuborildi",
       "invalidLinks": "Yaroqsiz havolalar bloklandi",
       "issueCount": "{{count}} ta manba muammo haqida xabar berdi.",

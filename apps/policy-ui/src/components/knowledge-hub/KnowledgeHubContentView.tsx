@@ -567,7 +567,7 @@ function SourceLibrarySection({ content }: { content: KnowledgeHubContent }) {
   const diagnostics = content.source_diagnostics ?? []
   const checkedCount = diagnostics.filter((diagnostic) => diagnostic.ok).length
   const issueCount = diagnostics.filter((diagnostic) => !diagnostic.ok).length
-  const candidateCount = diagnostics.reduce((sum, diagnostic) => sum + diagnostic.candidate_count, 0)
+  const verifiedItemCount = diagnostics.reduce((sum, diagnostic) => sum + diagnostic.candidate_count, 0)
   const excludedCount = diagnostics.reduce((sum, diagnostic) => sum + diagnostic.excluded_count, 0)
   const invalidLinkCount = diagnostics.reduce((sum, diagnostic) => sum + diagnostic.link_invalid_count, 0)
 
@@ -590,8 +590,8 @@ function SourceLibrarySection({ content }: { content: KnowledgeHubContent }) {
           <span>{t('knowledgeHub.sourceLibrary.sourcesChecked')}</span>
         </div>
         <div className="hub-stat">
-          <strong>{formatCount(candidateCount)}</strong>
-          <span>{t('knowledgeHub.sourceLibrary.candidatesExtracted')}</span>
+          <strong>{formatCount(verifiedItemCount)}</strong>
+          <span>{t('knowledgeHub.sourceLibrary.verifiedItems')}</span>
         </div>
         <div className="hub-stat">
           <strong>{formatCount(excludedCount)}</strong>

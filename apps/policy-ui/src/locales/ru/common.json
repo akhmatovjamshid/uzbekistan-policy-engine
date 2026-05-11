@@ -1066,7 +1066,7 @@
       "summaryAria": "Сводка библиотеки источников",
       "sourcesConfigured": "Источники",
       "sourcesChecked": "Источники проверены",
-      "candidatesExtracted": "Найдено",
+      "verifiedItems": "Проверенные материалы",
       "excludedItems": "Пропущено",
       "invalidLinks": "Недействительные ссылки заблокированы",
       "issueCount": "{{count}} источник сообщил о проблеме.",

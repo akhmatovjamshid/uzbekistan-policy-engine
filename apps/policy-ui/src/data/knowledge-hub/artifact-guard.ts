@@ -821,6 +821,20 @@ export function validateKnowledgeHubArtifact(input: unknown): KnowledgeHubArtifa
   if (!Array.isArray(input.candidates)) {
     issues.push({ path: 'candidates', message: 'Expected a candidate array.', severity: 'error' })
   }
+  if (input.extraction_mode === 'configured-source-fetch' && candidates.length > 0) {
+    issues.push({
+      path: 'candidates',
+      message: 'Public configured-source Knowledge Hub artifacts must be package-only and cannot expose candidate records.',
+      severity: 'error',
+    })
+  }
+  if (input.extraction_mode === 'configured-source-fetch' && acceptedReforms.length > 0) {
+    issues.push({
+      path: 'accepted_reforms',
+      message: 'Public configured-source Knowledge Hub artifacts must be package-only and cannot expose review records.',
+      severity: 'error',
+    })
+  }
 
   const ids = new Set<string>()
   for (const reformPackage of reformPackages) {
