@@ -58,7 +58,8 @@ async function createTestI18n() {
                 data: 'Source vintage',
                 source: 'Source vintage',
                 sourceVintage: 'Source vintage',
-                sourceArtifact: 'Source artifact',
+                sourceArtifact: 'Source coverage',
+                ioSourceCoverage: 'I-O source tables and public data snapshot',
                 saved: 'Saved',
               },
             },
@@ -172,8 +173,8 @@ describe('ScenarioLabSavedRunsPanel', () => {
     assert.match(markup, /I-O sector shock/)
     assert.match(markup, /2026Q1/)
     assert.match(markup, /2026Q1-live/)
-    assert.match(markup, /io_model\/io_data\.json/)
-    assert.match(markup, /Source artifact/)
+    assert.match(markup, /I-O source tables and public data snapshot/)
+    assert.match(markup, /Source coverage/)
     assert.match(markup, /Output effect/)
     assert.match(markup, /Open in Comparison/)
     assert.match(markup, /Load/)

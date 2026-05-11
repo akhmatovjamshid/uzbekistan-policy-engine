@@ -140,6 +140,10 @@ function toAssumptionValues(
   return base
 }
 
+function formatScenarioDataDate(value: string, referenceLabel: string): string {
+  return /^mock/i.test(value) ? referenceLabel : value
+}
+
 export function ScenarioLabPage() {
   const { t, i18n } = useTranslation()
   const [searchParams, setSearchParams] = useSearchParams()
@@ -611,6 +615,7 @@ export function ScenarioLabPage() {
   )
   const latestAttribution = pickLatestAttribution(currentAttribution)
   const dataVintage = latestAttribution?.data_version ?? scenarioLabBaseDataVersion
+  const dataDateLabel = formatScenarioDataDate(dataVintage, t('scenarioLab.context.referenceDataset'))
   const contextModelKeyByTab: Record<ScenarioLabModelTab, string> = {
     macro_qpm: 'qpm',
     io_sector_shock: 'io',
@@ -635,7 +640,7 @@ export function ScenarioLabPage() {
           lane: t('scenarioLab.context.lane.sectorLinkage'),
           model: t('scenarioLab.context.model.io'),
           runName: t('scenarioLab.ioShock.title'),
-          dataVintage: ioAnalyticsState.workspace?.data_vintage ?? dataVintage,
+          dataVintage: ioAnalyticsState.workspace?.data_vintage ?? dataDateLabel,
           saveState: ioSaveStatus
             ? t('scenarioLab.context.saveState.saved')
             : t('scenarioLab.context.saveState.unsaved'),
@@ -646,14 +651,14 @@ export function ScenarioLabPage() {
             lane: t('scenarioLab.context.lane.macroScenario'),
             model: t('scenarioLab.context.model.qpm'),
             runName: scenarioName,
-            dataVintage,
+            dataVintage: dataDateLabel,
             saveState:
               currentScenarioId && !hasPendingEdits
                 ? t('scenarioLab.context.saveState.saved')
                 : t('scenarioLab.context.saveState.unsaved'),
             stateLabels: [
               sourceState.mode === 'live' ? 'liveBridgeJson' : 'mockFixture',
-              currentScenarioId && !hasPendingEdits ? 'localBrowserDraft' : 'artifactExport',
+              ...(currentScenarioId && !hasPendingEdits ? (['localBrowserDraft'] as const) : []),
             ] satisfies TrustStateLabelId[],
           }
         : activeModelTab === 'saved_runs'
@@ -661,7 +666,7 @@ export function ScenarioLabPage() {
               lane: t('scenarioLab.context.lane.macroScenario'),
               model: t('scenarioLab.context.model.savedRuns'),
               runName: t(contextRunNameKeyByTab[activeModelTab]),
-              dataVintage,
+              dataVintage: dataDateLabel,
               saveState: t('scenarioLab.context.saveState.unsaved'),
               stateLabels: ['localBrowserDraft'] satisfies TrustStateLabelId[],
             }
@@ -669,7 +674,7 @@ export function ScenarioLabPage() {
             lane: t('scenarioLab.context.lane.macroScenario'),
             model: t(`scenarioLab.context.model.${contextModelKeyByTab[activeModelTab]}`),
             runName: t(contextRunNameKeyByTab[activeModelTab]),
-            dataVintage,
+            dataVintage: dataDateLabel,
             saveState: t('scenarioLab.context.saveState.unsaved'),
             stateLabels: ['planned'] satisfies TrustStateLabelId[],
           }
@@ -694,7 +699,7 @@ export function ScenarioLabPage() {
       </span>
       <span>
         <strong>{t('scenarioLab.header.meta.dataVintageLabel')}</strong>{' '}
-        {t('overview.common.middleDot')} {dataVintage}
+        {t('overview.common.middleDot')} {dataDateLabel}
       </span>
     </>
   )

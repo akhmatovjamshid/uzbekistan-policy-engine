@@ -356,7 +356,7 @@ describe('data registry source', () => {
     )
 
     for (const artifact of registry.artifacts) {
-      assert.match(artifact.statusDetail, /Artifact guard-checked/)
+      assert.match(artifact.statusDetail, /passed format checks/)
       assert.match(artifact.statusDetail, /not economic or model validation/)
       assert.match(artifact.validationScope, /Frontend guard checks/)
       assert.doesNotMatch(artifact.statusDetail, /^Valid\b/)

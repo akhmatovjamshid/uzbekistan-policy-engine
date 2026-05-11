@@ -9,8 +9,15 @@ export function BridgeEvidencePanel({ evidence }: BridgeEvidencePanelProps) {
   const { t } = useTranslation()
   if (!evidence) return null
 
+  const sourceCoverage =
+    evidence.source_artifact.includes('io_model') || evidence.source_artifact.includes('mcp_server')
+      ? t('modelExplorer.bridgeEvidence.sourceCoverageIo')
+      : evidence.source_artifact
+  const caveats = evidence.caveats.map((caveat) =>
+    caveat.replace(/\bbridge payload\b/gi, t('modelExplorer.bridgeEvidence.publishedDataFile')),
+  )
   const facts = [
-    [t('modelExplorer.bridgeEvidence.sourceArtifact'), evidence.source_artifact],
+    [t('modelExplorer.bridgeEvidence.sourceArtifact'), sourceCoverage],
     [t('modelExplorer.bridgeEvidence.dataVintage'), evidence.data_version],
     [t('modelExplorer.bridgeEvidence.exportedAt'), evidence.exported_at],
     [t('modelExplorer.bridgeEvidence.solverVersion'), evidence.solver_version],
@@ -42,11 +49,11 @@ export function BridgeEvidencePanel({ evidence }: BridgeEvidencePanelProps) {
           </span>
         ))}
       </div>
-      {evidence.caveats.length > 0 ? (
+      {caveats.length > 0 ? (
         <>
           <h5>{t('modelExplorer.bridgeEvidence.caveats')}</h5>
           <ul className="bridge-evidence__caveats">
-            {evidence.caveats.map((caveat) => (
+            {caveats.map((caveat) => (
               <li key={caveat}>{caveat}</li>
             ))}
           </ul>

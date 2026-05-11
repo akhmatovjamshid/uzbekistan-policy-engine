@@ -472,8 +472,7 @@ function buildOverviewArtifact(result: LoadedArtifact): RegistryArtifact {
   return {
     ...base,
     status,
-    statusDetail:
-      'Artifact guard-checked by Overview locked-metric guards; this is not economic or model validation.',
+    statusDetail: 'File loaded and passed format checks; this is not economic or model validation.',
     owner: 'CERR macro monitoring team',
     sourceSystem: 'overview_artifact',
     dataVintage: summarizeMetricPeriods(payload),
@@ -512,7 +511,7 @@ function buildQpmArtifact(result: LoadedArtifact): RegistryArtifact {
   return {
     ...base,
     status: highestSeverity === 'critical' || highestSeverity === 'warning' ? 'warning' : 'valid',
-    statusDetail: 'Artifact guard-checked by QPM frontend shape guards; this is not economic or model validation.',
+    statusDetail: 'File loaded and passed format checks; this is not economic or model validation.',
     owner: 'CERR macro modeling team',
     sourceSystem: payload.attribution.module,
     dataVintage: payload.attribution.data_version,
@@ -554,7 +553,7 @@ function buildDfmArtifact(result: LoadedArtifact, now: Date): RegistryArtifact {
   return {
     ...base,
     status: issues.length > 0 ? 'warning' : 'valid',
-    statusDetail: 'Artifact guard-checked by DFM frontend shape guards; this is not economic or model validation.',
+    statusDetail: 'File loaded and passed format checks; this is not economic or model validation.',
     owner: 'CERR nowcasting team',
     sourceSystem: payload.attribution.module,
     dataVintage: payload.attribution.data_version,
@@ -587,7 +586,7 @@ function buildIoArtifact(result: LoadedArtifact): RegistryArtifact {
   return {
     ...base,
     status: highestSeverity === 'critical' || highestSeverity === 'warning' ? 'warning' : 'valid',
-    statusDetail: 'Artifact guard-checked by I-O frontend shape guards; this is not economic or model validation.',
+    statusDetail: 'File loaded and passed format checks; this is not economic or model validation.',
     owner: 'CERR structural analysis team',
     sourceSystem: payload.metadata.source,
     dataVintage: payload.attribution.data_version,

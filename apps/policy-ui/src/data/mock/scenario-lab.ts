@@ -517,7 +517,7 @@ function buildImpulseResponseChart(values: ScenarioLabAssumptionState): ChartSpe
   return {
     chart_id: 'scenario_lab_impulse_response',
     title: 'Scenario impulse response vs baseline · 12 quarters',
-    subtitle: 'Deviation from baseline in percentage points; mock Scenario Lab engine output, not a live forecast.',
+    subtitle: 'Deviation from baseline in percentage points; reference Scenario Lab calculation, not a live forecast.',
     chart_type: 'line',
     x: {
       label: 'Horizon',

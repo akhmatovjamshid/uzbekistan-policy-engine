@@ -21,7 +21,7 @@ async function createTestI18n() {
             chip: { remove: 'Remove {{name}}' },
             selector: {
               inView: 'In view',
-              addSaved: '+ Add saved scenario',
+              addSaved: 'Add saved scenario',
               baselineLabel: 'Baseline',
             },
           },

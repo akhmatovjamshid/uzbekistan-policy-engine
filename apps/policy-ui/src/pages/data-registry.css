@@ -514,7 +514,20 @@
 
 @media (max-width: 700px) {
   .data-registry-summary {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
+  }
+
+  .data-registry-status-matrix {
+    grid-template-columns: 1fr;
+  }
+
+  .data-registry-status-card__head,
+  .data-registry-status-card dl div {
+    grid-template-columns: 1fr;
+  }
+
+  .data-registry-status-card__head {
+    display: grid;
   }
 
   .data-registry-legend dl {

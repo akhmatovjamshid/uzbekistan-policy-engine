@@ -1312,6 +1312,15 @@
 }
 
 @media (max-width: 760px) {
+  .analytical-context {
+    align-items: start;
+    display: grid;
+  }
+
+  .analytical-context__labels {
+    margin-top: var(--space-xs);
+  }
+
   .scenario-model-tabs__list,
   .scenario-tab-shell,
   .io-shock__layout,

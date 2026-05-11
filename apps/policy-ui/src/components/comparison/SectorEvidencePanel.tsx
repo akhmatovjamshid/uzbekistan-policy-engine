@@ -9,8 +9,15 @@ export function SectorEvidencePanel({ evidence }: SectorEvidencePanelProps) {
   const { t } = useTranslation()
   if (!evidence) return null
 
+  const sourceCoverage =
+    evidence.source_artifact.includes('io_model') || evidence.source_artifact.includes('mcp_server')
+      ? t('comparison.ioEvidence.sourceCoverageIo')
+      : evidence.source_artifact
+  const caveats = evidence.caveats.map((caveat) =>
+    caveat.replace(/\bbridge payload\b/gi, t('comparison.ioEvidence.publishedDataFile')),
+  )
   const facts = [
-    [t('comparison.ioEvidence.sourceArtifact'), evidence.source_artifact],
+    [t('comparison.ioEvidence.sourceArtifact'), sourceCoverage],
     [t('comparison.ioEvidence.dataVintage'), evidence.data_vintage],
     [t('comparison.ioEvidence.exportedAt'), evidence.exported_at],
     [t('comparison.ioEvidence.sectorCount'), String(evidence.sector_count)],
@@ -42,11 +49,11 @@ export function SectorEvidencePanel({ evidence }: SectorEvidencePanelProps) {
           </span>
         ))}
       </div>
-      {evidence.caveats.length > 0 ? (
+      {caveats.length > 0 ? (
         <>
           <h5>{t('comparison.ioEvidence.caveats')}</h5>
           <ul className="cmp-io-evidence__caveats">
-            {evidence.caveats.map((caveat) => (
+            {caveats.map((caveat) => (
               <li key={caveat}>{caveat}</li>
             ))}
           </ul>

@@ -9,7 +9,7 @@
       "planned": "Faol emas",
       "artifactGuardChecked": "Format tekshirildi",
       "sourceVintage": "Manba sanasi",
-      "artifactExport": "Saqlangan kesim",
+      "artifactExport": "Hisob kesimi",
       "registryGenerated": "Oxirgi tekshiruv",
       "lastValidationCheck": "Oxirgi tekshiruv",
       "overviewArtifact": "Joriy kesim",
@@ -404,11 +404,12 @@
       "saveState": {
         "saved": "saqlangan",
         "unsaved": "saqlanmagan"
-      }
+      },
+      "referenceDataset": "ma'lumot namunasi"
     },
     "modelTabs": {
       "title": "Tahlil tablari",
-      "description": "Har bir modelning natija chegarasini saqlagan holda modelga xos stsenariylarni bitta ish maydonida ishlating.",
+      "description": "Har bir faol modelni bitta ish maydonida ishlating va uning natijalarini boshqa modellardan alohida saqlang.",
       "tabsAria": "Stsenariy simulyatori model tablari",
       "plannedTitle": "Faol bo'lmagan model yo'nalishlari",
       "plannedDescription": "Bu tahlil yo'nalishlari faqat orientir uchun ko'rsatilgan va hozircha ishga tushmaydi.",
@@ -598,7 +599,8 @@
         "data": "Ma'lumot sanasi",
         "source": "Ma'lumot sanasi",
         "sourceVintage": "Ma'lumot sanasi",
-        "sourceArtifact": "Manba fayli",
+        "sourceArtifact": "Manbalar qamrovi",
+        "ioSourceCoverage": "I-O manba jadvallari va ommaviy ma'lumot kesimi",
         "saved": "Saqlangan"
       }
     },
@@ -732,7 +734,9 @@
       "title": "I-O sektor dalillari",
       "status": "Validatsiyadan o'tgan",
       "note": "Bu panel I-O ma'lumot qatlami orqali olingan strukturaviy sektor uzatishini tavsiflaydi. Bu makro prognoz, stsenariy deltasi yoki yuqoridagi stsenariylarning sababiy ta'siri emas.",
-      "sourceArtifact": "Manba fayli",
+      "sourceArtifact": "Manbalar qamrovi",
+      "sourceCoverageIo": "I-O manba jadvallari va ommaviy ma'lumot kesimi",
+      "publishedDataFile": "ommaviy ma'lumot fayli",
       "dataVintage": "Ma'lumot sanasi",
       "exportedAt": "Yangilangan",
       "sectorCount": "Sektorlar",
@@ -749,7 +753,7 @@
     },
     "selector": {
       "inView": "Ko'rinishda",
-      "addSaved": "+ Saqlangan stsenariy qo'shish",
+      "addSaved": "Saqlangan stsenariy qo'shish",
       "title": "Stsenariy tanlagich",
       "description": "2-3 ta stsenariyni tanlang va deltalarni talqin qilish uchun bitta bazaviy stsenariyni belgilang.",
       "empty": "Solishtirish uchun stsenariylar mavjud emas.",
@@ -1140,6 +1144,16 @@
       "api": "API",
       "static-fallback": "Statik fayl"
     },
+    "sourceLabels": {
+      "overview": "Overview ommaviy ma'lumotlari",
+      "qpm": "QPM stsenariy ma'lumotlari",
+      "dfm": "DFM nowcast ma'lumotlari",
+      "io": "I-O manba jadvallari",
+      "knowledgeHub": "Bilimlar bazasi ommaviy ma'lumotlari",
+      "overviewSystem": "Overview manba kesimi",
+      "qpmSystem": "QPM modeli chiqishi",
+      "dfmSystem": "DFM nowcast chiqishi"
+    },
     "summary": {
       "aria": "Ma'lumot manbalari holati xulosasi"
     },
@@ -1308,7 +1322,9 @@
     },
     "bridgeEvidence": {
       "title": "Model dalillari",
-      "sourceArtifact": "Manba fayli",
+      "sourceArtifact": "Manbalar qamrovi",
+      "sourceCoverageIo": "I-O manba jadvallari va ommaviy ma'lumot kesimi",
+      "publishedDataFile": "ommaviy ma'lumot fayli",
       "dataVintage": "Ma'lumot sanasi",
       "exportedAt": "Yangilangan",
       "solverVersion": "Solver",

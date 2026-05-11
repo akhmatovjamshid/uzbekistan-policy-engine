@@ -33,7 +33,7 @@ async function createTestI18n() {
                 'Mock Scenario Lab engine output: deviations from baseline over 12 quarters, in percentage points. It should not be cited as a live forecast.',
               explanations: {
                 headlineImpact:
-                  'Shows how the selected scenario deviates from the baseline across 12 quarters; values are percentage-point deviations from the mock Scenario Lab engine.',
+                  'Shows how the selected scenario deviates from the baseline across 12 quarters; values are percentage-point deviations from the reference calculation.',
                 macroPath:
                   'Shows the scenario path next to the baseline path so the table can be read as a comparison, not a raw dump.',
                 externalBalance:
@@ -69,7 +69,7 @@ describe('ResultsPanel clarification copy', () => {
 
     assert.match(markup, /Scenario impulse response/)
     assert.match(markup, /Deviation from baseline in percentage points/)
-    assert.match(markup, /mock Scenario Lab engine output, not a live forecast/)
+    assert.match(markup, /reference Scenario Lab calculation, not a live forecast/)
     assert.match(markup, /deviates from the baseline across 12 quarters/)
   })
 

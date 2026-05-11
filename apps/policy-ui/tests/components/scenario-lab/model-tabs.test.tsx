@@ -20,7 +20,7 @@ async function createTestI18n() {
           scenarioLab: {
             modelTabs: {
               title: 'Analysis tabs',
-              description: 'Run model-native scenarios in one workspace.',
+              description: 'Run each active model in one workspace.',
               tabsAria: 'Scenario Lab model tabs',
               plannedTitle: 'Inactive model lanes',
               plannedDescription: 'These analysis lanes are shown for orientation only and do not run yet.',

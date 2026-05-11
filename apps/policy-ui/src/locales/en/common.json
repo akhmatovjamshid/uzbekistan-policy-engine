@@ -9,7 +9,7 @@
       "planned": "Not active",
       "artifactGuardChecked": "Format checked",
       "sourceVintage": "Source date",
-      "artifactExport": "Saved snapshot",
+      "artifactExport": "Run snapshot",
       "registryGenerated": "Last checked",
       "lastValidationCheck": "Last checked",
       "overviewArtifact": "Current snapshot",
@@ -404,11 +404,12 @@
       "saveState": {
         "saved": "saved",
         "unsaved": "unsaved"
-      }
+      },
+      "referenceDataset": "reference data"
     },
     "modelTabs": {
       "title": "Analysis tabs",
-      "description": "Run model-native scenarios in one workspace while preserving each model's output boundary.",
+      "description": "Run each active model in one workspace while keeping its results clearly separated.",
       "tabsAria": "Scenario Lab model tabs",
       "plannedTitle": "Inactive model lanes",
       "plannedDescription": "These analysis lanes are shown for orientation only and do not run yet.",
@@ -598,7 +599,8 @@
         "data": "Data date",
         "source": "Data date",
         "sourceVintage": "Data date",
-        "sourceArtifact": "Source file",
+        "sourceArtifact": "Source coverage",
+        "ioSourceCoverage": "I-O source tables and public data snapshot",
         "saved": "Saved"
       }
     },
@@ -732,7 +734,9 @@
       "title": "I-O sector evidence",
       "status": "Validated",
       "note": "This panel describes structural sector transmission evidence from the I-O data layer. It is not a macro forecast, scenario delta, or causal effect of the scenarios above.",
-      "sourceArtifact": "Source file",
+      "sourceArtifact": "Source coverage",
+      "sourceCoverageIo": "I-O source tables and public data snapshot",
+      "publishedDataFile": "published data file",
       "dataVintage": "Data date",
       "exportedAt": "Updated",
       "sectorCount": "Sectors",
@@ -749,7 +753,7 @@
     },
     "selector": {
       "inView": "In view",
-      "addSaved": "+ Add saved scenario",
+      "addSaved": "Add saved scenario",
       "title": "Scenario selector",
       "description": "Select 2-3 scenarios and define one baseline for delta interpretation.",
       "empty": "No scenarios are available to compare.",
@@ -1140,6 +1144,16 @@
       "api": "API",
       "static-fallback": "Static file"
     },
+    "sourceLabels": {
+      "overview": "Overview public data",
+      "qpm": "QPM scenario data",
+      "dfm": "DFM nowcast data",
+      "io": "I-O source tables",
+      "knowledgeHub": "Knowledge Hub public data",
+      "overviewSystem": "Overview source snapshot",
+      "qpmSystem": "QPM model output",
+      "dfmSystem": "DFM nowcast output"
+    },
     "summary": {
       "aria": "Data source status summary"
     },
@@ -1308,7 +1322,9 @@
     },
     "bridgeEvidence": {
       "title": "Model evidence",
-      "sourceArtifact": "Source file",
+      "sourceArtifact": "Source coverage",
+      "sourceCoverageIo": "I-O source tables and public data snapshot",
+      "publishedDataFile": "published data file",
       "dataVintage": "Data date",
       "exportedAt": "Updated",
       "solverVersion": "Solver",

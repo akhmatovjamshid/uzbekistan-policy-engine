@@ -23,7 +23,9 @@ async function createTestI18n() {
               status: 'Validated',
               note:
                 'This panel describes structural sector transmission evidence from the I-O data layer. It is not a macro forecast, scenario delta, or causal effect of the scenarios above.',
-              sourceArtifact: 'Source file',
+              sourceArtifact: 'Source coverage',
+              sourceCoverageIo: 'I-O source tables and public data snapshot',
+              publishedDataFile: 'published data file',
               dataVintage: 'Data date',
               exportedAt: 'Updated',
               sectorCount: 'Sectors',
@@ -76,7 +78,7 @@ describe('SectorEvidencePanel', () => {
     assert.match(markup, /not a macro forecast/)
     assert.match(markup, /scenario delta/)
     assert.match(markup, /causal effect/)
-    assert.match(markup, /io_model\/io_data\.json/)
-    assert.match(markup, /Type II arrays are not part of this bridge payload/)
+    assert.match(markup, /I-O source tables and public data snapshot/)
+    assert.match(markup, /Type II arrays are not part of this published data file/)
   })
 })

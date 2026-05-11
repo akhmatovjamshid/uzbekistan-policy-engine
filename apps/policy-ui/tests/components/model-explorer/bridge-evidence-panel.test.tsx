@@ -50,7 +50,9 @@ async function createTestI18n() {
             validation: { title: 'Validation summary' },
             bridgeEvidence: {
               title: 'Model evidence',
-              sourceArtifact: 'Source file',
+              sourceArtifact: 'Source coverage',
+              sourceCoverageIo: 'I-O source tables and public data snapshot',
+              publishedDataFile: 'published data file',
               dataVintage: 'Data date',
               exportedAt: 'Updated',
               solverVersion: 'Solver',
@@ -100,8 +102,8 @@ describe('ModelDetail IO model evidence', () => {
     )
 
     assert.match(markup, /Model evidence/)
-    assert.match(markup, /io_model\/io_data\.json/)
+    assert.match(markup, /I-O source tables and public data snapshot/)
     assert.match(markup, /136/)
-    assert.match(markup, /Type II arrays are not part of this bridge payload/)
+    assert.match(markup, /Type II arrays are not part of this published data file/)
   })
 })

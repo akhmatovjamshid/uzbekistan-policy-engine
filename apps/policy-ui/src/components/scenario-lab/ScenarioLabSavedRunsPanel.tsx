@@ -65,6 +65,15 @@ function getMacroSourceVintage(scenario: SavedScenarioRecord): string | null {
   return null
 }
 
+function formatSavedRunDataDate(value: string, referenceLabel: string): string {
+  return /^mock/i.test(value) ? referenceLabel : value
+}
+
+function formatSavedRunSource(value: string, ioCoverageLabel: string): string {
+  if (value.includes('io_model') || value.includes('mcp_server')) return ioCoverageLabel
+  return value
+}
+
 export function ScenarioLabSavedRunsPanel({
   savedScenarios,
   onLoadScenario,
@@ -178,7 +187,7 @@ export function ScenarioLabSavedRunsPanel({
                   </div>
                   <div>
                     <dt>{t('scenarioLab.savedRuns.fields.sourceArtifact')}</dt>
-                    <dd>{run.source_artifact}</dd>
+                    <dd>{formatSavedRunSource(run.source_artifact, t('scenarioLab.savedRuns.fields.ioSourceCoverage'))}</dd>
                   </div>
                   <div>
                     <dt>{t('scenarioLab.ioShock.kpis.output')}</dt>
@@ -238,7 +247,7 @@ export function ScenarioLabSavedRunsPanel({
                 </div>
                 <div>
                   <dt>{t('scenarioLab.savedRuns.fields.data')}</dt>
-                  <dd>{scenario.data_version}</dd>
+                  <dd>{formatSavedRunDataDate(scenario.data_version, t('scenarioLab.context.referenceDataset'))}</dd>
                 </div>
                 {getMacroSourceVintage(scenario) ? (
                   <div>

@@ -20,6 +20,25 @@ function statusClass(status: RegistryStatus): string {
   return `data-registry-status data-registry-status--${status}`
 }
 
+function formatRegistrySourceLabel(value: string, t: (key: string) => string): string {
+  if (value.includes('/data/overview.json')) return t('dataRegistry.sourceLabels.overview')
+  if (value.includes('/data/qpm.json') || value === 'qpm') return t('dataRegistry.sourceLabels.qpm')
+  if (value.includes('/data/dfm.json') || value.includes('dfm_nowcast')) return t('dataRegistry.sourceLabels.dfm')
+  if (value.includes('/data/io.json') || value.includes('io_model') || value.includes('mcp_server')) {
+    return t('dataRegistry.sourceLabels.io')
+  }
+  if (value.includes('/data/knowledge-hub.json')) return t('dataRegistry.sourceLabels.knowledgeHub')
+  return value
+}
+
+function formatRegistrySystemLabel(value: string, t: (key: string) => string): string {
+  if (value === 'overview_artifact') return t('dataRegistry.sourceLabels.overviewSystem')
+  if (value === 'qpm') return t('dataRegistry.sourceLabels.qpmSystem')
+  if (value.includes('dfm')) return t('dataRegistry.sourceLabels.dfmSystem')
+  if (value.includes('I-O')) return value
+  return value
+}
+
 export function DataRegistryContent(props: {
   registry: DataRegistry
   isLoading?: boolean
@@ -230,8 +249,8 @@ function RegistryTable({ rows }: { rows: RegistryRow[] }) {
               <td>{row.dataVintage}</td>
               <td>{row.exportTimestamp}</td>
               <td>
-                <span>{row.source}</span>
-                <small>{row.sourceSystem}</small>
+                <span>{formatRegistrySourceLabel(row.source, t)}</span>
+                <small>{formatRegistrySystemLabel(row.sourceSystem, t)}</small>
               </td>
               <td>{row.owner}</td>
               <td>
@@ -278,7 +297,7 @@ function ArtifactCard({ artifact, generatedAt }: { artifact: RegistryArtifact; g
     <article className="data-registry-artifact">
       <div className="data-registry-artifact__head">
         <div>
-          <p className="data-registry-artifact__path">{artifact.artifactPath}</p>
+          <p className="data-registry-artifact__path">{formatRegistrySourceLabel(artifact.artifactPath, t)}</p>
           <h3>{artifact.modelArea}</h3>
         </div>
         <span className={statusClass(artifact.status)}>{t(`dataRegistry.status.${artifact.status}`)}</span>
@@ -315,7 +334,7 @@ function ArtifactCard({ artifact, generatedAt }: { artifact: RegistryArtifact; g
         </div>
         <div>
           <dt>{t('dataRegistry.artifact.sourceSystem')}</dt>
-          <dd>{artifact.sourceSystem}</dd>
+          <dd>{formatRegistrySystemLabel(artifact.sourceSystem, t)}</dd>
         </div>
         <div>
           <dt>{t('dataRegistry.artifact.solver')}</dt>

@@ -206,6 +206,7 @@
   display: grid;
   gap: var(--space-sm);
   min-width: 0;
+  overflow-x: auto;
 }
 
 .cmp-evidence-layout {
@@ -661,4 +662,51 @@
 
 .comparison-modal__actions {
   justify-content: flex-end;
+}
+
+@media (max-width: 700px) {
+  .analytical-context {
+    align-items: start;
+    display: grid;
+  }
+
+  .analytical-context__labels {
+    margin-top: var(--space-xs);
+  }
+
+  .cmp-selector {
+    align-items: stretch;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cmp-selector .label {
+    margin-right: 0;
+  }
+
+  .cmp-selector__baseline {
+    align-items: start;
+    display: grid;
+    gap: var(--space-xs);
+    margin-left: 0;
+  }
+
+  .cmp-selector__baseline-select,
+  .cmp-selector__add {
+    margin-left: 0;
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .scenario-chip {
+    justify-self: start;
+  }
+
+  .delta-table {
+    min-width: 42rem;
+  }
+
+  .cmp-io-evidence__facts div {
+    grid-template-columns: 1fr;
+  }
 }
