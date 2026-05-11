@@ -236,6 +236,20 @@ describe('Knowledge Hub reform intake', () => {
     assert.ok(decision.matched_actual_reform_signals.includes('parameter_change'))
   })
 
+  it('classifies financial integrity and employment fund legal updates into useful policy areas', () => {
+    const amlDecision = classifyReformCandidateText(
+      'Toʻlov tizimlari operatorlari va elektron pullar tizimlarida jinoiy faoliyatdan olingan daromadlarni legallashtirishga qarshi kurashish boʻyicha ichki nazorat qoidalariga oʻzgartirish kiritish haqida',
+    )
+    const employmentDecision = classifyReformCandidateText(
+      'O‘zbekiston Respublikasi Bandlikka ko‘maklashish davlat jamg‘armasi mablag‘lari hisobidan subsidiyalar va ssuda ajratish tartibi to‘g‘risidagi nizomni tasdiqlash haqida',
+    )
+
+    assert.equal(amlDecision.included, true)
+    assert.equal(amlDecision.reform_category, 'financial_sector')
+    assert.equal(employmentDecision.included, true)
+    assert.equal(employmentDecision.reform_category, 'labor_market')
+  })
+
   it('retains explicit legal and policy changes even when announced in meeting coverage', () => {
     const html = `
       <article>
@@ -619,7 +633,114 @@ describe('Knowledge Hub reform intake', () => {
     assert.equal(packages[0].title, 'Risk-based customs clearance and electronic declaration reform')
     assert.equal(packages[0].official_source_events.length, 2)
     assert.equal(packages[0].implementation_milestones.length, 2)
-    assert.equal(packages[0].current_stage, 'Multiple verified source events')
+    assert.equal(packages[0].current_stage, 'Multiple related official measures')
+  })
+
+  it('groups parallel AML/CFT financial-sector legal updates into one package', () => {
+    const baseCandidate = {
+      summary: 'Rules on countering legalization of criminal proceeds, terrorism financing, and WMD proliferation financing were amended.',
+      source_institution: 'National Database of Legislation of the Republic of Uzbekistan (Lex.uz)',
+      reform_category: 'financial_sector',
+      evidence_types: ['official_policy_announcement'],
+      inclusion_reason: 'Legal or regulatory change.',
+      extraction_mode: CONFIGURED_SOURCE_FETCH_EXTRACTION_MODE,
+      source_url_status: 'verified',
+      extracted_at: '2026-05-08T08:00:00.000Z',
+      source_published_at: '2026-05-08',
+    }
+    const packages = assembleReformPackagesFromCandidates([
+      {
+        ...baseCandidate,
+        title: 'Tijorat banklarida jinoiy faoliyatdan olingan daromadlarni legallashtirishga qarshi kurashish boʻyicha ichki nazorat qoidalariga qoʻshimcha va oʻzgartirishlar kiritish haqida',
+        source_title: 'Commercial bank AML/CFT internal-control rules amended',
+        source_url: 'https://lex.uz/uz/docs/8184105',
+      },
+      {
+        ...baseCandidate,
+        title: 'Nobank kredit tashkilotlarida jinoiy faoliyatdan olingan daromadlarni legallashtirishga qarshi kurashish boʻyicha ichki nazorat qoidalariga qoʻshimcha va oʻzgartirishlar kiritish haqida',
+        source_title: 'Nonbank credit organization AML/CFT internal-control rules amended',
+        source_url: 'https://lex.uz/uz/docs/8184204',
+      },
+      {
+        ...baseCandidate,
+        title: 'Toʻlov tizimlari operatorlari va elektron pullar tizimlarida jinoiy faoliyatdan olingan daromadlarni legallashtirishga qarshi kurashish boʻyicha ichki nazorat qoidalariga oʻzgartirish kiritish haqida',
+        source_title: 'Payment-system and e-money AML/CFT internal-control rules amended',
+        source_url: 'https://lex.uz/uz/docs/8184096',
+      },
+    ])
+
+    assert.equal(packages.length, 1)
+    assert.equal(packages[0].title, 'Financial-sector AML/CFT internal control rules reform')
+    assert.equal(packages[0].reform_category, 'financial_sector')
+    assert.equal(packages[0].official_source_events.length, 3)
+    assert.equal(packages[0].implementation_milestones.length, 3)
+    assert.ok(packages[0].short_summary.includes('banks, nonbank credit organizations, payment-system operators'))
+    assert.ok(!packages[0].title.includes('Energy'))
+  })
+
+  it('groups construction oversight and inspection-pricing legal updates into one package', () => {
+    const baseCandidate = {
+      source_institution: 'National Database of Legislation of the Republic of Uzbekistan (Lex.uz)',
+      reform_category: 'infrastructure_investment',
+      evidence_types: ['official_policy_announcement'],
+      inclusion_reason: 'Legal or regulatory change.',
+      extraction_mode: CONFIGURED_SOURCE_FETCH_EXTRACTION_MODE,
+      source_url_status: 'verified',
+      extracted_at: '2026-05-08T08:00:00.000Z',
+    }
+    const packages = assembleReformPackagesFromCandidates([
+      {
+        ...baseCandidate,
+        title: 'Measures discussed to reduce bureaucracy and strengthen construction oversight',
+        summary: 'Construction oversight and bureaucracy-reduction measures were reviewed.',
+        source_title: 'Measures discussed to reduce bureaucracy and strengthen construction oversight',
+        source_url: 'https://president.uz/en/lists/view/9181',
+        source_published_at: '2026-05-06',
+      },
+      {
+        ...baseCandidate,
+        title: 'Bino va inshootlarning instrumental texnik tekshiruv ishlarini baholash tartibi toʻgʻrisidagi buyruqni oʻz kuchini yoʻqotgan deb topish toʻgʻrisida',
+        summary: 'Prior construction technical inspection pricing order was superseded.',
+        source_title: 'Prior construction technical inspection pricing order superseded',
+        source_url: 'https://lex.uz/uz/docs/8180484',
+        source_published_at: '2026-05-07',
+      },
+      {
+        ...baseCandidate,
+        title: 'Bino va inshootlarning texnik holatini oʻrganish va sinov-laboratoriya ishlari narxlarini hisoblash tartibi toʻgʻrisidagi nizomni tasdiqlash haqida',
+        summary: 'Construction technical condition and laboratory work price calculation regulation approved.',
+        source_title: 'Construction inspection price calculation regulation approved',
+        source_url: 'https://lex.uz/uz/docs/8180898',
+        source_published_at: '2026-05-07',
+      },
+    ])
+
+    assert.equal(packages.length, 1)
+    assert.equal(packages[0].title, 'Construction oversight and technical inspection pricing reform')
+    assert.equal(packages[0].official_source_events.length, 3)
+    assert.equal(packages[0].current_stage, 'Multiple related official measures')
+    assert.ok(packages[0].parameters_or_amounts.includes('Technical condition and laboratory-work price calculation regulation approved'))
+  })
+
+  it('does not publish vague omnibus legal amendments as reform packages without a specific policy subject', () => {
+    const packages = assembleReformPackagesFromCandidates([
+      {
+        title: 'O‘RQ-1144 O‘zbekiston Respublikasining ayrim qonun hujjatlariga o‘zgartirish va qo‘shimchalar kiritish to‘g‘risida',
+        summary: 'Oʻzbekiston Respublikasining Qonuni, 07.05.2026 yildagi O‘RQ-1144-son.',
+        source_url: 'https://lex.uz/uz/docs/-8181969',
+        source_title: 'O‘zbekiston Respublikasining ayrim qonun hujjatlariga o‘zgartirish va qo‘shimchalar kiritish to‘g‘risida',
+        source_institution: 'National Database of Legislation of the Republic of Uzbekistan (Lex.uz)',
+        source_published_at: '2026-05-07',
+        reform_category: 'other_policy',
+        evidence_types: ['official_policy_announcement'],
+        inclusion_reason: 'Legal or regulatory change.',
+        extraction_mode: CONFIGURED_SOURCE_FETCH_EXTRACTION_MODE,
+        source_url_status: 'verified',
+        extracted_at: '2026-05-08T08:00:00.000Z',
+      },
+    ])
+
+    assert.deepEqual(packages, [])
   })
 
   it('does not assemble packages from direct unverified source events', () => {

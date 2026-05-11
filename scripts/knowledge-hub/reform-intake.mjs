@@ -813,14 +813,14 @@ const ACTUAL_REFORM_SIGNAL_DEFINITIONS = [
     id: 'legal_or_policy_instrument',
     patterns: [
       /\b(?:law on|law of|draft law|new law|decree|resolution|regulation|code|order|legal act|normative legal act|rule package|rules amended|rules introduced)\b/i,
-      /\b(?:qonun(?:i)?|farmon(?:i)?|qaror(?:i)?|buyruq(?:i)?|kodeks|normativ-huquqiy hujjat|nizom|yoʻriqnoma|yo'riqnoma|qoidalar|tartib|chora-tadbirlar(?:i)?)\b/i,
+      /\b(?:qonun(?:i)?|farmon(?:i)?|qaror(?:i)?|buyruq(?:i)?|kodeks|normativ-huquqiy hujjat|nizom|yoʻriqnoma|yo'riqnoma|qoidalar(?:iga)?|tartib|chora-tadbirlar(?:i)?|o.?zgartirish\w*|qo.?shimcha\w*)\b/i,
     ],
   },
   {
     id: 'adopted_measure',
     patterns: [
       /\b(?:adopted|approved|enacted|introduced|expands|expanded|abolished|reduced|launched|implemented|entered into force|came into force|signed into law|approves measures|approved measures)\b/i,
-      /\b(?:qabul qilindi|qabul qilingan|tasdiqlandi|tasdiqlash|joriy etildi|joriy etish|amalga oshirildi|kuchga kirdi|oʻz kuchini yoʻqotgan|o'z kuchini yo'qotgan|isloh qilish chora-tadbirlari|chora-tadbirlari)\b/i,
+      /\b(?:qabul qilindi|qabul qilingan|tasdiqlandi|tasdiqlash|joriy etildi|joriy etish|amalga oshirildi|kuchga kirdi|oʻz kuchini yoʻqotgan|o'z kuchini yo'qotgan|isloh qilish chora-tadbirlari|chora-tadbirlari|o.?zgartirish\w*|qo.?shimcha\w*)\b/i,
     ],
   },
   {
@@ -917,6 +917,12 @@ function slugify(value) {
 
 function classifyDomain(text) {
   const normalized = text.toLowerCase()
+  if (/(anti-money laundering|terrorism financing|aml|cft|jinoiy faoliyatdan olingan daromad|legallashtirish|terrorizmni moliyalashtirish|ommaviy qirgʻin qurolini|ommaviy qirg'in qurolini|toʻlov tizimlari|to'lov tizimlari|elektron pullar|nobank kredit)/.test(normalized)) return 'financial_sector'
+  if (/(qobiliyatsizlik|insolvency)/.test(normalized)) return 'business_environment'
+  if (/(bandlikka|employment fund|labor market|labour market|workforce)/.test(normalized)) return 'labor_market'
+  if (/(bozorlar|savdo komplekslari|bir martalik yigʻim|bir martalik yig'im|ijara toʻlovlari|ijara to'lovlari|market fees?|market complex)/.test(normalized)) return 'fiscal_tax'
+  if (/(borish qiyin|togʻli hududlar|tog'li hududlar|remote settlement|mountain settlement)/.test(normalized)) return 'social_protection'
+  if (/(construction oversight|qurilish.*nazorat|technical inspection|instrumental texnik|sinov-laboratoriya|narxlarini hisoblash)/.test(normalized)) return 'infrastructure_investment'
   if (/(housing|construction|urbanization|urban planning|master plan|land privatization|technical specifications|utility networks|qurilish|uy-joy|kadastr|shaharsozlik)/.test(normalized)) return 'infrastructure_investment'
   if (/(energy|gas|tariff adjustment|elektr|energiya|gaz|tarif)/.test(normalized)) return 'energy_tariffs'
   if (/(healthcare|medical|clinic|clinics|health insurance|insurance fund|state-funded medical|sogʻliqni saqlash|sog'liqni saqlash|tibbiy)/.test(normalized)) return 'social_protection'
@@ -1608,7 +1614,19 @@ function candidateWithRunMetadata(candidate, extractionMode, sourceUrlStatus, ex
 }
 
 function candidateToSourceEvent(candidate) {
-  const text = `${candidate.title} ${candidate.summary}`.toLowerCase()
+  const titleText = `${candidate.title} ${candidate.source_title ?? ''}`.toLowerCase()
+  const text = `${titleText} ${candidate.summary}`.toLowerCase()
+  const eventType = /\b(?:superseded|repealed|invalidated|o.?z kuchini yo.?qotgan)\b/i.test(titleText)
+    ? 'superseded'
+    : /\b(?:amended|amendments|o.?zgartirish\w*|qo.?shimcha\w*)/i.test(titleText)
+      ? 'amended'
+      : /\b(?:approved|adopted|tasdiqlash|tasdiqlandi|qabul qilindi|qabul qilingan)\b/i.test(titleText)
+        ? 'approved'
+        : text.includes('financing') || text.includes('loan') || text.includes('grant')
+          ? 'financing_allocated'
+          : text.includes('implemented') || text.includes('launched') || text.includes('introduced') || text.includes('joriy etish')
+            ? 'implementation_milestone'
+            : 'instructions_issued'
   return {
     id: candidate.source_url.includes('/9164')
       ? 'president-healthcare-quality-2026-05-01'
@@ -1620,15 +1638,7 @@ function candidateToSourceEvent(candidate) {
     evidence_type: candidate.evidence_types.includes('official_policy_announcement')
       ? 'official_policy_announcement'
       : candidate.evidence_types[0],
-    event_type: text.includes('amended') || text.includes('amendments')
-      ? 'amended'
-      : text.includes('approved') || text.includes('adopted')
-        ? 'approved'
-        : text.includes('financing') || text.includes('loan') || text.includes('grant')
-          ? 'financing_allocated'
-          : text.includes('implemented') || text.includes('launched') || text.includes('introduced')
-            ? 'implementation_milestone'
-            : 'instructions_issued',
+    event_type: eventType,
     summary: candidate.summary || candidate.inclusion_reason,
     source_url_status: candidate.source_url_status,
     extracted_at: candidate.extracted_at,
@@ -1695,63 +1705,122 @@ function isVerifiedAgricultureSubsidySourceEvent(candidate) {
 
 const PACKAGE_TOPIC_DEFINITIONS = [
   {
+    id: 'remote-mountain-settlement-classification',
+    title: 'Remote and mountain settlement classification rules update',
+    policy_area: 'Regional settlement classification and public-service eligibility',
+    reform_category: 'social_protection',
+    patterns: [/\b(borish qiyin|togʻli hududlar|tog'li hududlar|remote settlement|mountain settlement|aholi punktlarini)\b/i],
+  },
+  {
+    id: 'market-fee-rent-collection',
+    title: 'Market fee, rent, and service-payment collection rules',
+    policy_area: 'Market complex fee collection and rental-payment administration',
+    reform_category: 'fiscal_tax',
+    patterns: [/\b(bozorlar|savdo komplekslari|bir martalik yigʻim|bir martalik yig'im|ijara toʻlovlari|ijara to'lovlari|market fees?|market complex)\b/i],
+  },
+  {
+    id: 'aml-cft-financial-control',
+    title: 'Financial-sector AML/CFT internal control rules reform',
+    policy_area: 'AML/CFT controls for banks, nonbank lenders, payments, and e-money institutions',
+    reform_category: 'financial_sector',
+    patterns: [/\b(anti-money laundering|terrorism financing|aml|cft|jinoiy faoliyatdan olingan daromad|legallashtirish|terrorizmni moliyalashtirish|ommaviy qirgʻin qurolini|ommaviy qirg'in qurolini)\b/i],
+  },
+  {
+    id: 'employment-fund-subsidy-loans',
+    title: 'Employment Fund subsidy and loan allocation rules',
+    policy_area: 'Employment fund subsidies, loans, and labor-market support',
+    reform_category: 'labor_market',
+    patterns: [/\b(bandlikka|employment fund|subsidiyalar va ssuda|subsidy and loan allocation)\b/i],
+  },
+  {
+    id: 'large-investment-integrity-competition-review',
+    title: 'Large investment project integrity and competition review reform',
+    policy_area: 'Investment project anti-corruption review and competition impact assessment',
+    reform_category: 'business_environment',
+    patterns: [/\b(yirik investitsiya loyihalarini|anti-corruption expert|korrupsiyaga qarshi|competition impact|raqobat muhitiga)\b/i],
+  },
+  {
+    id: 'construction-oversight-inspection-pricing',
+    title: 'Construction oversight and technical inspection pricing reform',
+    policy_area: 'Construction oversight, technical inspection pricing, and inspection bureaucracy',
+    reform_category: 'infrastructure_investment',
+    patterns: [/\b(construction oversight|reduce bureaucracy and strengthen construction oversight|instrumental texnik|sinov-laboratoriya|texnik holatini|narxlarini hisoblash|qurilish.*nazorat inspeksiyasi)\b/i],
+  },
+  {
+    id: 'insolvency-framework',
+    title: 'Insolvency framework reform',
+    policy_area: 'Insolvency procedures and business restructuring',
+    reform_category: 'business_environment',
+    patterns: [/\b(qobiliyatsizlik|insolvency)\b/i],
+  },
+  {
     id: 'urbanization-housing-construction',
     title: 'Urbanization, construction permits, and housing delivery reform',
     policy_area: 'Urbanization, construction permits, housing, and infrastructure delivery',
+    reform_category: 'infrastructure_investment',
     patterns: [/\b(urbanization|housing construction|construction permits?|master plans?|land privatization|technical specifications|utility networks|yangi uzbekistan)\b/i],
   },
   {
     id: 'agriculture-subsidy-financing',
     title: 'Agriculture financing and subsidy delivery reform',
     policy_area: 'Agriculture financing, subsidies, and digital delivery',
+    reform_category: 'agriculture',
     patterns: [/\b(agrosubsidy|agricultural payments agency|cotton and grain|agricultur(?:e|al).{0,60}subsid|farmers?.{0,60}subsid|proactive subsidy)\b/i],
   },
   {
     id: 'customs-clearance-digitalization',
     title: 'Risk-based customs clearance and electronic declaration reform',
     policy_area: 'Trade facilitation and customs digitalization',
+    reform_category: 'trade_customs',
     patterns: [/\b(customs|clearance|electronic declaration|single window|risk-based)\b/i],
   },
   {
     id: 'public-transport-system',
     title: 'Public transport service and financing reform',
     policy_area: 'Public transport routes, fleet renewal, fare systems, and service delivery',
+    reform_category: 'infrastructure_investment',
     patterns: [/\b(public transport|bus routes?|electric buses|transport system|fare payment|transport service)\b/i],
   },
   {
     id: 'tax-administration-incentives',
     title: 'Tax administration and investment incentive reform',
     policy_area: 'Tax administration and fiscal incentives',
+    reform_category: 'fiscal_tax',
     patterns: [/\b(tax|vat|incentive|incentives|excise|duty)\b/i],
   },
   {
     id: 'energy-tariff-compensation',
     title: 'Energy tariff adjustment and compensation reform',
     policy_area: 'Energy tariffs, household compensation, and fiscal monitoring',
+    reform_category: 'energy_tariffs',
     patterns: [/\b(energy|tariff|gas|electricity|compensation)\b/i],
   },
   {
     id: 'public-services-digital-legal',
     title: 'Digital public service and legal process reform',
     policy_area: 'Digital public administration and legal services',
+    reform_category: 'digital_public_admin',
     patterns: [/\b(public service|notarial|notary|legal service|digital|online)\b/i],
   },
   {
     id: 'investment-climate-sez',
     title: 'Investment climate and special economic zone reform',
     policy_area: 'Investment climate and special economic zones',
+    reform_category: 'business_environment',
     patterns: [/\b(investment climate|special economic zones|investor service|investors?)\b/i],
   },
   {
     id: 'monetary-prudential-parameters',
     title: 'Monetary and financial-sector parameter reform',
     policy_area: 'Monetary policy and prudential regulation',
+    reform_category: 'monetary_policy',
     patterns: [/\b(policy rate|reserve requirement|prudential|bank|foreign-currency deposit)\b/i],
   },
   {
     id: 'public-administration-legal',
     title: 'Public administration legal framework reform',
     policy_area: 'Public administration and local state power rules',
+    reform_category: 'other_policy',
     patterns: [/\b(local state power|public administration|state power legislation)\b/i],
   },
 ]
@@ -1840,34 +1909,161 @@ const CATEGORY_PACKAGE_DEFAULTS = {
 }
 
 function topicPackageEnrichment(topic, sortedCandidates, sourceEvents) {
-  if (topic?.id !== 'tax-administration-incentives') return {}
   const groupText = sortedCandidates.map((candidate) => `${candidate.title} ${candidate.summary}`).join(' ')
-  if (!/\bincentives?\b/i.test(groupText) || !/\binfrastructure projects?\b/i.test(groupText)) return {}
-
   const firstEventDate = sourceEvents[0]?.source_published_at ?? packageDate(sortedCandidates[0])
+  const sourceEventDates = uniqueStrings(sourceEvents.map((event) => event.source_published_at).filter(Boolean))
 
-  return {
-    short_summary:
-      'Tracks a verified official-source event on tax incentives for investors financing infrastructure projects. The current source confirms the incentive measure but does not publish a future implementation deadline, so the tracker records the source event without inferring a forward milestone.',
-    parameters_or_amounts: [
-      'Tax incentives for investors financing infrastructure projects',
-      firstEventDate
-        ? `Verified official source event published on ${firstEventDate}`
-        : 'Verified official source event without a parsed publication date',
-      'No future implementation deadline was published in the extracted source',
-    ],
-    policy_channels: [
-      'Fiscal incentives',
-      'Private infrastructure investment',
-      'Business cost of capital',
-      'Public-private financing',
-    ],
-    financing_or_incentive: 'Tax incentives for investors financing infrastructure projects',
-    why_tracked:
-      'The verified official source records a fiscal incentive measure for investors financing infrastructure projects. It is tracked as an incentive package while avoiding any inferred implementation deadline not present in the source.',
-    measure_label: 'tax incentives for infrastructure investors',
-    milestone_label: 'tax incentive source event recorded',
+  if (topic?.id === 'tax-administration-incentives') {
+    if (!/\bincentives?\b/i.test(groupText) || !/\binfrastructure projects?\b/i.test(groupText)) return {}
+
+    return {
+      short_summary:
+        'Tracks a verified official-source event on tax incentives for investors financing infrastructure projects. The current source confirms the incentive measure but does not publish a future implementation deadline, so the tracker records the source event without inferring a forward milestone.',
+      parameters_or_amounts: [
+        'Tax incentives for investors financing infrastructure projects',
+        firstEventDate
+          ? `Verified official source event published on ${firstEventDate}`
+          : 'Verified official source event without a parsed publication date',
+        'No future implementation deadline was published in the extracted source',
+      ],
+      policy_channels: [
+        'Fiscal incentives',
+        'Private infrastructure investment',
+        'Business cost of capital',
+        'Public-private financing',
+      ],
+      financing_or_incentive: 'Tax incentives for investors financing infrastructure projects',
+      why_tracked:
+        'The verified official source records a fiscal incentive measure for investors financing infrastructure projects. It is tracked as an incentive package while avoiding any inferred implementation deadline not present in the source.',
+      measure_label: 'tax incentives for infrastructure investors',
+      milestone_label: 'tax incentive source event recorded',
+    }
   }
+
+  if (topic?.id === 'aml-cft-financial-control') {
+    return {
+      short_summary:
+        'Consolidates related legal updates to AML/CFT internal-control rules across banks, nonbank credit organizations, payment-system operators, e-money operators, and payment organizations. The package is kept as one financial-sector compliance dossier because the source events update parallel control-rule frameworks on the same date.',
+      parameters_or_amounts: [
+        'Commercial bank AML/CFT internal-control rules amended',
+        'Nonbank credit organization AML/CFT internal-control rules amended',
+        'Payment-system, e-money, and payment-organization AML/CFT internal-control rules amended',
+        sourceEventDates.length > 0
+          ? `Verified official source event date${sourceEventDates.length > 1 ? 's' : ''}: ${sourceEventDates.join(', ')}`
+          : 'Verified official source event without a parsed publication date',
+      ],
+      policy_channels: [
+        'Financial integrity supervision',
+        'Bank and nonbank compliance',
+        'Payment-system and e-money oversight',
+        'Financial stability and market confidence',
+      ],
+      model_relevance: ['Financial stability', 'Credit conditions', 'Compliance costs'],
+      why_tracked:
+        'The source events amend binding internal-control rules for financial institutions and payment providers. They are grouped to avoid presenting parallel AML/CFT legal updates as separate reforms.',
+      measure_label: 'AML/CFT internal-control rule amendments',
+    }
+  }
+
+  if (topic?.id === 'construction-oversight-inspection-pricing') {
+    return {
+      short_summary:
+        'Groups verified construction-oversight measures covering reduced bureaucracy, stronger supervision, and technical inspection or laboratory-work pricing rules. The package separates this oversight dossier from the broader housing and urbanization package.',
+      parameters_or_amounts: [
+        'Construction oversight and bureaucracy-reduction measures recorded',
+        'Technical condition and laboratory-work price calculation regulation approved',
+        'Prior instrumental technical inspection pricing order superseded where cited by source event',
+        sourceEventDates.length > 0 ? `Verified official source event dates: ${sourceEventDates.join(', ')}` : 'Verified official source event without a parsed publication date',
+      ],
+      policy_channels: [
+        'Construction inspection oversight',
+        'Technical inspection pricing',
+        'Administrative burden in construction',
+        'Construction quality and safety',
+      ],
+      model_relevance: ['Construction output', 'Investment', 'Public administration'],
+      why_tracked:
+        'The official sources identify related construction oversight and inspection-pricing measures. Grouping them prevents a repealed pricing order, a new pricing regulation, and presidential oversight instructions from appearing as unrelated dossiers.',
+      measure_label: 'construction oversight and inspection-pricing measure',
+    }
+  }
+
+  const enrichments = {
+    'remote-mountain-settlement-classification': {
+      short_summary:
+        'Tracks a legal update to the rules for classifying settlements as hard-to-reach or mountainous areas. The dossier is narrow, but it is source-backed and relevant for regional eligibility, service delivery, and targeted public support.',
+      parameters_or_amounts: [
+        'Amendment to the settlement classification instruction preamble',
+        firstEventDate ? `Legal act registered on ${firstEventDate}` : 'Verified official source event without a parsed publication date',
+        'No future implementation deadline was published in the extracted source',
+      ],
+      policy_channels: ['Regional classification', 'Targeted public support', 'Service-delivery eligibility'],
+      model_relevance: ['Public spending', 'Regional development', 'Household access'],
+      measure_label: 'settlement classification rule amendment',
+    },
+    'market-fee-rent-collection': {
+      short_summary:
+        'Tracks amendments to fee, rent, and service-payment collection rules for markets, trade complexes, and their branches. The package is treated as market-administration and fiscal-compliance regulation, not international trade reform.',
+      parameters_or_amounts: [
+        'One-time fee, rent, and service-payment collection rules amended',
+        firstEventDate ? `Legal act registered on ${firstEventDate}` : 'Verified official source event without a parsed publication date',
+        'No future implementation deadline was published in the extracted source',
+      ],
+      policy_channels: ['Market fee administration', 'Rent and service-payment collection', 'Fiscal compliance'],
+      model_relevance: ['Business costs', 'Fiscal administration', 'Market services'],
+      measure_label: 'market fee and rent collection amendments',
+    },
+    'employment-fund-subsidy-loans': {
+      short_summary:
+        'Tracks approval of rules for allocating subsidies and loans from the State Employment Assistance Fund. The dossier is relevant for active labor-market support and public financing of employment measures.',
+      parameters_or_amounts: [
+        'Subsidy and loan allocation regulation approved',
+        'State Employment Assistance Fund resources identified as the funding source',
+        firstEventDate ? `Legal act registered on ${firstEventDate}` : 'Verified official source event without a parsed publication date',
+      ],
+      policy_channels: ['Employment support subsidies', 'Labor-market financing', 'Public fund administration'],
+      model_relevance: ['Employment', 'Public spending', 'Labor supply'],
+      measure_label: 'employment fund subsidy and loan rules',
+    },
+    'large-investment-integrity-competition-review': {
+      short_summary:
+        'Tracks approval of procedures for anti-corruption review of large investment projects and assessment of their impact on the competitive environment. The package is a business-climate and competition-policy dossier rather than a generic investment headline.',
+      parameters_or_amounts: [
+        'Anti-corruption expert review procedure for large investment projects approved',
+        'Competition-environment impact assessment procedure approved',
+        firstEventDate ? `Legal act registered on ${firstEventDate}` : 'Verified official source event without a parsed publication date',
+      ],
+      policy_channels: ['Investment project appraisal', 'Anti-corruption screening', 'Competition impact assessment'],
+      model_relevance: ['Private investment', 'Market structure', 'Governance quality'],
+      measure_label: 'investment integrity and competition review procedure',
+    },
+    'insolvency-framework': {
+      short_summary:
+        'Tracks presidential measures to further improve the insolvency institution. The dossier is kept as a business-environment reform because insolvency procedures affect restructuring, creditor recovery, and investment risk.',
+      parameters_or_amounts: [
+        'Presidential decree on improving the insolvency institution',
+        firstEventDate ? `Official source event registered on ${firstEventDate}` : 'Verified official source event without a parsed publication date',
+        'No future implementation deadline was published in the extracted source',
+      ],
+      policy_channels: ['Insolvency procedures', 'Business restructuring', 'Creditor and debtor resolution'],
+      model_relevance: ['Private investment', 'Financial stability', 'Business exit and restructuring'],
+      measure_label: 'insolvency framework measures',
+    },
+    'public-transport-system': {
+      short_summary:
+        'Tracks official measures to develop regional public transport, including route coverage, fleet renewal, fare-payment systems, and service delivery. The package records the source-backed transport service reform without inferring unpublished deadlines.',
+      parameters_or_amounts: [
+        'Public transport development measures reviewed',
+        'Source-reported recent fleet renewal and route-launch evidence retained in source event',
+        firstEventDate ? `Official source event published on ${firstEventDate}` : 'Verified official source event without a parsed publication date',
+      ],
+      policy_channels: ['Public transport routes', 'Fleet renewal', 'Fare and payment systems', 'Urban and regional mobility'],
+      model_relevance: ['Public investment', 'Household transport access', 'Urban productivity'],
+      measure_label: 'public transport development measures',
+    },
+  }
+
+  return enrichments[topic?.id] ?? {}
 }
 
 function candidateTopic(candidate) {
@@ -1877,7 +2073,7 @@ function candidateTopic(candidate) {
 
 function packageAssemblyKey(candidate) {
   const topic = candidateTopic(candidate)
-  const category = candidate.reform_category ?? 'other_policy'
+  const category = topic?.reform_category ?? candidate.reform_category ?? 'other_policy'
   if (topic) return `${category}:${topic.id}`
   return `${category}:${slugify(candidate.title).slice(0, 48)}`
 }
@@ -1910,13 +2106,21 @@ function financingOrIncentiveFromCandidates(candidates) {
 
 function genericPackageSummary(topic, defaults, sourceEvents) {
   const eventCount = sourceEvents.length
-  return `Groups ${eventCount} verified official source event${eventCount > 1 ? 's' : ''} under ${topic?.policy_area ?? defaults.policy_area}. The tracker records only the source-backed measure and keeps legal/currentness interpretation limited to the cited official source.`
+  const policyArea = topic?.policy_area ?? defaults.policy_area
+  if (eventCount > 1) {
+    return `Consolidates ${eventCount} verified official source events under ${policyArea}. The package groups related measures into one dossier and keeps legal/currentness interpretation limited to the cited official sources.`
+  }
+  return `Tracks one verified official source event under ${policyArea}. The package records the source-backed measure without inferring implementation deadlines or legal effects not published by the cited source.`
 }
 
 function genericPackageParameters(sortedCandidates, sourceEvents, financingOrIncentive) {
   const parameters = []
   if (financingOrIncentive) parameters.push(financingOrIncentive)
-  parameters.push(...sourceEvents.map((event) => `${event.title} (${event.source_published_at || 'date not parsed'})`))
+  if (sourceEvents.length === 1) {
+    parameters.push(`Source event date: ${sourceEvents[0].source_published_at || 'date not parsed'}`)
+  } else {
+    parameters.push(`Source event dates: ${uniqueStrings(sourceEvents.map((event) => event.source_published_at || 'date not parsed')).join(', ')}`)
+  }
   parameters.push(`Evidence type${sourceEvents.length > 1 ? 's' : ''}: ${uniqueStrings(sourceEvents.map((event) => event.evidence_type)).join(', ')}`)
   if (sortedCandidates.length === 1) parameters.push('No future implementation deadline was published in the extracted source')
   return uniqueStrings(parameters)
@@ -1926,6 +2130,7 @@ function milestoneLabelForSourceEvent(event, topic, enrichment) {
   if (enrichment.milestone_label) return enrichment.milestone_label
   if (event.event_type === 'approved') return 'official measure approved'
   if (event.event_type === 'amended') return 'rules amended'
+  if (event.event_type === 'superseded') return 'previous rule superseded'
   if (event.event_type === 'implementation_milestone') return 'implementation measure recorded'
   if (event.event_type === 'financing_allocated') {
     return topic?.id === 'tax-administration-incentives'
@@ -1935,12 +2140,36 @@ function milestoneLabelForSourceEvent(event, topic, enrichment) {
   return 'official measure recorded'
 }
 
+function currentStageForSourceEvents(sourceEvents) {
+  if (sourceEvents.length > 1) return 'Multiple related official measures'
+  const eventType = sourceEvents[0]?.event_type
+  if (eventType === 'approved') return 'Regulation approved'
+  if (eventType === 'amended') return 'Rules amended'
+  if (eventType === 'superseded') return 'Previous rule superseded'
+  if (eventType === 'implementation_milestone') return 'Implementation measure recorded'
+  if (eventType === 'financing_allocated') return 'Financing or incentive measure recorded'
+  return 'Verified official measure'
+}
+
+function isVagueOmnibusLegalAmendment(candidate) {
+  const text = `${candidate.title} ${candidate.summary}`.toLowerCase()
+  return (
+    /\bayrim qonun hujjatlariga\b/i.test(text) &&
+    /\bo[ʻ'‘’]?zgartirish/i.test(text) &&
+    !candidateTopic(candidate)
+  )
+}
+
+function isPackageableCandidate(candidate) {
+  return !isVagueOmnibusLegalAmendment(candidate)
+}
+
 function genericPackageFromCandidateGroup(candidates) {
   const sortedCandidates = [...candidates].sort((left, right) => packageDate(left).localeCompare(packageDate(right)))
   const first = sortedCandidates[0]
   const latest = sortedCandidates[sortedCandidates.length - 1]
   const topic = candidateTopic(first)
-  const category = first.reform_category ?? 'other_policy'
+  const category = topic?.reform_category ?? first.reform_category ?? 'other_policy'
   const defaults = CATEGORY_PACKAGE_DEFAULTS[category] ?? CATEGORY_PACKAGE_DEFAULTS.other_policy
   const sourceEvents = sortedCandidates.map(candidateToSourceEvent)
   const currentStageDate = packageDate(latest)
@@ -1969,7 +2198,7 @@ function genericPackageFromCandidateGroup(candidates) {
     title: topic?.title ?? defaults.title,
     policy_area: topic?.policy_area ?? defaults.policy_area,
     reform_category: category,
-    current_stage: sortedCandidates.length > 1 ? 'Multiple verified source events' : 'Verified official measure',
+    current_stage: currentStageForSourceEvents(sourceEvents),
     current_stage_date: currentStageDate,
     next_milestone: NO_FUTURE_MILESTONE_LABEL,
     next_milestone_date: currentStageDate,
@@ -1984,7 +2213,7 @@ function genericPackageFromCandidateGroup(candidates) {
     why_tracked:
       enrichment.why_tracked ??
       `The package is assembled from ${sourceEvents.length} verified official source event${sourceEvents.length > 1 ? 's' : ''} with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.`,
-    model_relevance: defaults.model_relevance,
+    model_relevance: enrichment.model_relevance ?? defaults.model_relevance,
     policy_channels: enrichment.policy_channels ?? defaults.model_relevance,
     measure_tracks: sortedCandidates.map((candidate, index) => ({
       id: `${packageSlug}-measure-${index + 1}`,
@@ -1998,7 +2227,7 @@ function genericPackageFromCandidateGroup(candidates) {
 }
 
 export function assembleReformPackagesFromCandidates(candidates) {
-  const verifiedCandidates = candidates.filter(isConfiguredVerifiedCandidate)
+  const verifiedCandidates = candidates.filter((candidate) => isConfiguredVerifiedCandidate(candidate) && isPackageableCandidate(candidate))
   const healthcarePackages = verifiedCandidates
     .filter(isVerifiedHealthcareSourceEvent)
     .slice(0, 1)
