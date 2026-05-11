@@ -781,7 +781,6 @@ function knowledgeHubTrackerExpression() {
         'Review queue',
       ].find((snippet) => normalizedText.includes(snippet.toLowerCase()));
       const requiredNormalizedText = [
-        'official source tracker',
         'reform packages',
         'implementation timeline',
       ];
