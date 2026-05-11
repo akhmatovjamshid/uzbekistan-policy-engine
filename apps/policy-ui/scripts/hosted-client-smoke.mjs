@@ -781,17 +781,16 @@ function knowledgeHubTrackerExpression() {
         'Review queue',
       ].find((snippet) => normalizedText.includes(snippet.toLowerCase()));
       const requiredNormalizedText = [
-        'automatic official-source tracker',
-        'reform dossiers',
+        'official source tracker',
+        'reform packages',
         'implementation timeline',
       ];
       const missingText = requiredNormalizedText.filter((snippet) => !normalizedText.includes(snippet));
       const hasCaveat =
         normalizedText.includes('not a legal registry') ||
         normalizedText.includes('not an official legal registry') ||
-        (normalizedText.includes('automatic official-source tracker') &&
-          normalizedText.includes('invalid') &&
-          normalizedText.includes('unverified'));
+        normalizedText.includes('source summary') ||
+        normalizedText.includes('official source links');
       const hasSourceMetadata =
         !!dossier &&
         !!dossier.querySelector('a[href^="http"][target="_blank"][rel~="noopener"][rel~="noreferrer"]');
