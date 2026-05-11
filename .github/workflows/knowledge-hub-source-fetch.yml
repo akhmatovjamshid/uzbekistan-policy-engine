@@ -214,6 +214,10 @@ jobs:
           smoke_run_id="$(find_run_id policy-ui-hosted-smoke.yml)"
           require_success "$smoke_run_id" "Policy UI Hosted Smoke"
 
+          gh workflow run policy-ui-client-hosted-smoke.yml --ref main -f base_url=hosted
+          client_smoke_run_id="$(find_run_id policy-ui-client-hosted-smoke.yml)"
+          require_success "$client_smoke_run_id" "Policy UI Client Hosted Smoke"
+
       - name: Upload generated Knowledge Hub artifact bundle
         if: always()
         uses: actions/upload-artifact@v4
