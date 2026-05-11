@@ -1,6 +1,6 @@
 {
   "schema_version": "knowledge-hub-reform-tracker.v1",
-  "generated_at": "2026-05-11T09:43:07.442Z",
+  "generated_at": "2026-05-11T10:11:15.292Z",
   "generated_by": "scripts/knowledge-hub/generate-source-fetch-artifact.mjs",
   "extraction_mode": "configured-source-fetch",
   "extraction_mode_label": "Configured source fetch",
@@ -123,6 +123,13 @@
         "overridable_by_policy_measure": false
       },
       {
+        "id": "security-defense-out-of-scope",
+        "label": "Security or defense measure outside economic-policy scope",
+        "description": "Exclude military, defense, and security-sector modernization unless separately represented as a fiscal, industrial, trade, or public-service economic measure.",
+        "reason": "security_defense_out_of_scope",
+        "overridable_by_policy_measure": false
+      },
+      {
         "id": "administrative-update-only",
         "label": "Administrative update only",
         "description": "Exclude internal performance-discipline, reporting, staffing, and ministry process updates without a policy measure.",
@@ -199,6 +206,10 @@
       {
         "id": "ceremonial_or_cultural_event",
         "description": "The item is ceremonial, cultural, commemorative, or protocol content."
+      },
+      {
+        "id": "security_defense_out_of_scope",
+        "description": "The item is military, defense, or security-sector modernization outside the economic-policy tracker scope."
       },
       {
         "id": "administrative_update_only",
@@ -290,13 +301,13 @@
       "id": "lex-official-legal-acts",
       "institution": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
       "url": "https://lex.uz/uz/search/official?lang=4&pub_date=month",
-      "parser": "html-articles",
+      "parser": "lexuz-official-search",
       "fetch_url": "https://lex.uz/uz/search/official?lang=4&pub_date=month",
       "ok": true,
-      "candidate_count": 0,
-      "excluded_count": 13,
+      "candidate_count": 11,
+      "excluded_count": 1,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-11T09:43:07.442Z"
+      "fetched_at": "2026-05-11T10:11:15.292Z"
     },
     {
       "id": "president-reform-news",
@@ -305,10 +316,10 @@
       "parser": "president-uz-list",
       "fetch_url": "https://president.uz/en/lists/news",
       "ok": true,
-      "candidate_count": 0,
-      "excluded_count": 14,
+      "candidate_count": 2,
+      "excluded_count": 10,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-11T09:43:07.442Z"
+      "fetched_at": "2026-05-11T10:11:15.292Z"
     },
     {
       "id": "president-healthcare-reform-detail",
@@ -320,7 +331,7 @@
       "candidate_count": 1,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-11T09:43:07.442Z"
+      "fetched_at": "2026-05-11T10:11:15.292Z"
     },
     {
       "id": "gov-housing-urbanization-detail",
@@ -332,7 +343,7 @@
       "candidate_count": 1,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-11T09:43:07.442Z"
+      "fetched_at": "2026-05-11T10:11:15.292Z"
     },
     {
       "id": "gov-agriculture-subsidy-detail",
@@ -344,7 +355,7 @@
       "candidate_count": 1,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-11T09:43:07.442Z"
+      "fetched_at": "2026-05-11T10:11:15.292Z"
     },
     {
       "id": "gov-portal-reform-news",
@@ -356,7 +367,7 @@
       "candidate_count": 0,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-11T09:43:07.442Z"
+      "fetched_at": "2026-05-11T10:11:15.292Z"
     },
     {
       "id": "cbu-policy-news",
@@ -368,7 +379,7 @@
       "candidate_count": 0,
       "excluded_count": 347,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-11T09:43:07.442Z"
+      "fetched_at": "2026-05-11T10:11:15.292Z"
     },
     {
       "id": "customs-committee-news",
@@ -380,7 +391,7 @@
       "candidate_count": 0,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-11T09:43:07.442Z"
+      "fetched_at": "2026-05-11T10:11:15.292Z"
     },
     {
       "id": "mef-policy-news",
@@ -392,7 +403,7 @@
       "candidate_count": 0,
       "excluded_count": 12,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-11T09:43:07.442Z"
+      "fetched_at": "2026-05-11T10:11:15.292Z"
     },
     {
       "id": "tax-committee-news",
@@ -404,7 +415,7 @@
       "candidate_count": 0,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-11T09:43:07.442Z"
+      "fetched_at": "2026-05-11T10:11:15.292Z"
     },
     {
       "id": "energy-ministry-news",
@@ -416,7 +427,7 @@
       "candidate_count": 0,
       "excluded_count": 12,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-11T09:43:07.442Z"
+      "fetched_at": "2026-05-11T10:11:15.292Z"
     },
     {
       "id": "investment-trade-ministry-news",
@@ -428,7 +439,7 @@
       "candidate_count": 1,
       "excluded_count": 11,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-11T09:43:07.442Z"
+      "fetched_at": "2026-05-11T10:11:15.292Z"
     },
     {
       "id": "justice-ministry-news",
@@ -440,7 +451,7 @@
       "candidate_count": 0,
       "excluded_count": 12,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-11T09:43:07.442Z"
+      "fetched_at": "2026-05-11T10:11:15.292Z"
     }
   ],
   "reform_packages": [
@@ -594,9 +605,9 @@
           "source_published_at": "2026-05-01",
           "evidence_type": "official_policy_announcement",
           "event_type": "instructions_issued",
-          "summary": "President Shavkat Mirziyoyev reviewed measures for the further development of the healthcare system, enhancement of the quality of medical services, and expansion of private sector participation. Consistent efforts are underway nationwide to provide the population with high-quality, modern medical care, improve management efficiency in the sector, make broader use of private sector potential, and elevate regional healthcare infrastructure to a new level. The role of the private sector in advancing the industry, along with the opportunities available in this area, was also examined. As noted, while 3,200 private clinics were operating in the country in 2016, their number is expected to reach ",
+          "summary": "Official web-site of the President of Uzbekistan Official pages in social networks President of the Republic of Uzbekistan Healthcare system development issues discussed President Shavkat Mirziyoyev reviewed measures for the further development of the healthcare system, enhancement of the quality of medical services, and expansion of private sector participation. Consistent efforts are underway nationwide to provide the population with high-quality, modern medical care, improve management efficiency in the sector, make broader use of private sector potential, and elevate regional healthcare infrastructure to a new level. The role of the private sector in advancing the industry, along with th",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-11T09:43:07.442Z"
+          "extracted_at": "2026-05-11T10:11:15.292Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from a verified source event. It is not an official legal registry and does not assert legal force beyond the cited official source."
@@ -769,9 +780,9 @@
           "source_published_at": "2026-04-15",
           "evidence_type": "official_policy_announcement",
           "event_type": "instructions_issued",
-          "summary": "More than 500 industry representatives, including entrepreneurs, construction professionals, designers, architects, and urban plannersparticipated via regional studios. The Head of State emphasized that the construction sector plays a special role in achieving the ambitious goals set to ensure high economic growth across all sectors and regions. According to studies, each dollar invested in construction can generate an additional two to three dollars for the economy, while each job created in the sector leads to up to five new jobs in other industries. Over the past nine years, nearly 10,000 new construction enterprises have been established in the country. Twenty large companies with an ann",
+          "summary": "2026-04-15 09:10:00 / Meetings On April 14, President Shavkat Mirziyoyev chaired a meeting to review progress, address existing challenges, and outline priority tasks in housing construction and urbanization. More than 500 industry representatives, including entrepreneurs, construction professionals, designers, architects, and urban plannersparticipated via regional studios. The Head of State emphasized that the construction sector plays a special role in achieving the ambitious goals set to ensure high economic growth across all sectors and regions. According to studies, each dollar invested in construction can generate an additional two to three dollars for the economy, while each job crea",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-11T09:43:07.442Z"
+          "extracted_at": "2026-05-11T10:11:15.292Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from a verified source event. It is not an official legal registry and does not assert legal force beyond the cited official source."
@@ -902,12 +913,948 @@
           "source_published_at": "2025-12-09",
           "evidence_type": "official_policy_announcement",
           "event_type": "financing_allocated",
-          "summary": "The presentation began with an overview of the funds allocated to the sector this year and their effectiveness. It was noted that 29 trillion soums were allocated for financing cotton and grain cultivation, purchasing agricultural machinery, and implementing water-saving technologies. Furthermore, 2,35 trillion soums in subsidies were directed to the sector. Allocating subsidies equivalent to 10 percent of the cotton value to 3,430 farms and clusters enabled them to cultivate cotton on 151 thousand hectares using their own funds, resulting in savings of 1,9 trillion soums. Moreover, farmers who fully repaid their loans for cotton cultivation this year were offered a reimbursement of 4 percen",
+          "summary": "2025-12-09 17:05:00 / Presentations President Shavkat Mirziyoyev reviewed a presentation on the effective organization of financing for cotton and grain cultivation, as well as a new subsidy system for the agriculture complex. The presentation began with an overview of the funds allocated to the sector this year and their effectiveness. It was noted that 29 trillion soums were allocated for financing cotton and grain cultivation, purchasing agricultural machinery, and implementing water-saving technologies. Furthermore, 2,35 trillion soums in subsidies were directed to the sector. Allocating subsidies equivalent to 10 percent of the cotton value to 3,430 farms and clusters enabled them to cu",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-11T09:43:07.442Z"
+          "extracted_at": "2026-05-11T10:11:15.292Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from a verified source event. It is not an official legal registry and does not assert legal force beyond the cited official source."
+    },
+    {
+      "package_id": "pkg-infrastructure-investment-1868-2-08-05-2026-aholi-punktlarini-borish-qiyin-bo-lg-2026-05-08",
+      "title": "Infrastructure investment program reform",
+      "policy_area": "Infrastructure investment and program financing",
+      "reform_category": "infrastructure_investment",
+      "current_stage": "Verified official measure",
+      "current_stage_date": "2026-05-08",
+      "next_milestone": "No future milestone published in verified source",
+      "next_milestone_date": "2026-05-08",
+      "responsible_institutions": [
+        "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)"
+      ],
+      "legal_basis": "Verified official source event: 1868-2 08.05.2026 Aholi punktlarini borish qiyin boʻlgan va togʻli hududlar tarkibiga kiritish tartibi toʻgʻrisidagi yo‘riqnomaning muqaddimasiga o‘zgartirish kiritish haqida.",
+      "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
+      "short_summary": "Groups 1 verified official source event under Infrastructure investment and program financing. The tracker records only the source-backed measure and keeps legal/currentness interpretation limited to the cited official source.",
+      "parameters_or_amounts": [
+        "1868-2 08.05.2026 Aholi punktlarini borish qiyin boʻlgan va togʻli hududlar tarkibiga kiritish tartibi toʻgʻrisidagi yo‘riqnomaning muqaddimasiga o‘zgartirish kiritish haqida (2026-05-08)",
+        "Evidence type: official_policy_announcement",
+        "No future implementation deadline was published in the extracted source"
+      ],
+      "source_confidence": "medium",
+      "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
+      "model_relevance": [
+        "Investment",
+        "Public spending",
+        "Potential growth"
+      ],
+      "policy_channels": [
+        "Investment",
+        "Public spending",
+        "Potential growth"
+      ],
+      "measure_tracks": [
+        {
+          "id": "infrastructure-investment-1868-2-08-05-2026-aholi-punktlarini-borish-qiyin-bo-lg-measure-1",
+          "label": "verified official measure",
+          "status": "source verified"
+        }
+      ],
+      "implementation_milestones": [
+        {
+          "id": "infrastructure-investment-1868-2-08-05-2026-aholi-punktlarini-borish-qiyin-bo-lg-instructions_issued-2026-05-08",
+          "label": "official measure recorded",
+          "date": "2026-05-08",
+          "date_precision": "day",
+          "event_type": "instructions_issued",
+          "responsible_institutions": [
+            "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)"
+          ],
+          "evidence_type": "official_policy_announcement",
+          "source_event_ids": [
+            "source-event-2026-05-08-1868-2-08-05-2026-aholi-punktlarini-borish-qiyin-bo-lgan-va-tog-li-hu"
+          ],
+          "confidence": "medium"
+        }
+      ],
+      "official_source_events": [
+        {
+          "id": "source-event-2026-05-08-1868-2-08-05-2026-aholi-punktlarini-borish-qiyin-bo-lgan-va-tog-li-hu",
+          "title": "1868-2 08.05.2026 Aholi punktlarini borish qiyin boʻlgan va togʻli hududlar tarkibiga kiritish tartibi toʻgʻrisidagi yo‘riqnomaning muqaddimasiga o‘zgartirish kiritish haqida",
+          "source_institution": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
+          "source_url": "https://lex.uz/uz/docs/8182563",
+          "source_published_at": "2026-05-08",
+          "evidence_type": "official_policy_announcement",
+          "event_type": "instructions_issued",
+          "summary": "Oʻzbekiston Respublikasi Iqtisodiyot va moliya vazirligi, Oʻzbekiston Respublikasi Urbanizatsiya va uy-joy bozorini barqaror rivojlantirish milliy qoʻmitasi huzuridagi Kadastr agentligi, Oʻzbekiston Respublikasi Soliq qoʻmitasining qarori, 06.05.2026 yilda ro‘yxatdan o‘tgan, ro‘yxat raqami 1868-2 Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
+          "source_url_status": "verified",
+          "extracted_at": "2026-05-11T10:11:15.292Z"
+        }
+      ],
+      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
+    },
+    {
+      "package_id": "pkg-trade-customs-2185-3-08-05-2026-bozorlar-savdo-komplekslari-va-ularning-filialla-2026-05-08",
+      "title": "Trade and customs modernization reform",
+      "policy_area": "Trade facilitation, customs, and market access",
+      "reform_category": "trade_customs",
+      "current_stage": "Verified official measure",
+      "current_stage_date": "2026-05-08",
+      "next_milestone": "No future milestone published in verified source",
+      "next_milestone_date": "2026-05-08",
+      "responsible_institutions": [
+        "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)"
+      ],
+      "legal_basis": "Verified official source event: 2185-3 08.05.2026 Bozorlar, savdo komplekslari va ularning filiallarida bir martalik yigʻimlar, ijara toʻlovlari hamda koʻrsatilgan xizmatlar uchun toʻlovlarni oʻz vaqtida va toʻliq undirilishini tashkil etish va nazorat qilish tartibi toʻgʻrisidagi nizomga oʻzgartirishlar kiritish haqida.",
+      "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
+      "short_summary": "Groups 1 verified official source event under Trade facilitation, customs, and market access. The tracker records only the source-backed measure and keeps legal/currentness interpretation limited to the cited official source.",
+      "parameters_or_amounts": [
+        "2185-3 08.05.2026 Bozorlar, savdo komplekslari va ularning filiallarida bir martalik yigʻimlar, ijara toʻlovlari hamda koʻrsatilgan xizmatlar uchun toʻlovlarni oʻz vaqtida va toʻliq undirilishini tashkil etish va nazorat qilish tartibi toʻgʻrisidagi nizomga oʻzgartirishlar kiritish haqida (2026-05-08)",
+        "Evidence type: official_policy_announcement",
+        "No future implementation deadline was published in the extracted source"
+      ],
+      "source_confidence": "medium",
+      "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
+      "model_relevance": [
+        "Trade flows",
+        "Import costs",
+        "Export competitiveness"
+      ],
+      "policy_channels": [
+        "Trade flows",
+        "Import costs",
+        "Export competitiveness"
+      ],
+      "measure_tracks": [
+        {
+          "id": "trade-customs-2185-3-08-05-2026-bozorlar-savdo-komplekslari-va-ularning-filialla-measure-1",
+          "label": "verified official measure",
+          "status": "source verified"
+        }
+      ],
+      "implementation_milestones": [
+        {
+          "id": "trade-customs-2185-3-08-05-2026-bozorlar-savdo-komplekslari-va-ularning-filialla-instructions_issued-2026-05-08",
+          "label": "official measure recorded",
+          "date": "2026-05-08",
+          "date_precision": "day",
+          "event_type": "instructions_issued",
+          "responsible_institutions": [
+            "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)"
+          ],
+          "evidence_type": "official_policy_announcement",
+          "source_event_ids": [
+            "source-event-2026-05-08-2185-3-08-05-2026-bozorlar-savdo-komplekslari-va-ularning-filiallarid"
+          ],
+          "confidence": "medium"
+        }
+      ],
+      "official_source_events": [
+        {
+          "id": "source-event-2026-05-08-2185-3-08-05-2026-bozorlar-savdo-komplekslari-va-ularning-filiallarid",
+          "title": "2185-3 08.05.2026 Bozorlar, savdo komplekslari va ularning filiallarida bir martalik yigʻimlar, ijara toʻlovlari hamda koʻrsatilgan xizmatlar uchun toʻlovlarni oʻz vaqtida va toʻliq undirilishini tashkil etish va nazorat qilish tartibi toʻgʻrisidagi nizomga oʻzgartirishlar kiritish haqida",
+          "source_institution": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
+          "source_url": "https://lex.uz/uz/docs/8184197",
+          "source_published_at": "2026-05-08",
+          "evidence_type": "official_policy_announcement",
+          "event_type": "instructions_issued",
+          "summary": "Oʻzbekiston Respublikasi Iqtisodiyot va moliya vazirligi, Oʻzbekiston Respublikasi Soliq qoʻmitasining qarori, 08.05.2026 yilda ro‘yxatdan o‘tgan, ro‘yxat raqami 2185-3 Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
+          "source_url_status": "verified",
+          "extracted_at": "2026-05-11T10:11:15.292Z"
+        }
+      ],
+      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
+    },
+    {
+      "package_id": "pkg-monetary-policy-2886-12-08-05-2026-tijorat-banklarida-jinoiy-faoliyatdan-olingan-2026-05-08",
+      "title": "Monetary and financial-sector policy reform",
+      "policy_area": "Monetary policy and financial-sector regulation",
+      "reform_category": "monetary_policy",
+      "current_stage": "Verified official measure",
+      "current_stage_date": "2026-05-08",
+      "next_milestone": "No future milestone published in verified source",
+      "next_milestone_date": "2026-05-08",
+      "responsible_institutions": [
+        "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)"
+      ],
+      "legal_basis": "Verified official source event: 2886-12 08.05.2026 Tijorat banklarida jinoiy faoliyatdan olingan daromadlarni legallashtirishga, terrorizmni moliyalashtirishga va ommaviy qirgʻin qurolini tarqatishni moliyalashtirishga qarshi kurashish boʻyicha ichki nazorat qoidalariga qoʻshimcha va oʻzgartirishlar kiritish haqida.",
+      "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
+      "short_summary": "Groups 1 verified official source event under Monetary policy and financial-sector regulation. The tracker records only the source-backed measure and keeps legal/currentness interpretation limited to the cited official source.",
+      "parameters_or_amounts": [
+        "2886-12 08.05.2026 Tijorat banklarida jinoiy faoliyatdan olingan daromadlarni legallashtirishga, terrorizmni moliyalashtirishga va ommaviy qirgʻin qurolini tarqatishni moliyalashtirishga qarshi kurashish boʻyicha ichki nazorat qoidalariga qoʻshimcha va oʻzgartirishlar kiritish haqida (2026-05-08)",
+        "Evidence type: official_policy_announcement",
+        "No future implementation deadline was published in the extracted source"
+      ],
+      "source_confidence": "medium",
+      "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
+      "model_relevance": [
+        "Inflation",
+        "Credit conditions",
+        "Financial stability"
+      ],
+      "policy_channels": [
+        "Inflation",
+        "Credit conditions",
+        "Financial stability"
+      ],
+      "measure_tracks": [
+        {
+          "id": "monetary-policy-2886-12-08-05-2026-tijorat-banklarida-jinoiy-faoliyatdan-olingan-measure-1",
+          "label": "verified official measure",
+          "status": "source verified"
+        }
+      ],
+      "implementation_milestones": [
+        {
+          "id": "monetary-policy-2886-12-08-05-2026-tijorat-banklarida-jinoiy-faoliyatdan-olingan-instructions_issued-2026-05-08",
+          "label": "official measure recorded",
+          "date": "2026-05-08",
+          "date_precision": "day",
+          "event_type": "instructions_issued",
+          "responsible_institutions": [
+            "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)"
+          ],
+          "evidence_type": "official_policy_announcement",
+          "source_event_ids": [
+            "source-event-2026-05-08-2886-12-08-05-2026-tijorat-banklarida-jinoiy-faoliyatdan-olingan-daro"
+          ],
+          "confidence": "medium"
+        }
+      ],
+      "official_source_events": [
+        {
+          "id": "source-event-2026-05-08-2886-12-08-05-2026-tijorat-banklarida-jinoiy-faoliyatdan-olingan-daro",
+          "title": "2886-12 08.05.2026 Tijorat banklarida jinoiy faoliyatdan olingan daromadlarni legallashtirishga, terrorizmni moliyalashtirishga va ommaviy qirgʻin qurolini tarqatishni moliyalashtirishga qarshi kurashish boʻyicha ichki nazorat qoidalariga qoʻshimcha va oʻzgartirishlar kiritish haqida",
+          "source_institution": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
+          "source_url": "https://lex.uz/uz/docs/8184105",
+          "source_published_at": "2026-05-08",
+          "evidence_type": "official_policy_announcement",
+          "event_type": "instructions_issued",
+          "summary": "Oʻzbekiston Respublikasi Markaziy banki boshqaruvi, Oʻzbekiston Respublikasi bosh prokuraturasi huzuridagi iqtisodiy jinoyatlarga qarshi kurashish departamentining qarori, 08.05.2026 yilda ro‘yxatdan o‘tgan, ro‘yxat raqami 2886-12 Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
+          "source_url_status": "verified",
+          "extracted_at": "2026-05-11T10:11:15.292Z"
+        }
+      ],
+      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
+    },
+    {
+      "package_id": "pkg-monetary-policy-2925-10-08-05-2026-nobank-kredit-tashkilotlarida-jinoiy-faoliyat-2026-05-08",
+      "title": "Monetary and financial-sector policy reform",
+      "policy_area": "Monetary policy and financial-sector regulation",
+      "reform_category": "monetary_policy",
+      "current_stage": "Verified official measure",
+      "current_stage_date": "2026-05-08",
+      "next_milestone": "No future milestone published in verified source",
+      "next_milestone_date": "2026-05-08",
+      "responsible_institutions": [
+        "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)"
+      ],
+      "legal_basis": "Verified official source event: 2925-10 08.05.2026 Nobank kredit tashkilotlarida jinoiy faoliyatdan olingan daromadlarni legallashtirishga, terrorizmni moliyalashtirishga va ommaviy qirgʻin qurolini tarqatishni moliyalashtirishga qarshi kurashish boʻyicha ichki nazorat qoidalariga qoʻshimcha va oʻzgartirishlar kiritish haqida.",
+      "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
+      "short_summary": "Groups 1 verified official source event under Monetary policy and financial-sector regulation. The tracker records only the source-backed measure and keeps legal/currentness interpretation limited to the cited official source.",
+      "parameters_or_amounts": [
+        "2925-10 08.05.2026 Nobank kredit tashkilotlarida jinoiy faoliyatdan olingan daromadlarni legallashtirishga, terrorizmni moliyalashtirishga va ommaviy qirgʻin qurolini tarqatishni moliyalashtirishga qarshi kurashish boʻyicha ichki nazorat qoidalariga qoʻshimcha va oʻzgartirishlar kiritish haqida (2026-05-08)",
+        "Evidence type: official_policy_announcement",
+        "No future implementation deadline was published in the extracted source"
+      ],
+      "source_confidence": "medium",
+      "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
+      "model_relevance": [
+        "Inflation",
+        "Credit conditions",
+        "Financial stability"
+      ],
+      "policy_channels": [
+        "Inflation",
+        "Credit conditions",
+        "Financial stability"
+      ],
+      "measure_tracks": [
+        {
+          "id": "monetary-policy-2925-10-08-05-2026-nobank-kredit-tashkilotlarida-jinoiy-faoliyat-measure-1",
+          "label": "verified official measure",
+          "status": "source verified"
+        }
+      ],
+      "implementation_milestones": [
+        {
+          "id": "monetary-policy-2925-10-08-05-2026-nobank-kredit-tashkilotlarida-jinoiy-faoliyat-instructions_issued-2026-05-08",
+          "label": "official measure recorded",
+          "date": "2026-05-08",
+          "date_precision": "day",
+          "event_type": "instructions_issued",
+          "responsible_institutions": [
+            "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)"
+          ],
+          "evidence_type": "official_policy_announcement",
+          "source_event_ids": [
+            "source-event-2026-05-08-2925-10-08-05-2026-nobank-kredit-tashkilotlarida-jinoiy-faoliyatdan-o"
+          ],
+          "confidence": "medium"
+        }
+      ],
+      "official_source_events": [
+        {
+          "id": "source-event-2026-05-08-2925-10-08-05-2026-nobank-kredit-tashkilotlarida-jinoiy-faoliyatdan-o",
+          "title": "2925-10 08.05.2026 Nobank kredit tashkilotlarida jinoiy faoliyatdan olingan daromadlarni legallashtirishga, terrorizmni moliyalashtirishga va ommaviy qirgʻin qurolini tarqatishni moliyalashtirishga qarshi kurashish boʻyicha ichki nazorat qoidalariga qoʻshimcha va oʻzgartirishlar kiritish haqida",
+          "source_institution": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
+          "source_url": "https://lex.uz/uz/docs/8184204",
+          "source_published_at": "2026-05-08",
+          "evidence_type": "official_policy_announcement",
+          "event_type": "instructions_issued",
+          "summary": "Oʻzbekiston Respublikasi Markaziy banki boshqaruvi, Oʻzbekiston Respublikasi Bosh prokuraturasi huzuridagi iqtisodiy jinoyatlarga qarshi kurashish departamentining qarori, 08.05.2026 yilda ro‘yxatdan o‘tgan, ro‘yxat raqami 2925-10 Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
+          "source_url_status": "verified",
+          "extracted_at": "2026-05-11T10:11:15.292Z"
+        }
+      ],
+      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
+    },
+    {
+      "package_id": "pkg-energy-tariffs-3266-5-08-05-2026-to-lov-tizimlari-operatorlari-elektron-pullar-t-2026-05-08",
+      "title": "Energy tariff and compensation reform",
+      "policy_area": "Energy tariffs and social compensation",
+      "reform_category": "energy_tariffs",
+      "current_stage": "Verified official measure",
+      "current_stage_date": "2026-05-08",
+      "next_milestone": "No future milestone published in verified source",
+      "next_milestone_date": "2026-05-08",
+      "responsible_institutions": [
+        "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)"
+      ],
+      "legal_basis": "Verified official source event: 3266-5 08.05.2026 Toʻlov tizimlari operatorlari, elektron pullar tizimlari operatorlari va toʻlov tashkilotlarida jinoiy faoliyatdan olingan daromadlarni legallashtirishga, terrorizmni moliyalashtirishga va ommaviy qirgʻin qurolini tarqatishni moliyalashtirishga qarshi kurashish boʻyicha ichki nazorat qoidalariga oʻzgartirish va qoʻshimchalar kiritish haqida.",
+      "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
+      "short_summary": "Groups 1 verified official source event under Energy tariffs and social compensation. The tracker records only the source-backed measure and keeps legal/currentness interpretation limited to the cited official source.",
+      "parameters_or_amounts": [
+        "3266-5 08.05.2026 Toʻlov tizimlari operatorlari, elektron pullar tizimlari operatorlari va toʻlov tashkilotlarida jinoiy faoliyatdan olingan daromadlarni legallashtirishga, terrorizmni moliyalashtirishga va ommaviy qirgʻin qurolini tarqatishni moliyalashtirishga qarshi kurashish boʻyicha ichki nazorat qoidalariga oʻzgartirish va qoʻshimchalar kiritish haqida (2026-05-08)",
+        "Evidence type: official_policy_announcement",
+        "No future implementation deadline was published in the extracted source"
+      ],
+      "source_confidence": "medium",
+      "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
+      "model_relevance": [
+        "Inflation",
+        "Household income",
+        "Fiscal costs"
+      ],
+      "policy_channels": [
+        "Inflation",
+        "Household income",
+        "Fiscal costs"
+      ],
+      "measure_tracks": [
+        {
+          "id": "energy-tariffs-3266-5-08-05-2026-to-lov-tizimlari-operatorlari-elektron-pullar-t-measure-1",
+          "label": "verified official measure",
+          "status": "source verified"
+        }
+      ],
+      "implementation_milestones": [
+        {
+          "id": "energy-tariffs-3266-5-08-05-2026-to-lov-tizimlari-operatorlari-elektron-pullar-t-instructions_issued-2026-05-08",
+          "label": "official measure recorded",
+          "date": "2026-05-08",
+          "date_precision": "day",
+          "event_type": "instructions_issued",
+          "responsible_institutions": [
+            "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)"
+          ],
+          "evidence_type": "official_policy_announcement",
+          "source_event_ids": [
+            "source-event-2026-05-08-3266-5-08-05-2026-to-lov-tizimlari-operatorlari-elektron-pullar-tizim"
+          ],
+          "confidence": "medium"
+        }
+      ],
+      "official_source_events": [
+        {
+          "id": "source-event-2026-05-08-3266-5-08-05-2026-to-lov-tizimlari-operatorlari-elektron-pullar-tizim",
+          "title": "3266-5 08.05.2026 Toʻlov tizimlari operatorlari, elektron pullar tizimlari operatorlari va toʻlov tashkilotlarida jinoiy faoliyatdan olingan daromadlarni legallashtirishga, terrorizmni moliyalashtirishga va ommaviy qirgʻin qurolini tarqatishni moliyalashtirishga qarshi kurashish boʻyicha ichki nazorat qoidalariga oʻzgartirish va qoʻshimchalar kiritish haqida",
+          "source_institution": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
+          "source_url": "https://lex.uz/uz/docs/8184096",
+          "source_published_at": "2026-05-08",
+          "evidence_type": "official_policy_announcement",
+          "event_type": "instructions_issued",
+          "summary": "Oʻzbekiston Respublikasi Markaziy banki boshqaruvining, Oʻzbekiston Respublikasi Bosh prokuraturasi huzuridagi iqtisodiy jinoyatlarga qarshi kurashish departamentining qarori, 08.05.2026 yilda ro‘yxatdan o‘tgan, ro‘yxat raqami 3266-5 Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
+          "source_url_status": "verified",
+          "extracted_at": "2026-05-11T10:11:15.292Z"
+        }
+      ],
+      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
+    },
+    {
+      "package_id": "pkg-fiscal-tax-3832-08-05-2026-o-zbekiston-respublikasi-bandlikka-ko-maklashish-davl-2026-05-08",
+      "title": "Fiscal, tax, and budget measure reform",
+      "policy_area": "Fiscal policy, tax administration, and budget monitoring",
+      "reform_category": "fiscal_tax",
+      "current_stage": "Verified official measure",
+      "current_stage_date": "2026-05-08",
+      "next_milestone": "No future milestone published in verified source",
+      "next_milestone_date": "2026-05-08",
+      "responsible_institutions": [
+        "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)"
+      ],
+      "legal_basis": "Verified official source event: 3832 08.05.2026 O‘zbekiston Respublikasi Bandlikka ko‘maklashish davlat jamg‘armasi mablag‘lari hisobidan subsidiyalar va ssuda ajratish tartibi to‘g‘risidagi nizomni tasdiqlash haqida.",
+      "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
+      "short_summary": "Groups 1 verified official source event under Fiscal policy, tax administration, and budget monitoring. The tracker records only the source-backed measure and keeps legal/currentness interpretation limited to the cited official source.",
+      "parameters_or_amounts": [
+        "3832 08.05.2026 O‘zbekiston Respublikasi Bandlikka ko‘maklashish davlat jamg‘armasi mablag‘lari hisobidan subsidiyalar va ssuda ajratish tartibi to‘g‘risidagi nizomni tasdiqlash haqida (2026-05-08)",
+        "Evidence type: official_policy_announcement",
+        "No future implementation deadline was published in the extracted source"
+      ],
+      "source_confidence": "medium",
+      "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
+      "model_relevance": [
+        "Fiscal balance",
+        "Investment",
+        "Business costs"
+      ],
+      "policy_channels": [
+        "Fiscal balance",
+        "Investment",
+        "Business costs"
+      ],
+      "measure_tracks": [
+        {
+          "id": "fiscal-tax-3832-08-05-2026-o-zbekiston-respublikasi-bandlikka-ko-maklashish-davl-measure-1",
+          "label": "verified official measure",
+          "status": "source verified"
+        }
+      ],
+      "implementation_milestones": [
+        {
+          "id": "fiscal-tax-3832-08-05-2026-o-zbekiston-respublikasi-bandlikka-ko-maklashish-davl-instructions_issued-2026-05-08",
+          "label": "official measure recorded",
+          "date": "2026-05-08",
+          "date_precision": "day",
+          "event_type": "instructions_issued",
+          "responsible_institutions": [
+            "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)"
+          ],
+          "evidence_type": "official_policy_announcement",
+          "source_event_ids": [
+            "source-event-2026-05-08-3832-08-05-2026-o-zbekiston-respublikasi-bandlikka-ko-maklashish-davl"
+          ],
+          "confidence": "medium"
+        }
+      ],
+      "official_source_events": [
+        {
+          "id": "source-event-2026-05-08-3832-08-05-2026-o-zbekiston-respublikasi-bandlikka-ko-maklashish-davl",
+          "title": "3832 08.05.2026 O‘zbekiston Respublikasi Bandlikka ko‘maklashish davlat jamg‘armasi mablag‘lari hisobidan subsidiyalar va ssuda ajratish tartibi to‘g‘risidagi nizomni tasdiqlash haqida",
+          "source_institution": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
+          "source_url": "https://lex.uz/uz/docs/-8184101",
+          "source_published_at": "2026-05-08",
+          "evidence_type": "official_policy_announcement",
+          "event_type": "instructions_issued",
+          "summary": "Oʻzbekiston Respublikasi kambagʻallikni qisqartirish va bandlik vazirining buyrugʻi, 07.05.2026 yilda ro‘yxatdan o‘tgan, ro‘yxat raqami 3832 Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
+          "source_url_status": "verified",
+          "extracted_at": "2026-05-11T10:11:15.292Z"
+        }
+      ],
+      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
+    },
+    {
+      "package_id": "pkg-business-environment-3833-08-05-2026-yirik-investitsiya-loyihalarini-korrupsiyag-2026-05-08",
+      "title": "Business environment reform",
+      "policy_area": "Business regulation and investment climate",
+      "reform_category": "business_environment",
+      "current_stage": "Verified official measure",
+      "current_stage_date": "2026-05-08",
+      "next_milestone": "No future milestone published in verified source",
+      "next_milestone_date": "2026-05-08",
+      "responsible_institutions": [
+        "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)"
+      ],
+      "legal_basis": "Verified official source event: 3833 08.05.2026 Yirik investitsiya loyihalarini korrupsiyaga qarshi ekspertizadan o‘tkazish va ularning raqobat muhitiga ta’sirini baholash tartibi to‘g‘risidagi yo‘riqnomani tasdiqlash haqida.",
+      "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
+      "short_summary": "Groups 1 verified official source event under Business regulation and investment climate. The tracker records only the source-backed measure and keeps legal/currentness interpretation limited to the cited official source.",
+      "parameters_or_amounts": [
+        "3833 08.05.2026 Yirik investitsiya loyihalarini korrupsiyaga qarshi ekspertizadan o‘tkazish va ularning raqobat muhitiga ta’sirini baholash tartibi to‘g‘risidagi yo‘riqnomani tasdiqlash haqida (2026-05-08)",
+        "Evidence type: official_policy_announcement",
+        "No future implementation deadline was published in the extracted source"
+      ],
+      "source_confidence": "high",
+      "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
+      "model_relevance": [
+        "Private investment",
+        "Productivity",
+        "Business costs"
+      ],
+      "policy_channels": [
+        "Private investment",
+        "Productivity",
+        "Business costs"
+      ],
+      "measure_tracks": [
+        {
+          "id": "business-environment-3833-08-05-2026-yirik-investitsiya-loyihalarini-korrupsiyag-measure-1",
+          "label": "verified official measure",
+          "status": "source verified"
+        }
+      ],
+      "implementation_milestones": [
+        {
+          "id": "business-environment-3833-08-05-2026-yirik-investitsiya-loyihalarini-korrupsiyag-instructions_issued-2026-05-08",
+          "label": "official measure recorded",
+          "date": "2026-05-08",
+          "date_precision": "day",
+          "event_type": "instructions_issued",
+          "responsible_institutions": [
+            "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)"
+          ],
+          "evidence_type": "official_policy_announcement",
+          "source_event_ids": [
+            "source-event-2026-05-08-3833-08-05-2026-yirik-investitsiya-loyihalarini-korrupsiyaga-qarshi-e"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "official_source_events": [
+        {
+          "id": "source-event-2026-05-08-3833-08-05-2026-yirik-investitsiya-loyihalarini-korrupsiyaga-qarshi-e",
+          "title": "3833 08.05.2026 Yirik investitsiya loyihalarini korrupsiyaga qarshi ekspertizadan o‘tkazish va ularning raqobat muhitiga ta’sirini baholash tartibi to‘g‘risidagi yo‘riqnomani tasdiqlash haqida",
+          "source_institution": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
+          "source_url": "https://lex.uz/uz/docs/8184103",
+          "source_published_at": "2026-05-08",
+          "evidence_type": "official_policy_announcement",
+          "event_type": "instructions_issued",
+          "summary": "Oʻzbekiston Respublikasi Korrupsiyaga qarshi kurashish agentligi, Oʻzbekiston Respublikasi Raqobatni rivojlantirish va isteʼmolchilar huquqlarini himoya qilish qoʻmitasining qarori, 08.05.2026 yilda ro‘yxatdan o‘tgan, ro‘yxat raqami 3833 Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
+          "source_url_status": "verified",
+          "extracted_at": "2026-05-11T10:11:15.292Z"
+        }
+      ],
+      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
+    },
+    {
+      "package_id": "pkg-infrastructure-investment-3356-1-07-05-2026-o-zbekiston-respublikasi-qurilish-va-2026-05-07",
+      "title": "Infrastructure investment program reform",
+      "policy_area": "Infrastructure investment and program financing",
+      "reform_category": "infrastructure_investment",
+      "current_stage": "Verified official measure",
+      "current_stage_date": "2026-05-07",
+      "next_milestone": "No future milestone published in verified source",
+      "next_milestone_date": "2026-05-07",
+      "responsible_institutions": [
+        "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)"
+      ],
+      "legal_basis": "Verified official source event: 3356-1 07.05.2026 “Oʻzbekiston Respublikasi Qurilish vazirligi huzuridagi qurilish sohasida hududiy nazorat inspeksiyalari tomonidan oʻtkaziladigan bino va inshootlarning instrumental texnik tekshiruv ishlarini baholashning yagona hisoblash tartibi toʻgʻrisidagi nizomni tasdiqlash haqida”gi buyruqni oʻz kuchini yoʻqotgan deb topish toʻgʻrisida.",
+      "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
+      "short_summary": "Groups 1 verified official source event under Infrastructure investment and program financing. The tracker records only the source-backed measure and keeps legal/currentness interpretation limited to the cited official source.",
+      "parameters_or_amounts": [
+        "3356-1 07.05.2026 “Oʻzbekiston Respublikasi Qurilish vazirligi huzuridagi qurilish sohasida hududiy nazorat inspeksiyalari tomonidan oʻtkaziladigan bino va inshootlarning instrumental texnik tekshiruv ishlarini baholashning yagona hisoblash tartibi toʻgʻrisidagi nizomni tasdiqlash haqida”gi buyruqni oʻz kuchini yoʻqotgan deb topish toʻgʻrisida (2026-05-07)",
+        "Evidence type: official_policy_announcement",
+        "No future implementation deadline was published in the extracted source"
+      ],
+      "source_confidence": "medium",
+      "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
+      "model_relevance": [
+        "Investment",
+        "Public spending",
+        "Potential growth"
+      ],
+      "policy_channels": [
+        "Investment",
+        "Public spending",
+        "Potential growth"
+      ],
+      "measure_tracks": [
+        {
+          "id": "infrastructure-investment-3356-1-07-05-2026-o-zbekiston-respublikasi-qurilish-va-measure-1",
+          "label": "verified official measure",
+          "status": "source verified"
+        }
+      ],
+      "implementation_milestones": [
+        {
+          "id": "infrastructure-investment-3356-1-07-05-2026-o-zbekiston-respublikasi-qurilish-va-instructions_issued-2026-05-07",
+          "label": "official measure recorded",
+          "date": "2026-05-07",
+          "date_precision": "day",
+          "event_type": "instructions_issued",
+          "responsible_institutions": [
+            "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)"
+          ],
+          "evidence_type": "official_policy_announcement",
+          "source_event_ids": [
+            "source-event-2026-05-07-3356-1-07-05-2026-o-zbekiston-respublikasi-qurilish-vazirligi-huzurid"
+          ],
+          "confidence": "medium"
+        }
+      ],
+      "official_source_events": [
+        {
+          "id": "source-event-2026-05-07-3356-1-07-05-2026-o-zbekiston-respublikasi-qurilish-vazirligi-huzurid",
+          "title": "3356-1 07.05.2026 “Oʻzbekiston Respublikasi Qurilish vazirligi huzuridagi qurilish sohasida hududiy nazorat inspeksiyalari tomonidan oʻtkaziladigan bino va inshootlarning instrumental texnik tekshiruv ishlarini baholashning yagona hisoblash tartibi toʻgʻrisidagi nizomni tasdiqlash haqida”gi buyruqni oʻz kuchini yoʻqotgan deb topish toʻgʻrisida",
+          "source_institution": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
+          "source_url": "https://lex.uz/uz/docs/8180484",
+          "source_published_at": "2026-05-07",
+          "evidence_type": "official_policy_announcement",
+          "event_type": "instructions_issued",
+          "summary": "Oʻzbekiston Respublikasi qurilish va uy-joy kommunal xoʻjaligi vazirining buyrugʻi, 06.05.2026 yilda ro‘yxatdan o‘tgan, ro‘yxat raqami 3356-1 Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
+          "source_url_status": "verified",
+          "extracted_at": "2026-05-11T10:11:15.292Z"
+        }
+      ],
+      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
+    },
+    {
+      "package_id": "pkg-infrastructure-investment-3828-07-05-2026-o-zbekiston-respublikasi-vazirlar-mahk-2026-05-07",
+      "title": "Infrastructure investment program reform",
+      "policy_area": "Infrastructure investment and program financing",
+      "reform_category": "infrastructure_investment",
+      "current_stage": "Verified official measure",
+      "current_stage_date": "2026-05-07",
+      "next_milestone": "No future milestone published in verified source",
+      "next_milestone_date": "2026-05-07",
+      "responsible_institutions": [
+        "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)"
+      ],
+      "legal_basis": "Verified official source event: 3828 07.05.2026 Oʻzbekiston Respublikasi Vazirlar Mahkamasi huzuridagi Qurilish va uy-joy kommunal xoʻjaligi sohasida nazorat qilish inspeksiyasining hududiy nazorat qilish inspeksiyalari tomonidan oʻtkaziladigan bino va inshootlarning texnik holatini oʻrganish va sinov-laboratoriya ishlari narxlarini hisoblash tartibi toʻgʻrisidagi nizomni tasdiqlash haqida.",
+      "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
+      "short_summary": "Groups 1 verified official source event under Infrastructure investment and program financing. The tracker records only the source-backed measure and keeps legal/currentness interpretation limited to the cited official source.",
+      "parameters_or_amounts": [
+        "3828 07.05.2026 Oʻzbekiston Respublikasi Vazirlar Mahkamasi huzuridagi Qurilish va uy-joy kommunal xoʻjaligi sohasida nazorat qilish inspeksiyasining hududiy nazorat qilish inspeksiyalari tomonidan oʻtkaziladigan bino va inshootlarning texnik holatini oʻrganish va sinov-laboratoriya ishlari narxlarini hisoblash tartibi toʻgʻrisidagi nizomni tasdiqlash haqida (2026-05-07)",
+        "Evidence type: official_policy_announcement",
+        "No future implementation deadline was published in the extracted source"
+      ],
+      "source_confidence": "medium",
+      "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
+      "model_relevance": [
+        "Investment",
+        "Public spending",
+        "Potential growth"
+      ],
+      "policy_channels": [
+        "Investment",
+        "Public spending",
+        "Potential growth"
+      ],
+      "measure_tracks": [
+        {
+          "id": "infrastructure-investment-3828-07-05-2026-o-zbekiston-respublikasi-vazirlar-mahk-measure-1",
+          "label": "verified official measure",
+          "status": "source verified"
+        }
+      ],
+      "implementation_milestones": [
+        {
+          "id": "infrastructure-investment-3828-07-05-2026-o-zbekiston-respublikasi-vazirlar-mahk-instructions_issued-2026-05-07",
+          "label": "official measure recorded",
+          "date": "2026-05-07",
+          "date_precision": "day",
+          "event_type": "instructions_issued",
+          "responsible_institutions": [
+            "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)"
+          ],
+          "evidence_type": "official_policy_announcement",
+          "source_event_ids": [
+            "source-event-2026-05-07-3828-07-05-2026-o-zbekiston-respublikasi-vazirlar-mahkamasi-huzuridag"
+          ],
+          "confidence": "medium"
+        }
+      ],
+      "official_source_events": [
+        {
+          "id": "source-event-2026-05-07-3828-07-05-2026-o-zbekiston-respublikasi-vazirlar-mahkamasi-huzuridag",
+          "title": "3828 07.05.2026 Oʻzbekiston Respublikasi Vazirlar Mahkamasi huzuridagi Qurilish va uy-joy kommunal xoʻjaligi sohasida nazorat qilish inspeksiyasining hududiy nazorat qilish inspeksiyalari tomonidan oʻtkaziladigan bino va inshootlarning texnik holatini oʻrganish va sinov-laboratoriya ishlari narxlarini hisoblash tartibi toʻgʻrisidagi nizomni tasdiqlash haqida",
+          "source_institution": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
+          "source_url": "https://lex.uz/uz/docs/8180898",
+          "source_published_at": "2026-05-07",
+          "evidence_type": "official_policy_announcement",
+          "event_type": "instructions_issued",
+          "summary": "Oʻzbekiston Respublikasi Vazirlar Mahkamasi huzuridagi Qurilish va uy-joy kommunal xoʻjaligi sohasida nazorat qilish inspeksiyasi boshligʻining buyrugʻi, 06.05.2026 yilda ro‘yxatdan o‘tgan, ro‘yxat raqami 3828 Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
+          "source_url_status": "verified",
+          "extracted_at": "2026-05-11T10:11:15.292Z"
+        }
+      ],
+      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
+    },
+    {
+      "package_id": "pkg-other-policy-o-rq-1144-07-05-2026-o-zbekiston-respublikasining-ayrim-qonun-hujja-2026-05-07",
+      "title": "Policy implementation reform",
+      "policy_area": "Official policy implementation",
+      "reform_category": "other_policy",
+      "current_stage": "Verified official measure",
+      "current_stage_date": "2026-05-07",
+      "next_milestone": "No future milestone published in verified source",
+      "next_milestone_date": "2026-05-07",
+      "responsible_institutions": [
+        "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)"
+      ],
+      "legal_basis": "Verified official source event: O‘RQ-1144 07.05.2026 O‘zbekiston Respublikasining ayrim qonun hujjatlariga o‘zgartirish va qo‘shimchalar kiritish to‘g‘risida.",
+      "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
+      "short_summary": "Groups 1 verified official source event under Official policy implementation. The tracker records only the source-backed measure and keeps legal/currentness interpretation limited to the cited official source.",
+      "parameters_or_amounts": [
+        "O‘RQ-1144 07.05.2026 O‘zbekiston Respublikasining ayrim qonun hujjatlariga o‘zgartirish va qo‘shimchalar kiritish to‘g‘risida (2026-05-07)",
+        "Evidence type: official_policy_announcement",
+        "No future implementation deadline was published in the extracted source"
+      ],
+      "source_confidence": "medium",
+      "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
+      "model_relevance": [
+        "Public administration",
+        "Investment",
+        "Growth"
+      ],
+      "policy_channels": [
+        "Public administration",
+        "Investment",
+        "Growth"
+      ],
+      "measure_tracks": [
+        {
+          "id": "other-policy-o-rq-1144-07-05-2026-o-zbekiston-respublikasining-ayrim-qonun-hujja-measure-1",
+          "label": "verified official measure",
+          "status": "source verified"
+        }
+      ],
+      "implementation_milestones": [
+        {
+          "id": "other-policy-o-rq-1144-07-05-2026-o-zbekiston-respublikasining-ayrim-qonun-hujja-instructions_issued-2026-05-07",
+          "label": "official measure recorded",
+          "date": "2026-05-07",
+          "date_precision": "day",
+          "event_type": "instructions_issued",
+          "responsible_institutions": [
+            "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)"
+          ],
+          "evidence_type": "official_policy_announcement",
+          "source_event_ids": [
+            "source-event-2026-05-07-o-rq-1144-07-05-2026-o-zbekiston-respublikasining-ayrim-qonun-hujjatl"
+          ],
+          "confidence": "medium"
+        }
+      ],
+      "official_source_events": [
+        {
+          "id": "source-event-2026-05-07-o-rq-1144-07-05-2026-o-zbekiston-respublikasining-ayrim-qonun-hujjatl",
+          "title": "O‘RQ-1144 07.05.2026 O‘zbekiston Respublikasining ayrim qonun hujjatlariga o‘zgartirish va qo‘shimchalar kiritish to‘g‘risida",
+          "source_institution": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
+          "source_url": "https://lex.uz/uz/docs/-8181969",
+          "source_published_at": "2026-05-07",
+          "evidence_type": "official_policy_announcement",
+          "event_type": "instructions_issued",
+          "summary": "Oʻzbekiston Respublikasining Qonuni, 07.05.2026 yildagi O‘RQ-1144-son Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
+          "source_url_status": "verified",
+          "extracted_at": "2026-05-11T10:11:15.292Z"
+        }
+      ],
+      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
+    },
+    {
+      "package_id": "pkg-other-policy-pf-78-07-05-2026-to-lovga-qobiliyatsizlik-institutini-yanada-takomi-2026-05-07",
+      "title": "Policy implementation reform",
+      "policy_area": "Official policy implementation",
+      "reform_category": "other_policy",
+      "current_stage": "Verified official measure",
+      "current_stage_date": "2026-05-07",
+      "next_milestone": "No future milestone published in verified source",
+      "next_milestone_date": "2026-05-07",
+      "responsible_institutions": [
+        "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)"
+      ],
+      "legal_basis": "Verified official source event: PF-78 07.05.2026 To‘lovga qobiliyatsizlik institutini yanada takomillashtirish chora-tadbirlari to‘g‘risida.",
+      "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
+      "short_summary": "Groups 1 verified official source event under Official policy implementation. The tracker records only the source-backed measure and keeps legal/currentness interpretation limited to the cited official source.",
+      "parameters_or_amounts": [
+        "PF-78 07.05.2026 To‘lovga qobiliyatsizlik institutini yanada takomillashtirish chora-tadbirlari to‘g‘risida (2026-05-07)",
+        "Evidence type: official_policy_announcement",
+        "No future implementation deadline was published in the extracted source"
+      ],
+      "source_confidence": "high",
+      "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
+      "model_relevance": [
+        "Public administration",
+        "Investment",
+        "Growth"
+      ],
+      "policy_channels": [
+        "Public administration",
+        "Investment",
+        "Growth"
+      ],
+      "measure_tracks": [
+        {
+          "id": "other-policy-pf-78-07-05-2026-to-lovga-qobiliyatsizlik-institutini-yanada-takomi-measure-1",
+          "label": "verified official measure",
+          "status": "source verified"
+        }
+      ],
+      "implementation_milestones": [
+        {
+          "id": "other-policy-pf-78-07-05-2026-to-lovga-qobiliyatsizlik-institutini-yanada-takomi-instructions_issued-2026-05-07",
+          "label": "official measure recorded",
+          "date": "2026-05-07",
+          "date_precision": "day",
+          "event_type": "instructions_issued",
+          "responsible_institutions": [
+            "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)"
+          ],
+          "evidence_type": "official_policy_announcement",
+          "source_event_ids": [
+            "source-event-2026-05-07-pf-78-07-05-2026-to-lovga-qobiliyatsizlik-institutini-yanada-takomill"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "official_source_events": [
+        {
+          "id": "source-event-2026-05-07-pf-78-07-05-2026-to-lovga-qobiliyatsizlik-institutini-yanada-takomill",
+          "title": "PF-78 07.05.2026 To‘lovga qobiliyatsizlik institutini yanada takomillashtirish chora-tadbirlari to‘g‘risida",
+          "source_institution": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
+          "source_url": "https://lex.uz/uz/docs/-8180719",
+          "source_published_at": "2026-05-07",
+          "evidence_type": "official_policy_announcement",
+          "event_type": "instructions_issued",
+          "summary": "Oʻzbekiston Respublikasi Prezidentining Farmoni, 06.05.2026 yildagi PF-78-son Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
+          "source_url_status": "verified",
+          "extracted_at": "2026-05-11T10:11:15.292Z"
+        }
+      ],
+      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
+    },
+    {
+      "package_id": "pkg-public-transport-system-2026-05-07",
+      "title": "Public transport service and financing reform",
+      "policy_area": "Public transport routes, fleet renewal, fare systems, and service delivery",
+      "reform_category": "infrastructure_investment",
+      "current_stage": "Verified official measure",
+      "current_stage_date": "2026-05-07",
+      "next_milestone": "No future milestone published in verified source",
+      "next_milestone_date": "2026-05-07",
+      "responsible_institutions": [
+        "Official website of the President of the Republic of Uzbekistan"
+      ],
+      "legal_basis": "Verified official source event: President reviews measures to further develop public transport system.",
+      "official_basis": "Official website of the President of the Republic of Uzbekistan",
+      "short_summary": "Groups 1 verified official source event under Public transport routes, fleet renewal, fare systems, and service delivery. The tracker records only the source-backed measure and keeps legal/currentness interpretation limited to the cited official source.",
+      "parameters_or_amounts": [
+        "President reviews measures to further develop public transport system (2026-05-07)",
+        "Evidence type: official_policy_announcement",
+        "No future implementation deadline was published in the extracted source"
+      ],
+      "source_confidence": "high",
+      "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
+      "model_relevance": [
+        "Investment",
+        "Public spending",
+        "Potential growth"
+      ],
+      "policy_channels": [
+        "Investment",
+        "Public spending",
+        "Potential growth"
+      ],
+      "measure_tracks": [
+        {
+          "id": "public-transport-system-measure-1",
+          "label": "verified official measure",
+          "status": "source verified"
+        }
+      ],
+      "implementation_milestones": [
+        {
+          "id": "public-transport-system-implementation_milestone-2026-05-07",
+          "label": "implementation measure recorded",
+          "date": "2026-05-07",
+          "date_precision": "day",
+          "event_type": "implementation_milestone",
+          "responsible_institutions": [
+            "Official website of the President of the Republic of Uzbekistan"
+          ],
+          "evidence_type": "official_policy_announcement",
+          "source_event_ids": [
+            "source-event-2026-05-07-president-reviews-measures-to-further-develop-public-transport-system"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "official_source_events": [
+        {
+          "id": "source-event-2026-05-07-president-reviews-measures-to-further-develop-public-transport-system",
+          "title": "President reviews measures to further develop public transport system",
+          "source_institution": "Official website of the President of the Republic of Uzbekistan",
+          "source_url": "https://president.uz/en/lists/view/9186",
+          "source_published_at": "2026-05-07",
+          "evidence_type": "official_policy_announcement",
+          "event_type": "implementation_milestone",
+          "summary": "Official web-site of the President of Uzbekistan Official pages in social networks President of the Republic of Uzbekistan President reviews measures to further develop public transport system President Shavkat Mirziyoyev reviewed measures for the further improvement of the public transport system in the regions and the acceleration of work in this area. In recent years, extensive efforts have been undertaken to provide the population with convenient, safe, and environmentally friendly public transport. In particular, over the past three years, 2,650 modern electric buses and buses have been delivered to the capital and regional centers. A total of 279 regular routes have been launched under",
+          "source_url_status": "verified",
+          "extracted_at": "2026-05-11T10:11:15.292Z"
+        }
+      ],
+      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
+    },
+    {
+      "package_id": "pkg-infrastructure-investment-measures-discussed-to-reduce-bureaucracy-and-strengthe-2026-05-06",
+      "title": "Infrastructure investment program reform",
+      "policy_area": "Infrastructure investment and program financing",
+      "reform_category": "infrastructure_investment",
+      "current_stage": "Verified official measure",
+      "current_stage_date": "2026-05-06",
+      "next_milestone": "No future milestone published in verified source",
+      "next_milestone_date": "2026-05-06",
+      "responsible_institutions": [
+        "Official website of the President of the Republic of Uzbekistan"
+      ],
+      "legal_basis": "Verified official source event: Measures discussed to reduce bureaucracy and strengthen construction oversight.",
+      "official_basis": "Official website of the President of the Republic of Uzbekistan",
+      "short_summary": "Groups 1 verified official source event under Infrastructure investment and program financing. The tracker records only the source-backed measure and keeps legal/currentness interpretation limited to the cited official source.",
+      "parameters_or_amounts": [
+        "Measures discussed to reduce bureaucracy and strengthen construction oversight (2026-05-06)",
+        "Evidence type: official_policy_announcement",
+        "No future implementation deadline was published in the extracted source"
+      ],
+      "source_confidence": "medium",
+      "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
+      "model_relevance": [
+        "Investment",
+        "Public spending",
+        "Potential growth"
+      ],
+      "policy_channels": [
+        "Investment",
+        "Public spending",
+        "Potential growth"
+      ],
+      "measure_tracks": [
+        {
+          "id": "infrastructure-investment-measures-discussed-to-reduce-bureaucracy-and-strengthe-measure-1",
+          "label": "verified official measure",
+          "status": "source verified"
+        }
+      ],
+      "implementation_milestones": [
+        {
+          "id": "infrastructure-investment-measures-discussed-to-reduce-bureaucracy-and-strengthe-instructions_issued-2026-05-06",
+          "label": "official measure recorded",
+          "date": "2026-05-06",
+          "date_precision": "day",
+          "event_type": "instructions_issued",
+          "responsible_institutions": [
+            "Official website of the President of the Republic of Uzbekistan"
+          ],
+          "evidence_type": "official_policy_announcement",
+          "source_event_ids": [
+            "source-event-2026-05-06-measures-discussed-to-reduce-bureaucracy-and-strengthen-construction-"
+          ],
+          "confidence": "medium"
+        }
+      ],
+      "official_source_events": [
+        {
+          "id": "source-event-2026-05-06-measures-discussed-to-reduce-bureaucracy-and-strengthen-construction-",
+          "title": "Measures discussed to reduce bureaucracy and strengthen construction oversight",
+          "source_institution": "Official website of the President of the Republic of Uzbekistan",
+          "source_url": "https://president.uz/en/lists/view/9181",
+          "source_published_at": "2026-05-06",
+          "evidence_type": "official_policy_announcement",
+          "event_type": "instructions_issued",
+          "summary": "Official web-site of the President of Uzbekistan Official pages in social networks President of the Republic of Uzbekistan Measures discussed to reduce bureaucracy and strengthen construction oversight President Shavkat Mirziyoyev reviewed a presentation on reducing bureaucracy and increasing the efficiency of oversight in the construction, housing, and communal services sectors. The large-scale work being carried out in the construction sector contributes to the development of modern housing, social facilities, and convenient infrastructure. At the same time, the facilities under construction must be safe, high-quality, and fully compliant with environmental and urban planning requirements.",
+          "source_url_status": "verified",
+          "extracted_at": "2026-05-11T10:11:15.292Z"
+        }
+      ],
+      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
     },
     {
       "package_id": "pkg-tax-administration-incentives-2026-04-14",
@@ -962,23 +1909,23 @@
           ],
           "evidence_type": "official_policy_announcement",
           "source_event_ids": [
-            "source-event-2026-04-14-10-20-00-uzbekistan-expands-tax-incentives-for-investors-financing-in"
+            "source-event-2026-04-14-uzbekistan-expands-tax-incentives-for-investors-financing-infrastruct"
           ],
           "confidence": "high"
         }
       ],
       "official_source_events": [
         {
-          "id": "source-event-2026-04-14-10-20-00-uzbekistan-expands-tax-incentives-for-investors-financing-in",
+          "id": "source-event-2026-04-14-uzbekistan-expands-tax-incentives-for-investors-financing-infrastruct",
           "title": "Uzbekistan Expands Tax Incentives for Investors Financing Infrastructure Projects",
           "source_institution": "Ministry of Investment, Industry and Trade of the Republic of Uzbekistan",
           "source_url": "https://gov.uz/en/miit/news/view/153388",
           "source_published_at": "2026-04-14",
           "evidence_type": "official_policy_announcement",
           "event_type": "financing_allocated",
-          "summary": "Source API did not expose a summary for this configured extraction item.",
+          "summary": "Official detail page did not expose a separate summary in the configured extraction block.",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-11T09:43:07.442Z"
+          "extracted_at": "2026-05-11T10:11:15.292Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."

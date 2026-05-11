@@ -468,6 +468,90 @@ describe('Knowledge Hub reform intake', () => {
     assert.ok(diagnostics.artifact.caveats.some((caveat) => caveat.includes('official links passed validation')))
   })
 
+  it('classifies configured-source President.uz list items from fetched detail body text', async () => {
+    const diagnostics = await buildKnowledgeHubCandidateArtifactWithDiagnostics({
+      fetchSource: true,
+      extractedAt: '2026-05-05T08:00:00.000Z',
+      sources: [
+        {
+          id: 'president-reform-news',
+          institution: 'Official website of the President of the Republic of Uzbekistan',
+          url: 'https://president.uz/en/lists/news',
+          parser: 'president-uz-list',
+          follow_detail_links: true,
+        },
+      ],
+      fetchImpl: async (url) => {
+        if (String(url).includes('/lists/view/9301')) {
+          return new Response(`
+            <html>
+              <title>Business environment issues reviewed</title>
+              <body>
+                <h1>Business environment issues reviewed</h1>
+                <span>05.05.2026</span>
+                <p>The Head of State approved the proposed measures and issued instructions to introduce a single-window permit system, reduce duplicate documents for importers, and revise tax incentive procedures.</p>
+              </body>
+            </html>
+          `)
+        }
+        return new Response(`
+          <a href="/en/lists/view/9301">Business environment issues reviewed</a>
+          <span>05-05-2026</span>
+        `)
+      },
+    })
+
+    assert.equal(diagnostics.candidate_count, 1)
+    assert.equal(diagnostics.artifact.reform_packages.length, 1)
+    assert.equal(diagnostics.artifact.reform_packages[0].official_source_events[0].source_url, 'https://president.uz/en/lists/view/9301')
+    assert.equal(diagnostics.artifact.reform_packages[0].official_source_events[0].source_url_status, 'verified')
+  })
+
+  it('extracts Lex.uz official search results as document detail links, not navigation shell links', () => {
+    const decisions = extractCandidateDecisionsFromSource(
+      {
+        id: 'lex-official-legal-acts',
+        institution: 'National Database of Legislation of the Republic of Uzbekistan (Lex.uz)',
+        url: 'https://lex.uz/uz/search/official?lang=4&pub_date=month',
+        parser: 'lexuz-official-search',
+      },
+      `
+        <a href="/uz/search/official">RASMIY HUJJATLAR</a>
+        <a href="/uz/docs/-8180719">Toʻlovga qobiliyatsizlik institutini yanada takomillashtirish chora-tadbirlari toʻgʻrisida</a>
+        Oʻzbekiston Respublikasi Prezidentining Farmoni, 06.05.2026 yildagi PF-78-son
+      `,
+      '2026-05-05T08:00:00.000Z',
+    )
+
+    assert.equal(decisions.candidates.length, 1)
+    assert.equal(decisions.candidates[0].source_url, 'https://lex.uz/uz/docs/-8180719')
+    assert.ok(decisions.candidates[0].matched_include_rules.includes('legal-or-regulatory-change'))
+    assert.equal(decisions.exclusions.length, 0)
+  })
+
+  it('parses gov.uz detail publication dates from official detail records before page clock timestamps', () => {
+    const [candidate] = extractCandidatesFromSource(
+      {
+        id: 'gov-detail',
+        institution: 'Government portal of the Republic of Uzbekistan',
+        url: 'https://gov.uz/en/news/view/153724',
+        parser: 'official-detail',
+        allow_source_url_as_candidate: true,
+      },
+      `
+        <body>
+          <div>10:00:43 (UTC) 11.05.2026</div>
+          \\"date\\":\\"2026-04-15 09:10:00\\",
+          <h1>Progress and priorities in housing construction and urbanization reviewed</h1>
+          <p>Regional khokims were instructed to develop comprehensive programs for the implementation of approved master plans, and from July 1 technical specifications will be issued through a single application and a single payment.</p>
+        </body>
+      `,
+      '2026-05-05T08:00:00.000Z',
+    )
+
+    assert.equal(candidate.source_published_at, '2026-04-15')
+  })
+
   it('assembles generic packages from unrelated verified source events', () => {
     const packages = assembleReformPackagesFromCandidates([
       {

@@ -30,6 +30,7 @@ function govUzAuthorityNewsSource({ id, institution, code, url, fixture }) {
       language: 'en',
     },
     parser: 'govuz-api',
+    follow_detail_links: true,
     fixture_path: fixturePath(fixture),
   }
 }
@@ -39,7 +40,8 @@ export const REFORM_SOURCE_DEFINITIONS = [
     id: 'lex-official-legal-acts',
     institution: 'National Database of Legislation of the Republic of Uzbekistan (Lex.uz)',
     url: 'https://lex.uz/uz/search/official?lang=4&pub_date=month',
-    parser: 'html-articles',
+    parser: 'lexuz-official-search',
+    follow_detail_links: true,
     fixture_path: fixturePath('lex-official-legal-acts.html'),
   },
   {
@@ -47,6 +49,7 @@ export const REFORM_SOURCE_DEFINITIONS = [
     institution: 'Official website of the President of the Republic of Uzbekistan',
     url: 'https://president.uz/en/lists/news',
     parser: 'president-uz-list',
+    follow_detail_links: true,
     fixture_path: fixturePath('president-reform-news.html'),
   },
   {
@@ -78,6 +81,7 @@ export const REFORM_SOURCE_DEFINITIONS = [
     institution: 'Government portal of the Republic of Uzbekistan',
     url: 'https://gov.uz/en/news/news',
     parser: 'html-articles',
+    follow_detail_links: true,
     fixture_path: fixturePath('gov-portal-reform-news.html'),
   },
   {
@@ -572,6 +576,7 @@ const INCLUDE_RULE_DEFINITIONS = [
     category: 'other_policy',
     patterns: [
       /\b(?:law on|law of|draft law|new law|decree|resolution|regulation|code|order|amendments?|amended|legal act|normative legal act|rule package|rules amended|rules introduced)\b/i,
+      /\b(?:qonun(?:i)?|farmon(?:i)?|qaror(?:i)?|buyruq(?:i)?|kodeks|normativ-huquqiy hujjat|nizom|yoʻriqnoma|yo'riqnoma|qoidalar|tartib|oʻzgartirish|o'zgartirish|qoʻshimcha|qo'shimcha)\b/i,
     ],
   },
   {
@@ -583,6 +588,7 @@ const INCLUDE_RULE_DEFINITIONS = [
     category: 'other_policy',
     patterns: [
       /\b(?:adopted|approved|enacted|introduced|expands|expanded|abolished|reduced|launched|implemented|entered into force|came into force|signed into law|approves measures|approved measures)\b/i,
+      /\b(?:qabul qilindi|qabul qilingan|tasdiqlandi|tasdiqlash|joriy etildi|joriy etish|amalga oshirildi|kuchga kirdi|oʻz kuchini yoʻqotgan|o'z kuchini yo'qotgan|isloh qilish chora-tadbirlari|chora-tadbirlari(?:\s+toʻgʻrisida|\s+to'g'risida)?)\b/i,
     ],
   },
   {
@@ -607,6 +613,7 @@ const INCLUDE_RULE_DEFINITIONS = [
     patterns: [
       /\b(?:tax|excise|duty|budget|public finance|fiscal|subsidy|subsidies|tariff|compensation|fiscal monitoring|allocation|incentive|incentives)\b.{0,100}\b(?:introduced|amended|approved|adopted|expands|expanded|reduced|abolished|adjusted|parameter|parameters|rate|threshold|requirement|requirements)\b/i,
       /\b(?:introduced|amended|approved|adopted|expands|expanded|reduced|abolished|adjusted)\b.{0,100}\b(?:tax|excise|duty|budget|subsidy|subsidies|tariff|compensation|fiscal monitoring|allocation|incentive|incentives)\b/i,
+      /\b(?:soliq|aksiz|boj|byudjet|subsidiya|tarif|kompensatsiya|yigʻim|yig'im|imtiyoz|imtiyozlar)\b.{0,100}\b(?:joriy etish|tasdiqlash|tasdiqlandi|qabul qilindi|oʻzgartirish|o'zgartirish|kamaytirish|bekor qilish|stavka|talab|miqdor)\b/i,
     ],
   },
   {
@@ -619,6 +626,7 @@ const INCLUDE_RULE_DEFINITIONS = [
     patterns: [
       /\b(?:customs|border clearance|risk-based clearance|electronic declaration|electronic declarations|trade corridor|import|export|wto|market access)\b.{0,100}\b(?:introduced|approved|adopted|amended|implemented|launched|rules|measures|schedule|schedule adopted)\b/i,
       /\b(?:introduced|approved|adopted|amended|implemented|launched|approves measures)\b.{0,100}\b(?:customs|border clearance|risk-based clearance|electronic declaration|electronic declarations|trade corridor|import|export|wto|market access)\b/i,
+      /\b(?:bojxona|eksport|import|savdo|jahon savdo tashkiloti)\b.{0,100}\b(?:joriy etish|tasdiqlash|qabul qilindi|oʻzgartirish|o'zgartirish|chora-tadbirlar|qoidalar|tartib)\b/i,
     ],
   },
   {
@@ -631,6 +639,8 @@ const INCLUDE_RULE_DEFINITIONS = [
     patterns: [
       /\b(?:implementation|implemented|launched|rollout|roll-out|phase|stage|package)\b.{0,100}\b(?:reform|program|programme|strategy|master plan|roadmap|resolution|decree|law|project|rules|legal amendments|special economic zones|green economic development)\b/i,
       /\b(?:reform|program|programme|strategy|master plan|roadmap|resolution|decree|law|project|rules|legal amendments|special economic zones|green economic development)\b.{0,100}\b(?:implementation|implemented|launched|rollout|roll-out|phase|stage|package|measures)\b/i,
+      /\b(?:amalga oshirish|joriy etish|bosqich|dastur|yoʻl xaritasi|yo'l xaritasi|chora-tadbirlar)\b.{0,100}\b(?:isloh|qonun|farmon|qaror|loyiha|dastur|strategiya|nizom|qoidalar|tartib)\b/i,
+      /\b(?:isloh|qonun|farmon|qaror|loyiha|dastur|strategiya|nizom|qoidalar|tartib)\b.{0,100}\b(?:amalga oshirish|joriy etish|bosqich|chora-tadbirlar|tasdiqlash)\b/i,
     ],
   },
   {
@@ -700,6 +710,16 @@ const EXCLUDE_RULE_DEFINITIONS = [
     ],
   },
   {
+    id: 'security-defense-out-of-scope',
+    label: 'Security or defense measure outside economic-policy scope',
+    description: 'Exclude military, defense, and security-sector modernization unless separately represented as a fiscal, industrial, trade, or public-service economic measure.',
+    reason: 'security_defense_out_of_scope',
+    overridable_by_policy_measure: false,
+    patterns: [
+      /\b(military|army|armed forces|defense|defence|weapons?|commander-in-chief|unmanned aerial vehicles?|combat|security forces)\b/i,
+    ],
+  },
+  {
     id: 'administrative-update-only',
     label: 'Administrative update only',
     description: 'Exclude internal performance-discipline, reporting, staffing, and ministry process updates without a policy measure.',
@@ -747,6 +767,10 @@ export const REFORM_EXCLUSION_REASONS = [
     description: 'The item is ceremonial, cultural, commemorative, or protocol content.',
   },
   {
+    id: 'security_defense_out_of_scope',
+    description: 'The item is military, defense, or security-sector modernization outside the economic-policy tracker scope.',
+  },
+  {
     id: 'administrative_update_only',
     description: 'The item is internal administrative reporting without a policy measure.',
   },
@@ -789,12 +813,14 @@ const ACTUAL_REFORM_SIGNAL_DEFINITIONS = [
     id: 'legal_or_policy_instrument',
     patterns: [
       /\b(?:law on|law of|draft law|new law|decree|resolution|regulation|code|order|legal act|normative legal act|rule package|rules amended|rules introduced)\b/i,
+      /\b(?:qonun(?:i)?|farmon(?:i)?|qaror(?:i)?|buyruq(?:i)?|kodeks|normativ-huquqiy hujjat|nizom|yoʻriqnoma|yo'riqnoma|qoidalar|tartib|chora-tadbirlar(?:i)?)\b/i,
     ],
   },
   {
     id: 'adopted_measure',
     patterns: [
       /\b(?:adopted|approved|enacted|introduced|expands|expanded|abolished|reduced|launched|implemented|entered into force|came into force|signed into law|approves measures|approved measures)\b/i,
+      /\b(?:qabul qilindi|qabul qilingan|tasdiqlandi|tasdiqlash|joriy etildi|joriy etish|amalga oshirildi|kuchga kirdi|oʻz kuchini yoʻqotgan|o'z kuchini yo'qotgan|isloh qilish chora-tadbirlari|chora-tadbirlari)\b/i,
     ],
   },
   {
@@ -816,6 +842,8 @@ const ACTUAL_REFORM_SIGNAL_DEFINITIONS = [
     patterns: [
       /\b(?:implementation|implemented|launched|rollout|roll-out|phase|stage|package)\b.{0,100}\b(?:reform|program|programme|strategy|master plan|roadmap|resolution|decree|law|project|rules|legal amendments|special economic zones|green economic development)\b/i,
       /\b(?:reform|program|programme|strategy|master plan|roadmap|resolution|decree|law|project|rules|legal amendments|special economic zones|green economic development)\b.{0,100}\b(?:implementation|implemented|launched|rollout|roll-out|phase|stage|package|measures)\b/i,
+      /\b(?:amalga oshirish|joriy etish|bosqich|dastur|yoʻl xaritasi|yo'l xaritasi|chora-tadbirlar)\b.{0,100}\b(?:isloh|qonun|farmon|qaror|loyiha|dastur|strategiya|nizom|qoidalar|tartib)\b/i,
+      /\b(?:isloh|qonun|farmon|qaror|loyiha|dastur|strategiya|nizom|qoidalar|tartib)\b.{0,100}\b(?:amalga oshirish|joriy etish|bosqich|chora-tadbirlar|tasdiqlash)\b/i,
     ],
   },
 ]
@@ -889,18 +917,18 @@ function slugify(value) {
 
 function classifyDomain(text) {
   const normalized = text.toLowerCase()
-  if (/(housing|construction|urbanization|urban planning|master plan|land privatization|technical specifications|utility networks)/.test(normalized)) return 'infrastructure_investment'
-  if (/(energy|gas|tariff adjustment)/.test(normalized)) return 'energy_tariffs'
-  if (/(healthcare|medical|clinic|clinics|health insurance|insurance fund|state-funded medical)/.test(normalized)) return 'social_protection'
-  if (/(privatization|state-owned|soe)/.test(normalized)) return 'soe_privatization'
-  if (/(customs|trade|wto|import|export|clearance)/.test(normalized)) return 'trade_customs'
-  if (/(policy rate|reserve requirement|foreign exchange|fx|deposit|bank|microfinance|microcredit)/.test(normalized)) return 'monetary_policy'
-  if (/(agriculture|fisheries|forestry)/.test(normalized)) return 'agriculture'
-  if (/(budget|tax|excise|fiscal|subsidy|duty)/.test(normalized)) return 'fiscal_tax'
-  if (/(compensation|social protection|household)/.test(normalized)) return 'social_protection'
-  if (/(digital|electronic declaration|e-government|public service|notarial|legal service)/.test(normalized)) return 'digital_public_admin'
-  if (/(infrastructure|grant|loan|financing|master plan|green economic development)/.test(normalized)) return 'infrastructure_investment'
-  if (/(business|investment climate|investor|sme|small and medium-sized)/.test(normalized)) return 'business_environment'
+  if (/(housing|construction|urbanization|urban planning|master plan|land privatization|technical specifications|utility networks|qurilish|uy-joy|kadastr|shaharsozlik)/.test(normalized)) return 'infrastructure_investment'
+  if (/(energy|gas|tariff adjustment|elektr|energiya|gaz|tarif)/.test(normalized)) return 'energy_tariffs'
+  if (/(healthcare|medical|clinic|clinics|health insurance|insurance fund|state-funded medical|sogʻliqni saqlash|sog'liqni saqlash|tibbiy)/.test(normalized)) return 'social_protection'
+  if (/(privatization|state-owned|soe|xususiylashtirish|davlat aktiv)/.test(normalized)) return 'soe_privatization'
+  if (/(customs|trade|wto|import|export|clearance|bojxona|eksport|import|savdo|jahon savdo tashkiloti)/.test(normalized)) return 'trade_customs'
+  if (/(policy rate|reserve requirement|foreign exchange|fx|deposit|bank|microfinance|microcredit|toʻlov|to'lov|kredit|mikromoliya|markaziy bank)/.test(normalized)) return 'monetary_policy'
+  if (/(agriculture|fisheries|forestry|qishloq xoʻjaligi|qishloq xo'jaligi|baliqchilik|oʻrmon|o'rmon)/.test(normalized)) return 'agriculture'
+  if (/(budget|tax|excise|fiscal|subsidy|duty|byudjet|soliq|aksiz|subsidiya|boj|yigʻim|yig'im)/.test(normalized)) return 'fiscal_tax'
+  if (/(compensation|social protection|household|kompensatsiya|ijtimoiy himoya|aholi)/.test(normalized)) return 'social_protection'
+  if (/(digital|electronic declaration|e-government|public service|notarial|legal service|raqamli|elektron|davlat xizmati|notarial|huquqiy xizmat)/.test(normalized)) return 'digital_public_admin'
+  if (/(infrastructure|grant|loan|financing|master plan|green economic development|infratuzilma|moliyalashtirish|yashil iqtisodiyot)/.test(normalized)) return 'infrastructure_investment'
+  if (/(business|investment climate|investor|sme|small and medium-sized|tadbirkor|investitsiya|raqobat|kichik biznes)/.test(normalized)) return 'business_environment'
   return 'other_policy'
 }
 
@@ -974,6 +1002,30 @@ function normalizeUrlForComparison(value) {
   } catch {
     return ''
   }
+}
+
+const OFFICIAL_DETAIL_SOURCE_PATH_PATTERNS = [
+  /\/(?:uz|ru|en)?\/?docs\/-?\d+/i,
+  /\/(?:uz|ru|en)\/lists\/view\/\d+/i,
+  /\/(?:uz|ru|en)\/(?:[^/]+\/)?news\/view\/\d+/i,
+]
+
+const OFFICIAL_DETAIL_SOURCE_TEXT_PATTERNS = [
+  /\b(?:decree|resolution|law|order|regulation|program|programme|roadmap|action plan|incentive|implementation|adopted measures|approved measures)\b/i,
+  /\b(?:farmon(?:i)?|qaror(?:i)?|qonun(?:i)?|buyruq(?:i)?|nizom|dastur|yoʻl xaritasi|yo'l xaritasi|chora-tadbirlar(?:i)?|imtiyoz|amalga oshirish|tasdiqlash)\b/i,
+]
+
+function hasOfficialDetailSourcePattern(sourceUrl) {
+  try {
+    const path = new URL(sourceUrl).pathname
+    return OFFICIAL_DETAIL_SOURCE_PATH_PATTERNS.some((pattern) => pattern.test(path))
+  } catch {
+    return false
+  }
+}
+
+function hasOfficialMeasureTextPattern(text) {
+  return OFFICIAL_DETAIL_SOURCE_TEXT_PATTERNS.some((pattern) => pattern.test(text))
 }
 
 function isUsableCandidateSourceUrl(source, sourceUrl) {
@@ -1095,23 +1147,7 @@ function extractDecisionsFromGovUzApi(source, payload, extractedAt) {
     return { candidates: [], exclusions: [] }
   }
 
-  const decisions = payload.data
-    .map((item) => {
-      const id = typeof item.id === 'number' || typeof item.id === 'string' ? String(item.id) : ''
-      const title = typeof item.title === 'string' ? normalizeWhitespace(item.title) : ''
-      const summary = typeof item.anons === 'string' ? normalizeWhitespace(item.anons) : ''
-      const publishedAt = typeof item.date === 'string' ? item.date : ''
-      const text = `${title} ${summary}`
-      return {
-        id,
-        title,
-        summary,
-        publishedAt,
-        sourceUrl: id ? govUzAuthorityViewUrl(source, id) : source.url,
-        text,
-      }
-    })
-    .filter((item) => item.id && item.title)
+  const decisions = sourceItemsFromGovUzApi(source, payload)
     .map((item) =>
       sourceItemToDecision(
         source,
@@ -1127,17 +1163,47 @@ function extractDecisionsFromGovUzApi(source, payload, extractedAt) {
   }
 }
 
+function sourceItemsFromGovUzApi(source, payload) {
+  if (!payload || typeof payload !== 'object' || !Array.isArray(payload.data)) return []
+
+  return payload.data
+    .map((item) => {
+      const id = typeof item.id === 'number' || typeof item.id === 'string' ? String(item.id) : ''
+      const title = typeof item.title === 'string' ? normalizeWhitespace(item.title) : ''
+      const summary = typeof item.anons === 'string' ? normalizeWhitespace(item.anons) : ''
+      const publishedAt = typeof item.date === 'string' ? item.date : ''
+      return {
+        id,
+        title,
+        summary,
+        publishedAt,
+        sourceUrl: id ? govUzAuthorityViewUrl(source, id) : source.url,
+        text: `${title} ${summary}`,
+      }
+    })
+    .filter((item) => item.id && item.title)
+}
+
 function parsePresidentUzDate(value) {
   const match = value.match(/^([0-3]\d)[.-]([01]\d)[.-](\d{4})$/)
   if (!match) return value
   return `${match[3]}-${match[2]}-${match[1]}`
 }
 
-function extractDecisionsFromPresidentUzList(source, html, extractedAt) {
-  const matches = Array.from(
-    html.matchAll(/<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>[\s\S]{0,500}?([0-3]\d-[01]\d-\d{4})/gi),
+function parseOfficialDate(value) {
+  const normalized = normalizeWhitespace(value)
+  if (!normalized) return ''
+  const isoMatch = normalized.match(/\b(\d{4}-[01]\d-[0-3]\d)(?:[T\s]\d{2}:\d{2}(?::\d{2})?)?\b/)
+  if (isoMatch) return isoMatch[1]
+  const dayFirstMatch = normalized.match(/\b([0-3]\d)[.-]([01]\d)[.-](\d{4})\b/)
+  if (dayFirstMatch) return `${dayFirstMatch[3]}-${dayFirstMatch[2]}-${dayFirstMatch[1]}`
+  return normalized
+}
+
+function sourceItemsFromPresidentUzList(source, html) {
+  return Array.from(
+    html.matchAll(/<a\b[^>]*href=["']([^"']*\/lists\/view\/[^"']+)["'][^>]*>([\s\S]*?)<\/a>[\s\S]{0,500}?([0-3]\d-[01]\d-\d{4})/gi),
   )
-  const decisions = matches
     .map((match) => {
       const title = normalizeWhitespace(match[2])
       return {
@@ -1149,6 +1215,10 @@ function extractDecisionsFromPresidentUzList(source, html, extractedAt) {
       }
     })
     .filter((item) => item.title.length > 20 && !/president of the republic of uzbekistan/i.test(item.title))
+}
+
+function extractDecisionsFromPresidentUzList(source, html, extractedAt) {
+  const decisions = sourceItemsFromPresidentUzList(source, html)
     .map((item) =>
       sourceItemToDecision(
         source,
@@ -1164,44 +1234,78 @@ function extractDecisionsFromPresidentUzList(source, html, extractedAt) {
   }
 }
 
-function extractDecisionsFromPresidentUzDetail(source, html, extractedAt) {
+function detailBodyTextFromHtml(html) {
+  const contentBlock =
+    firstMatch(html, [
+      /<article\b[^>]*>([\s\S]*?)<\/article>/i,
+      /<main\b[^>]*>([\s\S]*?)<\/main>/i,
+      /<body\b[^>]*>([\s\S]*?)<\/body>/i,
+    ]) || html
+  const paragraphs = Array.from(
+    contentBlock.matchAll(/<(?:p|li|td|div)\b[^>]*>([\s\S]*?)<\/(?:p|li|td|div)>/gi),
+    (match) => normalizeWhitespace(match[1]),
+  ).filter((paragraph) => paragraph.length > 30)
+  const fallbackBodyText = normalizeWhitespace(contentBlock)
+  const paragraphText = uniqueStrings(paragraphs).join(' ')
+  return paragraphText.length > Math.min(500, fallbackBodyText.length * 0.4) ? paragraphText : fallbackBodyText
+}
+
+function detailTitleFromHtml(html, fallbackTitle = '') {
   const title = normalizeWhitespace(
     firstMatch(html, [
       /<meta\b[^>]*(?:property|name)=["'](?:og:title|twitter:title)["'][^>]*content=["']([^"']+)["'][^>]*>/i,
+      /<meta\b[^>]*content=["']([^"']+)["'][^>]*(?:property|name)=["'](?:og:title|twitter:title)["'][^>]*>/i,
       /<title\b[^>]*>([\s\S]*?)<\/title>/i,
       /<h1\b[^>]*>([\s\S]*?)<\/h1>/i,
       /<h2\b[^>]*>([\s\S]*?)<\/h2>/i,
       /<h[2-3]\b[^>]*class=["'][^"']*(?:title|news|article)[^"']*["'][^>]*>([\s\S]*?)<\/h[2-3]>/i,
-    ]),
-  ).replace(/\s*[-|]\s*.*$/, '')
-  const publishedAt = parsePresidentUzDate(
+    ]) || fallbackTitle,
+  )
+  return title.replace(/\s*[-|]\s*(?:President|Official|Lex|Gov).*$/i, '').trim()
+}
+
+function detailDateFromHtml(html, fallbackDate = '') {
+  return parseOfficialDate(
     firstMatch(html, [
       /<time\b[^>]*datetime=["']([^"']+)["']/i,
+      /\\?["']date\\?["']\s*:\s*\\?["'](\d{4}-[01]\d-[0-3]\d)(?:\s+\d{2}:\d{2}:\d{2})?\\?["']/i,
+      /<h3\b[^>]*>\s*(\d{4}-[01]\d-[0-3]\d)(?:\s+\d{2}:\d{2}:\d{2})?\s*\//i,
+      /(?:class|itemprop)=["'][^"']*(?:date|published)[^"']*["'][^>]*>([\s\S]*?)<\/[^>]+>/i,
       /\b(\d{4}-[01]\d-[0-3]\d)(?:\s+\d{2}:\d{2}:\d{2})?\b/i,
       /\b([0-3]\d[.-][01]\d[.-]\d{4})\b/i,
-    ]),
+    ]) || fallbackDate,
   )
-  const paragraphs = Array.from(html.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi), (match) => normalizeWhitespace(match[1]))
-    .filter((paragraph) => paragraph.length > 40)
-  const fallbackBodyText = normalizeWhitespace(
-    firstMatch(html, [/<article\b[^>]*>([\s\S]*?)<\/article>/i, /<main\b[^>]*>([\s\S]*?)<\/main>/i, /<body\b[^>]*>([\s\S]*?)<\/body>/i]) ||
-      html,
-  )
-  const bodyText = paragraphs.length > 0 ? paragraphs.join(' ') : fallbackBodyText
+}
+
+function sourceItemFromOfficialDetail(source, html, fallbackItem = {}) {
+  const title = detailTitleFromHtml(html, fallbackItem.title ?? '')
+  const publishedAt = detailDateFromHtml(html, fallbackItem.publishedAt ?? '')
+  const bodyText = detailBodyTextFromHtml(html)
   const summary = bodyText.slice(0, 700)
 
-  if (!title) return { candidates: [], exclusions: [] }
+  if (!title) return null
+
+  return {
+    id: fallbackItem.id ?? 'detail',
+    title,
+    summary,
+    publishedAt,
+    sourceUrl: fallbackItem.sourceUrl ?? source.url,
+    text: `${title} ${bodyText}`,
+  }
+}
+
+function extractDecisionsFromPresidentUzDetail(source, html, extractedAt) {
+  const item = sourceItemFromOfficialDetail(source, html, {
+    id: 'detail',
+    sourceUrl: source.url,
+  })
+
+  if (!item) return { candidates: [], exclusions: [] }
 
   const decision = sourceItemToDecision(
     source,
-    {
-      id: 'detail',
-      title,
-      summary,
-      publishedAt,
-      sourceUrl: source.url,
-      text: `${title} ${bodyText}`,
-    },
+    item,
     extractedAt,
     'President.uz detail page did not expose a separate summary in the configured extraction block.',
   )
@@ -1213,6 +1317,23 @@ function extractDecisionsFromPresidentUzDetail(source, html, extractedAt) {
 }
 
 export function extractCandidateDecisionsFromSource(source, html, extractedAt) {
+  if (source.parser === 'lexuz-official-search') {
+    const decisions = sourceItemsFromLexOfficialSearch(source, html)
+      .map((item) =>
+        sourceItemToDecision(
+          source,
+          item,
+          extractedAt,
+          'Lex.uz official search result did not expose a separate summary in the configured extraction block.',
+        ),
+      )
+
+    return {
+      candidates: decisions.flatMap((decision) => (decision.candidate ? [decision.candidate] : [])),
+      exclusions: decisions.flatMap((decision) => (decision.exclusion ? [decision.exclusion] : [])),
+    }
+  }
+
   if (source.parser === 'president-uz-list') {
     return extractDecisionsFromPresidentUzList(source, html, extractedAt)
   }
@@ -1224,35 +1345,7 @@ export function extractCandidateDecisionsFromSource(source, html, extractedAt) {
   const apiDecisions = extractDecisionsFromGovUzApi(source, jsonPayload, extractedAt)
   if (apiDecisions.candidates.length > 0 || apiDecisions.exclusions.length > 0) return apiDecisions
 
-  const decisions = extractArticleBlocks(html)
-    .map((block) => {
-      const href = firstMatch(block, [/<a\b[^>]*href=["']([^"']+)["']/i])
-      const title = normalizeWhitespace(
-        firstMatch(block, [
-          /<h[1-4]\b[^>]*>([\s\S]*?)<\/h[1-4]>/i,
-          /<a\b[^>]*>([\s\S]*?)<\/a>/i,
-        ]),
-      )
-      const summary = normalizeWhitespace(
-        firstMatch(block, [
-          /<p\b[^>]*class=["'][^"']*(?:summary|description|excerpt)[^"']*["'][^>]*>([\s\S]*?)<\/p>/i,
-          /<p\b[^>]*>([\s\S]*?)<\/p>/i,
-        ]),
-      )
-      const publishedAt = firstMatch(block, [
-        /<time\b[^>]*datetime=["']([^"']+)["']/i,
-        /data-date=["']([^"']+)["']/i,
-      ])
-      const text = `${title} ${summary}`
-      return {
-        title,
-        summary,
-        publishedAt,
-        sourceUrl: toAbsoluteUrl(href, source.url),
-        text,
-      }
-    })
-    .filter((item) => item.title)
+  const decisions = sourceItemsFromHtmlArticles(source, html)
     .map((item) =>
       sourceItemToDecision(
         source,
@@ -1270,6 +1363,176 @@ export function extractCandidateDecisionsFromSource(source, html, extractedAt) {
 
 export function extractCandidatesFromSource(source, html, extractedAt) {
   return extractCandidateDecisionsFromSource(source, html, extractedAt).candidates
+}
+
+function sourceItemsFromHtmlArticles(source, html) {
+  const articleItems = extractArticleBlocks(html)
+    .map((block) => {
+      const href = firstMatch(block, [/<a\b[^>]*href=["']([^"']+)["']/i])
+      const title = normalizeWhitespace(
+        firstMatch(block, [
+          /<h[1-4]\b[^>]*>([\s\S]*?)<\/h[1-4]>/i,
+          /<a\b[^>]*>([\s\S]*?)<\/a>/i,
+        ]),
+      )
+      const summary = normalizeWhitespace(
+        firstMatch(block, [
+          /<p\b[^>]*class=["'][^"']*(?:summary|description|excerpt|anons)[^"']*["'][^>]*>([\s\S]*?)<\/p>/i,
+          /<p\b[^>]*>([\s\S]*?)<\/p>/i,
+        ]),
+      )
+      const publishedAt = parseOfficialDate(
+        firstMatch(block, [
+          /<time\b[^>]*datetime=["']([^"']+)["']/i,
+          /data-date=["']([^"']+)["']/i,
+          /\b([0-3]\d[.-][01]\d[.-]\d{4})\b/i,
+          /\b(\d{4}-[01]\d-[0-3]\d)\b/i,
+        ]),
+      )
+      return {
+        title,
+        summary,
+        publishedAt,
+        sourceUrl: toAbsoluteUrl(href, source.url),
+        text: `${title} ${summary}`,
+      }
+    })
+    .filter((item) => item.title)
+
+  if (articleItems.length > 0) return articleItems
+
+  if (source.follow_detail_links !== true) return []
+
+  return Array.from(html.matchAll(/<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi), (match) => ({
+    title: normalizeWhitespace(match[2]),
+    summary: normalizeWhitespace(match[2]),
+    publishedAt: '',
+    sourceUrl: toAbsoluteUrl(match[1], source.url),
+    text: normalizeWhitespace(match[2]),
+  })).filter(
+    (item) =>
+      item.title.length > 20 &&
+      hasOfficialDetailSourcePattern(item.sourceUrl) &&
+      hasOfficialMeasureTextPattern(`${item.title} ${item.summary}`),
+  )
+}
+
+function sourceItemsFromLexOfficialSearch(source, html) {
+  const items = Array.from(
+    html.matchAll(/<a\b[^>]*href=["']([^"']*\/docs\/-?\d+[^"']*)["'][^>]*>([\s\S]*?)<\/a>([\s\S]{0,450})/gi),
+    (match) => {
+      const title = normalizeWhitespace(match[2])
+      const trailingText = normalizeWhitespace(match[3])
+      return {
+        title,
+        summary: trailingText,
+        publishedAt: parseOfficialDate(trailingText),
+        sourceUrl: toAbsoluteUrl(match[1], source.url),
+        text: `${title} ${trailingText}`,
+      }
+    },
+  ).filter((item) => item.title.length > 20 && hasOfficialMeasureTextPattern(`${item.title} ${item.summary}`))
+
+  return items.filter((item, index, allItems) => {
+    const firstIndex = allItems.findIndex((other) => normalizeUrlForComparison(other.sourceUrl) === normalizeUrlForComparison(item.sourceUrl))
+    return firstIndex === index
+  })
+}
+
+function sourceItemsFromSourceListing(source, html) {
+  if (source.parser === 'lexuz-official-search') return sourceItemsFromLexOfficialSearch(source, html)
+  if (source.parser === 'president-uz-list') return sourceItemsFromPresidentUzList(source, html)
+
+  const jsonPayload = maybeParseJson(html)
+  const govUzApiItems = sourceItemsFromGovUzApi(source, jsonPayload)
+  if (govUzApiItems.length > 0) return govUzApiItems
+
+  if (source.parser === 'president-uz-detail' || source.parser === 'official-detail') {
+    const item = sourceItemFromOfficialDetail(source, html, { id: 'detail', sourceUrl: source.url })
+    return item ? [item] : []
+  }
+
+  return sourceItemsFromHtmlArticles(source, html)
+}
+
+function shouldFetchDetailItems(source, fetchSource) {
+  return fetchSource && source.follow_detail_links === true && source.parser !== 'president-uz-detail' && source.parser !== 'official-detail'
+}
+
+async function fetchOfficialDetailItem(source, item, fetchImpl) {
+  if (!isUsableCandidateSourceUrl(source, item.sourceUrl)) return item
+
+  const response = await fetchImpl(item.sourceUrl, {
+    headers: SOURCE_LINK_VALIDATION_HEADERS,
+  })
+  if (!response.ok) {
+    return {
+      ...item,
+      text: '',
+      summary: '',
+      detail_fetch_error: `HTTP ${response.status}`,
+    }
+  }
+
+  const detailHtml = await response.text()
+  const detailItem = sourceItemFromOfficialDetail(source, detailHtml, item)
+  if (!detailItem) {
+    return {
+      ...item,
+      text: '',
+      summary: '',
+      detail_fetch_error: 'Detail page did not expose parseable title/body text',
+    }
+  }
+  return detailItem
+}
+
+async function extractCandidateDecisionsFromSourceWithDetails(source, html, extractedAt, { fetchSource, fetchImpl }) {
+  if (!shouldFetchDetailItems(source, fetchSource)) return extractCandidateDecisionsFromSource(source, html, extractedAt)
+
+  const items = sourceItemsFromSourceListing(source, html).slice(0, source.detail_fetch_limit ?? 12)
+  const decisions = await Promise.all(
+    items.map(async (item) => {
+      if (!isUsableCandidateSourceUrl(source, item.sourceUrl)) {
+        return sourceItemToDecision(
+          source,
+          item,
+          extractedAt,
+          'Official source list item did not expose a stable detail link.',
+        )
+      }
+
+      const detailItem = await fetchOfficialDetailItem(source, item, fetchImpl)
+      if (detailItem.detail_fetch_error) {
+        return {
+          candidate: null,
+          exclusion: {
+            title: item.title,
+            source_institution: source.institution,
+            source_url: item.sourceUrl,
+            source_published_at: item.publishedAt || undefined,
+            exclusion_reason: 'source_link_unusable',
+            matched_include_rules: [],
+            matched_exclude_rules: [],
+            relevance_score: 0,
+            source_url_error: detailItem.detail_fetch_error,
+          },
+        }
+      }
+
+      return sourceItemToDecision(
+        source,
+        detailItem,
+        extractedAt,
+        'Official detail page did not expose a separate summary in the configured extraction block.',
+      )
+    }),
+  )
+
+  return {
+    candidates: decisions.flatMap((decision) => (decision.candidate ? [decision.candidate] : [])),
+    exclusions: decisions.flatMap((decision) => (decision.exclusion ? [decision.exclusion] : [])),
+  }
 }
 
 async function readSource(source, fetchSource, fetchImpl = fetch) {
@@ -1448,6 +1711,12 @@ const PACKAGE_TOPIC_DEFINITIONS = [
     title: 'Risk-based customs clearance and electronic declaration reform',
     policy_area: 'Trade facilitation and customs digitalization',
     patterns: [/\b(customs|clearance|electronic declaration|single window|risk-based)\b/i],
+  },
+  {
+    id: 'public-transport-system',
+    title: 'Public transport service and financing reform',
+    policy_area: 'Public transport routes, fleet renewal, fare systems, and service delivery',
+    patterns: [/\b(public transport|bus routes?|electric buses|transport system|fare payment|transport service)\b/i],
   },
   {
     id: 'tax-administration-incentives',
@@ -1854,7 +2123,10 @@ export async function buildKnowledgeHubCandidateArtifactWithDiagnostics(options 
     sources.map(async (source) => {
       try {
         const html = await readSource(source, fetchSource, fetchImpl)
-        const decisions = extractCandidateDecisionsFromSource(source, html, extractedAt)
+        const decisions = await extractCandidateDecisionsFromSourceWithDetails(source, html, extractedAt, {
+          fetchSource,
+          fetchImpl,
+        })
         const linkValidation = await validateCandidateSourceLinks(uniqueCandidatesById(decisions.candidates), {
           fetchSource,
           fetchImpl,

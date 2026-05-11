@@ -77,11 +77,18 @@ describe('Knowledge Hub page', () => {
     assert.doesNotMatch(pageSource, /hub-grid/)
   })
 
-  it('renders all 4 reform packages as dossiers from the static artifact', () => {
+  it('renders expanded verified reform packages as dossiers from the static artifact', () => {
     const artifact = JSON.parse(readFileSync(PUBLIC_KNOWLEDGE_HUB_ARTIFACT, 'utf8'))
     const contentViewSource = readFileSync(KNOWLEDGE_HUB_CONTENT_VIEW_SOURCE, 'utf8')
 
-    assert.equal(artifact.reform_packages.length, 4)
+    assert.ok(artifact.reform_packages.length > 4)
+    assert.deepEqual(artifact.candidates, [])
+    assert.deepEqual(artifact.accepted_reforms, [])
+    assert.ok(
+      artifact.reform_packages.every((reformPackage: { official_source_events?: { source_url_status?: string }[] }) =>
+        reformPackage.official_source_events?.every((sourceEvent) => sourceEvent.source_url_status === 'verified'),
+      ),
+    )
     assert.match(contentViewSource, /packages=\{filteredPackages\}/)
     assert.match(contentViewSource, /totalCount=\{sortedPackages\.length\}/)
     assert.match(contentViewSource, /knowledgeHub\.reformTracker\.packages\.showing/)
