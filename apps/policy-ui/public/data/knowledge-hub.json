@@ -1,6 +1,6 @@
 {
   "schema_version": "knowledge-hub-reform-tracker.v1",
-  "generated_at": "2026-05-11T10:31:41.303Z",
+  "generated_at": "2026-05-12T05:52:52.654Z",
   "generated_by": "scripts/knowledge-hub/generate-source-fetch-artifact.mjs",
   "extraction_mode": "configured-source-fetch",
   "extraction_mode_label": "Configured source fetch",
@@ -307,7 +307,7 @@
       "candidate_count": 11,
       "excluded_count": 1,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-11T10:31:41.303Z"
+      "fetched_at": "2026-05-12T05:52:52.654Z"
     },
     {
       "id": "president-reform-news",
@@ -319,7 +319,7 @@
       "candidate_count": 2,
       "excluded_count": 10,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-11T10:31:41.303Z"
+      "fetched_at": "2026-05-12T05:52:52.654Z"
     },
     {
       "id": "president-healthcare-reform-detail",
@@ -331,7 +331,7 @@
       "candidate_count": 1,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-11T10:31:41.303Z"
+      "fetched_at": "2026-05-12T05:52:52.654Z"
     },
     {
       "id": "gov-housing-urbanization-detail",
@@ -343,7 +343,7 @@
       "candidate_count": 1,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-11T10:31:41.303Z"
+      "fetched_at": "2026-05-12T05:52:52.654Z"
     },
     {
       "id": "gov-agriculture-subsidy-detail",
@@ -355,7 +355,7 @@
       "candidate_count": 1,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-11T10:31:41.303Z"
+      "fetched_at": "2026-05-12T05:52:52.654Z"
     },
     {
       "id": "gov-portal-reform-news",
@@ -367,7 +367,7 @@
       "candidate_count": 0,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-11T10:31:41.303Z"
+      "fetched_at": "2026-05-12T05:52:52.654Z"
     },
     {
       "id": "cbu-policy-news",
@@ -379,7 +379,7 @@
       "candidate_count": 0,
       "excluded_count": 347,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-11T10:31:41.303Z"
+      "fetched_at": "2026-05-12T05:52:52.654Z"
     },
     {
       "id": "customs-committee-news",
@@ -391,7 +391,7 @@
       "candidate_count": 0,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-11T10:31:41.303Z"
+      "fetched_at": "2026-05-12T05:52:52.654Z"
     },
     {
       "id": "mef-policy-news",
@@ -403,7 +403,7 @@
       "candidate_count": 0,
       "excluded_count": 12,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-11T10:31:41.303Z"
+      "fetched_at": "2026-05-12T05:52:52.654Z"
     },
     {
       "id": "tax-committee-news",
@@ -415,7 +415,7 @@
       "candidate_count": 0,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-11T10:31:41.303Z"
+      "fetched_at": "2026-05-12T05:52:52.654Z"
     },
     {
       "id": "energy-ministry-news",
@@ -427,7 +427,7 @@
       "candidate_count": 0,
       "excluded_count": 12,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-11T10:31:41.303Z"
+      "fetched_at": "2026-05-12T05:52:52.654Z"
     },
     {
       "id": "investment-trade-ministry-news",
@@ -439,7 +439,7 @@
       "candidate_count": 1,
       "excluded_count": 11,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-11T10:31:41.303Z"
+      "fetched_at": "2026-05-12T05:52:52.654Z"
     },
     {
       "id": "justice-ministry-news",
@@ -451,7 +451,7 @@
       "candidate_count": 0,
       "excluded_count": 12,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-11T10:31:41.303Z"
+      "fetched_at": "2026-05-12T05:52:52.654Z"
     }
   ],
   "reform_packages": [
@@ -607,7 +607,7 @@
           "event_type": "instructions_issued",
           "summary": "Official web-site of the President of Uzbekistan Official pages in social networks President of the Republic of Uzbekistan Healthcare system development issues discussed President Shavkat Mirziyoyev reviewed measures for the further development of the healthcare system, enhancement of the quality of medical services, and expansion of private sector participation. Consistent efforts are underway nationwide to provide the population with high-quality, modern medical care, improve management efficiency in the sector, make broader use of private sector potential, and elevate regional healthcare infrastructure to a new level. The role of the private sector in advancing the industry, along with th",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-11T10:31:41.303Z"
+          "extracted_at": "2026-05-12T05:52:52.654Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from a verified source event. It is not an official legal registry and does not assert legal force beyond the cited official source."
@@ -782,7 +782,7 @@
           "event_type": "instructions_issued",
           "summary": "2026-04-15 09:10:00 / Meetings On April 14, President Shavkat Mirziyoyev chaired a meeting to review progress, address existing challenges, and outline priority tasks in housing construction and urbanization. More than 500 industry representatives, including entrepreneurs, construction professionals, designers, architects, and urban plannersparticipated via regional studios. The Head of State emphasized that the construction sector plays a special role in achieving the ambitious goals set to ensure high economic growth across all sectors and regions. According to studies, each dollar invested in construction can generate an additional two to three dollars for the economy, while each job crea",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-11T10:31:41.303Z"
+          "extracted_at": "2026-05-12T05:52:52.654Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from a verified source event. It is not an official legal registry and does not assert legal force beyond the cited official source."
@@ -915,7 +915,7 @@
           "event_type": "financing_allocated",
           "summary": "2025-12-09 17:05:00 / Presentations President Shavkat Mirziyoyev reviewed a presentation on the effective organization of financing for cotton and grain cultivation, as well as a new subsidy system for the agriculture complex. The presentation began with an overview of the funds allocated to the sector this year and their effectiveness. It was noted that 29 trillion soums were allocated for financing cotton and grain cultivation, purchasing agricultural machinery, and implementing water-saving technologies. Furthermore, 2,35 trillion soums in subsidies were directed to the sector. Allocating subsidies equivalent to 10 percent of the cotton value to 3,430 farms and clusters enabled them to cu",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-11T10:31:41.303Z"
+          "extracted_at": "2026-05-12T05:52:52.654Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from a verified source event. It is not an official legal registry and does not assert legal force beyond the cited official source."
@@ -987,7 +987,7 @@
           "event_type": "amended",
           "summary": "Oʻzbekiston Respublikasi Iqtisodiyot va moliya vazirligi, Oʻzbekiston Respublikasi Urbanizatsiya va uy-joy bozorini barqaror rivojlantirish milliy qoʻmitasi huzuridagi Kadastr agentligi, Oʻzbekiston Respublikasi Soliq qoʻmitasining qarori, 06.05.2026 yilda ro‘yxatdan o‘tgan, ro‘yxat raqami 1868-2 Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-11T10:31:41.303Z"
+          "extracted_at": "2026-05-12T05:52:52.654Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
@@ -1059,7 +1059,7 @@
           "event_type": "amended",
           "summary": "Oʻzbekiston Respublikasi Iqtisodiyot va moliya vazirligi, Oʻzbekiston Respublikasi Soliq qoʻmitasining qarori, 08.05.2026 yilda ro‘yxatdan o‘tgan, ro‘yxat raqami 2185-3 Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-11T10:31:41.303Z"
+          "extracted_at": "2026-05-12T05:52:52.654Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
@@ -1179,7 +1179,7 @@
           "event_type": "amended",
           "summary": "Oʻzbekiston Respublikasi Markaziy banki boshqaruvi, Oʻzbekiston Respublikasi bosh prokuraturasi huzuridagi iqtisodiy jinoyatlarga qarshi kurashish departamentining qarori, 08.05.2026 yilda ro‘yxatdan o‘tgan, ro‘yxat raqami 2886-12 Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-11T10:31:41.303Z"
+          "extracted_at": "2026-05-12T05:52:52.654Z"
         },
         {
           "id": "source-event-2026-05-08-2925-10-08-05-2026-nobank-kredit-tashkilotlarida-jinoiy-faoliyatdan-o",
@@ -1191,7 +1191,7 @@
           "event_type": "amended",
           "summary": "Oʻzbekiston Respublikasi Markaziy banki boshqaruvi, Oʻzbekiston Respublikasi Bosh prokuraturasi huzuridagi iqtisodiy jinoyatlarga qarshi kurashish departamentining qarori, 08.05.2026 yilda ro‘yxatdan o‘tgan, ro‘yxat raqami 2925-10 Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-11T10:31:41.303Z"
+          "extracted_at": "2026-05-12T05:52:52.654Z"
         },
         {
           "id": "source-event-2026-05-08-3266-5-08-05-2026-to-lov-tizimlari-operatorlari-elektron-pullar-tizim",
@@ -1203,7 +1203,7 @@
           "event_type": "amended",
           "summary": "Oʻzbekiston Respublikasi Markaziy banki boshqaruvining, Oʻzbekiston Respublikasi Bosh prokuraturasi huzuridagi iqtisodiy jinoyatlarga qarshi kurashish departamentining qarori, 08.05.2026 yilda ro‘yxatdan o‘tgan, ro‘yxat raqami 3266-5 Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-11T10:31:41.303Z"
+          "extracted_at": "2026-05-12T05:52:52.654Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
@@ -1275,7 +1275,7 @@
           "event_type": "approved",
           "summary": "Oʻzbekiston Respublikasi kambagʻallikni qisqartirish va bandlik vazirining buyrugʻi, 07.05.2026 yilda ro‘yxatdan o‘tgan, ro‘yxat raqami 3832 Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-11T10:31:41.303Z"
+          "extracted_at": "2026-05-12T05:52:52.654Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
@@ -1347,7 +1347,7 @@
           "event_type": "approved",
           "summary": "Oʻzbekiston Respublikasi Korrupsiyaga qarshi kurashish agentligi, Oʻzbekiston Respublikasi Raqobatni rivojlantirish va isteʼmolchilar huquqlarini himoya qilish qoʻmitasining qarori, 08.05.2026 yilda ro‘yxatdan o‘tgan, ro‘yxat raqami 3833 Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-11T10:31:41.303Z"
+          "extracted_at": "2026-05-12T05:52:52.654Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
@@ -1468,7 +1468,7 @@
           "event_type": "instructions_issued",
           "summary": "Official web-site of the President of Uzbekistan Official pages in social networks President of the Republic of Uzbekistan Measures discussed to reduce bureaucracy and strengthen construction oversight President Shavkat Mirziyoyev reviewed a presentation on reducing bureaucracy and increasing the efficiency of oversight in the construction, housing, and communal services sectors. The large-scale work being carried out in the construction sector contributes to the development of modern housing, social facilities, and convenient infrastructure. At the same time, the facilities under construction must be safe, high-quality, and fully compliant with environmental and urban planning requirements.",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-11T10:31:41.303Z"
+          "extracted_at": "2026-05-12T05:52:52.654Z"
         },
         {
           "id": "source-event-2026-05-07-3356-1-07-05-2026-o-zbekiston-respublikasi-qurilish-vazirligi-huzurid",
@@ -1480,7 +1480,7 @@
           "event_type": "superseded",
           "summary": "Oʻzbekiston Respublikasi qurilish va uy-joy kommunal xoʻjaligi vazirining buyrugʻi, 06.05.2026 yilda ro‘yxatdan o‘tgan, ro‘yxat raqami 3356-1 Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-11T10:31:41.303Z"
+          "extracted_at": "2026-05-12T05:52:52.654Z"
         },
         {
           "id": "source-event-2026-05-07-3828-07-05-2026-o-zbekiston-respublikasi-vazirlar-mahkamasi-huzuridag",
@@ -1492,7 +1492,7 @@
           "event_type": "approved",
           "summary": "Oʻzbekiston Respublikasi Vazirlar Mahkamasi huzuridagi Qurilish va uy-joy kommunal xoʻjaligi sohasida nazorat qilish inspeksiyasi boshligʻining buyrugʻi, 06.05.2026 yilda ro‘yxatdan o‘tgan, ro‘yxat raqami 3828 Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-11T10:31:41.303Z"
+          "extracted_at": "2026-05-12T05:52:52.654Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
@@ -1564,7 +1564,7 @@
           "event_type": "instructions_issued",
           "summary": "Oʻzbekiston Respublikasi Prezidentining Farmoni, 06.05.2026 yildagi PF-78-son Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-11T10:31:41.303Z"
+          "extracted_at": "2026-05-12T05:52:52.654Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
@@ -1637,7 +1637,7 @@
           "event_type": "implementation_milestone",
           "summary": "Official web-site of the President of Uzbekistan Official pages in social networks President of the Republic of Uzbekistan President reviews measures to further develop public transport system President Shavkat Mirziyoyev reviewed measures for the further improvement of the public transport system in the regions and the acceleration of work in this area. In recent years, extensive efforts have been undertaken to provide the population with convenient, safe, and environmentally friendly public transport. In particular, over the past three years, 2,650 modern electric buses and buses have been delivered to the capital and regional centers. A total of 279 regular routes have been launched under",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-11T10:31:41.303Z"
+          "extracted_at": "2026-05-12T05:52:52.654Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
@@ -1711,7 +1711,7 @@
           "event_type": "financing_allocated",
           "summary": "Official detail page did not expose a separate summary in the configured extraction block.",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-11T10:31:41.303Z"
+          "extracted_at": "2026-05-12T05:52:52.654Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
