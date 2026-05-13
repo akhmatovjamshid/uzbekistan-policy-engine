@@ -154,6 +154,17 @@ describe('Knowledge Hub reform intake', () => {
     assert.ok(!decision.matched_exclude_rules.includes('training-or-outreach'))
   })
 
+  it('retains public-transport proposals even when official-page boilerplate contains security words', () => {
+    const decision = classifyReformCandidateText(
+      'Proposals to improve efficiency of Tashkent Metro reviewed. The President approved the proposed measures and issued instructions. Platform screen doors will be tested at Shahriston station. Project-estimate documents are planned for the Mingorik-Chilonzor Buyum Bozori metro line. Distance-based fare payment and 2027-2030 rolling-stock procurement proposals will be prepared. Official page navigation includes security and defense links.',
+    )
+
+    assert.equal(decision.included, true)
+    assert.equal(decision.reform_category, 'infrastructure_investment')
+    assert.ok(decision.matched_include_rules.includes('adopted-policy-measure'))
+    assert.ok(!decision.matched_exclude_rules.includes('security-defense-out-of-scope'))
+  })
+
   it('excludes quarterly achievement reports even when they mention implementation of resolutions', () => {
     const decision = classifyReformCandidateText(
       'Results of the First Quarter of 2026 in the Field of Accounting and Auditing: Key Activities and Achievements. The ministry reported work to ensure implementation of Resolution No. PQ-282 and summarized target indicators, seminars, and monitoring activities.',
@@ -315,8 +326,12 @@ describe('Knowledge Hub reform intake', () => {
     assert.equal(healthcarePackage.title, 'Healthcare quality, licensing, and private-sector participation reform')
     assert.equal(healthcarePackage.official_source_events[0].source_url_status, 'not_checked_fixture')
     assert.match(healthcarePackage.caveat, /Fixture\/demo/)
-    assert.match(healthcarePackage.short_summary, /licensing, accreditation, state-funded service eligibility/)
-    assert.ok(healthcarePackage.parameters_or_amounts.includes('200 billion soums preferential credit resources'))
+    assert.match(healthcarePackage.short_summary, /licensing, accreditation, state purchasing/)
+    assert.ok(
+      healthcarePackage.parameters_or_amounts.includes(
+        'Private healthcare projects may receive preferential loans up to 10 billion soums; total credit resources are 200 billion soums.',
+      ),
+    )
     assert.ok(healthcarePackage.policy_channels.includes('Healthcare licensing and accreditation'))
     assert.deepEqual(
       healthcarePackage.measure_tracks.map((track) => track.label),
@@ -364,8 +379,12 @@ describe('Knowledge Hub reform intake', () => {
     assert.equal(diagnostics.artifact.reform_packages[0].official_source_events[0].source_url_status, 'verified')
     assert.match(diagnostics.artifact.reform_packages[0].caveat, /assembled from a verified source event/)
     assert.equal(diagnostics.artifact.reform_packages[0].financing_or_incentive, '200 billion soums preferential credit resources; loans up to 10 billion soums')
-    assert.match(diagnostics.artifact.reform_packages[0].short_summary, /preferential credit/)
-    assert.ok(diagnostics.artifact.reform_packages[0].parameters_or_amounts.includes('Loans up to 10 billion soums for private healthcare participation'))
+    assert.match(diagnostics.artifact.reform_packages[0].short_summary, /private-clinic financing/)
+    assert.ok(
+      diagnostics.artifact.reform_packages[0].parameters_or_amounts.includes(
+        'Private healthcare projects may receive preferential loans up to 10 billion soums; total credit resources are 200 billion soums.',
+      ),
+    )
     assert.ok(diagnostics.artifact.reform_packages[0].policy_channels.includes('Preferential credit and PPP delivery'))
     assert.deepEqual(
       diagnostics.artifact.reform_packages[0].implementation_milestones.map((milestone) => milestone.date),
@@ -407,8 +426,8 @@ describe('Knowledge Hub reform intake', () => {
     assert.equal(packages.length, 2)
     assert.equal(packages[0].title, 'Urbanization, construction permits, and housing delivery reform')
     assert.equal(packages[0].next_milestone_date, '2026-07-01')
-    assert.match(packages[0].short_summary, /construction permitting/)
-    assert.ok(packages[0].parameters_or_amounts.includes('140,000 regional apartment commissioning target for 2026'))
+    assert.match(packages[0].short_summary, /permit and utility procedures/)
+    assert.ok(packages[0].parameters_or_amounts.includes('140,000 regional apartments are targeted for commissioning in 2026.'))
     assert.ok(packages[0].policy_channels.includes('Housing supply delivery'))
     assert.deepEqual(
       packages[0].implementation_milestones.map((milestone) => milestone.date),
@@ -417,8 +436,8 @@ describe('Knowledge Hub reform intake', () => {
     assert.equal(packages[1].title, 'Agriculture financing and subsidy delivery reform')
     assert.equal(packages[1].reform_category, 'agriculture')
     assert.equal(packages[1].financing_or_incentive.includes('34.2 trillion soums'), true)
-    assert.match(packages[1].short_summary, /Agroportal and Agrosubsidy/)
-    assert.ok(packages[1].parameters_or_amounts.includes('1.3 trillion soums of 2026 subsidies to be provided proactively'))
+    assert.match(packages[1].short_summary, /payment agency/)
+    assert.ok(packages[1].parameters_or_amounts.includes('1.3 trillion soums of 2026 subsidies will be provided proactively.'))
     assert.ok(packages[1].policy_channels.includes('Agricultural producer finance'))
     assert.deepEqual(
       packages[1].implementation_milestones.map((milestone) => milestone.date),
@@ -590,11 +609,15 @@ describe('Knowledge Hub reform intake', () => {
     assert.equal(packages[0].official_source_events[0].source_url_status, 'verified')
     assert.equal(packages[0].next_milestone, 'No future milestone published in verified source')
     assert.equal(packages[0].next_milestone_date, '2026-05-05')
-    assert.match(packages[0].short_summary, /tax incentives for investors financing infrastructure projects/)
-    assert.ok(packages[0].parameters_or_amounts.includes('Tax incentives for investors financing infrastructure projects'))
-    assert.ok(packages[0].parameters_or_amounts.includes('Infrastructure investor incentive measure recorded'))
+    assert.match(packages[0].short_summary, /Infrastructure investors receive tax incentives/)
+    assert.ok(packages[0].parameters_or_amounts.includes('Tax incentives apply to investors financing infrastructure projects.'))
+    assert.ok(
+      packages[0].parameters_or_amounts.includes(
+        'Fiscal incentive treatment applies to qualifying infrastructure-investment financing.',
+      ),
+    )
     assert.ok(packages[0].policy_channels.includes('Fiscal incentives'))
-    assert.equal(packages[0].measure_tracks[0].label, 'tax incentives for infrastructure investors')
+    assert.equal(packages[0].measure_tracks[0].label, 'Tax incentives apply to infrastructure investors')
     assert.equal(packages[0].implementation_milestones.length, 1)
     assert.equal(packages[0].implementation_milestones[0].label, 'tax incentive source event recorded')
     assert.equal(packages[0].implementation_milestones[0].source_event_ids[0], packages[0].official_source_events[0].id)
@@ -633,7 +656,7 @@ describe('Knowledge Hub reform intake', () => {
     assert.equal(packages[0].title, 'Risk-based customs clearance and electronic declaration reform')
     assert.equal(packages[0].official_source_events.length, 2)
     assert.equal(packages[0].implementation_milestones.length, 2)
-    assert.equal(packages[0].current_stage, 'Multiple related official measures')
+    assert.equal(packages[0].current_stage, 'Multiple changes published')
   })
 
   it('groups parallel AML/CFT financial-sector legal updates into one package', () => {
@@ -674,7 +697,7 @@ describe('Knowledge Hub reform intake', () => {
     assert.equal(packages[0].reform_category, 'financial_sector')
     assert.equal(packages[0].official_source_events.length, 3)
     assert.equal(packages[0].implementation_milestones.length, 3)
-    assert.ok(packages[0].short_summary.includes('banks, nonbank credit organizations, payment-system operators'))
+    assert.ok(packages[0].short_summary.includes('banks, nonbank lenders, payments'))
     assert.ok(!packages[0].title.includes('Energy'))
   })
 
@@ -718,8 +741,12 @@ describe('Knowledge Hub reform intake', () => {
     assert.equal(packages.length, 1)
     assert.equal(packages[0].title, 'Construction oversight and technical inspection pricing reform')
     assert.equal(packages[0].official_source_events.length, 3)
-    assert.equal(packages[0].current_stage, 'Multiple related official measures')
-    assert.ok(packages[0].parameters_or_amounts.includes('Technical condition and laboratory-work price calculation regulation approved'))
+    assert.equal(packages[0].current_stage, 'Multiple changes published')
+    assert.ok(
+      packages[0].parameters_or_amounts.includes(
+        'Technical condition review and laboratory-work price calculation regulation is approved.',
+      ),
+    )
   })
 
   it('does not publish vague omnibus legal amendments as reform packages without a specific policy subject', () => {

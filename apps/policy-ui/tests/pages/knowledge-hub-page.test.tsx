@@ -117,18 +117,16 @@ describe('Knowledge Hub page', () => {
     )
   })
 
-  it('renders a CorpInfo-style latest-changes digest with the required labels', () => {
+  it('renders a CorpInfo-style latest-changes digest as compact change bullets', () => {
     const contentViewSource = readFileSync(KNOWLEDGE_HUB_CONTENT_VIEW_SOURCE, 'utf8')
 
     assert.match(contentViewSource, /LatestChangesSection/)
     assert.match(contentViewSource, /latestPackages = packages\.slice\(0, 3\)/)
-    assert.match(contentViewSource, /latestChanges\.changed/)
-    assert.match(contentViewSource, /latestChanges\.appliesTo/)
-    assert.match(contentViewSource, /latestChanges\.effectiveStatus/)
-    assert.match(contentViewSource, /latestChanges\.document/)
+    assert.match(contentViewSource, /latestChangeBullets\(reformPackage, t\)/)
+    assert.match(contentViewSource, /className="change-bullet-list"/)
+    assert.match(contentViewSource, /className="latest-change-card__summary"/)
+    assert.match(contentViewSource, /className="latest-change-source"/)
     assert.match(contentViewSource, /digestChangeText\(reformPackage, t\)/)
-    assert.match(contentViewSource, /reformPackage\.digest\?\.applies_to/)
-    assert.match(contentViewSource, /reformPackage\.digest\?\.effective_status/)
     assert.match(contentViewSource, /reformPackage\.digest\?\.document/)
     assert.doesNotMatch(contentViewSource, /const firstMeasure = parameterList\(reformPackage, t\)\[0\]/)
   })
@@ -139,7 +137,7 @@ describe('Knowledge Hub page', () => {
     const sorted = sortReformPackagesNewestFirst(artifact.reform_packages)
     const sortedDates = sorted.map((reformPackage) => reformPackage.current_stage_date)
 
-    assert.equal(sorted[0].current_stage_date, '2026-05-12')
+    assert.equal(sorted[0].current_stage_date, '2026-05-13')
     assert.equal(sorted.at(-1)?.current_stage_date, '2025-12-09')
     assert.equal(datesNewestFirst(sortedDates), true)
     assert.match(contentViewSource, /sortReformPackagesNewestFirst\(packages\)/)
@@ -221,9 +219,9 @@ describe('Knowledge Hub page', () => {
       </I18nextProvider>,
     )
 
-    assert.match(visibleCopy, /Licensing procedures change from 2026-07-01/)
-    assert.match(visibleCopy, /Tax incentives apply to infrastructure investors/)
-    assert.match(visibleCopy, /Funding envelope set at 34\.2 trillion soums/)
+    assert.match(visibleCopy, /From 2026-07-01, medical licensing procedures change/)
+    assert.match(visibleCopy, /Platform screen doors will be tested at Shahriston metro station/)
+    assert.match(visibleCopy, /34\.2 trillion soums are planned for cotton and grain harvest financing/)
     assert.ok(
       artifact.reform_packages.every((reformPackage: { short_summary?: string }) =>
         (reformPackage.short_summary ?? '').split(/(?<=[.!?])\s+/).filter(Boolean).length <= 1,

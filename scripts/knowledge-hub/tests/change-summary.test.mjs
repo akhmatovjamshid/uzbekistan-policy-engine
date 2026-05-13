@@ -243,9 +243,9 @@ describe('Knowledge Hub change summary', () => {
     const artifact = JSON.parse(readFileSync(PUBLIC_KNOWLEDGE_HUB_ARTIFACT, 'utf8'))
     const visibleCopy = artifact.reform_packages.map(collectVisibleReformSummaryCopy).join('\n')
 
-    assert.match(visibleCopy, /Licensing procedures change from 2026-07-01/)
-    assert.match(visibleCopy, /Tax incentives apply to infrastructure investors/)
-    assert.match(visibleCopy, /Funding envelope set at 34\.2 trillion soums/)
+    assert.match(visibleCopy, /From 2026-07-01, medical licensing procedures change/)
+    assert.match(visibleCopy, /Platform screen doors will be tested at Shahriston metro station/)
+    assert.match(visibleCopy, /34\.2 trillion soums are planned for cotton and grain harvest financing/)
     assert.ok(
       artifact.reform_packages.every(
         (reformPackage) => (reformPackage.short_summary ?? '').split(/(?<=[.!?])\s+/).filter(Boolean).length <= 1,

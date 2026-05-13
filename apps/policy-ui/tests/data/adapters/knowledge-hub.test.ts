@@ -220,9 +220,18 @@ describe('knowledge hub adapter', () => {
     assert.ok(content.reform_packages?.every((reformPackage) => reformPackage.digest.applies_to.length > 0))
     assert.ok(content.reform_packages?.every((reformPackage) => reformPackage.digest.effective_status.length > 0))
     assert.ok(content.reform_packages?.every((reformPackage) => reformPackage.digest.document.length > 0))
-    assert.ok(content.reform_packages?.every((reformPackage) => reformPackage.short_summary && reformPackage.short_summary.length > 60))
+    assert.ok(content.reform_packages?.every((reformPackage) => reformPackage.short_summary && reformPackage.short_summary.length >= 45))
     assert.ok(content.reform_packages?.every((reformPackage) => (reformPackage.parameters_or_amounts?.length ?? 0) > 0))
     assert.ok(content.reform_packages?.every((reformPackage) => (reformPackage.policy_channels?.length ?? 0) > 0))
+    assert.ok(
+      content.reform_packages?.some(
+        (reformPackage) =>
+          reformPackage.package_id === 'pkg-public-transport-system-2026-05-13' &&
+          reformPackage.parameters_or_amounts?.some((value) =>
+            value.includes('Mingorik-Chilonzor Buyum Bozori metro line'),
+          ),
+      ),
+    )
     assert.ok(
       content.reform_packages?.some(
         (reformPackage) =>

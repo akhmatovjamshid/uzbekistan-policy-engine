@@ -768,11 +768,12 @@ function knowledgeHubTrackerExpression() {
       const metrics = document.querySelector('.knowledge-hub-page .tracker-summary');
       const latestChanges = document.querySelector('.knowledge-hub-page .latest-changes');
       const latestCards = Array.from(document.querySelectorAll('.knowledge-hub-page .latest-change-card'));
-      const changeDigest = document.querySelector('.knowledge-hub-page .change-digest');
-      const digestTermCount = latestCards.reduce(
-        (count, card) => count + card.querySelectorAll('.change-digest dt').length,
+      const changeBulletList = document.querySelector('.knowledge-hub-page .change-bullet-list');
+      const bulletCount = latestCards.reduce(
+        (count, card) => count + card.querySelectorAll('.change-bullet-list li').length,
         0,
       );
+      const compactSummaries = latestCards.every((card) => !!card.querySelector('.latest-change-card__summary'));
       const searchInput = document.querySelector('.knowledge-hub-page .tracker-controls input[type="search"]');
       const archiveItems = Array.from(document.querySelectorAll('.knowledge-hub-page .reform-archive .archive-item'));
       const modelActive = document.querySelector('.knowledge-hub-page .model-chip--active');
@@ -821,8 +822,9 @@ function knowledgeHubTrackerExpression() {
           !!metrics &&
           !!latestChanges &&
           latestCards.length >= 3 &&
-          !!changeDigest &&
-          digestTermCount >= 12 &&
+          !!changeBulletList &&
+          bulletCount >= 9 &&
+          compactSummaries &&
           !!searchInput &&
           archiveItems.length > 0 &&
           !!modelActive &&
@@ -836,8 +838,9 @@ function knowledgeHubTrackerExpression() {
         hasMetrics: !!metrics,
         hasLatestChanges: !!latestChanges,
         latestChangeCount: latestCards.length,
-        hasChangeDigest: !!changeDigest,
-        digestTermCount,
+        hasChangeBulletList: !!changeBulletList,
+        bulletCount,
+        compactSummaries,
         hasSearchInput: !!searchInput,
         archiveItemCount: archiveItems.length,
         hasActiveModelLens: !!modelActive,

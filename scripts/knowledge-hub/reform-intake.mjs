@@ -167,14 +167,12 @@ export const REFORM_CATEGORIES = [
 
 const HEALTHCARE_PACKAGE_DEPTH = {
   short_summary:
-    'Tracks a presidential instruction package for healthcare licensing, accreditation, state-funded service eligibility, private-sector participation, preferential credit, and medical PPP delivery. The dated milestones are treated as implementation commitments from the cited source, not as an independently verified legal registry.',
+    'Healthcare package changes licensing, accreditation, state purchasing, private-clinic financing, and medical PPP delivery.',
   parameters_or_amounts: [
-    '200 billion soums preferential credit resources',
-    'Loans up to 10 billion soums for private healthcare participation',
-    'Revised licensing procedures from 2026-07-01',
-    'Republican medical institution licensing deadline on 2027-04-01',
-    'Insurance Fund purchasing from accredited organizations from 2028',
-    'District/city medical association licensing target by 2030-12-31',
+    'From 2026-07-01, medical licensing procedures change.',
+    'Private healthcare projects may receive preferential loans up to 10 billion soums; total credit resources are 200 billion soums.',
+    'Republican medical institutions must complete licensing by 2027-04-01; district and city medical associations by 2030-12-31.',
+    'From 2028, Insurance Fund purchases move to accredited medical organizations.',
   ],
   policy_channels: [
     'Public health service purchasing',
@@ -186,13 +184,12 @@ const HEALTHCARE_PACKAGE_DEPTH = {
 
 const HOUSING_URBANIZATION_PACKAGE_DEPTH = {
   short_summary:
-    'Tracks a presidential instruction package on urbanization, construction permitting, utility connection simplification, land-privatization processing, state-client KPIs, and regional housing delivery. The tracker separates dated implementation steps from the broader policy narrative in the source.',
+    'Construction and housing package cuts permit and utility procedures and sets 2026 housing and infrastructure targets.',
   parameters_or_amounts: [
-    'Single application and single payment for utility specifications from 2026-07-01',
-    'Draft resolution to reduce requirements, timelines, and payments by at least half',
-    '140,000 regional apartment commissioning target for 2026',
-    '1.4 trillion soums planned infrastructure support for Yangi Uzbekistan residential areas',
-    'State client KPI evaluation from 2026-06-01',
+    'From 2026-07-01, utility technical specifications move to one application and one payment.',
+    'Construction-permit requirements, timelines, and payments are to be cut by at least 50 percent.',
+    '140,000 regional apartments are targeted for commissioning in 2026.',
+    '1.4 trillion soums are planned for Yangi Uzbekistan residential infrastructure; state-client KPI evaluation starts 2026-06-01.',
   ],
   policy_channels: [
     'Construction permitting',
@@ -204,13 +201,12 @@ const HOUSING_URBANIZATION_PACKAGE_DEPTH = {
 
 const AGRICULTURE_SUBSIDY_PACKAGE_DEPTH = {
   short_summary:
-    'Tracks an agriculture support package covering harvest financing, proactive subsidy delivery, the Agricultural Payments Agency, and digital subsidy administration through Agroportal and Agrosubsidy. Amounts are shown as source-reported envelopes, not as disbursement verification.',
+    'Agriculture financing package creates a payment agency and moves subsidy delivery to digital channels.',
   parameters_or_amounts: [
-    '34.2 trillion soums planned for cotton and grain harvest financing',
-    '1.3 trillion soums of 2026 subsidies to be provided proactively',
-    'Additional 5 trillion soums proposed for agrotechnical measures',
-    'Agricultural Payments Agency implementation',
-    'Digital subsidy workflow through Agroportal and Agrosubsidy',
+    'Agricultural Payments Agency is established to administer subsidies and payments.',
+    '34.2 trillion soums are planned for cotton and grain harvest financing.',
+    '1.3 trillion soums of 2026 subsidies will be provided proactively.',
+    'An additional 5 trillion soums is proposed for agrotechnical measures; subsidy delivery moves through Agroportal and Agrosubsidy.',
   ],
   policy_channels: [
     'Agricultural producer finance',
@@ -1056,6 +1052,7 @@ function classifyDomain(text) {
   if (/(borish qiyin|togʻli hududlar|tog'li hududlar|remote settlement|mountain settlement)/.test(normalized)) return 'social_protection'
   if (/(construction oversight|qurilish.*nazorat|technical inspection|instrumental texnik|sinov-laboratoriya|narxlarini hisoblash)/.test(normalized)) return 'infrastructure_investment'
   if (/(housing|construction|urbanization|urban planning|master plan|land privatization|technical specifications|utility networks|qurilish|uy-joy|kadastr|shaharsozlik)/.test(normalized)) return 'infrastructure_investment'
+  if (/(metro|metropolitan|public transport|rolling stock|fare payment|distance-based fare|bus routes?|transport system|harakat tarkibi|jamoat transporti)/.test(normalized)) return 'infrastructure_investment'
   if (/(energy|gas|tariff adjustment|elektr|energiya|gaz|tarif)/.test(normalized)) return 'energy_tariffs'
   if (/(healthcare|medical|clinic|clinics|health insurance|insurance fund|state-funded medical|sogʻliqni saqlash|sog'liqni saqlash|tibbiy)/.test(normalized)) return 'social_protection'
   if (/(privatization|state-owned|soe|xususiylashtirish|davlat aktiv)/.test(normalized)) return 'soe_privatization'
@@ -1070,6 +1067,12 @@ function classifyDomain(text) {
   return 'other_policy'
 }
 
+function isPublicTransportReformText(text) {
+  return /\b(metro|metropolitan|public transport|rolling stock|fare payment|distance-based fare|platform screen doors?|bus routes?|transport system|toshkent metropoliteni)\b/i.test(
+    text,
+  )
+}
+
 function uniqueStrings(values) {
   return Array.from(new Set(values))
 }
@@ -1080,7 +1083,9 @@ function matchedRules(definitions, text) {
 
 export function classifyReformCandidateText(text) {
   const includeRules = matchedRules(INCLUDE_RULE_DEFINITIONS, text)
-  const excludeRules = matchedRules(EXCLUDE_RULE_DEFINITIONS, text)
+  const excludeRules = matchedRules(EXCLUDE_RULE_DEFINITIONS, text).filter(
+    (rule) => !(rule.reason === 'security_defense_out_of_scope' && isPublicTransportReformText(text)),
+  )
   const actualReformSignals = matchedRules(ACTUAL_REFORM_SIGNAL_DEFINITIONS, text)
   const nonOverridableExcludeRule = excludeRules.find((rule) => rule.overridable_by_policy_measure !== true)
   const hasPolicyMeasure = includeRules.length > 0 && actualReformSignals.length > 0
@@ -1907,6 +1912,15 @@ const PACKAGE_TOPIC_DEFINITIONS = [
     patterns: [/\b(lalmi|yaylov|pasture|dryland|yer uchastkalarini foydalanishga kiritish|rag.?batlantirishning yangi mexanizmlari)\b/i],
   },
   {
+    id: 'food-safety-veterinary-agrologistics',
+    title: 'Food safety, veterinary, and agrologistics reform',
+    policy_area: 'Food safety, veterinary services, agrologistics, and agricultural exports',
+    reform_category: 'agriculture',
+    patterns: [
+      /\b(food safety|food security|veterinary|livestock|pasture|phytosanitary|agrologistics|agroko.?makchi|field diary|pests?|fruit and vegetable exports?)\b/i,
+    ],
+  },
+  {
     id: 'customs-clearance-digitalization',
     title: 'Risk-based customs clearance and electronic declaration reform',
     policy_area: 'Trade facilitation and customs digitalization',
@@ -1918,7 +1932,7 @@ const PACKAGE_TOPIC_DEFINITIONS = [
     title: 'Public transport service and financing reform',
     policy_area: 'Public transport routes, fleet renewal, fare systems, and service delivery',
     reform_category: 'infrastructure_investment',
-    patterns: [/\b(public transport|bus routes?|electric buses|transport system|fare payment|transport service)\b/i],
+    patterns: [/\b(public transport|metro|metropolitan|bus routes?|electric buses|rolling stock|distance-based fare|transport system|fare payment|transport service)\b/i],
   },
   {
     id: 'tax-administration-incentives',
@@ -2054,11 +2068,10 @@ function topicPackageEnrichment(topic, sortedCandidates, sourceEvents) {
     if (!/\bincentives?\b/i.test(groupText) || !/\binfrastructure projects?\b/i.test(groupText)) return {}
 
     return {
-      short_summary:
-        'Records tax incentives for investors financing infrastructure projects. The dossier is kept as a fiscal incentive reform and does not infer implementation effects beyond the cited document.',
+      short_summary: 'Infrastructure investors receive tax incentives.',
       parameters_or_amounts: [
-        'Tax incentives for investors financing infrastructure projects',
-        'Infrastructure investor incentive measure recorded',
+        'Tax incentives apply to investors financing infrastructure projects.',
+        'Fiscal incentive treatment applies to qualifying infrastructure-investment financing.',
       ],
       policy_channels: [
         'Fiscal incentives',
@@ -2069,7 +2082,7 @@ function topicPackageEnrichment(topic, sortedCandidates, sourceEvents) {
       financing_or_incentive: 'Tax incentives for investors financing infrastructure projects',
       why_tracked:
         'The verified official source records a fiscal incentive measure for investors financing infrastructure projects. It is tracked as an incentive package while avoiding any inferred implementation deadline not present in the source.',
-      measure_label: 'tax incentives for infrastructure investors',
+      measure_label: 'Tax incentives apply to infrastructure investors',
       milestone_label: 'tax incentive source event recorded',
     }
   }
@@ -2077,11 +2090,11 @@ function topicPackageEnrichment(topic, sortedCandidates, sourceEvents) {
   if (topic?.id === 'aml-cft-financial-control') {
     return {
       short_summary:
-        'Consolidates related legal updates to AML/CFT internal-control rules across banks, nonbank credit organizations, payment-system operators, e-money operators, and payment organizations. The package is kept as one financial-sector compliance dossier because the source events update parallel control-rule frameworks on the same date.',
+        'AML/CFT internal-control rules change across banks, nonbank lenders, payments, and e-money institutions.',
       parameters_or_amounts: [
-        'Commercial bank AML/CFT internal-control rules amended',
-        'Nonbank credit organization AML/CFT internal-control rules amended',
-        'Payment-system, e-money, and payment-organization AML/CFT internal-control rules amended',
+        'Commercial-bank AML/CFT internal-control rules are amended.',
+        'Nonbank credit-organization AML/CFT internal-control rules are amended.',
+        'Payment-system, e-money, and payment-organization AML/CFT rules are amended.',
       ],
       policy_channels: [
         'Financial integrity supervision',
@@ -2092,18 +2105,18 @@ function topicPackageEnrichment(topic, sortedCandidates, sourceEvents) {
       model_relevance: ['Financial stability', 'Credit conditions', 'Compliance costs'],
       why_tracked:
         'The source events amend binding internal-control rules for financial institutions and payment providers. They are grouped to avoid presenting parallel AML/CFT legal updates as separate reforms.',
-      measure_label: 'AML/CFT internal-control rule amendments',
+      measure_label: 'AML/CFT internal-control rules were amended',
     }
   }
 
   if (topic?.id === 'construction-oversight-inspection-pricing') {
     return {
       short_summary:
-        'Groups verified construction-oversight measures covering reduced bureaucracy, stronger supervision, and technical inspection or laboratory-work pricing rules. The package separates this oversight dossier from the broader housing and urbanization package.',
+        'Construction oversight and technical-inspection pricing rules are approved.',
       parameters_or_amounts: [
-        'Construction oversight and bureaucracy-reduction measures recorded',
-        'Technical condition and laboratory-work price calculation regulation approved',
-        'Prior instrumental technical inspection pricing order superseded where cited by source event',
+        'Technical condition review and laboratory-work price calculation regulation is approved.',
+        'Construction oversight and bureaucracy-reduction measures are grouped under the construction reform package.',
+        'The previous technical-inspection pricing order is superseded where cited by the source.',
       ],
       policy_channels: [
         'Construction inspection oversight',
@@ -2114,99 +2127,121 @@ function topicPackageEnrichment(topic, sortedCandidates, sourceEvents) {
       model_relevance: ['Construction output', 'Investment', 'Public administration'],
       why_tracked:
         'The official sources identify related construction oversight and inspection-pricing measures. Grouping them prevents a repealed pricing order, a new pricing regulation, and presidential oversight instructions from appearing as unrelated dossiers.',
-      measure_label: 'construction oversight and inspection-pricing measure',
+      measure_label: 'Construction oversight and inspection-pricing rules were approved',
     }
   }
 
   const enrichments = {
     'remote-mountain-settlement-classification': {
       short_summary:
-        'Records a legal update to the rules for classifying settlements as hard-to-reach or mountainous areas. The dossier is narrow and relevant for regional eligibility, service delivery, and targeted public support.',
+        'Settlement classification rules change for hard-to-reach and mountainous areas.',
       parameters_or_amounts: [
-        'Amendment to the settlement classification instruction preamble',
-        'Regional eligibility classification rule updated',
+        'The preamble to the settlement classification instruction is amended.',
+        'Regional eligibility classification rules are updated for hard-to-reach and mountainous areas.',
       ],
       policy_channels: ['Regional classification', 'Targeted public support', 'Service-delivery eligibility'],
       model_relevance: ['Public spending', 'Regional development', 'Household access'],
-      measure_label: 'settlement classification rule amendment',
+      measure_label: 'Settlement classification rules were amended',
     },
     'market-fee-rent-collection': {
       short_summary:
-        'Records amendments to fee, rent, and service-payment collection rules for markets, trade complexes, and their branches. The package is treated as market-administration and fiscal-compliance regulation, not international trade reform.',
+        'Market fee, rent, and service-payment collection rules are amended.',
       parameters_or_amounts: [
-        'One-time fee, rent, and service-payment collection rules amended',
-        'Market administration payment collection procedure updated',
+        'One-time fee, rent, and service-payment collection rules are amended.',
+        'Payment collection procedures are updated for markets, trade complexes, and their branches.',
       ],
       policy_channels: ['Market fee administration', 'Rent and service-payment collection', 'Fiscal compliance'],
       model_relevance: ['Business costs', 'Fiscal administration', 'Market services'],
-      measure_label: 'market fee and rent collection amendments',
+      measure_label: 'Market fee, rent, and service-payment collection rules were amended',
     },
     'employment-fund-subsidy-loans': {
       short_summary:
-        'Records approval of rules for allocating subsidies and loans from the State Employment Assistance Fund. The dossier is relevant for active labor-market support and public financing of employment measures.',
+        'Rules are approved for subsidies and loans from the State Employment Assistance Fund.',
       parameters_or_amounts: [
-        'Subsidy and loan allocation regulation approved',
-        'State Employment Assistance Fund resources identified as the funding source',
-        'Employment support financing procedure updated',
+        'Subsidy and loan allocation regulation is approved.',
+        'State Employment Assistance Fund resources are identified as the funding source.',
+        'Employment-support financing procedures are updated.',
       ],
       policy_channels: ['Employment support subsidies', 'Labor-market financing', 'Public fund administration'],
       model_relevance: ['Employment', 'Public spending', 'Labor supply'],
-      measure_label: 'employment fund subsidy and loan rules',
+      measure_label: 'Rules were approved for Employment Fund subsidies and loans',
     },
     'pasture-dryland-use-incentives': {
       short_summary:
-        'Records measures introducing new mechanisms to encourage dryland and pasture land plots to be brought into use. The dossier is treated as an agriculture land-use incentive reform, not a generic implementation update.',
+        'New incentives are introduced to bring dryland and pasture plots into use.',
       parameters_or_amounts: [
-        'New incentive mechanisms for dryland and pasture land use introduced',
-        'Agricultural land activation measure recorded',
+        'New incentive mechanisms apply to dryland and pasture land activation.',
+        'Agricultural land-use activation rules are introduced.',
       ],
       policy_channels: ['Agricultural land use', 'Rural production incentives', 'Pasture and dryland activation'],
       model_relevance: ['Agricultural output', 'Rural investment', 'Land productivity'],
-      measure_label: 'dryland and pasture land-use incentives',
+      measure_label: 'Incentives apply to dryland and pasture land activation',
     },
     'agriculture-subsidy-financing': {
       short_summary:
-        'Records agriculture financing and subsidy delivery measures, including cotton and grain producer support where cited by the official document. The dossier is treated as an agriculture finance reform rather than a generic implementation item.',
+        'Cotton and grain producer financing support rules are amended.',
       parameters_or_amounts: [
-        'Cotton and grain producer financial support measures recorded',
-        'Agriculture financing and subsidy delivery measure recorded',
+        'Cotton and grain producer financial-support rules are amended.',
+        'Agriculture financing and subsidy delivery procedures are updated.',
       ],
       policy_channels: ['Agricultural producer finance', 'Subsidy delivery', 'Rural liquidity'],
       model_relevance: ['Agricultural output', 'Food prices', 'Rural income'],
-      measure_label: 'agriculture producer financial support',
+      measure_label: 'Cotton and grain producer financial support rules were amended',
+    },
+    'food-safety-veterinary-agrologistics': {
+      short_summary:
+        'Food-safety, veterinary, export-logistics, livestock, and digital field-control measures are set out.',
+      parameters_or_amounts: [
+        'From 2027, six state functions are to be transferred gradually to the private sector, including laboratory tests, animal vaccination, disinfection, and identification.',
+        'By 2027-03-01, a unified food-safety information system is to launch and integrate with the border-control single window.',
+        'From 2029-01-01, fruit and vegetable exports are to move through agrologistics centers.',
+        'Food-industry enterprises are to move toward HACCP and Codex Alimentarius standards; full transition is targeted by 2032.',
+        'Agroko‘makchi gets an electronic Field Diary, and AI tools will forecast pests and advise farmers.',
+      ],
+      policy_channels: [
+        'Food-safety administration',
+        'Veterinary and livestock services',
+        'Agrologistics and export controls',
+        'Digital field monitoring',
+      ],
+      model_relevance: ['Agricultural output', 'Food prices', 'Export logistics'],
+      why_tracked:
+        'The official source sets dated food-safety, veterinary, export-logistics, and digital agriculture measures.',
+      measure_label: 'Food-safety and agrologistics measures were set out',
     },
     'customs-clearance-digitalization': {
       short_summary:
-        'Records official customs and trade-facilitation measures affecting clearance, declarations, or border processes. The dossier is relevant for trade-cost and sector-exposure analysis.',
+        'Customs clearance, declaration, and border-process measures are updated.',
       parameters_or_amounts: [
-        'Customs and trade-facilitation measure recorded',
-        'Clearance or declaration process update identified',
+        'Customs and trade-facilitation procedures are updated.',
+        'Clearance and declaration processes are updated.',
       ],
       policy_channels: ['Customs clearance', 'Trade facilitation', 'Import and export transaction costs'],
       model_relevance: ['Trade flows', 'Import costs', 'Sector linkages'],
-      measure_label: 'customs and trade-facilitation measure',
+      measure_label: 'Customs and trade-facilitation procedures were updated',
     },
     'public-services-digital-legal': {
       short_summary:
-        'Records measures to reduce bureaucracy or update digital public service and legal-service processes. The dossier is relevant for administrative burden and public-service delivery.',
+        'Public-service and legal-service procedures are simplified.',
       parameters_or_amounts: [
-        'Digital public service or legal-process measure recorded',
-        'Administrative burden reduction channel identified',
+        'Digital public-service procedures are updated.',
+        'Legal-service processes are simplified.',
+        'Administrative burden reduction is the stated channel.',
       ],
       policy_channels: ['Public service delivery', 'Administrative burden', 'Digital public administration'],
       model_relevance: ['Public administration', 'Transaction costs', 'Productivity'],
-      measure_label: 'digital public service process measure',
+      measure_label: 'Digital public-service procedures were updated',
     },
     'large-investment-integrity-competition-review': {
       short_summary:
-        'Records approval of procedures for anti-corruption review of large investment projects and assessment of their impact on the competitive environment. The package is a business-climate and competition-policy dossier rather than a generic investment headline.',
+        'Large investment projects get anti-corruption review and competition-impact assessment procedures.',
       parameters_or_amounts: [
-        'Anti-corruption expert review procedure for large investment projects approved',
-        'Competition-environment impact assessment procedure approved',
+        'Anti-corruption expert review procedure for large investment projects is approved.',
+        'Competition-environment impact assessment procedure is approved.',
       ],
       policy_channels: ['Investment project appraisal', 'Anti-corruption screening', 'Competition impact assessment'],
       model_relevance: ['Private investment', 'Market structure', 'Governance quality'],
-      measure_label: 'investment integrity and competition review procedure',
+      measure_label: 'Investment integrity and competition review procedures were approved',
     },
     'insolvency-framework': {
       short_summary:
@@ -2221,15 +2256,17 @@ function topicPackageEnrichment(topic, sortedCandidates, sourceEvents) {
     },
     'public-transport-system': {
       short_summary:
-        'Records official measures to develop regional public transport, including route coverage, fleet renewal, fare-payment systems, and service delivery.',
+        'Public-transport proposals cover a new metro line, fare-payment changes, and 2027-2030 rolling-stock needs.',
       parameters_or_amounts: [
-        'Public transport development measures reviewed',
-        'Source-reported recent fleet renewal and route-launch evidence retained in source event',
-        'Urban and regional mobility service measure recorded',
+        'Platform screen doors will be tested at Shahriston metro station.',
+        'Project-estimate documents are planned for the Mingorik-Chilonzor Buyum Bozori metro line.',
+        'Construction options are to be studied in two stages: Mingorik-South Station, then South Station-Chilonzor Buyum Bozori.',
+        'Distance-based fares, social-category benefits, and daily, weekly, and monthly passes are to be studied.',
+        'Rolling-stock procurement proposals for 2027-2030 are to be prepared.',
       ],
       policy_channels: ['Public transport routes', 'Fleet renewal', 'Fare and payment systems', 'Urban and regional mobility'],
       model_relevance: ['Public investment', 'Household transport access', 'Urban productivity'],
-      measure_label: 'public transport development measures',
+      measure_label: 'Public transport development measures were updated',
     },
   }
 
@@ -2305,13 +2342,20 @@ function milestoneLabelForSourceEvent(event, topic, enrichment) {
 }
 
 function currentStageForSourceEvents(sourceEvents) {
-  if (sourceEvents.length > 1) return 'Multiple related official measures'
+  if (sourceEvents.length > 1) {
+    const eventTypes = new Set(sourceEvents.map((event) => event.event_type))
+    if (eventTypes.size === 1 && eventTypes.has('amended')) return 'Rules amended'
+    if (eventTypes.size === 1 && eventTypes.has('financing_allocated')) return 'Incentive published'
+    if (eventTypes.size === 1 && eventTypes.has('instructions_issued')) return 'Instructions issued'
+    return 'Multiple changes published'
+  }
   const eventType = sourceEvents[0]?.event_type
   if (eventType === 'approved') return 'Regulation approved'
   if (eventType === 'amended') return 'Rules amended'
   if (eventType === 'superseded') return 'Previous rule superseded'
-  if (eventType === 'implementation_milestone') return 'Implementation measure recorded'
-  if (eventType === 'financing_allocated') return 'Financing or incentive measure recorded'
+  if (eventType === 'instructions_issued') return 'Instructions issued'
+  if (eventType === 'implementation_milestone') return 'Implementation started'
+  if (eventType === 'financing_allocated') return 'Incentive published'
   return 'Verified official measure'
 }
 
@@ -2407,10 +2451,11 @@ function cleanPublicDigestText(value) {
 }
 
 function publicDigestChanged(reformPackage) {
+  const parameter = reformPackage.parameters_or_amounts?.find((value) => cleanPublicDigestText(value).length > 0)
   const measure = reformPackage.measure_tracks.find((track) => track.label)?.label
   const financing = reformPackage.financing_or_incentive
   const summary = reformPackage.short_summary ?? reformPackage.why_tracked
-  return cleanPublicDigestText(measure ?? financing ?? summary)
+  return cleanPublicDigestText(parameter ?? measure ?? financing ?? summary)
 }
 
 function publicDigestEffectiveStatus(reformPackage) {

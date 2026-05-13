@@ -210,6 +210,12 @@ function digestChangeText(reformPackage: ReformPackage, t: TFunction): string {
   return reformPackage.digest?.changed ?? parameterList(reformPackage, t)[0] ?? dossierSummary(reformPackage)
 }
 
+function latestChangeBullets(reformPackage: ReformPackage, t: TFunction): string[] {
+  const primaryChange = digestChangeText(reformPackage, t)
+  const bullets = parameterList(reformPackage, t).filter((value) => value !== primaryChange)
+  return compactUniqueList([primaryChange, ...bullets]).slice(0, 4)
+}
+
 function isAmountThresholdOrDeadline(value: string): boolean {
   return /\b(\d+(?:[.,]\d+)?|billion|trillion|million|soums?|uzs|loan|credit|subsidy|incentive|financ|deadline|target|from\s+\d{4}|by\s+\d{4}|until\s+\d{4}|payment|fee|rent|threshold|at least|up to)\b/i.test(
     value,
@@ -400,7 +406,7 @@ function LatestChangesSection({ packages, allPackages }: { packages: ReformPacka
         {latestPackages.map((reformPackage) => {
           const sourceEvent = packagePrimarySource(reformPackage)
           const displayTitle = dossierDisplayTitle(reformPackage, allPackages)
-          const firstMeasure = digestChangeText(reformPackage, t)
+          const bullets = latestChangeBullets(reformPackage, t)
 
           return (
             <article key={reformPackage.package_id} className="latest-change-card">
@@ -408,32 +414,21 @@ function LatestChangesSection({ packages, allPackages }: { packages: ReformPacka
                 <time dateTime={reformPackage.current_stage_date}>{formatDisplayDate(reformPackage.current_stage_date)}</time>
                 <h3>{displayTitle}</h3>
               </header>
-              <dl className="change-digest">
-                <div>
-                  <dt>{t('knowledgeHub.reformTracker.latestChanges.changed')}</dt>
-                  <dd>{firstMeasure}</dd>
-                </div>
-                <div>
-                  <dt>{t('knowledgeHub.reformTracker.latestChanges.appliesTo')}</dt>
-                  <dd>{reformPackage.digest?.applies_to ?? reformPackage.policy_area}</dd>
-                </div>
-                <div>
-                  <dt>{t('knowledgeHub.reformTracker.latestChanges.effectiveStatus')}</dt>
-                  <dd>{reformPackage.digest?.effective_status ?? reformPackage.current_stage}</dd>
-                </div>
-                <div>
-                  <dt>{t('knowledgeHub.reformTracker.latestChanges.document')}</dt>
-                  <dd>
-                    {sourceEvent ? (
-                      <a href={sourceEvent.source_url} className="text-source-link" {...EXTERNAL_LINK_PROPS}>
-                        {reformPackage.digest?.document ?? hostLabel(sourceEvent.source_url)}
-                      </a>
-                    ) : (
-                      reformPackage.digest?.document ?? reformPackage.official_basis
-                    )}
-                  </dd>
-                </div>
-              </dl>
+              <p className="latest-change-card__summary">{dossierSummary(reformPackage)}</p>
+              <ul className="change-bullet-list">
+                {bullets.map((bullet) => (
+                  <li key={bullet}>{bullet}</li>
+                ))}
+              </ul>
+              <p className="latest-change-source">
+                {sourceEvent ? (
+                  <a href={sourceEvent.source_url} className="text-source-link" {...EXTERNAL_LINK_PROPS}>
+                    {reformPackage.digest?.document ?? hostLabel(sourceEvent.source_url)}
+                  </a>
+                ) : (
+                  reformPackage.digest?.document ?? reformPackage.official_basis
+                )}
+              </p>
             </article>
           )
         })}
