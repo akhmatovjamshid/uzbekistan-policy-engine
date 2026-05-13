@@ -5,10 +5,17 @@ import type {
   KnowledgeHubActiveModelLensId,
   KnowledgeHubContent,
   KnowledgeHubGatedModelLensId,
+  KnowledgeHubLiteratureItem,
   ReformPackage,
   ReformPackageMilestone,
   ReformPackageSourceEvent,
 } from '../../contracts/data-contract.js'
+import {
+  dateSortKey,
+  sortMilestonesChronologically,
+  sortReformPackagesNewestFirst,
+  sortResearchUpdatesNewestFirst,
+} from './knowledge-hub-ordering.js'
 
 type KnowledgeHubContentViewProps = {
   content: KnowledgeHubContent
@@ -17,6 +24,19 @@ type KnowledgeHubContentViewProps = {
 type KnowledgeHubSectionId = 'reformTracker' | 'researchUpdates' | 'literatureHub'
 type LabelNamespace = 'eventType' | 'evidenceType'
 type ModelLensId = KnowledgeHubActiveModelLensId | KnowledgeHubGatedModelLensId
+
+type KeyMeasureLabelKey =
+  | 'whatChanged'
+  | 'whoAffected'
+  | 'effectiveStatus'
+  | 'newRule'
+  | 'amountsDeadlines'
+  | 'officialDocument'
+
+type KeyMeasureRow = {
+  labelKey: KeyMeasureLabelKey
+  values: string[]
+}
 
 type DossierFilters = {
   search: string
@@ -31,12 +51,6 @@ const EXTERNAL_LINK_PROPS = {
 } as const
 
 const HUB_SECTIONS: KnowledgeHubSectionId[] = ['reformTracker', 'researchUpdates', 'literatureHub']
-
-function dateSortKey(value: string): string {
-  if (/^\d{4}$/.test(value)) return `${value}-01-01`
-  if (/^\d{4}-\d{2}$/.test(value)) return `${value}-01`
-  return value
-}
 
 function formatDisplayDate(value: string | undefined): string {
   if (!value) return 'n/a'
@@ -70,9 +84,7 @@ function isFutureDate(value: string, reference: number): boolean {
 }
 
 function packageTimeline(reformPackage: ReformPackage): ReformPackageMilestone[] {
-  return [...reformPackage.implementation_milestones].sort((left, right) =>
-    dateSortKey(left.date).localeCompare(dateSortKey(right.date)),
-  )
+  return sortMilestonesChronologically(reformPackage.implementation_milestones)
 }
 
 function flattenMilestones(packages: ReformPackage[]): ReformPackageMilestone[] {
@@ -170,13 +182,17 @@ function displayParameter(t: TFunction, value: string): string {
   return value.replace(/\b[a-z]+(?:_[a-z]+)+\b/g, (token) => humanizeMachineToken(token).toLowerCase())
 }
 
+const HIDDEN_MEASURE_PATTERNS = [
+  /^(Evidence type|Source event date|Source event dates|Verified official source event date|Legal act registered|Official source event published):/i,
+  /No future implementation deadline/i,
+  /Tracks one verified official source event/i,
+  /Tracks \d+ verified official source events?/i,
+  /Official detail page did not expose/i,
+]
+
 function isVisibleMeasure(value: string): boolean {
   const normalized = value.trim()
-  return (
-    !/^(Evidence type|Source event date|Source event dates|Verified official source event date|Legal act registered|Official source event published):/i.test(
-      normalized,
-    ) && !/No future implementation deadline/i.test(normalized)
-  )
+  return !HIDDEN_MEASURE_PATTERNS.some((pattern) => pattern.test(normalized))
 }
 
 function parameterList(reformPackage: ReformPackage, t: TFunction): string[] {
@@ -192,6 +208,42 @@ function parameterList(reformPackage: ReformPackage, t: TFunction): string[] {
 
 function digestChangeText(reformPackage: ReformPackage, t: TFunction): string {
   return reformPackage.digest?.changed ?? parameterList(reformPackage, t)[0] ?? dossierSummary(reformPackage)
+}
+
+function isAmountThresholdOrDeadline(value: string): boolean {
+  return /\b(\d+(?:[.,]\d+)?|billion|trillion|million|soums?|uzs|loan|credit|subsidy|incentive|financ|deadline|target|from\s+\d{4}|by\s+\d{4}|until\s+\d{4}|payment|fee|rent|threshold|at least|up to)\b/i.test(
+    value,
+  )
+}
+
+function measureTrackText(track: ReformPackage['measure_tracks'][number]): string {
+  const label = humanizeMachineToken(track.label)
+  if (!track.status || /^source verified$/i.test(track.status)) return label
+  return `${label}: ${humanizeMachineToken(track.status)}`
+}
+
+function structuredKeyMeasures(reformPackage: ReformPackage, t: TFunction): KeyMeasureRow[] {
+  const visibleParameters = (reformPackage.parameters_or_amounts ?? [])
+    .filter(isVisibleMeasure)
+    .map((value) => displayParameter(t, value))
+  const amountDeadlineValues = compactUniqueList([
+    ...(reformPackage.financing_or_incentive ? [reformPackage.financing_or_incentive] : []),
+    ...visibleParameters.filter(isAmountThresholdOrDeadline),
+  ])
+  const measureValues = compactUniqueList([
+    ...reformPackage.measure_tracks.map(measureTrackText),
+    ...visibleParameters.filter((value) => !isAmountThresholdOrDeadline(value)),
+  ])
+  const rows: KeyMeasureRow[] = [
+    { labelKey: 'whatChanged', values: [digestChangeText(reformPackage, t)] },
+    { labelKey: 'whoAffected', values: [reformPackage.digest?.applies_to ?? reformPackage.policy_area] },
+    { labelKey: 'effectiveStatus', values: [reformPackage.digest?.effective_status ?? reformPackage.current_stage] },
+    { labelKey: 'newRule', values: measureValues },
+    { labelKey: 'amountsDeadlines', values: amountDeadlineValues },
+    { labelKey: 'officialDocument', values: [reformPackage.digest?.document ?? reformPackage.official_basis] },
+  ]
+
+  return rows.filter((row) => row.values.some((value) => value.trim().length > 0))
 }
 
 function stageTone(stage: string): 'green' | 'amber' | 'blue' {
@@ -564,7 +616,7 @@ function ReformArchive({
         {packages.map((reformPackage, index) => {
           const sourceEvent = packagePrimarySource(reformPackage)
           const displayTitle = dossierDisplayTitle(reformPackage, allPackages)
-          const measures = parameterList(reformPackage, t).slice(0, 4)
+          const measureRows = structuredKeyMeasures(reformPackage, t)
           return (
             <details key={reformPackage.package_id} className="archive-item" open={index === 0}>
               <summary className="archive-summary">
@@ -588,11 +640,28 @@ function ReformArchive({
                 </section>
                 <section>
                   <h3>{t('knowledgeHub.reformTracker.archive.keyMeasures')}</h3>
-                  <ul className="measure-list">
-                    {measures.map((measure) => (
-                      <li key={measure}>{measure}</li>
+                  <dl className="structured-measure-list">
+                    {measureRows.map((row) => (
+                      <div key={row.labelKey}>
+                        <dt>{t(`knowledgeHub.reformTracker.archive.keyMeasureLabels.${row.labelKey}`)}</dt>
+                        <dd>
+                          {row.labelKey === 'officialDocument' && sourceEvent ? (
+                            <a href={sourceEvent.source_url} className="text-source-link" {...EXTERNAL_LINK_PROPS}>
+                              {row.values[0]}
+                            </a>
+                          ) : row.values.length === 1 ? (
+                            row.values[0]
+                          ) : (
+                            <ul>
+                              {row.values.map((value) => (
+                                <li key={value}>{value}</li>
+                              ))}
+                            </ul>
+                          )}
+                        </dd>
+                      </div>
                     ))}
-                  </ul>
+                  </dl>
                 </section>
                 <section>
                   <h3>{t('knowledgeHub.reformTracker.archive.timeline')}</h3>
@@ -673,13 +742,7 @@ function ReformTrackerDesk({ content }: { content: KnowledgeHubContent }) {
     stage: '',
     sourceHost: '',
   })
-  const sortedPackages = useMemo(
-    () =>
-      [...packages].sort((left, right) =>
-        dateSortKey(right.current_stage_date).localeCompare(dateSortKey(left.current_stage_date)),
-      ),
-    [packages],
-  )
+  const sortedPackages = useMemo(() => sortReformPackagesNewestFirst(packages), [packages])
   const filteredPackages = useMemo(
     () => sortedPackages.filter((reformPackage) => packageMatchesFilters(reformPackage, filters, sortedPackages)),
     [filters, sortedPackages],
@@ -704,7 +767,7 @@ function ReformTrackerDesk({ content }: { content: KnowledgeHubContent }) {
 
 function ResearchUpdatesSection({ content }: { content: KnowledgeHubContent }) {
   const { t } = useTranslation()
-  const updates = content.research_updates ?? []
+  const updates = useMemo(() => sortResearchUpdatesNewestFirst(content.research_updates ?? []), [content.research_updates])
 
   return (
     <section className="hub-detail-panel research-updates-panel" aria-label={t('knowledgeHub.researchUpdates.aria')}>
@@ -718,50 +781,31 @@ function ResearchUpdatesSection({ content }: { content: KnowledgeHubContent }) {
       {updates.length > 0 ? (
         <div className="research-update-list">
           {updates.map((update) => (
-            <article key={update.id} className="research-update-card">
-              <header>
-                <time dateTime={update.published_at ?? update.as_of_date}>
-                  {formatDisplayDate(update.published_at ?? update.as_of_date)}
-                </time>
+            <article key={update.id} className="research-update-row">
+              <time dateTime={update.published_at ?? update.as_of_date}>
+                {formatDisplayDate(update.published_at ?? update.as_of_date)}
+              </time>
+              <div className="research-update-row__main">
                 <h3>{update.title}</h3>
-                <p>{update.summary}</p>
-              </header>
-              <div className="research-update-grid">
-                <div>
-                  <h4>{t('knowledgeHub.researchUpdates.topic')}</h4>
-                  <p>{update.topic}</p>
-                </div>
-                <div>
-                  <h4>{t('knowledgeHub.researchUpdates.models')}</h4>
-                  <div className="chip-row">
-                    {update.model_ids.map((modelId) => (
-                      <span key={modelId} className="model-chip model-chip--active">
-                        {modelId}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <h4>{t('knowledgeHub.researchUpdates.methods')}</h4>
-                  <div className="literature-methods">
-                    {update.methods.map((method) => (
-                      <span key={method}>{method}</span>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <h4>{t('knowledgeHub.researchUpdates.relevance')}</h4>
-                  <p>{update.why_relevant}</p>
-                </div>
-                <div className="research-update-source">
-                  <h4>{t('knowledgeHub.researchUpdates.sources')}</h4>
-                  <a href={update.source_url} className="external-source-link" {...EXTERNAL_LINK_PROPS}>
-                    <span>{update.source_title}</span>
-                    <span>{t('knowledgeHub.reformTracker.dossier.sourceLinkMeta', { host: hostLabel(update.source_url) })}</span>
-                  </a>
-                  <span>{update.source_institution}</span>
-                </div>
+                <p>{update.why_relevant}</p>
+                <a href={update.source_url} className="text-source-link" {...EXTERNAL_LINK_PROPS}>
+                  {update.source_title}
+                </a>
               </div>
+              <dl className="research-update-facts">
+                <div>
+                  <dt>{t('knowledgeHub.researchUpdates.models')}</dt>
+                  <dd>{update.model_ids.join(', ')}</dd>
+                </div>
+                <div>
+                  <dt>{t('knowledgeHub.researchUpdates.methods')}</dt>
+                  <dd>{update.methods.join(', ')}</dd>
+                </div>
+                <div>
+                  <dt>{t('knowledgeHub.researchUpdates.source')}</dt>
+                  <dd>{update.source_institution}</dd>
+                </div>
+              </dl>
             </article>
           ))}
         </div>
@@ -781,6 +825,7 @@ function LiteratureHubSection({ content }: { content: KnowledgeHubContent }) {
     [literatureItems],
   )
   const items = literatureItems.filter((item) => selectedModel === 'all' || item.model_ids.includes(selectedModel))
+  const showModelFilter = modelOptions.length > 2
 
   return (
     <section className="hub-detail-panel literature-hub-panel" aria-label={t('knowledgeHub.literatureHub.aria')}>
@@ -791,54 +836,62 @@ function LiteratureHubSection({ content }: { content: KnowledgeHubContent }) {
         </div>
       </header>
 
-      <div className="literature-filter" role="group" aria-label={t('knowledgeHub.literatureHub.filterAria')}>
-        {modelOptions.map((modelId) => (
-          <button
-            key={modelId}
-            type="button"
-            className={selectedModel === modelId ? 'is-active' : ''}
-            onClick={() => setSelectedModel(modelId)}
-          >
-            {modelId === 'all' ? t('knowledgeHub.literatureHub.allModels') : modelId}
-          </button>
-        ))}
-      </div>
+      {showModelFilter ? (
+        <div className="literature-filter" role="group" aria-label={t('knowledgeHub.literatureHub.filterAria')}>
+          {modelOptions.map((modelId) => (
+            <button
+              key={modelId}
+              type="button"
+              className={selectedModel === modelId ? 'is-active' : ''}
+              onClick={() => setSelectedModel(modelId)}
+            >
+              {modelId === 'all' ? t('knowledgeHub.literatureHub.allModels') : modelId}
+            </button>
+          ))}
+        </div>
+      ) : null}
 
       {items.length > 0 ? (
-        <div className="literature-list">
-          {items.map((item) => (
-            <article key={item.id} className="literature-card">
-              <header>
-                <h3>{item.title}</h3>
-                <span>
-                  {item.source} · {item.year}
-                </span>
-              </header>
-              {item.authors ? <p>{item.authors}</p> : null}
-              <div className="chip-row">
-                {item.model_ids.map((modelId) => (
-                  <span key={modelId} className="model-chip model-chip--active">
-                    {modelId}
-                  </span>
-                ))}
-              </div>
-              <div className="literature-methods">
-                {item.methods.map((method) => (
-                  <span key={method}>{method}</span>
-                ))}
-              </div>
-              <p>{item.note}</p>
-              <a href={item.url} className="external-source-link" {...EXTERNAL_LINK_PROPS}>
-                <span>{t('knowledgeHub.literatureHub.openSource')}</span>
-                <span>{t('knowledgeHub.reformTracker.dossier.sourceLinkMeta', { host: hostLabel(item.url) })}</span>
-              </a>
-            </article>
-          ))}
+        <div className="literature-table-wrap">
+          <table className="literature-table">
+            <thead>
+              <tr>
+                <th scope="col">{t('knowledgeHub.literatureHub.model')}</th>
+                <th scope="col">{t('knowledgeHub.literatureHub.method')}</th>
+                <th scope="col">{t('knowledgeHub.literatureHub.year')}</th>
+                <th scope="col">{t('knowledgeHub.literatureHub.source')}</th>
+                <th scope="col">{t('knowledgeHub.literatureHub.referenceTitle')}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {items.map((item) => (
+                <LiteratureTableRow key={item.id} item={item} />
+              ))}
+            </tbody>
+          </table>
         </div>
       ) : (
         <p className="empty-state empty-state--compact">{t('knowledgeHub.literatureHub.empty')}</p>
       )}
     </section>
+  )
+}
+
+function LiteratureTableRow({ item }: { item: KnowledgeHubLiteratureItem }) {
+  return (
+    <tr>
+      <td>{item.model_ids.join(', ')}</td>
+      <td>{item.methods.join(', ')}</td>
+      <td>{item.year}</td>
+      <td>{item.source}</td>
+      <td>
+        <a href={item.url} className="text-source-link" {...EXTERNAL_LINK_PROPS}>
+          {item.title}
+        </a>
+        {item.authors ? <span>{item.authors}</span> : null}
+        <p>{item.note}</p>
+      </td>
+    </tr>
   )
 }
 

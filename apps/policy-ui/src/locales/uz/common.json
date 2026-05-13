@@ -965,7 +965,15 @@
         "plannedLenses": "Rejadagi linzalar",
         "noActiveLens": "Faol linza yo'q",
         "source": "Manba",
-        "openSource": "Manbani ochish"
+        "openSource": "Manbani ochish",
+        "keyMeasureLabels": {
+          "whatChanged": "Nima o'zgardi",
+          "whoAffected": "Kimlarga taalluqli",
+          "effectiveStatus": "Kuchga kirish sanasi / holati",
+          "newRule": "Yangi qoida / chora",
+          "amountsDeadlines": "Summalar / chegaralar / muddatlar",
+          "officialDocument": "Rasmiy hujjat"
+        }
       },
       "support": {
         "aria": "Islohotlar monitoringi uchun qo'shimcha ma'lumot",
@@ -1086,6 +1094,7 @@
       "methods": "Usullar",
       "relevance": "Platformaga aloqasi",
       "sources": "Manbalar",
+      "source": "Institut / manba",
       "empty": "Tadqiqot yangilanishlari hozircha mavjud emas."
     },
     "literatureHub": {
@@ -1094,6 +1103,11 @@
       "description": "Platforma modellarini tushunish uchun asosiy manbalar.",
       "filterAria": "Adabiyotni model bo'yicha filtrlash",
       "allModels": "Barcha modellar",
+      "model": "Model",
+      "method": "Usul",
+      "year": "Yil",
+      "source": "Manba / institut",
+      "referenceTitle": "Manba nomi",
       "openSource": "Manbani ochish",
       "empty": "Bu model uchun manbalar hali ko'rsatilmagan."
     },

@@ -2,6 +2,18 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { describe, it } from 'node:test'
 import { fileURLToPath } from 'node:url'
+import i18next from 'i18next'
+import { renderToStaticMarkup } from 'react-dom/server'
+import { I18nextProvider, initReactI18next } from 'react-i18next'
+import {
+  KnowledgeHubContentView,
+} from '../../src/components/knowledge-hub/KnowledgeHubContentView.js'
+import {
+  sortMilestonesChronologically,
+  sortReformPackagesNewestFirst,
+  sortResearchUpdatesNewestFirst,
+} from '../../src/components/knowledge-hub/knowledge-hub-ordering.js'
+import { knowledgeHubArtifactToContent } from '../../src/data/adapters/knowledge-hub.js'
 
 const KNOWLEDGE_HUB_PAGE_SOURCE = fileURLToPath(
   new URL('../../../src/pages/KnowledgeHubPage.tsx', import.meta.url),
@@ -15,12 +27,31 @@ const LOCALE_SOURCES = ['en', 'ru', 'uz'].map((locale) =>
 const PUBLIC_KNOWLEDGE_HUB_ARTIFACT = fileURLToPath(
   new URL('../../../public/data/knowledge-hub.json', import.meta.url),
 )
+const EN_LOCALE_SOURCE = fileURLToPath(new URL('../../../src/locales/en/common.json', import.meta.url))
 
 function collectStrings(value: unknown): string[] {
   if (typeof value === 'string') return [value]
   if (Array.isArray(value)) return value.flatMap(collectStrings)
   if (value && typeof value === 'object') return Object.values(value).flatMap(collectStrings)
   return []
+}
+
+function datesNewestFirst(values: string[]): boolean {
+  return values.every((value, index) => index === 0 || value <= values[index - 1])
+}
+
+async function createKnowledgeHubTestI18n() {
+  const instance = i18next.createInstance()
+  const common = JSON.parse(readFileSync(EN_LOCALE_SOURCE, 'utf8'))
+  await instance.use(initReactI18next).init({
+    lng: 'en',
+    fallbackLng: 'en',
+    defaultNS: 'common',
+    ns: ['common'],
+    interpolation: { escapeValue: false },
+    resources: { en: { common } },
+  })
+  return instance
 }
 
 describe('Knowledge Hub page', () => {
@@ -88,6 +119,83 @@ describe('Knowledge Hub page', () => {
     assert.doesNotMatch(contentViewSource, /const firstMeasure = parameterList\(reformPackage, t\)\[0\]/)
   })
 
+  it('sorts reform packages newest to oldest for latest changes and archive display', () => {
+    const artifact = JSON.parse(readFileSync(PUBLIC_KNOWLEDGE_HUB_ARTIFACT, 'utf8'))
+    const contentViewSource = readFileSync(KNOWLEDGE_HUB_CONTENT_VIEW_SOURCE, 'utf8')
+    const sorted = sortReformPackagesNewestFirst(artifact.reform_packages)
+    const sortedDates = sorted.map((reformPackage) => reformPackage.current_stage_date)
+
+    assert.equal(sorted[0].current_stage_date, '2026-05-12')
+    assert.equal(sorted.at(-1)?.current_stage_date, '2025-12-09')
+    assert.equal(datesNewestFirst(sortedDates), true)
+    assert.match(contentViewSource, /sortReformPackagesNewestFirst\(packages\)/)
+    assert.match(contentViewSource, /<LatestChangesSection packages=\{sortedPackages\}/)
+    assert.match(contentViewSource, /packages=\{filteredPackages\}/)
+  })
+
+  it('sorts Research Updates newest to oldest before rendering', () => {
+    const artifact = JSON.parse(readFileSync(PUBLIC_KNOWLEDGE_HUB_ARTIFACT, 'utf8'))
+    const contentViewSource = readFileSync(KNOWLEDGE_HUB_CONTENT_VIEW_SOURCE, 'utf8')
+    const sorted = sortResearchUpdatesNewestFirst(artifact.research_updates)
+    const sortedDates = sorted
+      .map((update) => update.published_at ?? update.as_of_date)
+      .filter((value): value is string => typeof value === 'string')
+
+    assert.deepEqual(
+      sorted.map((update) => update.id),
+      [
+        'research-dfm-world-trade-nowcast-2026',
+        'research-oecd-icio-2025',
+        'research-dfm-nowcasting-model-comparison-2025',
+        'research-qpm-tonga-2025',
+      ],
+    )
+    assert.equal(datesNewestFirst(sortedDates), true)
+    assert.match(contentViewSource, /sortResearchUpdatesNewestFirst\(content\.research_updates \?\? \[\]\)/)
+  })
+
+  it('keeps individual reform milestones in natural chronological sequence', () => {
+    const artifact = JSON.parse(readFileSync(PUBLIC_KNOWLEDGE_HUB_ARTIFACT, 'utf8'))
+    const urbanization = artifact.reform_packages.find(
+      (reformPackage: { package_id: string }) =>
+        reformPackage.package_id === 'pkg-urbanization-construction-permits-housing-2026',
+    )
+    const sorted = sortMilestonesChronologically(urbanization.implementation_milestones)
+
+    assert.deepEqual(
+      sorted.map((milestone) => `${milestone.date}:${milestone.event_type}`),
+      [
+        '2026-06-01:effective_date',
+        '2026-06:target_deadline',
+        '2026-07-01:effective_date',
+        '2026-07:target_deadline',
+        '2026:target_deadline',
+      ],
+    )
+  })
+
+  it('renders structured Key Measures without extraction metadata phrases', async () => {
+    const artifact = JSON.parse(readFileSync(PUBLIC_KNOWLEDGE_HUB_ARTIFACT, 'utf8'))
+    const content = knowledgeHubArtifactToContent(artifact)
+    const i18n = await createKnowledgeHubTestI18n()
+    const html = renderToStaticMarkup(
+      <I18nextProvider i18n={i18n}>
+        <KnowledgeHubContentView content={content} />
+      </I18nextProvider>,
+    )
+
+    assert.match(html, /What changed/)
+    assert.match(html, /Who is affected/)
+    assert.match(html, /Effective date \/ status/)
+    assert.match(html, /New rule \/ measure/)
+    assert.match(html, /Amounts \/ thresholds \/ deadlines/)
+    assert.match(html, /Official document/)
+    assert.doesNotMatch(
+      html,
+      /Source event date|Evidence type|No future implementation deadline|Tracks one verified official source event|Official detail page did not expose|Tracks \d+ verified official source events?/i,
+    )
+  })
+
   it('renders search and compact archive controls instead of a selected-dossier desk', () => {
     const contentViewSource = readFileSync(KNOWLEDGE_HUB_CONTENT_VIEW_SOURCE, 'utf8')
 
@@ -125,13 +233,13 @@ describe('Knowledge Hub page', () => {
     assert.ok(artifact.research_updates.length >= 3)
     assert.ok(artifact.literature_items.length >= 3)
     assert.match(contentViewSource, /ResearchUpdatesSection/)
-    assert.match(contentViewSource, /research-update-card/)
+    assert.match(contentViewSource, /research-update-row/)
     assert.match(contentViewSource, /content\.research_updates/)
     assert.match(contentViewSource, /why_relevant/)
     assert.match(contentViewSource, /model_ids/)
     assert.match(contentViewSource, /LiteratureHubSection/)
     assert.match(contentViewSource, /content\.literature_items/)
-    assert.match(contentViewSource, /literature-card/)
+    assert.match(contentViewSource, /literature-table/)
 
     assert.doesNotMatch(contentViewSource, /PolicyBriefsSection/)
     assert.doesNotMatch(contentViewSource, /policy-brief-card/)
@@ -177,6 +285,12 @@ describe('Knowledge Hub page', () => {
       assert.equal(typeof locale.knowledgeHub.reformTracker.filters.source, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.archive.title, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.archive.modelLenses, 'string')
+      assert.equal(typeof locale.knowledgeHub.reformTracker.archive.keyMeasureLabels.whatChanged, 'string')
+      assert.equal(typeof locale.knowledgeHub.reformTracker.archive.keyMeasureLabels.whoAffected, 'string')
+      assert.equal(typeof locale.knowledgeHub.reformTracker.archive.keyMeasureLabels.effectiveStatus, 'string')
+      assert.equal(typeof locale.knowledgeHub.reformTracker.archive.keyMeasureLabels.newRule, 'string')
+      assert.equal(typeof locale.knowledgeHub.reformTracker.archive.keyMeasureLabels.amountsDeadlines, 'string')
+      assert.equal(typeof locale.knowledgeHub.reformTracker.archive.keyMeasureLabels.officialDocument, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.support.sourcesTitle, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.support.selectionTitle, 'string')
       assert.equal(typeof locale.knowledgeHub.researchUpdates.title, 'string')
@@ -184,8 +298,13 @@ describe('Knowledge Hub page', () => {
       assert.equal(typeof locale.knowledgeHub.researchUpdates.models, 'string')
       assert.equal(typeof locale.knowledgeHub.researchUpdates.methods, 'string')
       assert.equal(typeof locale.knowledgeHub.researchUpdates.relevance, 'string')
-      assert.equal(typeof locale.knowledgeHub.researchUpdates.sources, 'string')
+      assert.equal(typeof locale.knowledgeHub.researchUpdates.source, 'string')
       assert.equal(typeof locale.knowledgeHub.literatureHub.title, 'string')
+      assert.equal(typeof locale.knowledgeHub.literatureHub.model, 'string')
+      assert.equal(typeof locale.knowledgeHub.literatureHub.method, 'string')
+      assert.equal(typeof locale.knowledgeHub.literatureHub.year, 'string')
+      assert.equal(typeof locale.knowledgeHub.literatureHub.source, 'string')
+      assert.equal(typeof locale.knowledgeHub.literatureHub.referenceTitle, 'string')
       assert.equal(typeof locale.knowledgeHub.literatureHub.openSource, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.dossier.openOfficialSourceAria, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.dossier.sourceLinkMeta, 'string')

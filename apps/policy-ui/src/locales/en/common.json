@@ -965,7 +965,15 @@
         "plannedLenses": "Planned lenses",
         "noActiveLens": "No active lens",
         "source": "Source",
-        "openSource": "Open source"
+        "openSource": "Open source",
+        "keyMeasureLabels": {
+          "whatChanged": "What changed",
+          "whoAffected": "Who is affected",
+          "effectiveStatus": "Effective date / status",
+          "newRule": "New rule / measure",
+          "amountsDeadlines": "Amounts / thresholds / deadlines",
+          "officialDocument": "Official document"
+        }
       },
       "support": {
         "aria": "Reform tracker supporting information",
@@ -1086,6 +1094,7 @@
       "methods": "Methods",
       "relevance": "Relevance",
       "sources": "Sources",
+      "source": "Institution / source",
       "empty": "No research updates are available."
     },
     "literatureHub": {
@@ -1094,6 +1103,11 @@
       "description": "Core references for understanding the models used in the platform.",
       "filterAria": "Filter literature by model",
       "allModels": "All models",
+      "model": "Model",
+      "method": "Method",
+      "year": "Year",
+      "source": "Source / institution",
+      "referenceTitle": "Reference title",
       "openSource": "Open reference",
       "empty": "No references are listed for this model yet."
     },
