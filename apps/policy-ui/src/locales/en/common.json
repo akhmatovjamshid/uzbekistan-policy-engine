@@ -1085,6 +1085,30 @@
       "openSourceAria": "Open {{institution}} source site in a new tab",
       "empty": "No source checks are available."
     },
+    "policyBriefs": {
+      "aria": "Knowledge Hub policy briefs",
+      "title": "Policy Briefs",
+      "description": "Static internal-preview notes derived from official-source reform packages.",
+      "previewLabel": "Internal preview",
+      "previewCaveat": "These briefs are not citable, not reviewed publications, and not model evidence.",
+      "internalOnly": "Internal only",
+      "nonCitable": "Non-citable",
+      "packageBasis": "Package basis",
+      "possibleLenses": "Possible lenses",
+      "officialSources": "Official sources",
+      "empty": "No internal-preview briefs are available."
+    },
+    "modelImpactMap": {
+      "aria": "Knowledge Hub model impact map",
+      "title": "Model Impact Map",
+      "description": "Cautious routing from reform packages to possible analytical lenses.",
+      "possibleLenses": "Possible analytical lenses",
+      "gatedLanes": "Planned/gated lanes",
+      "possibleLens": "Possible lens",
+      "plannedGated": "Planned/gated",
+      "boundaryTitle": "Boundaries",
+      "empty": "No model impact map is available."
+    },
     "methodologyDetail": {
       "aria": "Knowledge Hub methodology",
       "title": "Method",

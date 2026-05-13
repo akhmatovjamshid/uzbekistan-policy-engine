@@ -166,18 +166,40 @@ describe('knowledge hub adapter', () => {
     )
     assert.ok(validation.ok && validation.value.accepted_reforms.length === 0)
     assert.ok(validation.ok && validation.value.candidates.length === 0)
+    assert.ok(validation.ok && validation.value.policy_briefs.length >= 3)
+    assert.ok(validation.ok && validation.value.policy_briefs.every((brief) => brief.publication_state === 'internal_preview'))
+    assert.ok(validation.ok && validation.value.policy_briefs.every((brief) => brief.citation_permission === 'internal_only'))
+    assert.ok(validation.ok && validation.value.policy_briefs.every((brief) => brief.citable === false))
+    assert.ok(validation.ok && validation.value.policy_briefs.every((brief) => brief.caveats.some((caveat) => caveat.includes('Do not cite'))))
+    assert.deepEqual(
+      validation.ok ? validation.value.model_impact_map.active_lenses.map((lens) => `${lens.id}:${lens.status}`).sort() : [],
+      ['DFM:possible_lens', 'I-O:possible_lens', 'QPM:possible_lens'].sort(),
+    )
+    assert.deepEqual(
+      validation.ok ? validation.value.model_impact_map.gated_lenses.map((lens) => `${lens.id}:${lens.status}`).sort() : [],
+      ['CGE:planned_gated', 'FPP:planned_gated', 'HFI:planned_gated', 'PE:planned_gated', 'Synthesis:planned_gated'].sort(),
+    )
+    assert.ok(
+      validation.ok &&
+        validation.value.model_impact_map.package_links.every((link) =>
+          link.active_lenses.every((lens) => ['QPM', 'DFM', 'I-O'].includes(lens.model_id)),
+        ),
+    )
 
     const content = knowledgeHubArtifactToContent(validation.ok ? validation.value : artifact)
     assert.equal(content.reform_packages?.length, validation.ok ? validation.value.reform_packages.length : 0)
     assert.ok(content.reform_packages?.some((reformPackage) => reformPackage.title.length > 0))
     assert.equal(content.reforms.length, 0)
     assert.equal(content.briefs.length, 0)
+    assert.equal(content.policy_briefs?.length, validation.ok ? validation.value.policy_briefs.length : 0)
+    assert.equal(content.model_impact_map?.gated_lenses.length, 5)
     assert.equal(content.candidates?.length, 0)
     assert.equal(content.source_diagnostics?.length, validation.ok ? validation.value.source_diagnostics.length : 0)
     assert.equal(content.meta.candidate_items, 0)
     assert.equal(content.meta.sources_configured, 13)
     assert.equal(content.meta.reform_packages, validation.ok ? validation.value.reform_packages.length : 0)
     assert.equal(content.meta.reforms_tracked, validation.ok ? validation.value.reform_packages.length : 0)
+    assert.equal(content.meta.research_briefs, validation.ok ? validation.value.policy_briefs.length : 0)
     assert.equal(content.sources?.length, 13)
     assert.equal(content.rulebook?.version, 'knowledge-hub-reform-intake-rulebook.v2')
     assert.ok(content.rulebook?.include_rules.some((rule) => rule.id === 'legal-or-regulatory-change'))
@@ -289,6 +311,27 @@ describe('knowledge hub adapter', () => {
     assert.ok(invalidValidation.issues.some((issue) => issue.message.includes('cannot expose review records')))
   })
 
+  it('rejects public policy briefs that become citable or point at gated model lenses', () => {
+    const artifact = JSON.parse(readFileSync(PUBLIC_KNOWLEDGE_HUB_ARTIFACT_PATH, 'utf8'))
+    const invalidArtifact = JSON.parse(JSON.stringify(artifact))
+    invalidArtifact.policy_briefs[0].citable = true
+    invalidArtifact.policy_briefs[0].citation_permission = 'external_allowed'
+    invalidArtifact.policy_briefs[0].possible_lenses = ['QPM', 'PE']
+    invalidArtifact.model_impact_map.package_links[0].active_lenses.push({
+      model_id: 'CGE',
+      channel: 'Synthetic invalid gated lane.',
+      caveat: 'Synthetic invalid gated lane.',
+    })
+
+    const invalidValidation = validateKnowledgeHubArtifact(invalidArtifact)
+
+    assert.equal(invalidValidation.ok, false)
+    assert.ok(invalidValidation.issues.some((issue) => issue.message.includes('non-citable')))
+    assert.ok(invalidValidation.issues.some((issue) => issue.message.includes('internal_only')))
+    assert.ok(invalidValidation.issues.some((issue) => issue.message.includes('active analytical lenses')))
+    assert.ok(invalidValidation.issues.some((issue) => issue.path.includes('active_lenses')))
+  })
+
   it('loads Knowledge Hub from the static artifact and does not import hidden mock content', async () => {
     const source = readFileSync(KNOWLEDGE_HUB_SOURCE_PATH, 'utf8')
     const beforeMockSnapshot = JSON.stringify(knowledgeHubContentMock)
@@ -311,13 +354,15 @@ describe('knowledge hub adapter', () => {
     assert.equal(fetchCalls, 1)
     assert.equal(state.content?.meta.reforms_tracked, artifact.reform_packages.length)
     assert.equal(state.content?.meta.reform_packages, artifact.reform_packages.length)
-    assert.equal(state.content?.meta.research_briefs, 0)
+    assert.equal(state.content?.meta.research_briefs, artifact.policy_briefs.length)
     assert.equal(state.content?.meta.literature_items, 0)
     assert.equal(state.content?.meta.candidate_items, 0)
     assert.equal(state.content?.reforms.length, 0)
     assert.equal(state.content?.reform_packages?.length, artifact.reform_packages.length)
     assert.ok(state.content?.reform_packages?.[0].title)
     assert.equal(state.content?.briefs.length, 0)
+    assert.equal(state.content?.policy_briefs?.length, artifact.policy_briefs.length)
+    assert.equal(state.content?.model_impact_map?.active_lenses.length, 3)
     assert.equal(state.content?.extraction_mode, 'configured-source-fetch')
     assert.equal(state.content?.extraction_mode_label, 'Configured source fetch')
     assert.equal(state.content?.candidates?.length, 0)

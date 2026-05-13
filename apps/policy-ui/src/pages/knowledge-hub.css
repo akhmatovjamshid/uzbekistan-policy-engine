@@ -595,6 +595,187 @@
   margin-bottom: var(--space-md);
 }
 
+.internal-preview-note {
+  align-items: start;
+  background: color-mix(in srgb, var(--hub-amber) 9%, var(--hub-panel));
+  border: 1px solid color-mix(in srgb, var(--hub-amber) 30%, var(--hub-line));
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  display: grid;
+  gap: 0.25rem;
+  padding: var(--space-sm) var(--space-md);
+}
+
+.internal-preview-note strong {
+  color: var(--hub-ink);
+  font-size: 0.84rem;
+}
+
+.internal-preview-note span {
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.policy-brief-list,
+.impact-package-list {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.policy-brief-card,
+.impact-package-card,
+.model-lens-card {
+  border: 1px solid var(--hub-soft-line);
+  border-radius: var(--radius-sm);
+  display: grid;
+  gap: var(--space-md);
+  min-width: 0;
+  padding: var(--space-md);
+}
+
+.policy-brief-card header,
+.impact-package-card header {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.policy-brief-card header > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.policy-brief-card h3,
+.brief-package-list h4,
+.model-lens-grid h3,
+.impact-package-card h3,
+.model-lens-card strong {
+  color: var(--hub-ink);
+  font-family: Georgia, "Times New Roman", serif;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.policy-brief-card h3,
+.impact-package-card h3 {
+  font-size: 1.08rem;
+}
+
+.policy-brief-card p,
+.brief-package-list li,
+.brief-caveats li,
+.model-lens-card p,
+.impact-lens-links p,
+.impact-lens-links span,
+.model-impact-caveats li {
+  color: var(--color-text);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.brief-card-grid {
+  display: grid;
+  gap: var(--space-md);
+  grid-template-columns: minmax(0, 1fr) minmax(12rem, 0.45fr) minmax(14rem, 0.55fr);
+}
+
+.brief-package-list {
+  display: grid;
+  gap: 0.55rem;
+  min-width: 0;
+}
+
+.brief-package-list h4 {
+  font-size: 0.9rem;
+}
+
+.brief-package-list ul,
+.brief-caveats {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0;
+  padding-left: 1rem;
+}
+
+.source-link-list {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.brief-caveats {
+  background: color-mix(in srgb, var(--hub-panel) 88%, var(--color-surface-muted));
+  border: 1px solid var(--hub-line);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm) var(--space-md) var(--space-sm) 1.5rem;
+}
+
+.model-lens-grid {
+  display: grid;
+  gap: var(--space-md);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.model-lens-grid > section {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.model-lens-grid h3 {
+  font-size: 1rem;
+}
+
+.model-lens-list {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.model-lens-card {
+  gap: 0.55rem;
+}
+
+.model-lens-card--gated {
+  background: color-mix(in srgb, var(--hub-panel) 82%, var(--color-surface-muted));
+}
+
+.model-lens-card .ui-chip {
+  justify-self: start;
+}
+
+.impact-package-card header span {
+  color: var(--hub-muted);
+  font-size: 0.8rem;
+}
+
+.impact-lens-links {
+  display: grid;
+  gap: var(--space-sm);
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+}
+
+.impact-lens-links section {
+  background: color-mix(in srgb, var(--hub-panel) 88%, var(--color-surface-muted));
+  border: 1px solid var(--hub-line);
+  border-radius: var(--radius-sm);
+  display: grid;
+  gap: 0.3rem;
+  padding: var(--space-sm);
+}
+
+.impact-lens-links strong {
+  color: var(--hub-blue);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+.impact-lens-links p,
+.impact-lens-links span {
+  margin: 0;
+}
+
+.impact-lens-links span {
+  color: var(--hub-muted);
+}
+
 .hub-stat {
   background: color-mix(in srgb, var(--hub-panel) 86%, var(--color-surface-muted));
   border: 1px solid var(--hub-soft-line);
@@ -815,6 +996,8 @@
 
   .hub-detail-panel__head,
   .hub-stat-grid,
+  .brief-card-grid,
+  .model-lens-grid,
   .source-library-card,
   .source-library-card dl,
   .methodology-columns {

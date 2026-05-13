@@ -4,6 +4,7 @@ import type { TFunction } from 'i18next'
 import type {
   KnowledgeHubContent,
   KnowledgeHubConfiguredSource,
+  KnowledgeHubPolicyBrief,
   KnowledgeHubRulebookRule,
   KnowledgeHubSourceDiagnostic,
   ReformPackage,
@@ -15,7 +16,7 @@ type KnowledgeHubContentViewProps = {
   content: KnowledgeHubContent
 }
 
-type KnowledgeHubSectionId = 'reformTracker' | 'sourceLibrary' | 'methodology'
+type KnowledgeHubSectionId = 'reformTracker' | 'policyBriefs' | 'modelImpactMap' | 'sourceLibrary' | 'methodology'
 type LabelNamespace = 'eventType' | 'evidenceType'
 
 type DossierFilters = {
@@ -29,7 +30,13 @@ const EXTERNAL_LINK_PROPS = {
   rel: 'noopener noreferrer',
 } as const
 
-const HUB_SECTIONS: KnowledgeHubSectionId[] = ['reformTracker', 'sourceLibrary', 'methodology']
+const HUB_SECTIONS: KnowledgeHubSectionId[] = [
+  'reformTracker',
+  'policyBriefs',
+  'modelImpactMap',
+  'sourceLibrary',
+  'methodology',
+]
 
 function dateSortKey(value: string): string {
   if (/^\d{4}$/.test(value)) return `${value}-01-01`
@@ -93,6 +100,16 @@ function dossierDisplayTitle(reformPackage: ReformPackage, packages: ReformPacka
 
 function sourceById(reformPackage: ReformPackage, id: string): ReformPackageSourceEvent | undefined {
   return reformPackage.official_source_events.find((event) => event.id === id)
+}
+
+function sourceEventsByIds(packages: ReformPackage[], ids: string[]): ReformPackageSourceEvent[] {
+  const eventsById = new Map(
+    packages.flatMap((reformPackage) => reformPackage.official_source_events.map((event) => [event.id, event] as const)),
+  )
+  return ids.flatMap((id) => {
+    const event = eventsById.get(id)
+    return event ? [event] : []
+  })
 }
 
 function flattenMilestones(packages: ReformPackage[]): ReformPackageMilestone[] {
@@ -614,6 +631,185 @@ function ReformTrackerDesk({ content }: { content: KnowledgeHubContent }) {
   )
 }
 
+function BriefPackageList({ brief, packages }: { brief: KnowledgeHubPolicyBrief; packages: ReformPackage[] }) {
+  const { t } = useTranslation()
+  const packagesById = new Map(packages.map((reformPackage) => [reformPackage.package_id, reformPackage]))
+
+  return (
+    <div className="brief-package-list">
+      <h4>{t('knowledgeHub.policyBriefs.packageBasis')}</h4>
+      <ul>
+        {brief.package_ids.map((packageId) => {
+          const reformPackage = packagesById.get(packageId)
+          return (
+            <li key={packageId}>
+              {reformPackage ? dossierDisplayTitle(reformPackage, packages) : packageId}
+            </li>
+          )
+        })}
+      </ul>
+    </div>
+  )
+}
+
+function PolicyBriefsSection({ content }: { content: KnowledgeHubContent }) {
+  const { t } = useTranslation()
+  const packages = content.reform_packages ?? []
+  const briefs = content.policy_briefs ?? []
+
+  return (
+    <section className="hub-detail-panel policy-briefs-panel" aria-label={t('knowledgeHub.policyBriefs.aria')}>
+      <header className="hub-detail-panel__head">
+        <div>
+          <h2>{t('knowledgeHub.policyBriefs.title')}</h2>
+          <p>{t('knowledgeHub.policyBriefs.description')}</p>
+        </div>
+      </header>
+
+      <div className="internal-preview-note" role="note">
+        <strong>{t('knowledgeHub.policyBriefs.previewLabel')}</strong>
+        <span>{t('knowledgeHub.policyBriefs.previewCaveat')}</span>
+      </div>
+
+      {briefs.length > 0 ? (
+        <div className="policy-brief-list">
+          {briefs.map((brief) => {
+            const sourceEvents = sourceEventsByIds(packages, brief.source_event_ids)
+            return (
+              <article key={brief.id} className="policy-brief-card">
+                <header>
+                  <div>
+                    <span className="ui-chip ui-chip--amber">{t('knowledgeHub.policyBriefs.internalOnly')}</span>
+                    <span className="ui-chip">{t('knowledgeHub.policyBriefs.nonCitable')}</span>
+                  </div>
+                  <h3>{brief.title}</h3>
+                  <p>{brief.summary}</p>
+                </header>
+                <div className="brief-card-grid">
+                  <BriefPackageList brief={brief} packages={packages} />
+                  <div className="brief-package-list">
+                    <h4>{t('knowledgeHub.policyBriefs.possibleLenses')}</h4>
+                    <div className="chip-row">
+                      {brief.possible_lenses.map((lens) => (
+                        <span key={lens} className="attribution-badge">
+                          {lens}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="brief-package-list">
+                    <h4>{t('knowledgeHub.policyBriefs.officialSources')}</h4>
+                    <div className="source-link-list">
+                      {sourceEvents.map((event) => (
+                        <a key={event.id} href={event.source_url} className="external-source-link" {...EXTERNAL_LINK_PROPS}>
+                          <span>{event.source_institution}</span>
+                          <span>{t('knowledgeHub.reformTracker.dossier.sourceLinkMeta', { host: hostLabel(event.source_url) })}</span>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <ul className="brief-caveats">
+                  {brief.caveats.map((caveat) => (
+                    <li key={caveat}>{caveat}</li>
+                  ))}
+                </ul>
+              </article>
+            )
+          })}
+        </div>
+      ) : (
+        <p className="empty-state empty-state--compact">{t('knowledgeHub.policyBriefs.empty')}</p>
+      )}
+    </section>
+  )
+}
+
+function ModelImpactMapSection({ content }: { content: KnowledgeHubContent }) {
+  const { t } = useTranslation()
+  const packages = content.reform_packages ?? []
+  const packagesById = new Map(packages.map((reformPackage) => [reformPackage.package_id, reformPackage]))
+  const impactMap = content.model_impact_map
+
+  if (!impactMap) {
+    return (
+      <section className="hub-detail-panel" aria-label={t('knowledgeHub.modelImpactMap.aria')}>
+        <p className="empty-state empty-state--compact">{t('knowledgeHub.modelImpactMap.empty')}</p>
+      </section>
+    )
+  }
+
+  return (
+    <section className="hub-detail-panel model-impact-panel" aria-label={t('knowledgeHub.modelImpactMap.aria')}>
+      <header className="hub-detail-panel__head">
+        <div>
+          <h2>{t('knowledgeHub.modelImpactMap.title')}</h2>
+          <p>{t('knowledgeHub.modelImpactMap.description')}</p>
+        </div>
+      </header>
+
+      <div className="model-lens-grid">
+        <section>
+          <h3>{t('knowledgeHub.modelImpactMap.possibleLenses')}</h3>
+          <div className="model-lens-list">
+            {impactMap.active_lenses.map((lens) => (
+              <article key={lens.id} className="model-lens-card">
+                <strong>{lens.label}</strong>
+                <span className="ui-chip ui-chip--blue">{t('knowledgeHub.modelImpactMap.possibleLens')}</span>
+                <p>{lens.caveat}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+        <section>
+          <h3>{t('knowledgeHub.modelImpactMap.gatedLanes')}</h3>
+          <div className="model-lens-list">
+            {impactMap.gated_lenses.map((lens) => (
+              <article key={lens.id} className="model-lens-card model-lens-card--gated">
+                <strong>{lens.label}</strong>
+                <span className="ui-chip">{t('knowledgeHub.modelImpactMap.plannedGated')}</span>
+                <p>{lens.caveat}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+      </div>
+
+      <div className="impact-package-list">
+        {impactMap.package_links.map((link) => {
+          const reformPackage = packagesById.get(link.package_id)
+          return (
+            <article key={link.package_id} className="impact-package-card">
+              <header>
+                <h3>{reformPackage ? dossierDisplayTitle(reformPackage, packages) : link.package_id}</h3>
+                {reformPackage ? <span>{reformPackage.policy_area}</span> : null}
+              </header>
+              <div className="impact-lens-links">
+                {link.active_lenses.map((lens) => (
+                  <section key={`${link.package_id}-${lens.model_id}`}>
+                    <strong>{lens.model_id}</strong>
+                    <p>{lens.channel}</p>
+                    <span>{lens.caveat}</span>
+                  </section>
+                ))}
+              </div>
+            </article>
+          )
+        })}
+      </div>
+
+      <section className="dossier-section dossier-section--caveats model-impact-caveats">
+        <h3>{t('knowledgeHub.modelImpactMap.boundaryTitle')}</h3>
+        <ul>
+          {impactMap.caveats.map((caveat) => (
+            <li key={caveat}>{caveat}</li>
+          ))}
+        </ul>
+      </section>
+    </section>
+  )
+}
+
 function sourceRows(content: KnowledgeHubContent): Array<KnowledgeHubConfiguredSource & { diagnostic?: KnowledgeHubSourceDiagnostic }> {
   const diagnosticsById = new Map((content.source_diagnostics ?? []).map((diagnostic) => [diagnostic.id, diagnostic]))
   const configuredSources = content.sources ?? []
@@ -813,6 +1009,8 @@ export function KnowledgeHubContentView({ content }: KnowledgeHubContentViewProp
         ))}
       </div>
       {activeSection === 'reformTracker' ? <ReformTrackerDesk content={content} /> : null}
+      {activeSection === 'policyBriefs' ? <PolicyBriefsSection content={content} /> : null}
+      {activeSection === 'modelImpactMap' ? <ModelImpactMapSection content={content} /> : null}
       {activeSection === 'sourceLibrary' ? <SourceLibrarySection content={content} /> : null}
       {activeSection === 'methodology' ? <MethodologySection content={content} /> : null}
     </>

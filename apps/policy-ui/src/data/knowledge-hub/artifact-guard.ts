@@ -4,6 +4,11 @@ import type {
   ReformCitationPermission,
   ReformEvidenceType,
   ReformArtifactExtractionMode,
+  KnowledgeHubActiveModelLensId,
+  KnowledgeHubGatedModelLensId,
+  KnowledgeHubModelImpactMap,
+  KnowledgeHubModelImpactPackageLink,
+  KnowledgeHubPolicyBrief,
   ReformLicenseClass,
   ReformMilestoneEventType,
   ReformPackage,
@@ -153,6 +158,15 @@ const REFORM_MILESTONE_EVENT_TYPE_VALUES: ReformMilestoneEventType[] = [
 ]
 
 const REFORM_SOURCE_CONFIDENCE_VALUES: ReformSourceConfidence[] = ['high', 'medium', 'low']
+
+const KNOWLEDGE_HUB_ACTIVE_MODEL_LENS_VALUES: KnowledgeHubActiveModelLensId[] = ['QPM', 'DFM', 'I-O']
+const KNOWLEDGE_HUB_GATED_MODEL_LENS_VALUES: KnowledgeHubGatedModelLensId[] = [
+  'PE',
+  'CGE',
+  'FPP',
+  'HFI',
+  'Synthesis',
+]
 
 const REFORM_DATE_PRECISION_VALUES: NonNullable<ReformPackageMilestone['date_precision']>[] = [
   'day',
@@ -563,6 +577,224 @@ function validateReformPackage(
   return reformPackage
 }
 
+function validatePolicyBrief(
+  value: unknown,
+  path: string,
+  issues: KnowledgeHubArtifactValidationIssue[],
+): KnowledgeHubPolicyBrief | null {
+  if (!isRecord(value)) {
+    issues.push({ path, message: 'Policy brief entry must be an object.', severity: 'error' })
+    return null
+  }
+
+  const packageIds = stringArray(value.package_ids, `${path}.package_ids`, issues)
+  const sourceEventIds = stringArray(value.source_event_ids, `${path}.source_event_ids`, issues)
+  const possibleLenses = stringArray(value.possible_lenses, `${path}.possible_lenses`, issues)
+  const brief: KnowledgeHubPolicyBrief = {
+    id: requireString(value, 'id', path, issues),
+    title: requireString(value, 'title', path, issues),
+    summary: requireString(value, 'summary', path, issues),
+    package_ids: packageIds,
+    policy_channels: stringArray(value.policy_channels, `${path}.policy_channels`, issues),
+    possible_lenses: possibleLenses.filter((lens): lens is KnowledgeHubActiveModelLensId =>
+      KNOWLEDGE_HUB_ACTIVE_MODEL_LENS_VALUES.includes(lens as KnowledgeHubActiveModelLensId),
+    ),
+    source_event_ids: sourceEventIds,
+    as_of_date: requireString(value, 'as_of_date', path, issues),
+    publication_state: requireEnum(value, 'publication_state', path, ['internal_preview'], issues),
+    citation_permission: requireEnum(value, 'citation_permission', path, ['internal_only'], issues),
+    citable: false,
+    caveats: stringArray(value.caveats, `${path}.caveats`, issues),
+  }
+
+  if (value.citable !== false) {
+    issues.push({ path: `${path}.citable`, message: 'Internal preview policy briefs must be non-citable.', severity: 'error' })
+  }
+  if (brief.as_of_date && !isIsoLike(brief.as_of_date)) {
+    issues.push({ path: `${path}.as_of_date`, message: 'Expected an ISO-like as-of date.', severity: 'error' })
+  }
+  if (brief.package_ids.length === 0) {
+    issues.push({ path: `${path}.package_ids`, message: 'Expected at least one source package id.', severity: 'error' })
+  }
+  if (brief.source_event_ids.length === 0) {
+    issues.push({ path: `${path}.source_event_ids`, message: 'Expected at least one source event id.', severity: 'error' })
+  }
+  if (brief.policy_channels.length === 0) {
+    issues.push({ path: `${path}.policy_channels`, message: 'Expected at least one policy channel.', severity: 'error' })
+  }
+  for (const lens of possibleLenses) {
+    if (!KNOWLEDGE_HUB_ACTIVE_MODEL_LENS_VALUES.includes(lens as KnowledgeHubActiveModelLensId)) {
+      issues.push({
+        path: `${path}.possible_lenses`,
+        message: `Policy briefs may reference only active analytical lenses: ${KNOWLEDGE_HUB_ACTIVE_MODEL_LENS_VALUES.join(', ')}.`,
+        severity: 'error',
+      })
+    }
+  }
+  if (brief.possible_lenses.length === 0) {
+    issues.push({ path: `${path}.possible_lenses`, message: 'Expected at least one active analytical lens.', severity: 'error' })
+  }
+  if (brief.caveats.length === 0) {
+    issues.push({ path: `${path}.caveats`, message: 'Expected at least one internal-preview caveat.', severity: 'error' })
+  }
+
+  return brief
+}
+
+function validateActiveModelImpactLink(
+  value: unknown,
+  path: string,
+  issues: KnowledgeHubArtifactValidationIssue[],
+): KnowledgeHubModelImpactPackageLink['active_lenses'][number] | null {
+  if (!isRecord(value)) {
+    issues.push({ path, message: 'Active model impact link must be an object.', severity: 'error' })
+    return null
+  }
+
+  return {
+    model_id: requireEnum(value, 'model_id', path, KNOWLEDGE_HUB_ACTIVE_MODEL_LENS_VALUES, issues),
+    channel: requireString(value, 'channel', path, issues),
+    caveat: requireString(value, 'caveat', path, issues),
+  }
+}
+
+function validateGatedModelImpactLink(
+  value: unknown,
+  path: string,
+  issues: KnowledgeHubArtifactValidationIssue[],
+): KnowledgeHubModelImpactPackageLink['gated_lenses'][number] | null {
+  if (!isRecord(value)) {
+    issues.push({ path, message: 'Gated model impact link must be an object.', severity: 'error' })
+    return null
+  }
+
+  return {
+    model_id: requireEnum(value, 'model_id', path, KNOWLEDGE_HUB_GATED_MODEL_LENS_VALUES, issues),
+    status: requireEnum(value, 'status', path, ['planned_gated'], issues),
+    caveat: requireString(value, 'caveat', path, issues),
+  }
+}
+
+function validateModelLens(
+  value: unknown,
+  path: string,
+  kind: 'active' | 'gated',
+  issues: KnowledgeHubArtifactValidationIssue[],
+): KnowledgeHubModelImpactMap['active_lenses'][number] | null {
+  if (!isRecord(value)) {
+    issues.push({ path, message: 'Model lens entry must be an object.', severity: 'error' })
+    return null
+  }
+
+  const allowed = kind === 'active' ? KNOWLEDGE_HUB_ACTIVE_MODEL_LENS_VALUES : KNOWLEDGE_HUB_GATED_MODEL_LENS_VALUES
+  const expectedStatus = kind === 'active' ? 'possible_lens' : 'planned_gated'
+  return {
+    id: requireEnum(value, 'id', path, allowed, issues),
+    label: requireString(value, 'label', path, issues),
+    status: requireEnum(value, 'status', path, [expectedStatus], issues),
+    caveat: requireString(value, 'caveat', path, issues),
+  }
+}
+
+function validateModelImpactPackageLink(
+  value: unknown,
+  path: string,
+  issues: KnowledgeHubArtifactValidationIssue[],
+): KnowledgeHubModelImpactPackageLink | null {
+  if (!isRecord(value)) {
+    issues.push({ path, message: 'Model impact package link must be an object.', severity: 'error' })
+    return null
+  }
+
+  const activeLenses = Array.isArray(value.active_lenses)
+    ? value.active_lenses
+        .map((entry, index) => validateActiveModelImpactLink(entry, `${path}.active_lenses[${index}]`, issues))
+        .filter((entry): entry is KnowledgeHubModelImpactPackageLink['active_lenses'][number] => entry !== null)
+    : []
+  if (!Array.isArray(value.active_lenses)) {
+    issues.push({ path: `${path}.active_lenses`, message: 'Expected an active lens array.', severity: 'error' })
+  }
+
+  const gatedLenses = Array.isArray(value.gated_lenses)
+    ? value.gated_lenses
+        .map((entry, index) => validateGatedModelImpactLink(entry, `${path}.gated_lenses[${index}]`, issues))
+        .filter((entry): entry is KnowledgeHubModelImpactPackageLink['gated_lenses'][number] => entry !== null)
+    : []
+  if (!Array.isArray(value.gated_lenses)) {
+    issues.push({ path: `${path}.gated_lenses`, message: 'Expected a gated lens array.', severity: 'error' })
+  }
+  if (activeLenses.length === 0) {
+    issues.push({ path: `${path}.active_lenses`, message: 'Expected at least one possible active analytical lens.', severity: 'error' })
+  }
+
+  return {
+    package_id: requireString(value, 'package_id', path, issues),
+    active_lenses: activeLenses,
+    gated_lenses: gatedLenses,
+  }
+}
+
+function validateModelImpactMap(
+  value: unknown,
+  path: string,
+  issues: KnowledgeHubArtifactValidationIssue[],
+): KnowledgeHubModelImpactMap | null {
+  if (!isRecord(value)) {
+    issues.push({ path, message: 'Model impact map must be an object.', severity: 'error' })
+    return null
+  }
+
+  const activeLenses = Array.isArray(value.active_lenses)
+    ? value.active_lenses
+        .map((entry, index) => validateModelLens(entry, `${path}.active_lenses[${index}]`, 'active', issues))
+        .filter((entry): entry is KnowledgeHubModelImpactMap['active_lenses'][number] => entry !== null)
+    : []
+  if (!Array.isArray(value.active_lenses)) {
+    issues.push({ path: `${path}.active_lenses`, message: 'Expected an active model lens array.', severity: 'error' })
+  }
+
+  const gatedLenses = Array.isArray(value.gated_lenses)
+    ? value.gated_lenses
+        .map((entry, index) => validateModelLens(entry, `${path}.gated_lenses[${index}]`, 'gated', issues))
+        .filter((entry): entry is KnowledgeHubModelImpactMap['gated_lenses'][number] => entry !== null)
+    : []
+  if (!Array.isArray(value.gated_lenses)) {
+    issues.push({ path: `${path}.gated_lenses`, message: 'Expected a gated model lens array.', severity: 'error' })
+  }
+
+  const packageLinks = Array.isArray(value.package_links)
+    ? value.package_links
+        .map((entry, index) => validateModelImpactPackageLink(entry, `${path}.package_links[${index}]`, issues))
+        .filter((entry): entry is KnowledgeHubModelImpactPackageLink => entry !== null)
+    : []
+  if (!Array.isArray(value.package_links)) {
+    issues.push({ path: `${path}.package_links`, message: 'Expected a package link array.', severity: 'error' })
+  }
+
+  const activeIds = activeLenses.map((lens) => lens.id)
+  const gatedIds = gatedLenses.map((lens) => lens.id)
+  if (activeIds.length !== KNOWLEDGE_HUB_ACTIVE_MODEL_LENS_VALUES.length) {
+    issues.push({ path: `${path}.active_lenses`, message: 'Expected QPM, DFM, and I-O as the only active analytical lenses.', severity: 'error' })
+  }
+  for (const expected of KNOWLEDGE_HUB_ACTIVE_MODEL_LENS_VALUES) {
+    if (!activeIds.includes(expected)) {
+      issues.push({ path: `${path}.active_lenses`, message: `Missing active analytical lens ${expected}.`, severity: 'error' })
+    }
+  }
+  for (const expected of KNOWLEDGE_HUB_GATED_MODEL_LENS_VALUES) {
+    if (!gatedIds.includes(expected)) {
+      issues.push({ path: `${path}.gated_lenses`, message: `Missing planned/gated model lane ${expected}.`, severity: 'error' })
+    }
+  }
+
+  return {
+    active_lenses: activeLenses,
+    gated_lenses: gatedLenses,
+    package_links: packageLinks,
+    caveats: stringArray(value.caveats, `${path}.caveats`, issues),
+  }
+}
+
 function validateTrackerCommon(
   value: unknown,
   path: string,
@@ -804,6 +1036,17 @@ export function validateKnowledgeHubArtifact(input: unknown): KnowledgeHubArtifa
     issues.push({ path: 'reform_packages', message: 'Expected a reform package array.', severity: 'error' })
   }
 
+  const policyBriefs = Array.isArray(input.policy_briefs)
+    ? input.policy_briefs
+        .map((entry, index) => validatePolicyBrief(entry, `policy_briefs[${index}]`, issues))
+        .filter((entry): entry is KnowledgeHubPolicyBrief => entry !== null)
+    : []
+  if (!Array.isArray(input.policy_briefs)) {
+    issues.push({ path: 'policy_briefs', message: 'Expected a policy brief array.', severity: 'error' })
+  }
+
+  const modelImpactMap = validateModelImpactMap(input.model_impact_map, 'model_impact_map', issues)
+
   const acceptedReforms = Array.isArray(input.accepted_reforms)
     ? input.accepted_reforms
         .map((entry, index) => validateAcceptedReform(entry, `accepted_reforms[${index}]`, issues))
@@ -837,11 +1080,38 @@ export function validateKnowledgeHubArtifact(input: unknown): KnowledgeHubArtifa
   }
 
   const ids = new Set<string>()
+  const packageIds = new Set<string>()
+  const sourceEventIds = new Set<string>()
   for (const reformPackage of reformPackages) {
     if (ids.has(reformPackage.package_id)) {
       issues.push({ path: 'reform_packages', message: `Duplicate package id ${reformPackage.package_id}.`, severity: 'error' })
     }
     ids.add(reformPackage.package_id)
+    packageIds.add(reformPackage.package_id)
+    for (const sourceEvent of reformPackage.official_source_events) {
+      sourceEventIds.add(sourceEvent.id)
+    }
+  }
+  for (const brief of policyBriefs) {
+    if (ids.has(brief.id)) {
+      issues.push({ path: 'policy_briefs', message: `Duplicate policy brief id ${brief.id}.`, severity: 'error' })
+    }
+    ids.add(brief.id)
+    for (const packageId of brief.package_ids) {
+      if (!packageIds.has(packageId)) {
+        issues.push({ path: `policy_briefs.${brief.id}.package_ids`, message: `Unknown source package id ${packageId}.`, severity: 'error' })
+      }
+    }
+    for (const sourceEventId of brief.source_event_ids) {
+      if (!sourceEventIds.has(sourceEventId)) {
+        issues.push({ path: `policy_briefs.${brief.id}.source_event_ids`, message: `Unknown source event id ${sourceEventId}.`, severity: 'error' })
+      }
+    }
+  }
+  for (const packageLink of modelImpactMap?.package_links ?? []) {
+    if (!packageIds.has(packageLink.package_id)) {
+      issues.push({ path: `model_impact_map.package_links.${packageLink.package_id}`, message: `Unknown source package id ${packageLink.package_id}.`, severity: 'error' })
+    }
   }
   for (const reform of acceptedReforms) {
     if (ids.has(reform.id)) {
@@ -881,6 +1151,13 @@ export function validateKnowledgeHubArtifact(input: unknown): KnowledgeHubArtifa
       sources,
       source_diagnostics: sourceDiagnostics,
       reform_packages: reformPackages,
+      policy_briefs: policyBriefs,
+      model_impact_map: modelImpactMap ?? {
+        active_lenses: [],
+        gated_lenses: [],
+        package_links: [],
+        caveats: [],
+      },
       accepted_reforms: acceptedReforms,
       candidates,
       caveats,

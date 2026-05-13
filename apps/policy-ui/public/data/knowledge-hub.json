@@ -1862,6 +1862,400 @@
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
     }
   ],
+  "policy_briefs": [
+    {
+      "id": "brief-trade-business-costs-2026-05",
+      "title": "Trade facilitation and business-cost measures",
+      "summary": "Source-backed reform packages point to customs digitalization, market-fee administration, and infrastructure-investment tax incentives as near-term channels for trade costs, compliance costs, and private investment. This internal preview brief summarizes the package evidence only and does not estimate economic effects.",
+      "package_ids": [
+        "pkg-customs-clearance-digitalization-2026-05-12",
+        "pkg-market-fee-rent-collection-2026-05-08",
+        "pkg-tax-administration-incentives-2026-04-14"
+      ],
+      "policy_channels": [
+        "Trade facilitation",
+        "Business costs",
+        "Fiscal incentives"
+      ],
+      "possible_lenses": [
+        "QPM",
+        "DFM",
+        "I-O"
+      ],
+      "source_event_ids": [
+        "source-event-2026-05-12-priority-tasks-identified-for-food-security-and-livestock-development",
+        "source-event-2026-05-08-2185-3-08-05-2026-bozorlar-savdo-komplekslari-va-ularning-filiallarid",
+        "source-event-2026-04-14-uzbekistan-expands-tax-incentives-for-investors-financing-infrastruct"
+      ],
+      "as_of_date": "2026-05-13",
+      "publication_state": "internal_preview",
+      "citation_permission": "internal_only",
+      "citable": false,
+      "caveats": [
+        "Internal preview only. Do not cite, export, or share externally.",
+        "Derived only from verified official-source reform packages in this static artifact.",
+        "Possible model lenses are routing hints, not model outputs or estimated impacts."
+      ]
+    },
+    {
+      "id": "brief-infrastructure-service-delivery-2026-05",
+      "title": "Infrastructure delivery and service-access measures",
+      "summary": "Housing, construction oversight, public transport, healthcare participation, and digital public-service packages all affect administrative capacity and service delivery. This brief frames the common implementation channels without treating the page as a legal registry or current official notice.",
+      "package_ids": [
+        "pkg-urbanization-construction-permits-housing-2026",
+        "pkg-construction-oversight-inspection-pricing-2026-05-07",
+        "pkg-public-transport-system-2026-05-07",
+        "pkg-healthcare-quality-licensing-private-sector-2026",
+        "pkg-public-services-digital-legal-2026-05-12"
+      ],
+      "policy_channels": [
+        "Public service delivery",
+        "Construction and transport services",
+        "Private participation"
+      ],
+      "possible_lenses": [
+        "DFM",
+        "I-O"
+      ],
+      "source_event_ids": [
+        "source-event-2026-04-15-progress-and-priorities-in-housing-construction-and-urbanization-revi",
+        "source-event-2026-05-07-3828-07-05-2026-o-zbekiston-respublikasi-vazirlar-mahkamasi-huzuridag",
+        "source-event-2026-05-07-president-reviews-measures-to-further-develop-public-transport-system",
+        "president-healthcare-quality-2026-05-01",
+        "source-event-2026-05-12-measures-to-reduce-bureaucracy-in-public-service-delivery-reviewed"
+      ],
+      "as_of_date": "2026-05-13",
+      "publication_state": "internal_preview",
+      "citation_permission": "internal_only",
+      "citable": false,
+      "caveats": [
+        "Internal preview only. Do not cite, export, or share externally.",
+        "Summaries are based on package records and official links, not independent legal review.",
+        "I-O and DFM are possible lenses only; no active model output is cited."
+      ]
+    },
+    {
+      "id": "brief-social-rural-labor-support-2026-05",
+      "title": "Rural, regional, and labor-support measures",
+      "summary": "Agriculture financing, Employment Fund rules, and regional settlement classification packages share fiscal-delivery and household-access channels. The note is useful for internal scenario scoping, but it is not a reviewed policy recommendation or an externally citable brief.",
+      "package_ids": [
+        "pkg-agriculture-subsidy-financing-digital-delivery-2026",
+        "pkg-employment-fund-subsidy-loans-2026-05-07",
+        "pkg-remote-mountain-settlement-classification-2026-05-06"
+      ],
+      "policy_channels": [
+        "Subsidy delivery",
+        "Labor-market support",
+        "Regional eligibility"
+      ],
+      "possible_lenses": [
+        "QPM",
+        "DFM"
+      ],
+      "source_event_ids": [
+        "source-event-2025-12-09-financing-and-subsidy-plans-for-the-agricultural-sector-reviewed",
+        "source-event-2026-05-07-3832-07-05-2026-o-zbekiston-respublikasi-bandlikka-ko-maklashish-davl",
+        "source-event-2026-05-06-1868-2-06-05-2026-aholi-punktlarini-borish-qiyin-bo-lgan-va-tog-li-hu"
+      ],
+      "as_of_date": "2026-05-13",
+      "publication_state": "internal_preview",
+      "citation_permission": "internal_only",
+      "citable": false,
+      "caveats": [
+        "Internal preview only. Do not cite, export, or share externally.",
+        "The brief preserves the source-backed package caveats and does not verify fiscal cost or implementation status.",
+        "QPM and DFM references are possible analytical lenses only."
+      ]
+    },
+    {
+      "id": "brief-financial-integrity-investment-governance-2026-05",
+      "title": "Financial integrity and investment-governance measures",
+      "summary": "AML/CFT internal-control amendments and large-investment integrity review rules affect compliance costs, financial-sector risk monitoring, and investment appraisal. The internal note groups those channels for preview navigation only.",
+      "package_ids": [
+        "pkg-aml-cft-financial-control-2026-05-08",
+        "pkg-large-investment-integrity-competition-review-2026-05-08"
+      ],
+      "policy_channels": [
+        "Financial integrity supervision",
+        "Investment appraisal",
+        "Competition and governance review"
+      ],
+      "possible_lenses": [
+        "QPM",
+        "DFM",
+        "I-O"
+      ],
+      "source_event_ids": [
+        "source-event-2026-05-08-2886-12-08-05-2026-tijorat-banklarida-jinoiy-faoliyatdan-olingan-daro",
+        "source-event-2026-05-08-2925-10-08-05-2026-nobank-kredit-tashkilotlarida-jinoiy-faoliyatdan-o",
+        "source-event-2026-05-08-3266-5-08-05-2026-to-lov-tizimlari-operatorlari-elektron-pullar-tizim",
+        "source-event-2026-05-08-3833-08-05-2026-yirik-investitsiya-loyihalarini-korrupsiyaga-qarshi-e"
+      ],
+      "as_of_date": "2026-05-13",
+      "publication_state": "internal_preview",
+      "citation_permission": "internal_only",
+      "citable": false,
+      "caveats": [
+        "Internal preview only. Do not cite, export, or share externally.",
+        "The grouping is editorial and source-backed; it is not a reviewed legal or supervisory interpretation.",
+        "Model references are not model-output evidence."
+      ]
+    }
+  ],
+  "model_impact_map": {
+    "active_lenses": [
+      {
+        "id": "QPM",
+        "label": "QPM",
+        "status": "possible_lens",
+        "caveat": "Possible macro scenario lens only. The map does not cite QPM outputs or estimate reform effects."
+      },
+      {
+        "id": "DFM",
+        "label": "DFM",
+        "status": "possible_lens",
+        "caveat": "Possible monitoring lens only. The map does not treat DFM nowcasts as reform impact estimates."
+      },
+      {
+        "id": "I-O",
+        "label": "I-O",
+        "status": "possible_lens",
+        "caveat": "Possible sector-linkage lens only. The map does not claim general-equilibrium or behavioral effects."
+      }
+    ],
+    "gated_lenses": [
+      {
+        "id": "PE",
+        "label": "PE",
+        "status": "planned_gated",
+        "caveat": "Planned/gated. Not an active Knowledge Hub model output."
+      },
+      {
+        "id": "CGE",
+        "label": "CGE",
+        "status": "planned_gated",
+        "caveat": "Planned/gated. Not an active Knowledge Hub model output."
+      },
+      {
+        "id": "FPP",
+        "label": "FPP",
+        "status": "planned_gated",
+        "caveat": "Planned/gated. Not an active Knowledge Hub model output."
+      },
+      {
+        "id": "HFI",
+        "label": "HFI",
+        "status": "planned_gated",
+        "caveat": "Planned/gated. Not an active Knowledge Hub model output."
+      },
+      {
+        "id": "Synthesis",
+        "label": "Synthesis",
+        "status": "planned_gated",
+        "caveat": "Planned/gated. Not an active Knowledge Hub model output."
+      }
+    ],
+    "package_links": [
+      {
+        "package_id": "pkg-healthcare-quality-licensing-private-sector-2026",
+        "active_lenses": [
+          {
+            "model_id": "DFM",
+            "channel": "Track service-sector and public-service indicators where source data exist.",
+            "caveat": "Monitoring lens only; no healthcare reform effect is estimated."
+          },
+          {
+            "model_id": "I-O",
+            "channel": "Frame private medical investment and service procurement as sector-linkage questions.",
+            "caveat": "Sector accounting lens only; not a welfare or health-outcome model."
+          }
+        ],
+        "gated_lenses": []
+      },
+      {
+        "package_id": "pkg-urbanization-construction-permits-housing-2026",
+        "active_lenses": [
+          {
+            "model_id": "DFM",
+            "channel": "Monitor construction and investment indicators around implementation dates.",
+            "caveat": "Monitoring lens only; timing does not prove causality."
+          },
+          {
+            "model_id": "I-O",
+            "channel": "Use sector-linkage tables to frame construction and utility-connection demand channels.",
+            "caveat": "I-O lens is static accounting, not a reform impact estimate."
+          }
+        ],
+        "gated_lenses": []
+      },
+      {
+        "package_id": "pkg-agriculture-subsidy-financing-digital-delivery-2026",
+        "active_lenses": [
+          {
+            "model_id": "QPM",
+            "channel": "Frame food-price and fiscal-cost channels for scenario design.",
+            "caveat": "Scenario lens only; no subsidy cost or inflation effect is calculated here."
+          },
+          {
+            "model_id": "DFM",
+            "channel": "Monitor agriculture and price indicators if available.",
+            "caveat": "Monitoring lens only; no attribution to the reform package."
+          }
+        ],
+        "gated_lenses": []
+      },
+      {
+        "package_id": "pkg-public-services-digital-legal-2026-05-12",
+        "active_lenses": [
+          {
+            "model_id": "DFM",
+            "channel": "Monitor administrative and service-delivery indicators where the data layer supports them.",
+            "caveat": "Monitoring lens only; no productivity effect is estimated."
+          }
+        ],
+        "gated_lenses": []
+      },
+      {
+        "package_id": "pkg-customs-clearance-digitalization-2026-05-12",
+        "active_lenses": [
+          {
+            "model_id": "QPM",
+            "channel": "Frame import-cost and external-balance channels for macro scenario discussion.",
+            "caveat": "Scenario lens only; no QPM output is cited."
+          },
+          {
+            "model_id": "I-O",
+            "channel": "Frame sector exposure to trade-cost and customs-clearance changes.",
+            "caveat": "I-O lens does not model customs behavior or price pass-through."
+          }
+        ],
+        "gated_lenses": []
+      },
+      {
+        "package_id": "pkg-market-fee-rent-collection-2026-05-08",
+        "active_lenses": [
+          {
+            "model_id": "QPM",
+            "channel": "Frame fiscal-administration and business-cost channels for scenario discussion.",
+            "caveat": "No revenue or price effect is calculated by this map."
+          }
+        ],
+        "gated_lenses": []
+      },
+      {
+        "package_id": "pkg-aml-cft-financial-control-2026-05-08",
+        "active_lenses": [
+          {
+            "model_id": "QPM",
+            "channel": "Frame credit-condition and financial-stability channels for macro risk discussion.",
+            "caveat": "No QPM credit or stability effect is estimated."
+          },
+          {
+            "model_id": "DFM",
+            "channel": "Monitor financial indicators where bridge data exist.",
+            "caveat": "Monitoring lens only; compliance effects are not estimated."
+          }
+        ],
+        "gated_lenses": []
+      },
+      {
+        "package_id": "pkg-large-investment-integrity-competition-review-2026-05-08",
+        "active_lenses": [
+          {
+            "model_id": "QPM",
+            "channel": "Frame private-investment and governance-quality channels for scenario design.",
+            "caveat": "No investment response is estimated."
+          },
+          {
+            "model_id": "I-O",
+            "channel": "Use sector-linkage context if a reviewed investment-sector mapping is later supplied.",
+            "caveat": "No automatic sector mapping is generated."
+          }
+        ],
+        "gated_lenses": []
+      },
+      {
+        "package_id": "pkg-construction-oversight-inspection-pricing-2026-05-07",
+        "active_lenses": [
+          {
+            "model_id": "DFM",
+            "channel": "Monitor construction indicators around published implementation dates.",
+            "caveat": "Monitoring lens only; no causal impact is claimed."
+          },
+          {
+            "model_id": "I-O",
+            "channel": "Frame construction-service cost channels through sector-linkage tables.",
+            "caveat": "I-O lens is static accounting only."
+          }
+        ],
+        "gated_lenses": []
+      },
+      {
+        "package_id": "pkg-employment-fund-subsidy-loans-2026-05-07",
+        "active_lenses": [
+          {
+            "model_id": "QPM",
+            "channel": "Frame public-spending and labor-market support channels for macro scenarios.",
+            "caveat": "No employment or fiscal multiplier is estimated here."
+          },
+          {
+            "model_id": "DFM",
+            "channel": "Monitor labor-market indicators where available.",
+            "caveat": "Monitoring lens only."
+          }
+        ],
+        "gated_lenses": []
+      },
+      {
+        "package_id": "pkg-public-transport-system-2026-05-07",
+        "active_lenses": [
+          {
+            "model_id": "DFM",
+            "channel": "Monitor transport, service, or urban activity indicators where available.",
+            "caveat": "Monitoring lens only; no mobility effect is estimated."
+          },
+          {
+            "model_id": "I-O",
+            "channel": "Frame fleet renewal and route expansion as transport-sector linkage questions.",
+            "caveat": "I-O lens does not estimate congestion, modal shift, or welfare effects."
+          }
+        ],
+        "gated_lenses": []
+      },
+      {
+        "package_id": "pkg-remote-mountain-settlement-classification-2026-05-06",
+        "active_lenses": [
+          {
+            "model_id": "QPM",
+            "channel": "Frame targeted public-support channels for fiscal scenario discussion.",
+            "caveat": "No fiscal cost or household effect is estimated."
+          }
+        ],
+        "gated_lenses": []
+      },
+      {
+        "package_id": "pkg-tax-administration-incentives-2026-04-14",
+        "active_lenses": [
+          {
+            "model_id": "QPM",
+            "channel": "Frame fiscal-balance and investment channels for macro scenario discussion.",
+            "caveat": "No QPM run or fiscal-cost estimate is cited."
+          },
+          {
+            "model_id": "I-O",
+            "channel": "Frame private infrastructure investment through sector-linkage tables if a sector mapping is reviewed.",
+            "caveat": "No automatic sector allocation or multiplier is generated."
+          }
+        ],
+        "gated_lenses": []
+      }
+    ],
+    "caveats": [
+      "Internal preview map only. It routes reform packages to possible analytical lenses and does not cite model outputs.",
+      "QPM, DFM, and I-O are possible lenses only where the source-backed package channel makes that routing cautious.",
+      "PE, CGE, FPP, HFI, and Synthesis remain planned/gated and are not active model outputs on this page."
+    ]
+  },
   "accepted_reforms": [],
   "candidates": [],
   "caveats": [

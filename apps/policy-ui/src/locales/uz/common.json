@@ -1085,6 +1085,30 @@
       "openSourceAria": "{{institution}} manba saytini yangi oynada ochish",
       "empty": "Manba tekshiruvlari mavjud emas."
     },
+    "policyBriefs": {
+      "aria": "Bilimlar markazi qisqa tahlillari",
+      "title": "Qisqa tahlillar",
+      "description": "Rasmiy manbali islohot paketlaridan olingan statik ichki ko'rish yozuvlari.",
+      "previewLabel": "Ichki ko'rish",
+      "previewCaveat": "Bu yozuvlarni iqtibos qilish mumkin emas; ular taqrizlangan nashr yoki model dalili emas.",
+      "internalOnly": "Faqat ichki",
+      "nonCitable": "Iqtibos qilinmaydi",
+      "packageBasis": "Paket asosi",
+      "possibleLenses": "Mumkin linzalar",
+      "officialSources": "Rasmiy manbalar",
+      "empty": "Ichki ko'rish uchun qisqa tahlillar mavjud emas."
+    },
+    "modelImpactMap": {
+      "aria": "Bilimlar markazi model ta'siri xaritasi",
+      "title": "Model ta'siri xaritasi",
+      "description": "Islohot paketlarini mumkin analitik linzalarga ehtiyotkorlik bilan yo'naltirish.",
+      "possibleLenses": "Mumkin analitik linzalar",
+      "gatedLanes": "Rejalashtirilgan/yopiq yo'nalishlar",
+      "possibleLens": "Mumkin linza",
+      "plannedGated": "Rejalashtirilgan/yopiq",
+      "boundaryTitle": "Chegaralar",
+      "empty": "Model ta'siri xaritasi mavjud emas."
+    },
     "methodologyDetail": {
       "aria": "Bilimlar markazi metodologiyasi",
       "title": "Usul",

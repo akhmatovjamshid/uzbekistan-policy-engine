@@ -1,6 +1,8 @@
 import type {
   KnowledgeHubConfiguredSource,
   KnowledgeHubContent,
+  KnowledgeHubModelImpactMap,
+  KnowledgeHubPolicyBrief,
   KnowledgeHubRulebookMetadata,
   KnowledgeHubRulebookRule,
   KnowledgeHubSourceDiagnostic,
@@ -82,6 +84,8 @@ export type RawKnowledgeHubPayload = {
   briefs?: RawKnowledgeHubBrief[]
   candidates?: ReformCandidateItem[]
   source_diagnostics?: KnowledgeHubSourceDiagnostic[]
+  policy_briefs?: KnowledgeHubPolicyBrief[]
+  model_impact_map?: KnowledgeHubModelImpactMap
   caveats?: string[]
   generated_at?: string
   extraction_mode?: string
@@ -243,6 +247,7 @@ export function toKnowledgeHubContent(raw: RawKnowledgeHubPayload): KnowledgeHub
   const reforms = Array.isArray(rawReforms) ? rawReforms.map(adaptReform) : []
   const briefs = Array.isArray(raw.briefs) ? raw.briefs.map(adaptBrief) : []
   const candidates = Array.isArray(raw.candidates) ? raw.candidates : []
+  const policyBriefs = Array.isArray(raw.policy_briefs) ? raw.policy_briefs : []
   const sources = Array.isArray(raw.sources) ? raw.sources : []
   const sourceDiagnostics = Array.isArray(raw.source_diagnostics) ? raw.source_diagnostics : []
   const meta = raw.meta ?? {}
@@ -250,6 +255,8 @@ export function toKnowledgeHubContent(raw: RawKnowledgeHubPayload): KnowledgeHub
     reform_packages: reformPackages,
     reforms,
     briefs,
+    policy_briefs: policyBriefs,
+    model_impact_map: raw.model_impact_map,
     candidates,
     sources,
     rulebook: adaptRulebook(raw.rulebook),
@@ -279,6 +286,8 @@ export function knowledgeHubArtifactToContent(artifact: KnowledgeHubArtifact): K
     sources: artifact.sources,
     rulebook: artifact.rulebook,
     reform_packages: artifact.reform_packages,
+    policy_briefs: artifact.policy_briefs,
+    model_impact_map: artifact.model_impact_map,
     accepted_reforms: artifact.accepted_reforms,
     candidates: artifact.candidates,
     source_diagnostics: artifact.source_diagnostics,
@@ -288,7 +297,7 @@ export function knowledgeHubArtifactToContent(artifact: KnowledgeHubArtifact): K
       sources_configured: artifact.sources.length,
       reforms_tracked: artifact.reform_packages.length,
       reform_packages: artifact.reform_packages.length,
-      research_briefs: 0,
+      research_briefs: artifact.policy_briefs.length,
       literature_items: 0,
     },
   })

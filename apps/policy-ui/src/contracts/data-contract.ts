@@ -697,6 +697,58 @@ export type ResearchBrief = {
   model_refs: string[]
 }
 
+export type KnowledgeHubPreviewCitationPermission = 'internal_only'
+export type KnowledgeHubPolicyBriefState = 'internal_preview'
+export type KnowledgeHubActiveModelLensId = 'QPM' | 'DFM' | 'I-O'
+export type KnowledgeHubGatedModelLensId = 'PE' | 'CGE' | 'FPP' | 'HFI' | 'Synthesis'
+
+export type KnowledgeHubPolicyBrief = {
+  id: string
+  title: string
+  summary: string
+  package_ids: string[]
+  policy_channels: string[]
+  possible_lenses: KnowledgeHubActiveModelLensId[]
+  source_event_ids: string[]
+  as_of_date: string
+  publication_state: KnowledgeHubPolicyBriefState
+  citation_permission: KnowledgeHubPreviewCitationPermission
+  citable: false
+  caveats: string[]
+}
+
+export type KnowledgeHubModelLens = {
+  id: KnowledgeHubActiveModelLensId | KnowledgeHubGatedModelLensId
+  label: string
+  status: 'possible_lens' | 'planned_gated'
+  caveat: string
+}
+
+export type KnowledgeHubModelImpactLink = {
+  model_id: KnowledgeHubActiveModelLensId
+  channel: string
+  caveat: string
+}
+
+export type KnowledgeHubGatedModelLink = {
+  model_id: KnowledgeHubGatedModelLensId
+  status: 'planned_gated'
+  caveat: string
+}
+
+export type KnowledgeHubModelImpactPackageLink = {
+  package_id: string
+  active_lenses: KnowledgeHubModelImpactLink[]
+  gated_lenses: KnowledgeHubGatedModelLink[]
+}
+
+export type KnowledgeHubModelImpactMap = {
+  active_lenses: KnowledgeHubModelLens[]
+  gated_lenses: KnowledgeHubModelLens[]
+  package_links: KnowledgeHubModelImpactPackageLink[]
+  caveats: string[]
+}
+
 export type ReformEvidenceType =
   | 'legal_text'
   | 'official_policy_announcement'
@@ -896,6 +948,8 @@ export type KnowledgeHubContent = {
   reform_packages?: ReformPackage[]
   reforms: ReformTrackerItem[]
   briefs: ResearchBrief[]
+  policy_briefs?: KnowledgeHubPolicyBrief[]
+  model_impact_map?: KnowledgeHubModelImpactMap
   candidates?: ReformCandidateItem[]
   sources?: KnowledgeHubConfiguredSource[]
   rulebook?: KnowledgeHubRulebookMetadata
