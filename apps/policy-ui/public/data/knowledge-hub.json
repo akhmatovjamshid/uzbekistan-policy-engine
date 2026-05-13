@@ -472,14 +472,14 @@
       "legal_basis": "Official presidential instruction package on healthcare quality, licensing, accreditation, and private-sector participation.",
       "official_basis": "Official website of the President of the Republic of Uzbekistan, 2026-05-01.",
       "financing_or_incentive": "200 billion soums preferential credit resources; loans up to 10 billion soums",
-      "short_summary": "Tracks a presidential instruction package for healthcare licensing, accreditation, state-funded service eligibility, private-sector participation, preferential credit, and medical PPP delivery. The dated milestones are treated as implementation commitments from the cited source, not as an independently verified legal registry.",
+      "short_summary": "Healthcare licensing, accreditation, state-funded purchasing, private participation, credit support, and medical PPP delivery rules were approved.",
       "parameters_or_amounts": [
-        "200 billion soums preferential credit resources",
-        "Loans up to 10 billion soums for private healthcare participation",
-        "Revised licensing procedures from 2026-07-01",
-        "Republican medical institution licensing deadline on 2027-04-01",
-        "Insurance Fund purchasing from accredited organizations from 2028",
-        "District/city medical association licensing target by 2030-12-31"
+        "Funding envelope set at 200 billion soums for preferential credit",
+        "Loans up to 10 billion soums apply to private healthcare participation",
+        "Licensing procedures change from 2026-07-01",
+        "Republican medical institutions must complete licensing by 2027-04-01",
+        "Insurance Fund purchasing shifts to accredited organizations from 2028",
+        "District and city medical associations must complete licensing by 2030-12-31"
       ],
       "policy_channels": [
         "Public health service purchasing",
@@ -612,9 +612,9 @@
       ],
       "caveat": "Automatic official-source tracker entry assembled from a verified source event. It is not an official legal registry and does not assert legal force beyond the cited official source.",
       "digest": {
-        "changed": "licensing reform",
+        "changed": "Licensing procedures change from 2026-07-01",
         "applies_to": "Healthcare services and private-sector participation",
-        "effective_status": "Instructions issued; next step: Revised licensing procedures start (2026-07-01)",
+        "effective_status": "Instructions issued; licensing changes start 2026-07-01",
         "document": "Healthcare system development issues discussed"
       }
     },
@@ -635,13 +635,13 @@
       ],
       "legal_basis": "Official presidential meeting coverage on urbanization, master plans, construction permits, land privatization, and housing delivery.",
       "official_basis": "Government portal of the Republic of Uzbekistan, 2026-04-15.",
-      "financing_or_incentive": "Annual master-plan budget allocations and 1.4 trillion soums planned infrastructure support for Yangi Uzbekistan residential areas identified in source.",
-      "short_summary": "Tracks a presidential instruction package on urbanization, construction permitting, utility connection simplification, land-privatization processing, state-client KPIs, and regional housing delivery. The tracker separates dated implementation steps from the broader policy narrative in the source.",
+      "financing_or_incentive": "Annual master-plan budget allocations and 1.4 trillion soums infrastructure support for Yangi Uzbekistan residential areas.",
+      "short_summary": "Urban master plans, construction permits, utility connections, land privatization, state-client KPIs, and regional housing targets were updated.",
       "parameters_or_amounts": [
-        "Single application and single payment for utility specifications from 2026-07-01",
-        "Draft resolution to reduce requirements, timelines, and payments by at least half",
+        "Utility specifications move to one application and one payment from 2026-07-01",
+        "Permit requirements, timelines, and payments are targeted for at least a 50 percent cut",
         "140,000 regional apartment commissioning target for 2026",
-        "1.4 trillion soums planned infrastructure support for Yangi Uzbekistan residential areas",
+        "Funding envelope set at 1.4 trillion soums for Yangi Uzbekistan residential infrastructure",
         "State client KPI evaluation from 2026-06-01"
       ],
       "policy_channels": [
@@ -793,9 +793,9 @@
       ],
       "caveat": "Automatic official-source tracker entry assembled from a verified source event. It is not an official legal registry and does not assert legal force beyond the cited official source.",
       "digest": {
-        "changed": "master-plan implementation programs",
+        "changed": "Utility specifications move to one application and one payment from 2026-07-01",
         "applies_to": "Urbanization, construction permits, housing, and infrastructure delivery",
-        "effective_status": "Instructions issued; next step: Construction permit and utility connection simplification starts (2026-07-01)",
+        "effective_status": "Instructions issued; permit and utility changes start 2026-07-01",
         "document": "Progress and priorities in housing construction and urbanization reviewed"
       }
     },
@@ -815,14 +815,14 @@
       ],
       "legal_basis": "Official presidential presentation coverage citing the decree on improving state support for agriculture and the Agricultural Payments Agency.",
       "official_basis": "Government portal of the Republic of Uzbekistan, 2025-12-09.",
-      "financing_or_incentive": "34.2 trillion soums planned for cotton and grain harvest financing; 1.3 trillion soums of 2026 subsidies to be provided proactively; additional 5 trillion soums proposed for agrotechnical measures.",
-      "short_summary": "Tracks an agriculture support package covering harvest financing, proactive subsidy delivery, the Agricultural Payments Agency, and digital subsidy administration through Agroportal and Agrosubsidy. Amounts are shown as source-reported envelopes, not as disbursement verification.",
+      "financing_or_incentive": "Funding envelope set at 34.2 trillion soums for cotton and grain harvest financing, 1.3 trillion soums for proactive 2026 subsidies, and a proposed 5 trillion soums for agrotechnical measures.",
+      "short_summary": "Agriculture financing, proactive subsidy delivery, the Agricultural Payments Agency, and digital subsidy workflows were approved.",
       "parameters_or_amounts": [
-        "34.2 trillion soums planned for cotton and grain harvest financing",
-        "1.3 trillion soums of 2026 subsidies to be provided proactively",
+        "Funding envelope set at 34.2 trillion soums for cotton and grain harvest financing",
+        "Proactive 2026 subsidy payments set at 1.3 trillion soums",
         "Additional 5 trillion soums proposed for agrotechnical measures",
-        "Agricultural Payments Agency implementation",
-        "Digital subsidy workflow through Agroportal and Agrosubsidy"
+        "Agricultural Payments Agency established",
+        "Subsidy delivery moves through Agroportal and Agrosubsidy"
       ],
       "policy_channels": [
         "Agricultural producer finance",
@@ -932,9 +932,9 @@
       ],
       "caveat": "Automatic official-source tracker entry assembled from a verified source event. It is not an official legal registry and does not assert legal force beyond the cited official source.",
       "digest": {
-        "changed": "Agricultural Payments Agency setup",
+        "changed": "Agricultural Payments Agency established",
         "applies_to": "Agriculture financing, subsidies, and digital delivery",
-        "effective_status": "Instructions issued; next step: 2026 proactive subsidy delivery through Agrosubsidy (2026)",
+        "effective_status": "Instructions issued; proactive subsidy delivery starts in 2026",
         "document": "Financing and subsidy plans for the agricultural sector reviewed"
       }
     },
@@ -943,7 +943,7 @@
       "title": "Tax administration and investment incentive reform",
       "policy_area": "Tax administration and fiscal incentives",
       "reform_category": "fiscal_tax",
-      "current_stage": "Multiple related official measures",
+      "current_stage": "Incentives published",
       "current_stage_date": "2026-05-12",
       "next_milestone": "No future milestone published in verified source",
       "next_milestone_date": "2026-05-12",
@@ -954,13 +954,13 @@
       "legal_basis": "Verified official source events: Uzbekistan Expands Tax Incentives for Investors Financing Infrastructure Projects; Information on work completed during the 1st quarter of 2026 on the development of information systems and artificial intelligence technologies.",
       "official_basis": "Ministry of Investment, Industry and Trade of the Republic of Uzbekistan; Ministry of Economy and Finance of Uzbekistan",
       "financing_or_incentive": "Tax incentives for investors financing infrastructure projects",
-      "short_summary": "Records tax incentives for investors financing infrastructure projects. The dossier is kept as a fiscal incentive reform and does not infer implementation effects beyond the cited document.",
+      "short_summary": "Tax incentives apply to investors financing infrastructure projects.",
       "parameters_or_amounts": [
-        "Tax incentives for investors financing infrastructure projects",
-        "Infrastructure investor incentive measure recorded"
+        "Tax incentives apply to investors financing infrastructure projects",
+        "Infrastructure investors receive fiscal incentive treatment"
       ],
       "source_confidence": "high",
-      "why_tracked": "The verified official source records a fiscal incentive measure for investors financing infrastructure projects. It is tracked as an incentive package while avoiding any inferred implementation deadline not present in the source.",
+      "why_tracked": "The official source sets a fiscal incentive measure for investors financing infrastructure projects.",
       "model_relevance": [
         "Fiscal balance",
         "Investment",
@@ -1047,9 +1047,9 @@
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
       "digest": {
-        "changed": "tax incentives for infrastructure investors",
+        "changed": "Tax incentives apply to infrastructure investors",
         "applies_to": "Tax administration and fiscal incentives",
-        "effective_status": "Multiple related official measures (2026-05-12)",
+        "effective_status": "Measures published on 2026-05-12",
         "document": "Uzbekistan Expands Tax Incentives for Investors Financing Infrastructure Projects"
       }
     },
@@ -1058,7 +1058,7 @@
       "title": "Digital public service and legal process reform",
       "policy_area": "Digital public administration and legal services",
       "reform_category": "digital_public_admin",
-      "current_stage": "Verified official measure",
+      "current_stage": "Instructions issued",
       "current_stage_date": "2026-05-12",
       "next_milestone": "No future milestone published in verified source",
       "next_milestone_date": "2026-05-12",
@@ -1067,13 +1067,13 @@
       ],
       "legal_basis": "Verified official source event: Measures to reduce bureaucracy in public service delivery reviewed.",
       "official_basis": "Official website of the President of the Republic of Uzbekistan",
-      "short_summary": "Records measures to reduce bureaucracy or update digital public service and legal-service processes. The dossier is relevant for administrative burden and public-service delivery.",
+      "short_summary": "Digital public-service and legal-service procedures were updated to reduce administrative burden.",
       "parameters_or_amounts": [
-        "Digital public service or legal-process measure recorded",
-        "Administrative burden reduction channel identified"
+        "Digital public-service procedures were updated",
+        "Legal-service processes were simplified"
       ],
       "source_confidence": "high",
-      "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
+      "why_tracked": "The official source sets public-service and legal-process simplification measures.",
       "model_relevance": [
         "Public administration",
         "Transaction costs",
@@ -1124,9 +1124,9 @@
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
       "digest": {
-        "changed": "digital public service process measure",
+        "changed": "Digital public-service procedures were updated",
         "applies_to": "Digital public administration and legal services",
-        "effective_status": "Verified official measure (2026-05-12)",
+        "effective_status": "Instructions issued on 2026-05-12",
         "document": "Measures to reduce bureaucracy in public service delivery reviewed"
       }
     },
@@ -1144,13 +1144,13 @@
       ],
       "legal_basis": "Verified official source event: PF-82 12.05.2026 Paxta va bug‘doy yetishtiruvchilarni moliyaviy qo‘llab-quvvatlashning qo‘shimcha chora-tadbirlari to‘g‘risida.",
       "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
-      "short_summary": "Records agriculture financing and subsidy delivery measures, including cotton and grain producer support where cited by the official document. The dossier is treated as an agriculture finance reform rather than a generic implementation item.",
+      "short_summary": "Cotton and grain producer financing support rules were amended.",
       "parameters_or_amounts": [
-        "Cotton and grain producer financial support measures recorded",
-        "Agriculture financing and subsidy delivery measure recorded"
+        "Cotton and grain producer financial support rules were amended",
+        "Agriculture financing and subsidy delivery rules were updated"
       ],
       "source_confidence": "high",
-      "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
+      "why_tracked": "The official document amends financial-support rules for cotton and grain producers.",
       "model_relevance": [
         "Agricultural output",
         "Food prices",
@@ -1201,7 +1201,7 @@
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
       "digest": {
-        "changed": "agriculture producer financial support",
+        "changed": "Cotton and grain producer financial support rules were amended",
         "applies_to": "Agriculture financing, subsidies, and digital delivery",
         "effective_status": "Rules amended (2026-05-12)",
         "document": "PF-82 12.05.2026 Paxta va bug‘doy yetishtiruvchilarni moliyaviy qo‘llab-quvvatlashning qo‘shimcha chora-tadbirlari to‘g‘risida"
@@ -1212,7 +1212,7 @@
       "title": "Dryland and pasture land-use incentive reform",
       "policy_area": "Dryland and pasture land activation incentives",
       "reform_category": "agriculture",
-      "current_stage": "Implementation measure recorded",
+      "current_stage": "Mechanisms introduced",
       "current_stage_date": "2026-05-12",
       "next_milestone": "No future milestone published in verified source",
       "next_milestone_date": "2026-05-12",
@@ -1221,13 +1221,13 @@
       ],
       "legal_basis": "Verified official source event: PF-83 12.05.2026 Lalmi va yaylov yer uchastkalarini foydalanishga kiritishni rag‘batlantirishning yangi mexanizmlarini joriy etish chora-tadbirlari to‘g‘risida.",
       "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
-      "short_summary": "Records measures introducing new mechanisms to encourage dryland and pasture land plots to be brought into use. The dossier is treated as an agriculture land-use incentive reform, not a generic implementation update.",
+      "short_summary": "Incentive mechanisms were introduced to bring dryland and pasture plots into use.",
       "parameters_or_amounts": [
-        "New incentive mechanisms for dryland and pasture land use introduced",
-        "Agricultural land activation measure recorded"
+        "New incentive mechanisms apply to dryland and pasture land use",
+        "Agricultural land activation rules were introduced"
       ],
       "source_confidence": "high",
-      "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
+      "why_tracked": "The official document introduces mechanisms for activating dryland and pasture plots.",
       "model_relevance": [
         "Agricultural output",
         "Rural investment",
@@ -1278,9 +1278,9 @@
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
       "digest": {
-        "changed": "dryland and pasture land-use incentives",
+        "changed": "Incentives apply to dryland and pasture land activation",
         "applies_to": "Dryland and pasture land activation incentives",
-        "effective_status": "Implementation measure recorded (2026-05-12)",
+        "effective_status": "Mechanisms introduced on 2026-05-12",
         "document": "PF-83 12.05.2026 Lalmi va yaylov yer uchastkalarini foydalanishga kiritishni rag‘batlantirishning yangi mexanizmlarini joriy etish chora-tadbirlari to‘g‘risida"
       }
     },
@@ -1289,7 +1289,7 @@
       "title": "Risk-based customs clearance and electronic declaration reform",
       "policy_area": "Trade facilitation and customs digitalization",
       "reform_category": "trade_customs",
-      "current_stage": "Verified official measure",
+      "current_stage": "Instructions issued",
       "current_stage_date": "2026-05-12",
       "next_milestone": "No future milestone published in verified source",
       "next_milestone_date": "2026-05-12",
@@ -1298,13 +1298,13 @@
       ],
       "legal_basis": "Verified official source event: Priority tasks identified for food security and livestock development.",
       "official_basis": "Official website of the President of the Republic of Uzbekistan",
-      "short_summary": "Records official customs and trade-facilitation measures affecting clearance, declarations, or border processes. The dossier is relevant for trade-cost and sector-exposure analysis.",
+      "short_summary": "Customs clearance, declaration, and border-process measures were updated.",
       "parameters_or_amounts": [
-        "Customs and trade-facilitation measure recorded",
-        "Clearance or declaration process update identified"
+        "Customs and trade-facilitation procedures were updated",
+        "Clearance and declaration processes were updated"
       ],
       "source_confidence": "high",
-      "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
+      "why_tracked": "The official source sets customs and trade-facilitation measures affecting clearance and declarations.",
       "model_relevance": [
         "Trade flows",
         "Import costs",
@@ -1355,9 +1355,9 @@
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
       "digest": {
-        "changed": "customs and trade-facilitation measure",
+        "changed": "Customs and trade-facilitation procedures were updated",
         "applies_to": "Trade facilitation and customs digitalization",
-        "effective_status": "Verified official measure (2026-05-12)",
+        "effective_status": "Instructions issued on 2026-05-12",
         "document": "Priority tasks identified for food security and livestock development"
       }
     },
@@ -1375,13 +1375,13 @@
       ],
       "legal_basis": "Verified official source event: 2185-3 08.05.2026 Bozorlar, savdo komplekslari va ularning filiallarida bir martalik yigʻimlar, ijara toʻlovlari hamda koʻrsatilgan xizmatlar uchun toʻlovlarni oʻz vaqtida va toʻliq undirilishini tashkil etish va nazorat qilish tartibi toʻgʻrisidagi nizomga oʻzgartirishlar kiritish haqida.",
       "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
-      "short_summary": "Records amendments to fee, rent, and service-payment collection rules for markets, trade complexes, and their branches. The package is treated as market-administration and fiscal-compliance regulation, not international trade reform.",
+      "short_summary": "Fee, rent, and service-payment collection rules changed for markets, trade complexes, and branches.",
       "parameters_or_amounts": [
         "One-time fee, rent, and service-payment collection rules amended",
         "Market administration payment collection procedure updated"
       ],
       "source_confidence": "medium",
-      "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
+      "why_tracked": "The official document amends payment-collection rules for markets, trade complexes, and branches.",
       "model_relevance": [
         "Business costs",
         "Fiscal administration",
@@ -1432,7 +1432,7 @@
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
       "digest": {
-        "changed": "market fee and rent collection amendments",
+        "changed": "Market fee, rent, and service-payment collection rules were amended",
         "applies_to": "Market complex fee collection and rental-payment administration",
         "effective_status": "Rules amended (2026-05-08)",
         "document": "2185-3 08.05.2026 Bozorlar, savdo komplekslari va ularning filiallarida bir martalik yigʻimlar, ijara toʻlovlari hamda koʻrsatilgan xizmatlar uchun toʻlovlarni oʻz vaqtida va toʻliq undirilishini tashkil etish va nazorat qilish tartibi toʻgʻrisidagi nizomga oʻzgartirishlar kiritish haqida"
@@ -1443,7 +1443,7 @@
       "title": "Financial-sector AML/CFT internal control rules reform",
       "policy_area": "AML/CFT controls for banks, nonbank lenders, payments, and e-money institutions",
       "reform_category": "financial_sector",
-      "current_stage": "Multiple related official measures",
+      "current_stage": "Rules amended",
       "current_stage_date": "2026-05-08",
       "next_milestone": "No future milestone published in verified source",
       "next_milestone_date": "2026-05-08",
@@ -1452,14 +1452,14 @@
       ],
       "legal_basis": "Verified official source events: 2886-12 08.05.2026 Tijorat banklarida jinoiy faoliyatdan olingan daromadlarni legallashtirishga, terrorizmni moliyalashtirishga va ommaviy qirgʻin qurolini tarqatishni moliyalashtirishga qarshi kurashish boʻyicha ichki nazorat qoidalariga qoʻshimcha va oʻzgartirishlar kiritish haqida; 2925-10 08.05.2026 Nobank kredit tashkilotlarida jinoiy faoliyatdan olingan daromadlarni legallashtirishga, terrorizmni moliyalashtirishga va ommaviy qirgʻin qurolini tarqatishni moliyalashtirishga qarshi kurashish boʻyicha ichki nazorat qoidalariga qoʻshimcha va oʻzgartirishlar kiritish haqida; 3266-5 08.05.2026 Toʻlov tizimlari operatorlari, elektron pullar tizimlari operatorlari va toʻlov tashkilotlarida jinoiy faoliyatdan olingan daromadlarni legallashtirishga, terrorizmni moliyalashtirishga va ommaviy qirgʻin qurolini tarqatishni moliyalashtirishga qarshi kurashish boʻyicha ichki nazorat qoidalariga oʻzgartirish va qoʻshimchalar kiritish haqida.",
       "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
-      "short_summary": "Consolidates related legal updates to AML/CFT internal-control rules across banks, nonbank credit organizations, payment-system operators, e-money operators, and payment organizations. The package is kept as one financial-sector compliance dossier because the source events update parallel control-rule frameworks on the same date.",
+      "short_summary": "AML/CFT internal-control rules changed for banks, nonbank lenders, payment-system operators, e-money operators, and payment organizations.",
       "parameters_or_amounts": [
         "Commercial bank AML/CFT internal-control rules amended",
         "Nonbank credit organization AML/CFT internal-control rules amended",
         "Payment-system, e-money, and payment-organization AML/CFT internal-control rules amended"
       ],
       "source_confidence": "medium",
-      "why_tracked": "The source events amend binding internal-control rules for financial institutions and payment providers. They are grouped to avoid presenting parallel AML/CFT legal updates as separate reforms.",
+      "why_tracked": "The official documents amend parallel AML/CFT internal-control frameworks for financial institutions and payment providers.",
       "model_relevance": [
         "Financial stability",
         "Credit conditions",
@@ -1581,9 +1581,9 @@
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
       "digest": {
-        "changed": "AML/CFT internal-control rule amendments",
+        "changed": "AML/CFT internal-control rules were amended",
         "applies_to": "AML/CFT controls for banks, nonbank lenders, payments, and e-money institutions",
-        "effective_status": "Multiple related official measures (2026-05-08)",
+        "effective_status": "Rules amended on 2026-05-08",
         "document": "2886-12 08.05.2026 Tijorat banklarida jinoiy faoliyatdan olingan daromadlarni legallashtirishga, terrorizmni moliyalashtirishga va ommaviy qirgʻin qurolini tarqatishni moliyalashtirishga qarshi kurashish boʻyicha ichki nazorat qoidalariga qoʻshimcha va oʻzgartirishlar kiritish haqida"
       }
     },
@@ -1601,13 +1601,13 @@
       ],
       "legal_basis": "Verified official source event: 3833 08.05.2026 Yirik investitsiya loyihalarini korrupsiyaga qarshi ekspertizadan o‘tkazish va ularning raqobat muhitiga ta’sirini baholash tartibi to‘g‘risidagi yo‘riqnomani tasdiqlash haqida.",
       "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
-      "short_summary": "Records approval of procedures for anti-corruption review of large investment projects and assessment of their impact on the competitive environment. The package is a business-climate and competition-policy dossier rather than a generic investment headline.",
+      "short_summary": "Procedures were approved for anti-corruption review of large investment projects and competition-impact assessment.",
       "parameters_or_amounts": [
         "Anti-corruption expert review procedure for large investment projects approved",
         "Competition-environment impact assessment procedure approved"
       ],
       "source_confidence": "high",
-      "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
+      "why_tracked": "The official document approves review procedures for large investment projects.",
       "model_relevance": [
         "Private investment",
         "Market structure",
@@ -1658,7 +1658,7 @@
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
       "digest": {
-        "changed": "investment integrity and competition review procedure",
+        "changed": "Investment integrity and competition review procedures were approved",
         "applies_to": "Investment project anti-corruption review and competition impact assessment",
         "effective_status": "Regulation approved (2026-05-08)",
         "document": "3833 08.05.2026 Yirik investitsiya loyihalarini korrupsiyaga qarshi ekspertizadan o‘tkazish va ularning raqobat muhitiga ta’sirini baholash tartibi to‘g‘risidagi yo‘riqnomani tasdiqlash haqida"
@@ -1678,14 +1678,14 @@
       ],
       "legal_basis": "Verified official source event: 3828 07.05.2026 Oʻzbekiston Respublikasi Vazirlar Mahkamasi huzuridagi Qurilish va uy-joy kommunal xoʻjaligi sohasida nazorat qilish inspeksiyasining hududiy nazorat qilish inspeksiyalari tomonidan oʻtkaziladigan bino va inshootlarning texnik holatini oʻrganish va sinov-laboratoriya ishlari narxlarini hisoblash tartibi toʻgʻrisidagi nizomni tasdiqlash haqida.",
       "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
-      "short_summary": "Groups verified construction-oversight measures covering reduced bureaucracy, stronger supervision, and technical inspection or laboratory-work pricing rules. The package separates this oversight dossier from the broader housing and urbanization package.",
+      "short_summary": "Construction oversight, supervision, and technical inspection pricing rules were approved.",
       "parameters_or_amounts": [
-        "Construction oversight and bureaucracy-reduction measures recorded",
+        "Construction oversight and bureaucracy-reduction measures were approved",
         "Technical condition and laboratory-work price calculation regulation approved",
-        "Prior instrumental technical inspection pricing order superseded where cited by source event"
+        "Prior technical inspection pricing order was superseded"
       ],
       "source_confidence": "medium",
-      "why_tracked": "The official sources identify related construction oversight and inspection-pricing measures. Grouping them prevents a repealed pricing order, a new pricing regulation, and presidential oversight instructions from appearing as unrelated dossiers.",
+      "why_tracked": "The official documents set related construction oversight and inspection-pricing measures.",
       "model_relevance": [
         "Construction output",
         "Investment",
@@ -1737,7 +1737,7 @@
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
       "digest": {
-        "changed": "construction oversight and inspection-pricing measure",
+        "changed": "Construction oversight and inspection-pricing rules were approved",
         "applies_to": "Construction oversight, technical inspection pricing, and inspection bureaucracy",
         "effective_status": "Regulation approved (2026-05-07)",
         "document": "3828 07.05.2026 Oʻzbekiston Respublikasi Vazirlar Mahkamasi huzuridagi Qurilish va uy-joy kommunal xoʻjaligi sohasida nazorat qilish inspeksiyasining hududiy nazorat qilish inspeksiyalari tomonidan oʻtkaziladigan bino va inshootlarning texnik holatini oʻrganish va sinov-laboratoriya ishlari narxlarini hisoblash tartibi toʻgʻrisidagi nizomni tasdiqlash haqida"
@@ -1757,14 +1757,14 @@
       ],
       "legal_basis": "Verified official source event: 3832-сон 07.05.2026. Oʻzbekiston Respublikasi Bandlikka koʻmaklashish davlat jamgʻarmasi mablagʻlari hisobidan subsidiyalar va ssuda ajratish tartibi toʻgʻrisidagi nizomni tasdiqlash haqida.",
       "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
-      "short_summary": "Records approval of rules for allocating subsidies and loans from the State Employment Assistance Fund. The dossier is relevant for active labor-market support and public financing of employment measures.",
+      "short_summary": "Rules were approved for allocating subsidies and loans from the State Employment Assistance Fund.",
       "parameters_or_amounts": [
         "Subsidy and loan allocation regulation approved",
         "State Employment Assistance Fund resources identified as the funding source",
         "Employment support financing procedure updated"
       ],
       "source_confidence": "high",
-      "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
+      "why_tracked": "The official document approves subsidy and loan allocation rules for the State Employment Assistance Fund.",
       "model_relevance": [
         "Employment",
         "Public spending",
@@ -1815,7 +1815,7 @@
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
       "digest": {
-        "changed": "employment fund subsidy and loan rules",
+        "changed": "Rules were approved for Employment Fund subsidies and loans",
         "applies_to": "Employment fund subsidies, loans, and labor-market support",
         "effective_status": "Regulation approved (2026-05-07)",
         "document": "3832-сон 07.05.2026. Oʻzbekiston Respublikasi Bandlikka koʻmaklashish davlat jamgʻarmasi mablagʻlari hisobidan subsidiyalar va ssuda ajratish tartibi toʻgʻrisidagi nizomni tasdiqlash haqida"
@@ -1826,7 +1826,7 @@
       "title": "Public transport service and financing reform",
       "policy_area": "Public transport routes, fleet renewal, fare systems, and service delivery",
       "reform_category": "infrastructure_investment",
-      "current_stage": "Implementation measure recorded",
+      "current_stage": "Instructions issued",
       "current_stage_date": "2026-05-07",
       "next_milestone": "No future milestone published in verified source",
       "next_milestone_date": "2026-05-07",
@@ -1835,14 +1835,14 @@
       ],
       "legal_basis": "Verified official source event: President reviews measures to further develop public transport system.",
       "official_basis": "Official website of the President of the Republic of Uzbekistan",
-      "short_summary": "Records official measures to develop regional public transport, including route coverage, fleet renewal, fare-payment systems, and service delivery.",
+      "short_summary": "Regional public-transport route coverage, fleet renewal, fare-payment systems, and service delivery measures were updated.",
       "parameters_or_amounts": [
-        "Public transport development measures reviewed",
-        "Source-reported recent fleet renewal and route-launch evidence retained in source event",
-        "Urban and regional mobility service measure recorded"
+        "Public transport development measures were updated",
+        "Fleet renewal and route-launch measures were updated",
+        "Urban and regional mobility service measures were updated"
       ],
       "source_confidence": "high",
-      "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
+      "why_tracked": "The official source sets public-transport development measures for routes, fleet renewal, fare systems, and service delivery.",
       "model_relevance": [
         "Public investment",
         "Household transport access",
@@ -1894,9 +1894,9 @@
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
       "digest": {
-        "changed": "public transport development measures",
+        "changed": "Public transport development measures were updated",
         "applies_to": "Public transport routes, fleet renewal, fare systems, and service delivery",
-        "effective_status": "Implementation measure recorded (2026-05-07)",
+        "effective_status": "Instructions issued on 2026-05-07",
         "document": "President reviews measures to further develop public transport system"
       }
     },
@@ -1914,13 +1914,13 @@
       ],
       "legal_basis": "Verified official source event: 1868-2-сон 06.05.2026. Aholi punktlarini borish qiyin boʻlgan va togʻli hududlar tarkibiga kiritish tartibi toʻgʻrisidagi yoʻriqnomaning muqaddimasiga oʻzgartirish kiritish haqida.",
       "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
-      "short_summary": "Records a legal update to the rules for classifying settlements as hard-to-reach or mountainous areas. The dossier is narrow and relevant for regional eligibility, service delivery, and targeted public support.",
+      "short_summary": "Settlement classification rules changed for hard-to-reach and mountainous areas.",
       "parameters_or_amounts": [
         "Amendment to the settlement classification instruction preamble",
         "Regional eligibility classification rule updated"
       ],
       "source_confidence": "medium",
-      "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
+      "why_tracked": "The official document amends settlement classification rules for regional eligibility.",
       "model_relevance": [
         "Public spending",
         "Regional development",
@@ -1971,7 +1971,7 @@
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
       "digest": {
-        "changed": "settlement classification rule amendment",
+        "changed": "Settlement classification rules were amended",
         "applies_to": "Regional settlement classification and public-service eligibility",
         "effective_status": "Rules amended (2026-05-06)",
         "document": "1868-2-сон 06.05.2026. Aholi punktlarini borish qiyin boʻlgan va togʻli hududlar tarkibiga kiritish tartibi toʻgʻrisidagi yoʻriqnomaning muqaddimasiga oʻzgartirish kiritish haqida"

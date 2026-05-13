@@ -871,9 +871,9 @@
       }
     },
     "reforms": {
-      "title": "Reform tracker",
+      "title": "Reform changes",
       "helper": "Policy actions linked to affected models and economic domains.",
-      "empty": "No reforms are currently tracked."
+      "empty": "No reforms are currently available."
     },
     "briefs": {
       "title": "Research briefs",
@@ -891,14 +891,14 @@
       "dossierDeskAria": "Reform list and details",
       "header": {
         "eyebrow": "Knowledge Hub",
-        "automaticTracker": "Official source tracker",
+        "automaticTracker": "Official reform changes",
         "sources": "official sources",
         "packages": "packages",
         "lastFetch": "Last fetch",
         "updated": "Updated"
       },
       "metrics": {
-        "aria": "Reform tracker metrics",
+        "aria": "Reform change metrics",
         "dossiers": "Reforms",
         "activePackages": "Active packages",
         "upcomingMilestones": "Upcoming milestones",
@@ -915,18 +915,18 @@
         "fixture-demo": "Demo data"
       },
       "notice": {
-        "aria": "Reform tracker caveat",
-        "title": "Tracker status",
+        "aria": "Reform source note",
+        "title": "Source note",
         "caveat": "Summaries come from official source links. This page is not a legal registry.",
         "sourceLanguage": "Package titles and source excerpts stay in the source language; interface labels are translated."
       },
       "tabs": {
-        "aria": "Reform tracker views",
+        "aria": "Reform views",
         "packages": "Reform Packages",
         "timeline": "Implementation Timeline"
       },
       "filters": {
-        "aria": "Reform dossier filters",
+        "aria": "Reform filters",
         "title": "Filters",
         "clearAll": "Clear all",
         "search": "Search reforms",
@@ -945,7 +945,7 @@
       "latestChanges": {
         "aria": "Latest reform changes",
         "title": "Latest changes",
-        "description": "Short source-based summary of the newest tracked changes.",
+        "description": "Short summary of the newest official changes.",
         "changed": "Changed",
         "appliesTo": "Applies to",
         "effectiveStatus": "Effective / status",
@@ -976,16 +976,16 @@
         }
       },
       "support": {
-        "aria": "Reform tracker supporting information",
+        "aria": "Reform supporting information",
         "sourcesTitle": "Sources checked",
         "sourcesChecked": "Official sources",
         "reforms": "Reforms",
         "brokenLinks": "Broken links",
         "selectionTitle": "How reforms are selected",
-        "selectionFallback": "The tracker keeps items with a clear policy instrument, adopted measure, parameter change, or dated implementation step."
+        "selectionFallback": "This view keeps items with a clear policy instrument, adopted measure, parameter change, or dated implementation step."
       },
       "packages": {
-        "aria": "Reform dossier list",
+        "aria": "Reform list",
         "empty": "No reforms match the current filters.",
         "count": "{{count}} reform",
         "count_one": "{{count}} reform",
@@ -1022,8 +1022,8 @@
         "policyArea": "Policy area",
         "financing": "Financing / incentive",
         "whatChanged": "What changed",
-        "whyTracked": "Why tracked",
-        "measureTracks": "Measure tracks",
+        "whyTracked": "Selection basis",
+        "measureTracks": "Measures",
         "measuresAndParameters": "Key measures",
         "keyMeasures": "Key measures",
         "upcomingMilestones": "Upcoming milestones",
@@ -1031,7 +1031,7 @@
         "packageTimeline": "Package timeline",
         "implementationTimeline": "Implementation timeline",
         "noPackageTimeline": "No package timeline events are available.",
-        "evidence": "Evidence / source events",
+        "evidence": "Evidence / sources",
         "modelRelevance": "Model relevance",
         "responsibleInstitutions": "Responsible institutions",
         "lead": "Lead",

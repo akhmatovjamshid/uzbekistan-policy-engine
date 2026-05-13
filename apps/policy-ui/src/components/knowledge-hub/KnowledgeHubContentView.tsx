@@ -230,10 +230,9 @@ function structuredKeyMeasures(reformPackage: ReformPackage, t: TFunction): KeyM
     ...(reformPackage.financing_or_incentive ? [reformPackage.financing_or_incentive] : []),
     ...visibleParameters.filter(isAmountThresholdOrDeadline),
   ])
-  const measureValues = compactUniqueList([
-    ...reformPackage.measure_tracks.map(measureTrackText),
-    ...visibleParameters.filter((value) => !isAmountThresholdOrDeadline(value)),
-  ])
+  const parameterMeasures = visibleParameters.filter((value) => !isAmountThresholdOrDeadline(value))
+  const fallbackMeasureTracks = reformPackage.measure_tracks.map(measureTrackText)
+  const measureValues = compactUniqueList(parameterMeasures.length > 0 ? parameterMeasures : fallbackMeasureTracks)
   const rows: KeyMeasureRow[] = [
     { labelKey: 'whatChanged', values: [digestChangeText(reformPackage, t)] },
     { labelKey: 'whoAffected', values: [reformPackage.digest?.applies_to ?? reformPackage.policy_area] },

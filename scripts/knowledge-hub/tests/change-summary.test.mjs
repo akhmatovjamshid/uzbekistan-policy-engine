@@ -1,9 +1,26 @@
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
 import { describe, it } from 'node:test'
+import { fileURLToPath } from 'node:url'
 import {
   buildKnowledgeHubChangeSummary,
   renderKnowledgeHubChangeSummaryMarkdown,
 } from '../change-summary.mjs'
+
+const PUBLIC_KNOWLEDGE_HUB_ARTIFACT = fileURLToPath(
+  new URL('../../../apps/policy-ui/public/data/knowledge-hub.json', import.meta.url),
+)
+
+function collectVisibleReformSummaryCopy(reformPackage) {
+  return [
+    reformPackage.short_summary,
+    reformPackage.financing_or_incentive,
+    ...(reformPackage.parameters_or_amounts ?? []),
+    ...Object.values(reformPackage.digest ?? {}),
+  ]
+    .filter((value) => typeof value === 'string' && value.length > 0)
+    .join('\n')
+}
 
 describe('Knowledge Hub change summary', () => {
   it('summarizes package, diagnostic, invalid-link, and source-failure changes', () => {
@@ -220,5 +237,23 @@ describe('Knowledge Hub change summary', () => {
     assert.match(markdown, /Package count: 1 -> 2/)
     assert.match(markdown, /`pkg-added` - Added package/)
     assert.match(markdown, /### Source failures\n- None/)
+  })
+
+  it('keeps public reform summary fields free of tracker and process phrases', () => {
+    const artifact = JSON.parse(readFileSync(PUBLIC_KNOWLEDGE_HUB_ARTIFACT, 'utf8'))
+    const visibleCopy = artifact.reform_packages.map(collectVisibleReformSummaryCopy).join('\n')
+
+    assert.match(visibleCopy, /Licensing procedures change from 2026-07-01/)
+    assert.match(visibleCopy, /Tax incentives apply to infrastructure investors/)
+    assert.match(visibleCopy, /Funding envelope set at 34\.2 trillion soums/)
+    assert.ok(
+      artifact.reform_packages.every(
+        (reformPackage) => (reformPackage.short_summary ?? '').split(/(?<=[.!?])\s+/).filter(Boolean).length <= 1,
+      ),
+    )
+    assert.doesNotMatch(
+      visibleCopy,
+      /\b(Tracks|source-backed|verified official source event|without inferring|dossier|measure recorded|source event recorded|Source-reported)\b/i,
+    )
   })
 })

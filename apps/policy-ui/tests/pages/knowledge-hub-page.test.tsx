@@ -36,6 +36,20 @@ function collectStrings(value: unknown): string[] {
   return []
 }
 
+function visibleReformCopy(reformPackage: {
+  short_summary?: string
+  parameters_or_amounts?: string[]
+  financing_or_incentive?: string
+  digest?: Record<string, string>
+}): string {
+  return collectStrings({
+    short_summary: reformPackage.short_summary,
+    parameters_or_amounts: reformPackage.parameters_or_amounts,
+    financing_or_incentive: reformPackage.financing_or_incentive,
+    digest: reformPackage.digest,
+  }).join('\n')
+}
+
 function datesNewestFirst(values: string[]): boolean {
   return values.every((value, index) => index === 0 || value <= values[index - 1])
 }
@@ -192,7 +206,32 @@ describe('Knowledge Hub page', () => {
     assert.match(html, /Official document/)
     assert.doesNotMatch(
       html,
-      /Source event date|Evidence type|No future implementation deadline|Tracks one verified official source event|Official detail page did not expose|Tracks \d+ verified official source events?/i,
+      /Source event date|Evidence type|No future implementation deadline|Tracks one verified official source event|Official detail page did not expose|Tracks \d+ verified official source events?|source-backed|without inferring|dossier|measure recorded|source event recorded|Source-reported/i,
+    )
+  })
+
+  it('keeps visible reform summaries and Key Measures copy short and change-focused', async () => {
+    const artifact = JSON.parse(readFileSync(PUBLIC_KNOWLEDGE_HUB_ARTIFACT, 'utf8'))
+    const visibleCopy = artifact.reform_packages.map(visibleReformCopy).join('\n')
+    const content = knowledgeHubArtifactToContent(artifact)
+    const i18n = await createKnowledgeHubTestI18n()
+    const html = renderToStaticMarkup(
+      <I18nextProvider i18n={i18n}>
+        <KnowledgeHubContentView content={content} />
+      </I18nextProvider>,
+    )
+
+    assert.match(visibleCopy, /Licensing procedures change from 2026-07-01/)
+    assert.match(visibleCopy, /Tax incentives apply to infrastructure investors/)
+    assert.match(visibleCopy, /Funding envelope set at 34\.2 trillion soums/)
+    assert.ok(
+      artifact.reform_packages.every((reformPackage: { short_summary?: string }) =>
+        (reformPackage.short_summary ?? '').split(/(?<=[.!?])\s+/).filter(Boolean).length <= 1,
+      ),
+    )
+    assert.doesNotMatch(
+      `${visibleCopy}\n${html}`,
+      /\b(Tracks|source-backed|verified official source event|without inferring|dossier|measure recorded|source event recorded|Source-reported)\b/i,
     )
   })
 

@@ -871,9 +871,9 @@
       }
     },
     "reforms": {
-      "title": "Islohotlar monitoringi",
+      "title": "Islohot o'zgarishlari",
       "helper": "Tegishli modellar va iqtisodiy sohalarga bog'langan siyosiy choralar.",
-      "empty": "Hozircha kuzatilayotgan islohotlar yo'q."
+      "empty": "Hozircha islohotlar mavjud emas."
     },
     "briefs": {
       "title": "Tadqiqot yozuvlari",
@@ -891,14 +891,14 @@
       "dossierDeskAria": "Islohotlar ro'yxati va tafsilotlari",
       "header": {
         "eyebrow": "Bilimlar markazi",
-        "automaticTracker": "Rasmiy manbalar monitoringi",
+        "automaticTracker": "Rasmiy islohot o'zgarishlari",
         "sources": "rasmiy manba",
         "packages": "paket",
         "lastFetch": "Oxirgi yuklash",
         "updated": "Yangilandi"
       },
       "metrics": {
-        "aria": "Islohotlar monitoringi ko'rsatkichlari",
+        "aria": "Islohot o'zgarishlari ko'rsatkichlari",
         "dossiers": "Islohotlar",
         "activePackages": "Faol paketlar",
         "upcomingMilestones": "Kelayotgan bosqichlar",
@@ -915,18 +915,18 @@
         "fixture-demo": "Demo ma'lumot"
       },
       "notice": {
-        "aria": "Islohotlar monitoringi izohi",
-        "title": "Tracker holati",
+        "aria": "Islohot manbalari bo'yicha izoh",
+        "title": "Manba izohi",
         "caveat": "Xulosalar rasmiy manba havolalariga tayangan. Bu sahifa huquqiy reyestr emas.",
         "sourceLanguage": "Paket nomlari va manba parchasi manba tilida qoladi; interfeys yorliqlari tarjima qilinadi."
       },
       "tabs": {
-        "aria": "Islohotlar monitoringi ko'rinishlari",
+        "aria": "Islohot bo'limlari",
         "packages": "Islohot paketlari",
         "timeline": "Amalga oshirish jadvali"
       },
       "filters": {
-        "aria": "Islohot dosyelari filtrlari",
+        "aria": "Islohot filtrlari",
         "title": "Filtrlar",
         "clearAll": "Hammasini tozalash",
         "search": "Islohotlarni qidirish",
@@ -976,16 +976,16 @@
         }
       },
       "support": {
-        "aria": "Islohotlar monitoringi uchun qo'shimcha ma'lumot",
+        "aria": "Islohotlar bo'yicha qo'shimcha ma'lumot",
         "sourcesTitle": "Tekshirilgan manbalar",
         "sourcesChecked": "Rasmiy manbalar",
         "reforms": "Islohotlar",
         "brokenLinks": "Ishlamaydigan havolalar",
         "selectionTitle": "Islohotlar qanday tanlanadi",
-        "selectionFallback": "Monitoring aniq siyosat instrumenti, qabul qilingan chora, parametr o'zgarishi yoki sanali amalga oshirish bosqichi bo'lgan materiallarni qoldiradi."
+        "selectionFallback": "Bu bo'lim aniq siyosat instrumenti, qabul qilingan chora, parametr o'zgarishi yoki sanali amalga oshirish bosqichi bo'lgan materiallarni qoldiradi."
       },
       "packages": {
-        "aria": "Islohot dosyelari ro'yxati",
+        "aria": "Islohotlar ro'yxati",
         "empty": "Joriy filtrlarga mos islohot yo'q.",
         "count": "{{count}} ta islohot",
         "count_one": "{{count}} ta islohot",
@@ -1022,8 +1022,8 @@
         "policyArea": "Siyosat sohasi",
         "financing": "Moliyalashtirish / imtiyoz",
         "whatChanged": "Nima o'zgardi",
-        "whyTracked": "Nega kuzatiladi",
-        "measureTracks": "Chora yo'nalishlari",
+        "whyTracked": "Tanlash asosi",
+        "measureTracks": "Choralar",
         "measuresAndParameters": "Asosiy choralar",
         "keyMeasures": "Asosiy choralar",
         "upcomingMilestones": "Kelayotgan bosqichlar",
@@ -1031,7 +1031,7 @@
         "packageTimeline": "Paket jadvali",
         "implementationTimeline": "Amalga oshirish jadvali",
         "noPackageTimeline": "Bu paket bo'yicha jadval voqealari mavjud emas.",
-        "evidence": "Dalillar / manba voqealari",
+        "evidence": "Dalillar / manbalar",
         "modelRelevance": "Modellar bilan bog'liqlik",
         "responsibleInstitutions": "Mas'ul tashkilotlar",
         "lead": "Yetakchi",
