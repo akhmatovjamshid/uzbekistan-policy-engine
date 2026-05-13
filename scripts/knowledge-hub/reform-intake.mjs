@@ -222,6 +222,138 @@ const AGRICULTURE_SUBSIDY_PACKAGE_DEPTH = {
 
 const NO_FUTURE_MILESTONE_LABEL = 'No future milestone published in verified source'
 
+const MODEL_IMPACT_ACTIVE_LENSES = [
+  {
+    id: 'QPM',
+    label: 'Quarterly Projection Model',
+    status: 'possible_lens',
+    caveat: 'Use for monetary, inflation, output-gap, and macro-transmission framing only.',
+  },
+  {
+    id: 'DFM',
+    label: 'Dynamic Factor Model',
+    status: 'possible_lens',
+    caveat: 'Use for nowcasting and high-frequency indicator context only.',
+  },
+  {
+    id: 'I-O',
+    label: 'Input-output model',
+    status: 'possible_lens',
+    caveat: 'Use for sector linkage and final-demand shock propagation only.',
+  },
+]
+
+const MODEL_IMPACT_GATED_LENSES = [
+  { id: 'PE', label: 'Partial-equilibrium trade', status: 'planned_gated', caveat: 'Not active in public outputs.' },
+  { id: 'CGE', label: 'Computable general equilibrium', status: 'planned_gated', caveat: 'Not active in public outputs.' },
+  { id: 'FPP', label: 'Fiscal programming', status: 'planned_gated', caveat: 'Not active in public outputs.' },
+  { id: 'HFI', label: 'High-frequency indicators', status: 'planned_gated', caveat: 'Not active in public outputs.' },
+  { id: 'Synthesis', label: 'Cross-model synthesis', status: 'planned_gated', caveat: 'Not active in public outputs.' },
+]
+
+export const STATIC_RESEARCH_UPDATES = [
+  {
+    id: 'research-qpm-tonga-2025',
+    title: 'Quarterly projection model customized for small open-economy policy scenarios',
+    topic: 'QPM scenario design for monetary transmission and external shocks',
+    summary:
+      'The paper adapts a QPM to a small open economy and uses scenario shocks for financial stress, natural disaster, and external-demand risk. The design is useful for deciding how country-specific transmission channels should enter a CERR-style QPM workspace.',
+    model_ids: ['QPM'],
+    methods: ['Quarterly projection model', 'calibration', 'scenario analysis', 'monetary transmission'],
+    source_title: 'A Quarterly Projection Model for Tonga',
+    source_institution: 'International Monetary Fund',
+    source_url: 'https://www.imf.org/en/Publications/WP/Issues/2025/06/20/A-Quarterly-Projection-Model-for-Tonga-567845',
+    published_at: '2025-06-20',
+    geography: 'Tonga',
+    why_relevant:
+      'Shows how a compact QPM can be adapted for policy-relevant shocks when data and institutional structure differ from larger economies.',
+  },
+  {
+    id: 'research-dfm-nowcasting-model-comparison-2025',
+    title: 'GDP nowcasting comparison confirms bridge and dynamic-factor models as strong baselines',
+    topic: 'Nowcasting method selection for short GDP series and high-frequency indicators',
+    summary:
+      'The study compares traditional econometric and machine-learning approaches across simulations and country cases. It finds bridge and dynamic-factor methods among the strongest empirical baselines, especially when data histories are limited.',
+    model_ids: ['DFM'],
+    methods: ['Dynamic factor model', 'bridge model', 'forecast evaluation', 'high-frequency indicators'],
+    source_title: 'GDP Nowcasting Performance of Traditional Econometric Models vs Machine-Learning Algorithms',
+    source_institution: 'International Monetary Fund',
+    source_url:
+      'https://www.imf.org/en/Publications/WP/Issues/2025/12/05/GDP-Nowcasting-Performance-of-Traditional-Econometric-Models-vs-Machine-Learning-572360',
+    published_at: '2025-12-05',
+    why_relevant:
+      'Supports keeping the platform nowcast lane interpretable and benchmarked before adding heavier machine-learning methods.',
+  },
+  {
+    id: 'research-dfm-world-trade-nowcast-2026',
+    title: 'Multi-region factor model nowcasts world trade with regional spillovers',
+    topic: 'Trade nowcasting and regional spillover structure',
+    summary:
+      'The paper builds a dynamic-factor nowcast of world trade with regional blocks and spillovers. It is relevant for monitoring external demand and trade-channel stress around Central Asia and Uzbekistan-style open-economy questions.',
+    model_ids: ['DFM', 'I-O'],
+    methods: ['Dynamic factor model', 'multi-region blocks', 'trade nowcasting', 'spillover analysis'],
+    source_title: 'Nowcasting World Trade with a Multi-Region Factor Model',
+    source_institution: 'International Monetary Fund',
+    source_url: 'https://www.imf.org/en/Publications/WP/Issues/2026/03/13/Nowcasting-World-Trade-with-a-Multi-Region-Factor-Model-574626',
+    published_at: '2026-03-13',
+    geography: 'Global trade',
+    why_relevant:
+      'Links nowcasting methods to trade exposure monitoring, which can inform external-demand assumptions before sector propagation work.',
+  },
+  {
+    id: 'research-oecd-icio-2025',
+    title: 'OECD ICIO and TiVA 2025 data refresh expands current input-output evidence for trade exposure',
+    topic: 'Input-output tables and value-added trade indicators',
+    summary:
+      'The 2025 ICIO and TiVA release provides current inter-country input-output infrastructure for production, consumption, investment, and trade flows by country and activity. It is a useful external benchmark for sector-linkage and value-added trade analysis.',
+    model_ids: ['I-O'],
+    methods: ['Inter-country input-output tables', 'value-added trade', 'global value chains', 'sector linkages'],
+    source_title: 'Inter-Country Input-Output tables',
+    source_institution: 'Organisation for Economic Co-operation and Development',
+    source_url: 'https://www.oecd.org/en/data/datasets/inter-country-input-output-tables.html',
+    as_of_date: '2026-01-15',
+    geography: 'Global',
+    why_relevant:
+      'Provides a source-linked benchmark for checking sector-linkage assumptions and trade exposure indicators used around the I-O lane.',
+  },
+]
+
+export const STATIC_LITERATURE_ITEMS = [
+  {
+    id: 'qpm-practical-model-policy-analysis',
+    title: 'Practical Model-Based Monetary Policy Analysis: A How-To Guide',
+    authors: 'Michal Andrle, Jaromir Benes, Andrew Berg, Rafael A. Portillo, and Douglas Laxton',
+    year: '2006',
+    source: 'IMF Working Paper 2006/081',
+    url: 'https://www.imf.org/en/Publications/WP/Issues/2016/12/31/Practical-Model-Based-Monetary-Policy-Analysis-A-How-To-Guide-18842',
+    model_ids: ['QPM'],
+    methods: ['IS curve', 'Phillips curve', 'policy reaction function'],
+    note: 'Core reference for practical semi-structural monetary policy model use.',
+  },
+  {
+    id: 'dfm-two-step-estimator',
+    title: 'A two-step estimator for large approximate dynamic factor models based on Kalman filtering',
+    authors: 'Mario Forni, Domenico Giannone, Marco Lippi, and Lucrezia Reichlin',
+    year: '2011',
+    source: 'Journal of Econometrics',
+    url: 'https://www.sciencedirect.com/science/article/pii/S030440761100039X',
+    model_ids: ['DFM'],
+    methods: ['Dynamic factor model', 'Kalman smoother', 'principal components'],
+    note: 'Technical reference for estimating large dynamic-factor systems used in nowcasting.',
+  },
+  {
+    id: 'io-foundations-extensions',
+    title: 'Input-Output Analysis: Foundations and Extensions',
+    authors: 'Ronald E. Miller and Peter D. Blair',
+    year: '2022',
+    source: 'Cambridge University Press',
+    url: 'https://doi.org/10.1017/9781108676212',
+    model_ids: ['I-O'],
+    methods: ['Leontief inverse', 'multipliers', 'sector linkages'],
+    note: 'Standard reference for interpreting input-output multipliers and sector linkages.',
+  },
+]
+
 export const FIXTURE_DEMO_REFORM_PACKAGES = [
   {
     package_id: 'pkg-healthcare-quality-licensing-private-sector-2026',
@@ -1765,7 +1897,14 @@ const PACKAGE_TOPIC_DEFINITIONS = [
     title: 'Agriculture financing and subsidy delivery reform',
     policy_area: 'Agriculture financing, subsidies, and digital delivery',
     reform_category: 'agriculture',
-    patterns: [/\b(agrosubsidy|agricultural payments agency|cotton and grain|agricultur(?:e|al).{0,60}subsid|farmers?.{0,60}subsid|proactive subsidy)\b/i],
+    patterns: [/\b(agrosubsidy|agricultural payments agency|cotton and grain|cotton.*grain|paxta va bug.?doy|agricultur(?:e|al).{0,60}subsid|farmers?.{0,60}subsid|proactive subsidy)\b/i],
+  },
+  {
+    id: 'pasture-dryland-use-incentives',
+    title: 'Dryland and pasture land-use incentive reform',
+    policy_area: 'Dryland and pasture land activation incentives',
+    reform_category: 'agriculture',
+    patterns: [/\b(lalmi|yaylov|pasture|dryland|yer uchastkalarini foydalanishga kiritish|rag.?batlantirishning yangi mexanizmlari)\b/i],
   },
   {
     id: 'customs-clearance-digitalization',
@@ -1910,21 +2049,16 @@ const CATEGORY_PACKAGE_DEFAULTS = {
 
 function topicPackageEnrichment(topic, sortedCandidates, sourceEvents) {
   const groupText = sortedCandidates.map((candidate) => `${candidate.title} ${candidate.summary}`).join(' ')
-  const firstEventDate = sourceEvents[0]?.source_published_at ?? packageDate(sortedCandidates[0])
-  const sourceEventDates = uniqueStrings(sourceEvents.map((event) => event.source_published_at).filter(Boolean))
 
   if (topic?.id === 'tax-administration-incentives') {
     if (!/\bincentives?\b/i.test(groupText) || !/\binfrastructure projects?\b/i.test(groupText)) return {}
 
     return {
       short_summary:
-        'Tracks a verified official-source event on tax incentives for investors financing infrastructure projects. The current source confirms the incentive measure but does not publish a future implementation deadline, so the tracker records the source event without inferring a forward milestone.',
+        'Records tax incentives for investors financing infrastructure projects. The dossier is kept as a fiscal incentive reform and does not infer implementation effects beyond the cited document.',
       parameters_or_amounts: [
         'Tax incentives for investors financing infrastructure projects',
-        firstEventDate
-          ? `Verified official source event published on ${firstEventDate}`
-          : 'Verified official source event without a parsed publication date',
-        'No future implementation deadline was published in the extracted source',
+        'Infrastructure investor incentive measure recorded',
       ],
       policy_channels: [
         'Fiscal incentives',
@@ -1948,9 +2082,6 @@ function topicPackageEnrichment(topic, sortedCandidates, sourceEvents) {
         'Commercial bank AML/CFT internal-control rules amended',
         'Nonbank credit organization AML/CFT internal-control rules amended',
         'Payment-system, e-money, and payment-organization AML/CFT internal-control rules amended',
-        sourceEventDates.length > 0
-          ? `Verified official source event date${sourceEventDates.length > 1 ? 's' : ''}: ${sourceEventDates.join(', ')}`
-          : 'Verified official source event without a parsed publication date',
       ],
       policy_channels: [
         'Financial integrity supervision',
@@ -1973,7 +2104,6 @@ function topicPackageEnrichment(topic, sortedCandidates, sourceEvents) {
         'Construction oversight and bureaucracy-reduction measures recorded',
         'Technical condition and laboratory-work price calculation regulation approved',
         'Prior instrumental technical inspection pricing order superseded where cited by source event',
-        sourceEventDates.length > 0 ? `Verified official source event dates: ${sourceEventDates.join(', ')}` : 'Verified official source event without a parsed publication date',
       ],
       policy_channels: [
         'Construction inspection oversight',
@@ -1991,11 +2121,10 @@ function topicPackageEnrichment(topic, sortedCandidates, sourceEvents) {
   const enrichments = {
     'remote-mountain-settlement-classification': {
       short_summary:
-        'Tracks a legal update to the rules for classifying settlements as hard-to-reach or mountainous areas. The dossier is narrow, but it is source-backed and relevant for regional eligibility, service delivery, and targeted public support.',
+        'Records a legal update to the rules for classifying settlements as hard-to-reach or mountainous areas. The dossier is narrow and relevant for regional eligibility, service delivery, and targeted public support.',
       parameters_or_amounts: [
         'Amendment to the settlement classification instruction preamble',
-        firstEventDate ? `Legal act registered on ${firstEventDate}` : 'Verified official source event without a parsed publication date',
-        'No future implementation deadline was published in the extracted source',
+        'Regional eligibility classification rule updated',
       ],
       policy_channels: ['Regional classification', 'Targeted public support', 'Service-delivery eligibility'],
       model_relevance: ['Public spending', 'Regional development', 'Household access'],
@@ -2003,11 +2132,10 @@ function topicPackageEnrichment(topic, sortedCandidates, sourceEvents) {
     },
     'market-fee-rent-collection': {
       short_summary:
-        'Tracks amendments to fee, rent, and service-payment collection rules for markets, trade complexes, and their branches. The package is treated as market-administration and fiscal-compliance regulation, not international trade reform.',
+        'Records amendments to fee, rent, and service-payment collection rules for markets, trade complexes, and their branches. The package is treated as market-administration and fiscal-compliance regulation, not international trade reform.',
       parameters_or_amounts: [
         'One-time fee, rent, and service-payment collection rules amended',
-        firstEventDate ? `Legal act registered on ${firstEventDate}` : 'Verified official source event without a parsed publication date',
-        'No future implementation deadline was published in the extracted source',
+        'Market administration payment collection procedure updated',
       ],
       policy_channels: ['Market fee administration', 'Rent and service-payment collection', 'Fiscal compliance'],
       model_relevance: ['Business costs', 'Fiscal administration', 'Market services'],
@@ -2015,23 +2143,66 @@ function topicPackageEnrichment(topic, sortedCandidates, sourceEvents) {
     },
     'employment-fund-subsidy-loans': {
       short_summary:
-        'Tracks approval of rules for allocating subsidies and loans from the State Employment Assistance Fund. The dossier is relevant for active labor-market support and public financing of employment measures.',
+        'Records approval of rules for allocating subsidies and loans from the State Employment Assistance Fund. The dossier is relevant for active labor-market support and public financing of employment measures.',
       parameters_or_amounts: [
         'Subsidy and loan allocation regulation approved',
         'State Employment Assistance Fund resources identified as the funding source',
-        firstEventDate ? `Legal act registered on ${firstEventDate}` : 'Verified official source event without a parsed publication date',
+        'Employment support financing procedure updated',
       ],
       policy_channels: ['Employment support subsidies', 'Labor-market financing', 'Public fund administration'],
       model_relevance: ['Employment', 'Public spending', 'Labor supply'],
       measure_label: 'employment fund subsidy and loan rules',
     },
+    'pasture-dryland-use-incentives': {
+      short_summary:
+        'Records measures introducing new mechanisms to encourage dryland and pasture land plots to be brought into use. The dossier is treated as an agriculture land-use incentive reform, not a generic implementation update.',
+      parameters_or_amounts: [
+        'New incentive mechanisms for dryland and pasture land use introduced',
+        'Agricultural land activation measure recorded',
+      ],
+      policy_channels: ['Agricultural land use', 'Rural production incentives', 'Pasture and dryland activation'],
+      model_relevance: ['Agricultural output', 'Rural investment', 'Land productivity'],
+      measure_label: 'dryland and pasture land-use incentives',
+    },
+    'agriculture-subsidy-financing': {
+      short_summary:
+        'Records agriculture financing and subsidy delivery measures, including cotton and grain producer support where cited by the official document. The dossier is treated as an agriculture finance reform rather than a generic implementation item.',
+      parameters_or_amounts: [
+        'Cotton and grain producer financial support measures recorded',
+        'Agriculture financing and subsidy delivery measure recorded',
+      ],
+      policy_channels: ['Agricultural producer finance', 'Subsidy delivery', 'Rural liquidity'],
+      model_relevance: ['Agricultural output', 'Food prices', 'Rural income'],
+      measure_label: 'agriculture producer financial support',
+    },
+    'customs-clearance-digitalization': {
+      short_summary:
+        'Records official customs and trade-facilitation measures affecting clearance, declarations, or border processes. The dossier is relevant for trade-cost and sector-exposure analysis.',
+      parameters_or_amounts: [
+        'Customs and trade-facilitation measure recorded',
+        'Clearance or declaration process update identified',
+      ],
+      policy_channels: ['Customs clearance', 'Trade facilitation', 'Import and export transaction costs'],
+      model_relevance: ['Trade flows', 'Import costs', 'Sector linkages'],
+      measure_label: 'customs and trade-facilitation measure',
+    },
+    'public-services-digital-legal': {
+      short_summary:
+        'Records measures to reduce bureaucracy or update digital public service and legal-service processes. The dossier is relevant for administrative burden and public-service delivery.',
+      parameters_or_amounts: [
+        'Digital public service or legal-process measure recorded',
+        'Administrative burden reduction channel identified',
+      ],
+      policy_channels: ['Public service delivery', 'Administrative burden', 'Digital public administration'],
+      model_relevance: ['Public administration', 'Transaction costs', 'Productivity'],
+      measure_label: 'digital public service process measure',
+    },
     'large-investment-integrity-competition-review': {
       short_summary:
-        'Tracks approval of procedures for anti-corruption review of large investment projects and assessment of their impact on the competitive environment. The package is a business-climate and competition-policy dossier rather than a generic investment headline.',
+        'Records approval of procedures for anti-corruption review of large investment projects and assessment of their impact on the competitive environment. The package is a business-climate and competition-policy dossier rather than a generic investment headline.',
       parameters_or_amounts: [
         'Anti-corruption expert review procedure for large investment projects approved',
         'Competition-environment impact assessment procedure approved',
-        firstEventDate ? `Legal act registered on ${firstEventDate}` : 'Verified official source event without a parsed publication date',
       ],
       policy_channels: ['Investment project appraisal', 'Anti-corruption screening', 'Competition impact assessment'],
       model_relevance: ['Private investment', 'Market structure', 'Governance quality'],
@@ -2039,11 +2210,10 @@ function topicPackageEnrichment(topic, sortedCandidates, sourceEvents) {
     },
     'insolvency-framework': {
       short_summary:
-        'Tracks presidential measures to further improve the insolvency institution. The dossier is kept as a business-environment reform because insolvency procedures affect restructuring, creditor recovery, and investment risk.',
+        'Records presidential measures to further improve the insolvency institution. The dossier is kept as a business-environment reform because insolvency procedures affect restructuring, creditor recovery, and investment risk.',
       parameters_or_amounts: [
         'Presidential decree on improving the insolvency institution',
-        firstEventDate ? `Official source event registered on ${firstEventDate}` : 'Verified official source event without a parsed publication date',
-        'No future implementation deadline was published in the extracted source',
+        'Business restructuring and creditor-resolution channel identified',
       ],
       policy_channels: ['Insolvency procedures', 'Business restructuring', 'Creditor and debtor resolution'],
       model_relevance: ['Private investment', 'Financial stability', 'Business exit and restructuring'],
@@ -2051,11 +2221,11 @@ function topicPackageEnrichment(topic, sortedCandidates, sourceEvents) {
     },
     'public-transport-system': {
       short_summary:
-        'Tracks official measures to develop regional public transport, including route coverage, fleet renewal, fare-payment systems, and service delivery. The package records the source-backed transport service reform without inferring unpublished deadlines.',
+        'Records official measures to develop regional public transport, including route coverage, fleet renewal, fare-payment systems, and service delivery.',
       parameters_or_amounts: [
         'Public transport development measures reviewed',
         'Source-reported recent fleet renewal and route-launch evidence retained in source event',
-        firstEventDate ? `Official source event published on ${firstEventDate}` : 'Verified official source event without a parsed publication date',
+        'Urban and regional mobility service measure recorded',
       ],
       policy_channels: ['Public transport routes', 'Fleet renewal', 'Fare and payment systems', 'Urban and regional mobility'],
       model_relevance: ['Public investment', 'Household transport access', 'Urban productivity'],
@@ -2108,21 +2278,15 @@ function genericPackageSummary(topic, defaults, sourceEvents) {
   const eventCount = sourceEvents.length
   const policyArea = topic?.policy_area ?? defaults.policy_area
   if (eventCount > 1) {
-    return `Consolidates ${eventCount} verified official source events under ${policyArea}. The package groups related measures into one dossier and keeps legal/currentness interpretation limited to the cited official sources.`
+    return `Consolidates ${eventCount} official measures under ${policyArea}. The dossier groups related source events while keeping legal and currentness interpretation limited to the cited official documents.`
   }
-  return `Tracks one verified official source event under ${policyArea}. The package records the source-backed measure without inferring implementation deadlines or legal effects not published by the cited source.`
+  return `Records a specific official measure under ${policyArea}. The dossier summarizes the cited document without inferring unpublished implementation deadlines or legal effects.`
 }
 
-function genericPackageParameters(sortedCandidates, sourceEvents, financingOrIncentive) {
+function genericPackageParameters(sortedCandidates, _sourceEvents, financingOrIncentive) {
   const parameters = []
   if (financingOrIncentive) parameters.push(financingOrIncentive)
-  if (sourceEvents.length === 1) {
-    parameters.push(`Source event date: ${sourceEvents[0].source_published_at || 'date not parsed'}`)
-  } else {
-    parameters.push(`Source event dates: ${uniqueStrings(sourceEvents.map((event) => event.source_published_at || 'date not parsed')).join(', ')}`)
-  }
-  parameters.push(`Evidence type${sourceEvents.length > 1 ? 's' : ''}: ${uniqueStrings(sourceEvents.map((event) => event.evidence_type)).join(', ')}`)
-  if (sortedCandidates.length === 1) parameters.push('No future implementation deadline was published in the extracted source')
+  parameters.push(...sortedCandidates.map((candidate) => measureLabelFromCandidate(candidate)))
   return uniqueStrings(parameters)
 }
 
@@ -2161,7 +2325,13 @@ function isVagueOmnibusLegalAmendment(candidate) {
 }
 
 function isPackageableCandidate(candidate) {
-  return !isVagueOmnibusLegalAmendment(candidate)
+  return (
+    !isVagueOmnibusLegalAmendment(candidate) &&
+    (candidateTopic(candidate) ||
+      isVerifiedHealthcareSourceEvent(candidate) ||
+      isVerifiedHousingUrbanizationSourceEvent(candidate) ||
+      isVerifiedAgricultureSubsidySourceEvent(candidate))
+  )
 }
 
 function genericPackageFromCandidateGroup(candidates) {
@@ -2226,6 +2396,140 @@ function genericPackageFromCandidateGroup(candidates) {
   }
 }
 
+function cleanPublicDigestText(value) {
+  return String(value ?? '')
+    .replace(/^Tracks an?\s+/i, '')
+    .replace(/^Tracks one verified official source event.*?\.\s*/i, '')
+    .replace(/^Official detail page did not expose.*$/i, '')
+    .replace(/\bsource-backed\b/gi, 'official')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+function publicDigestChanged(reformPackage) {
+  const measure = reformPackage.measure_tracks.find((track) => track.label)?.label
+  const financing = reformPackage.financing_or_incentive
+  const summary = reformPackage.short_summary ?? reformPackage.why_tracked
+  return cleanPublicDigestText(measure ?? financing ?? summary)
+}
+
+function publicDigestEffectiveStatus(reformPackage) {
+  const date = reformPackage.next_milestone_date || reformPackage.current_stage_date
+  if (reformPackage.next_milestone && reformPackage.next_milestone !== NO_FUTURE_MILESTONE_LABEL) {
+    return `${reformPackage.current_stage}; next step: ${reformPackage.next_milestone}${date ? ` (${date})` : ''}`
+  }
+  return `${reformPackage.current_stage}${reformPackage.current_stage_date ? ` (${reformPackage.current_stage_date})` : ''}`
+}
+
+function addPublicDigest(reformPackage) {
+  const sourceEvent = reformPackage.official_source_events[0]
+  const documentTitle = sourceEvent?.title && !/^Official detail page did not expose/i.test(sourceEvent.title)
+    ? sourceEvent.title
+    : reformPackage.official_basis
+
+  return {
+    ...reformPackage,
+    digest: {
+      changed: publicDigestChanged(reformPackage),
+      applies_to: reformPackage.policy_area,
+      effective_status: publicDigestEffectiveStatus(reformPackage),
+      document: cleanPublicDigestText(documentTitle),
+    },
+  }
+}
+
+function buildModelImpactMap(reformPackages) {
+  return {
+    active_lenses: MODEL_IMPACT_ACTIVE_LENSES,
+    gated_lenses: MODEL_IMPACT_GATED_LENSES,
+    package_links: reformPackages.map((reformPackage) => {
+      const text = `${reformPackage.reform_category} ${reformPackage.policy_area} ${reformPackage.model_relevance.join(' ')}`.toLowerCase()
+      const active_lenses = [
+        ...(text.match(/\b(monetary|inflation|credit|financial)\b/)
+          ? [{ model_id: 'QPM', channel: 'Macro-financial and inflation transmission context.', caveat: 'Possible lens only.' }]
+          : []),
+        ...(text.match(/\b(nowcast|transport|construction|agriculture|trade|customs|investment|output|sector)\b/)
+          ? [{ model_id: 'DFM', channel: 'High-frequency monitoring context.', caveat: 'Possible lens only.' }]
+          : []),
+        ...(text.match(/\b(trade|customs|construction|agriculture|transport|infrastructure|sector|investment)\b/)
+          ? [{ model_id: 'I-O', channel: 'Sector-linkage and final-demand propagation context.', caveat: 'Possible lens only.' }]
+          : []),
+      ]
+
+      return {
+        package_id: reformPackage.package_id,
+        active_lenses: active_lenses.length > 0
+          ? active_lenses
+          : [{ model_id: 'DFM', channel: 'General monitoring context.', caveat: 'Possible lens only.' }],
+        gated_lenses: MODEL_IMPACT_GATED_LENSES.map((lens) => ({
+          model_id: lens.id,
+          status: 'planned_gated',
+          caveat: 'Not active in public outputs.',
+        })),
+      }
+    }),
+    caveats: ['Model links are routing hints for analyst navigation and do not represent model results.'],
+  }
+}
+
+function firstPackageIdByCategory(reformPackages, category) {
+  return reformPackages.find((reformPackage) => reformPackage.reform_category === category)?.package_id
+}
+
+function buildInternalPolicyBriefs(reformPackages) {
+  const tradePackage = firstPackageIdByCategory(reformPackages, 'trade_customs')
+  const infrastructurePackage = firstPackageIdByCategory(reformPackages, 'infrastructure_investment')
+  const agriculturePackage = firstPackageIdByCategory(reformPackages, 'agriculture')
+  const financialPackage = firstPackageIdByCategory(reformPackages, 'financial_sector')
+  const packageIds = [tradePackage, infrastructurePackage, agriculturePackage, financialPackage].filter(Boolean)
+  const sourceEventsByPackage = new Map(reformPackages.map((reformPackage) => [reformPackage.package_id, reformPackage.official_source_events[0]?.id]))
+
+  return [
+    {
+      id: 'brief-model-routing-internal-2026-05',
+      title: 'Model routing notes for current reform packages',
+      summary: 'Internal package-routing note retained for non-public workflow compatibility.',
+      package_ids: packageIds.slice(0, 3),
+      policy_channels: ['Macro monitoring', 'Sector linkages', 'Trade exposure'],
+      possible_lenses: ['QPM', 'DFM', 'I-O'],
+      source_event_ids: packageIds.slice(0, 3).map((id) => sourceEventsByPackage.get(id)).filter(Boolean),
+      as_of_date: '2026-05-13',
+      publication_state: 'internal_preview',
+      citation_permission: 'internal_only',
+      citable: false,
+      caveats: ['Do not cite. Internal compatibility note only.'],
+    },
+    {
+      id: 'brief-sector-linkage-internal-2026-05',
+      title: 'Sector-linkage note for infrastructure and agriculture packages',
+      summary: 'Internal package-routing note retained for non-public workflow compatibility.',
+      package_ids: [infrastructurePackage, agriculturePackage].filter(Boolean),
+      policy_channels: ['Infrastructure delivery', 'Agriculture financing', 'Regional access'],
+      possible_lenses: ['DFM', 'I-O'],
+      source_event_ids: [infrastructurePackage, agriculturePackage].map((id) => id && sourceEventsByPackage.get(id)).filter(Boolean),
+      as_of_date: '2026-05-13',
+      publication_state: 'internal_preview',
+      citation_permission: 'internal_only',
+      citable: false,
+      caveats: ['Do not cite. Internal compatibility note only.'],
+    },
+    {
+      id: 'brief-financial-monitoring-internal-2026-05',
+      title: 'Financial-sector monitoring note',
+      summary: 'Internal package-routing note retained for non-public workflow compatibility.',
+      package_ids: [financialPackage].filter(Boolean),
+      policy_channels: ['Financial integrity', 'Compliance costs', 'Credit conditions'],
+      possible_lenses: ['QPM', 'DFM'],
+      source_event_ids: [financialPackage].map((id) => id && sourceEventsByPackage.get(id)).filter(Boolean),
+      as_of_date: '2026-05-13',
+      publication_state: 'internal_preview',
+      citation_permission: 'internal_only',
+      citable: false,
+      caveats: ['Do not cite. Internal compatibility note only.'],
+    },
+  ].filter((brief) => brief.package_ids.length > 0 && brief.source_event_ids.length > 0)
+}
+
 export function assembleReformPackagesFromCandidates(candidates) {
   const verifiedCandidates = candidates.filter((candidate) => isConfiguredVerifiedCandidate(candidate) && isPackageableCandidate(candidate))
   const healthcarePackages = verifiedCandidates
@@ -2258,7 +2562,7 @@ export function assembleReformPackagesFromCandidates(candidates) {
     .map(genericPackageFromCandidateGroup)
     .sort((left, right) => right.current_stage_date.localeCompare(left.current_stage_date))
 
-  return [...healthcarePackages, ...housingUrbanizationPackages, ...agricultureSubsidyPackages, ...genericPackages]
+  return [...healthcarePackages, ...housingUrbanizationPackages, ...agricultureSubsidyPackages, ...genericPackages].map(addPublicDigest)
 }
 
 async function validateCandidateSourceLink(candidate, fetchImpl) {
@@ -2400,6 +2704,11 @@ export async function buildKnowledgeHubCandidateArtifactWithDiagnostics(options 
     : fetchSource
       ? assembleReformPackagesFromCandidates(candidates)
       : FIXTURE_DEMO_REFORM_PACKAGES
+  const publicReformPackages = reformPackages.map(addPublicDigest)
+  const policyBriefs = options.policyBriefs ?? buildInternalPolicyBriefs(publicReformPackages)
+  const researchUpdates = options.researchUpdates ?? STATIC_RESEARCH_UPDATES
+  const literatureItems = options.literatureItems ?? STATIC_LITERATURE_ITEMS
+  const modelImpactMap = options.modelImpactMap ?? buildModelImpactMap(publicReformPackages)
   const includeCandidatesInArtifact = options.includeCandidatesInArtifact !== false
   const artifactCandidates = includeCandidatesInArtifact ? candidates : []
   const sourceFailures = sourceResults
@@ -2436,7 +2745,11 @@ export async function buildKnowledgeHubCandidateArtifactWithDiagnostics(options 
     rulebook: REFORM_INTAKE_RULEBOOK,
     sources: sources.map(sourceDefinitionToArtifactSource),
     source_diagnostics: sourceResults.map(sourceResultToArtifactDiagnostic),
-    reform_packages: reformPackages,
+    reform_packages: publicReformPackages,
+    policy_briefs: policyBriefs,
+    research_updates: researchUpdates,
+    literature_items: literatureItems,
+    model_impact_map: modelImpactMap,
     accepted_reforms: [],
     candidates: artifactCandidates,
     caveats,

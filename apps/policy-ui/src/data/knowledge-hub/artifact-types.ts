@@ -1,7 +1,9 @@
 import type {
   KnowledgeHubSourceDiagnostic,
+  KnowledgeHubLiteratureItem,
   KnowledgeHubModelImpactMap,
   KnowledgeHubPolicyBrief,
+  KnowledgeHubResearchUpdate,
   ReformPackage,
   ReformCandidateItem,
   ReformTrackerItem,
@@ -37,6 +39,8 @@ export type KnowledgeHubArtifact = {
   source_diagnostics: KnowledgeHubSourceDiagnostic[]
   reform_packages: ReformPackage[]
   policy_briefs: KnowledgeHubPolicyBrief[]
+  research_updates: KnowledgeHubResearchUpdate[]
+  literature_items: KnowledgeHubLiteratureItem[]
   model_impact_map: KnowledgeHubModelImpactMap
   accepted_reforms: ReformTrackerItem[]
   candidates: ReformCandidateItem[]

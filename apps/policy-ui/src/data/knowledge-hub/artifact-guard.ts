@@ -6,9 +6,12 @@ import type {
   ReformArtifactExtractionMode,
   KnowledgeHubActiveModelLensId,
   KnowledgeHubGatedModelLensId,
+  KnowledgeHubLiteratureItem,
   KnowledgeHubModelImpactMap,
   KnowledgeHubModelImpactPackageLink,
   KnowledgeHubPolicyBrief,
+  KnowledgeHubResearchUpdate,
+  ReformPackageDigest,
   ReformLicenseClass,
   ReformMilestoneEventType,
   ReformPackage,
@@ -472,6 +475,35 @@ function validatePackageSourceEvent(
   return event
 }
 
+function validatePackageDigest(
+  value: unknown,
+  path: string,
+  issues: KnowledgeHubArtifactValidationIssue[],
+): ReformPackageDigest | null {
+  if (!isRecord(value)) {
+    issues.push({ path, message: 'Package digest must be an object.', severity: 'error' })
+    return null
+  }
+
+  const digest = {
+    changed: requireString(value, 'changed', path, issues),
+    applies_to: requireString(value, 'applies_to', path, issues),
+    effective_status: requireString(value, 'effective_status', path, issues),
+    document: requireString(value, 'document', path, issues),
+  }
+  const forbidden = /Source event date|Evidence type|No future implementation deadline|Tracks one verified official source event|Official detail page did not expose/i
+  for (const [key, fieldValue] of Object.entries(digest)) {
+    if (forbidden.test(fieldValue)) {
+      issues.push({
+        path: `${path}.${key}`,
+        message: 'Public digest cannot expose extraction metadata or generic source-event wording.',
+        severity: 'error',
+      })
+    }
+  }
+  return digest
+}
+
 function validateReformPackage(
   value: unknown,
   path: string,
@@ -526,6 +558,12 @@ function validateReformPackage(
   const reformPackage: ReformPackage = {
     package_id: requireString(value, 'package_id', path, issues),
     title: requireString(value, 'title', path, issues),
+    digest: validatePackageDigest(value.digest, `${path}.digest`, issues) ?? {
+      changed: '',
+      applies_to: '',
+      effective_status: '',
+      document: '',
+    },
     short_summary: stringValue(value.short_summary) ?? undefined,
     policy_area: requireString(value, 'policy_area', path, issues),
     reform_category: requireEnum(value, 'reform_category', path, REFORM_CATEGORY_VALUES, issues),
@@ -639,6 +677,116 @@ function validatePolicyBrief(
   }
 
   return brief
+}
+
+function validateResearchUpdate(
+  value: unknown,
+  path: string,
+  issues: KnowledgeHubArtifactValidationIssue[],
+): KnowledgeHubResearchUpdate | null {
+  if (!isRecord(value)) {
+    issues.push({ path, message: 'Research update entry must be an object.', severity: 'error' })
+    return null
+  }
+
+  const modelIds = stringArray(value.model_ids, `${path}.model_ids`, issues)
+  const update: KnowledgeHubResearchUpdate = {
+    id: requireString(value, 'id', path, issues),
+    title: requireString(value, 'title', path, issues),
+    topic: requireString(value, 'topic', path, issues),
+    summary: requireString(value, 'summary', path, issues),
+    model_ids: modelIds.filter((modelId): modelId is KnowledgeHubResearchUpdate['model_ids'][number] =>
+      [...KNOWLEDGE_HUB_ACTIVE_MODEL_LENS_VALUES, ...KNOWLEDGE_HUB_GATED_MODEL_LENS_VALUES].includes(
+        modelId as KnowledgeHubResearchUpdate['model_ids'][number],
+      ),
+    ),
+    methods: stringArray(value.methods, `${path}.methods`, issues),
+    source_title: requireString(value, 'source_title', path, issues),
+    source_institution: requireString(value, 'source_institution', path, issues),
+    source_url: requireString(value, 'source_url', path, issues),
+    published_at: stringValue(value.published_at) ?? undefined,
+    as_of_date: stringValue(value.as_of_date) ?? undefined,
+    geography: stringValue(value.geography) ?? undefined,
+    why_relevant: requireString(value, 'why_relevant', path, issues),
+  }
+
+  validateUrl(update.source_url, `${path}.source_url`, issues)
+  if (!update.published_at && !update.as_of_date) {
+    issues.push({ path, message: 'Research updates require published_at or as_of_date.', severity: 'error' })
+  }
+  if (update.published_at && !isIsoLike(update.published_at)) {
+    issues.push({ path: `${path}.published_at`, message: 'Expected an ISO-like publication date.', severity: 'error' })
+  }
+  if (update.as_of_date && !isIsoLike(update.as_of_date)) {
+    issues.push({ path: `${path}.as_of_date`, message: 'Expected an ISO-like as-of date.', severity: 'error' })
+  }
+  if (update.model_ids.length === 0) {
+    issues.push({ path: `${path}.model_ids`, message: 'Expected at least one model id.', severity: 'error' })
+  }
+  if (update.methods.length === 0) {
+    issues.push({ path: `${path}.methods`, message: 'Expected at least one method.', severity: 'error' })
+  }
+  for (const modelId of modelIds) {
+    if (
+      ![...KNOWLEDGE_HUB_ACTIVE_MODEL_LENS_VALUES, ...KNOWLEDGE_HUB_GATED_MODEL_LENS_VALUES].includes(
+        modelId as KnowledgeHubResearchUpdate['model_ids'][number],
+      )
+    ) {
+      issues.push({ path: `${path}.model_ids`, message: `Unknown Knowledge Hub model id ${modelId}.`, severity: 'error' })
+    }
+  }
+
+  return update
+}
+
+function validateLiteratureItem(
+  value: unknown,
+  path: string,
+  issues: KnowledgeHubArtifactValidationIssue[],
+): KnowledgeHubLiteratureItem | null {
+  if (!isRecord(value)) {
+    issues.push({ path, message: 'Literature item entry must be an object.', severity: 'error' })
+    return null
+  }
+
+  const modelIds = stringArray(value.model_ids, `${path}.model_ids`, issues)
+  const item: KnowledgeHubLiteratureItem = {
+    id: requireString(value, 'id', path, issues),
+    title: requireString(value, 'title', path, issues),
+    authors: stringValue(value.authors) ?? undefined,
+    year: requireString(value, 'year', path, issues),
+    source: requireString(value, 'source', path, issues),
+    url: requireString(value, 'url', path, issues),
+    model_ids: modelIds.filter((modelId): modelId is KnowledgeHubLiteratureItem['model_ids'][number] =>
+      [...KNOWLEDGE_HUB_ACTIVE_MODEL_LENS_VALUES, ...KNOWLEDGE_HUB_GATED_MODEL_LENS_VALUES].includes(
+        modelId as KnowledgeHubLiteratureItem['model_ids'][number],
+      ),
+    ),
+    methods: stringArray(value.methods, `${path}.methods`, issues),
+    note: requireString(value, 'note', path, issues),
+  }
+
+  validateUrl(item.url, `${path}.url`, issues)
+  if (!/^\d{4}$/.test(item.year)) {
+    issues.push({ path: `${path}.year`, message: 'Expected a four-digit year.', severity: 'error' })
+  }
+  if (item.model_ids.length === 0) {
+    issues.push({ path: `${path}.model_ids`, message: 'Expected at least one model id.', severity: 'error' })
+  }
+  if (item.methods.length === 0) {
+    issues.push({ path: `${path}.methods`, message: 'Expected at least one method.', severity: 'error' })
+  }
+  for (const modelId of modelIds) {
+    if (
+      ![...KNOWLEDGE_HUB_ACTIVE_MODEL_LENS_VALUES, ...KNOWLEDGE_HUB_GATED_MODEL_LENS_VALUES].includes(
+        modelId as KnowledgeHubLiteratureItem['model_ids'][number],
+      )
+    ) {
+      issues.push({ path: `${path}.model_ids`, message: `Unknown Knowledge Hub model id ${modelId}.`, severity: 'error' })
+    }
+  }
+
+  return item
 }
 
 function validateActiveModelImpactLink(
@@ -1045,6 +1193,24 @@ export function validateKnowledgeHubArtifact(input: unknown): KnowledgeHubArtifa
     issues.push({ path: 'policy_briefs', message: 'Expected a policy brief array.', severity: 'error' })
   }
 
+  const researchUpdates = Array.isArray(input.research_updates)
+    ? input.research_updates
+        .map((entry, index) => validateResearchUpdate(entry, `research_updates[${index}]`, issues))
+        .filter((entry): entry is KnowledgeHubResearchUpdate => entry !== null)
+    : []
+  if (!Array.isArray(input.research_updates)) {
+    issues.push({ path: 'research_updates', message: 'Expected a research update array.', severity: 'error' })
+  }
+
+  const literatureItems = Array.isArray(input.literature_items)
+    ? input.literature_items
+        .map((entry, index) => validateLiteratureItem(entry, `literature_items[${index}]`, issues))
+        .filter((entry): entry is KnowledgeHubLiteratureItem => entry !== null)
+    : []
+  if (!Array.isArray(input.literature_items)) {
+    issues.push({ path: 'literature_items', message: 'Expected a literature item array.', severity: 'error' })
+  }
+
   const modelImpactMap = validateModelImpactMap(input.model_impact_map, 'model_impact_map', issues)
 
   const acceptedReforms = Array.isArray(input.accepted_reforms)
@@ -1108,6 +1274,18 @@ export function validateKnowledgeHubArtifact(input: unknown): KnowledgeHubArtifa
       }
     }
   }
+  for (const update of researchUpdates) {
+    if (ids.has(update.id)) {
+      issues.push({ path: 'research_updates', message: `Duplicate research update id ${update.id}.`, severity: 'error' })
+    }
+    ids.add(update.id)
+  }
+  for (const item of literatureItems) {
+    if (ids.has(item.id)) {
+      issues.push({ path: 'literature_items', message: `Duplicate literature item id ${item.id}.`, severity: 'error' })
+    }
+    ids.add(item.id)
+  }
   for (const packageLink of modelImpactMap?.package_links ?? []) {
     if (!packageIds.has(packageLink.package_id)) {
       issues.push({ path: `model_impact_map.package_links.${packageLink.package_id}`, message: `Unknown source package id ${packageLink.package_id}.`, severity: 'error' })
@@ -1152,6 +1330,8 @@ export function validateKnowledgeHubArtifact(input: unknown): KnowledgeHubArtifa
       source_diagnostics: sourceDiagnostics,
       reform_packages: reformPackages,
       policy_briefs: policyBriefs,
+      research_updates: researchUpdates,
+      literature_items: literatureItems,
       model_impact_map: modelImpactMap ?? {
         active_lenses: [],
         gated_lenses: [],

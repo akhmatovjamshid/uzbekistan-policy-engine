@@ -717,6 +717,34 @@ export type KnowledgeHubPolicyBrief = {
   caveats: string[]
 }
 
+export type KnowledgeHubResearchUpdate = {
+  id: string
+  title: string
+  topic: string
+  summary: string
+  model_ids: Array<KnowledgeHubActiveModelLensId | KnowledgeHubGatedModelLensId>
+  methods: string[]
+  source_title: string
+  source_institution: string
+  source_url: string
+  published_at?: string
+  as_of_date?: string
+  geography?: string
+  why_relevant: string
+}
+
+export type KnowledgeHubLiteratureItem = {
+  id: string
+  title: string
+  authors?: string
+  year: string
+  source: string
+  url: string
+  model_ids: Array<KnowledgeHubActiveModelLensId | KnowledgeHubGatedModelLensId>
+  methods: string[]
+  note: string
+}
+
 export type KnowledgeHubModelLens = {
   id: KnowledgeHubActiveModelLensId | KnowledgeHubGatedModelLensId
   label: string
@@ -869,9 +897,17 @@ export type ReformPackageSourceEvent = {
   extracted_at?: string
 }
 
+export type ReformPackageDigest = {
+  changed: string
+  applies_to: string
+  effective_status: string
+  document: string
+}
+
 export type ReformPackage = {
   package_id: string
   title: string
+  digest: ReformPackageDigest
   short_summary?: string
   policy_area: string
   reform_category: ReformCategory
@@ -949,6 +985,8 @@ export type KnowledgeHubContent = {
   reforms: ReformTrackerItem[]
   briefs: ResearchBrief[]
   policy_briefs?: KnowledgeHubPolicyBrief[]
+  research_updates?: KnowledgeHubResearchUpdate[]
+  literature_items?: KnowledgeHubLiteratureItem[]
   model_impact_map?: KnowledgeHubModelImpactMap
   candidates?: ReformCandidateItem[]
   sources?: KnowledgeHubConfiguredSource[]

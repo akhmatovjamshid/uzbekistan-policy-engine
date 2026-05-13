@@ -1075,73 +1075,16 @@
           "implementation_program": "Implementation program",
           "international_agreement": "International agreement"
         }
-      },
-      "methodology": {
-        "title": "Methodology note",
-        "includedTitle": "Included",
-        "included": "Official policy measures, decrees, implementation deadlines, financing mechanisms, and institutional reforms.",
-        "excludedTitle": "Excluded",
-        "excluded": "Meetings, speeches, trainings, generic cooperation news, and analytical reports without a policy measure.",
-        "caveat": "This page summarizes official source links. It is not a legal registry.",
-        "diagnostics": "Source checks",
-        "sourcesChecked": "{{count}} source checked",
-        "sourcesChecked_one": "{{count}} source checked",
-        "sourcesChecked_few": "{{count}} sources checked",
-        "sourcesChecked_many": "{{count}} sources checked",
-        "sourcesChecked_other": "{{count}} sources checked",
-        "invalidLinksBlocked": "{{count}} invalid link blocked",
-        "invalidLinksBlocked_one": "{{count}} invalid link blocked",
-        "invalidLinksBlocked_few": "{{count}} invalid links blocked",
-        "invalidLinksBlocked_many": "{{count}} invalid links blocked",
-        "invalidLinksBlocked_other": "{{count}} invalid links blocked"
       }
-    },
-    "sourceLibrary": {
-      "aria": "Knowledge Hub source library",
-      "status": "Sources",
-      "title": "Sources",
-      "description": "Official sites checked during the latest update.",
-      "summaryAria": "Source library summary",
-      "sourcesConfigured": "Sources",
-      "sourcesChecked": "Sources checked",
-      "verifiedItems": "Verified items",
-      "excludedItems": "Excluded items",
-      "invalidLinks": "Invalid links blocked",
-      "issueCount": "{{count}} source reported an issue.",
-      "issueCount_one": "{{count}} source reported an issue.",
-      "issueCount_few": "{{count}} sources reported issues.",
-      "issueCount_many": "{{count}} sources reported issues.",
-      "issueCount_other": "{{count}} sources reported issues.",
-      "lastChecked": "Last checked",
-      "itemsFound": "Items found",
-      "excluded": "Excluded",
-      "linkStatus": "Link status",
-      "statusChecked": "Checked",
-      "statusIssue": "Issue",
-      "statusMissing": "Not checked",
-      "openSource": "Open source site",
-      "openSourceAria": "Open {{institution}} source site in a new tab",
-      "empty": "No source checks are available."
-    },
-    "policyBriefs": {
-      "aria": "Knowledge Hub policy briefs",
-      "title": "Policy Briefs",
-      "description": "Static internal-preview notes derived from official-source reform packages.",
-      "previewLabel": "Internal preview",
-      "previewCaveat": "These briefs are not citable, not reviewed publications, and not model evidence.",
-      "internalOnly": "Internal only",
-      "nonCitable": "Non-citable",
-      "packageBasis": "Package basis",
-      "possibleLenses": "Possible lenses",
-      "officialSources": "Official sources",
-      "empty": "No internal-preview briefs are available."
     },
     "researchUpdates": {
       "aria": "Knowledge Hub research updates",
       "title": "Research Updates",
-      "description": "Source-linked notes on current reform topics and relevant analytical channels.",
-      "packageBasis": "Reform packages",
-      "policyChannels": "Policy channels",
+      "description": "Recent model-use and policy-application research relevant to macro, nowcasting, sector, fiscal, and trade analysis.",
+      "topic": "Topic",
+      "models": "Models",
+      "methods": "Methods",
+      "relevance": "Relevance",
       "sources": "Sources",
       "empty": "No research updates are available."
     },
@@ -1154,62 +1097,11 @@
       "openSource": "Open reference",
       "empty": "No references are listed for this model yet."
     },
-    "modelImpactMap": {
-      "aria": "Knowledge Hub model impact map",
-      "title": "Model Impact Map",
-      "description": "Cautious routing from reform packages to possible analytical lenses.",
-      "possibleLenses": "Possible analytical lenses",
-      "gatedLanes": "Planned/gated lanes",
-      "possibleLens": "Possible lens",
-      "plannedGated": "Planned/gated",
-      "boundaryTitle": "Boundaries",
-      "empty": "No model impact map is available."
-    },
-    "methodologyDetail": {
-      "aria": "Knowledge Hub methodology",
-      "title": "Methodology",
-      "description": "How the page decides whether an official source item is a reform.",
-      "versionUnavailable": "Version unavailable",
-      "definitionTitle": "What counts as a reform",
-      "definitionUnavailable": "No reform definition is available.",
-      "includeRules": "Include rules",
-      "excludeRules": "Exclude rules",
-      "threshold": "Include threshold",
-      "includedTitle": "Included",
-      "excludedTitle": "Excluded",
-      "evidenceTypes": "Evidence types",
-      "boundaries": "Boundaries",
-      "showFullRules": "Show full rules",
-      "note": "Note"
-    },
     "sections": {
       "aria": "Knowledge Hub subsections",
       "reformTracker": "Reform Tracker",
       "researchUpdates": "Research Updates",
-      "literatureHub": "Literature Hub",
-      "policyBriefs": "Policy Briefs",
-      "sourceLibrary": "Source Library",
-      "methodology": "Methodology",
-      "modelImpactMap": "Model Impact Map",
-      "plannedStatus": "Planned"
-    },
-    "planned": {
-      "policyBriefs": {
-        "title": "Policy Briefs planned",
-        "body": "Reviewed analyst-ready notes will appear here after content governance is ready. No AI-drafted or unreviewed prose is presented as final analysis."
-      },
-      "sourceLibrary": {
-        "title": "Source Library planned",
-        "body": "This section will summarize official source coverage and source-check posture without exposing parser internals or intake diagnostics in the main flow."
-      },
-      "methodology": {
-        "title": "Methodology planned",
-        "body": "Definitions, inclusion rules, caveats, and automation boundaries will be visible here without turning the Reform Tracker into a review workflow."
-      },
-      "modelImpactMap": {
-        "title": "Model Impact Map planned",
-        "body": "This map will route reforms to analytical channels cautiously. It will not cite gated model outputs or activate model scenarios."
-      }
+      "literatureHub": "Literature Hub"
     }
   },
   "dataRegistry": {

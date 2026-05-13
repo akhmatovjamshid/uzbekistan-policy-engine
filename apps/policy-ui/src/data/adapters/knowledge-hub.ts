@@ -1,8 +1,10 @@
 import type {
   KnowledgeHubConfiguredSource,
   KnowledgeHubContent,
+  KnowledgeHubLiteratureItem,
   KnowledgeHubModelImpactMap,
   KnowledgeHubPolicyBrief,
+  KnowledgeHubResearchUpdate,
   KnowledgeHubRulebookMetadata,
   KnowledgeHubRulebookRule,
   KnowledgeHubSourceDiagnostic,
@@ -85,6 +87,8 @@ export type RawKnowledgeHubPayload = {
   candidates?: ReformCandidateItem[]
   source_diagnostics?: KnowledgeHubSourceDiagnostic[]
   policy_briefs?: KnowledgeHubPolicyBrief[]
+  research_updates?: KnowledgeHubResearchUpdate[]
+  literature_items?: KnowledgeHubLiteratureItem[]
   model_impact_map?: KnowledgeHubModelImpactMap
   caveats?: string[]
   generated_at?: string
@@ -248,6 +252,8 @@ export function toKnowledgeHubContent(raw: RawKnowledgeHubPayload): KnowledgeHub
   const briefs = Array.isArray(raw.briefs) ? raw.briefs.map(adaptBrief) : []
   const candidates = Array.isArray(raw.candidates) ? raw.candidates : []
   const policyBriefs = Array.isArray(raw.policy_briefs) ? raw.policy_briefs : []
+  const researchUpdates = Array.isArray(raw.research_updates) ? raw.research_updates : []
+  const literatureItems = Array.isArray(raw.literature_items) ? raw.literature_items : []
   const sources = Array.isArray(raw.sources) ? raw.sources : []
   const sourceDiagnostics = Array.isArray(raw.source_diagnostics) ? raw.source_diagnostics : []
   const meta = raw.meta ?? {}
@@ -256,6 +262,8 @@ export function toKnowledgeHubContent(raw: RawKnowledgeHubPayload): KnowledgeHub
     reforms,
     briefs,
     policy_briefs: policyBriefs,
+    research_updates: researchUpdates,
+    literature_items: literatureItems,
     model_impact_map: raw.model_impact_map,
     candidates,
     sources,
@@ -268,8 +276,8 @@ export function toKnowledgeHubContent(raw: RawKnowledgeHubPayload): KnowledgeHub
     source_artifact: typeof raw.source_artifact === 'string' ? raw.source_artifact : undefined,
     meta: {
       reforms_tracked: asNumber(meta.reforms_tracked, reforms.length),
-      research_briefs: asNumber(meta.research_briefs, briefs.length),
-      literature_items: asNumber(meta.literature_items, 0),
+      research_briefs: asNumber(meta.research_briefs, researchUpdates.length),
+      literature_items: asNumber(meta.literature_items, literatureItems.length),
       candidate_items: asNumber(meta.candidate_items, candidates.length),
       sources_configured: asNumber(meta.sources_configured, 0),
       reform_packages: asNumber(meta.reform_packages, reformPackages.length),
@@ -287,6 +295,8 @@ export function knowledgeHubArtifactToContent(artifact: KnowledgeHubArtifact): K
     rulebook: artifact.rulebook,
     reform_packages: artifact.reform_packages,
     policy_briefs: artifact.policy_briefs,
+    research_updates: artifact.research_updates,
+    literature_items: artifact.literature_items,
     model_impact_map: artifact.model_impact_map,
     accepted_reforms: artifact.accepted_reforms,
     candidates: artifact.candidates,
@@ -297,8 +307,8 @@ export function knowledgeHubArtifactToContent(artifact: KnowledgeHubArtifact): K
       sources_configured: artifact.sources.length,
       reforms_tracked: artifact.reform_packages.length,
       reform_packages: artifact.reform_packages.length,
-      research_briefs: artifact.policy_briefs.length,
-      literature_items: 0,
+      research_briefs: artifact.research_updates.length,
+      literature_items: artifact.literature_items.length,
     },
   })
 }

@@ -171,6 +171,12 @@ describe('knowledge hub adapter', () => {
     assert.ok(validation.ok && validation.value.policy_briefs.every((brief) => brief.citation_permission === 'internal_only'))
     assert.ok(validation.ok && validation.value.policy_briefs.every((brief) => brief.citable === false))
     assert.ok(validation.ok && validation.value.policy_briefs.every((brief) => brief.caveats.some((caveat) => caveat.includes('Do not cite'))))
+    assert.ok(validation.ok && validation.value.research_updates.length >= 3)
+    assert.ok(validation.ok && validation.value.research_updates.every((update) => update.model_ids.length > 0))
+    assert.ok(validation.ok && validation.value.research_updates.every((update) => update.methods.length > 0))
+    assert.ok(validation.ok && validation.value.research_updates.every((update) => update.why_relevant.length > 0))
+    assert.ok(validation.ok && validation.value.literature_items.length >= 3)
+    assert.ok(validation.ok && validation.value.literature_items.every((item) => item.model_ids.length > 0))
     assert.deepEqual(
       validation.ok ? validation.value.model_impact_map.active_lenses.map((lens) => `${lens.id}:${lens.status}`).sort() : [],
       ['DFM:possible_lens', 'I-O:possible_lens', 'QPM:possible_lens'].sort(),
@@ -192,6 +198,8 @@ describe('knowledge hub adapter', () => {
     assert.equal(content.reforms.length, 0)
     assert.equal(content.briefs.length, 0)
     assert.equal(content.policy_briefs?.length, validation.ok ? validation.value.policy_briefs.length : 0)
+    assert.equal(content.research_updates?.length, validation.ok ? validation.value.research_updates.length : 0)
+    assert.equal(content.literature_items?.length, validation.ok ? validation.value.literature_items.length : 0)
     assert.equal(content.model_impact_map?.gated_lenses.length, 5)
     assert.equal(content.candidates?.length, 0)
     assert.equal(content.source_diagnostics?.length, validation.ok ? validation.value.source_diagnostics.length : 0)
@@ -199,7 +207,8 @@ describe('knowledge hub adapter', () => {
     assert.equal(content.meta.sources_configured, 13)
     assert.equal(content.meta.reform_packages, validation.ok ? validation.value.reform_packages.length : 0)
     assert.equal(content.meta.reforms_tracked, validation.ok ? validation.value.reform_packages.length : 0)
-    assert.equal(content.meta.research_briefs, validation.ok ? validation.value.policy_briefs.length : 0)
+    assert.equal(content.meta.research_briefs, validation.ok ? validation.value.research_updates.length : 0)
+    assert.equal(content.meta.literature_items, validation.ok ? validation.value.literature_items.length : 0)
     assert.equal(content.sources?.length, 13)
     assert.equal(content.rulebook?.version, 'knowledge-hub-reform-intake-rulebook.v2')
     assert.ok(content.rulebook?.include_rules.some((rule) => rule.id === 'legal-or-regulatory-change'))
@@ -207,13 +216,17 @@ describe('knowledge hub adapter', () => {
     assert.ok(content.rulebook?.actual_reform_definition?.includes('legal or policy instrument'))
     assert.equal(content.extraction_mode_label, 'Configured source fetch')
     assert.ok(content.reform_packages?.every((reformPackage) => reformPackage.implementation_milestones.length > 0))
+    assert.ok(content.reform_packages?.every((reformPackage) => reformPackage.digest.changed.length > 0))
+    assert.ok(content.reform_packages?.every((reformPackage) => reformPackage.digest.applies_to.length > 0))
+    assert.ok(content.reform_packages?.every((reformPackage) => reformPackage.digest.effective_status.length > 0))
+    assert.ok(content.reform_packages?.every((reformPackage) => reformPackage.digest.document.length > 0))
     assert.ok(content.reform_packages?.every((reformPackage) => reformPackage.short_summary && reformPackage.short_summary.length > 60))
     assert.ok(content.reform_packages?.every((reformPackage) => (reformPackage.parameters_or_amounts?.length ?? 0) > 0))
     assert.ok(content.reform_packages?.every((reformPackage) => (reformPackage.policy_channels?.length ?? 0) > 0))
     assert.ok(
       content.reform_packages?.some(
         (reformPackage) =>
-          reformPackage.package_id === 'pkg-tax-administration-incentives-2026-04-14' &&
+          reformPackage.package_id === 'pkg-tax-administration-incentives-2026-05-12' &&
           reformPackage.next_milestone === 'No future milestone published in verified source' &&
           reformPackage.financing_or_incentive === 'Tax incentives for investors financing infrastructure projects' &&
           reformPackage.implementation_milestones.some((milestone) => milestone.id === 'tax-administration-incentives-financing_allocated-2026-04-14'),
@@ -354,14 +367,16 @@ describe('knowledge hub adapter', () => {
     assert.equal(fetchCalls, 1)
     assert.equal(state.content?.meta.reforms_tracked, artifact.reform_packages.length)
     assert.equal(state.content?.meta.reform_packages, artifact.reform_packages.length)
-    assert.equal(state.content?.meta.research_briefs, artifact.policy_briefs.length)
-    assert.equal(state.content?.meta.literature_items, 0)
+    assert.equal(state.content?.meta.research_briefs, artifact.research_updates.length)
+    assert.equal(state.content?.meta.literature_items, artifact.literature_items.length)
     assert.equal(state.content?.meta.candidate_items, 0)
     assert.equal(state.content?.reforms.length, 0)
     assert.equal(state.content?.reform_packages?.length, artifact.reform_packages.length)
     assert.ok(state.content?.reform_packages?.[0].title)
     assert.equal(state.content?.briefs.length, 0)
     assert.equal(state.content?.policy_briefs?.length, artifact.policy_briefs.length)
+    assert.equal(state.content?.research_updates?.length, artifact.research_updates.length)
+    assert.equal(state.content?.literature_items?.length, artifact.literature_items.length)
     assert.equal(state.content?.model_impact_map?.active_lenses.length, 3)
     assert.equal(state.content?.extraction_mode, 'configured-source-fetch')
     assert.equal(state.content?.extraction_mode_label, 'Configured source fetch')

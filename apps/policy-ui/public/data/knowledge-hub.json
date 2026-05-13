@@ -400,8 +400,8 @@
       "parser": "govuz-api",
       "fetch_url": "https://api-portal.gov.uz/authorities/news/category?code_name=news&page=1",
       "ok": true,
-      "candidate_count": 0,
-      "excluded_count": 12,
+      "candidate_count": 1,
+      "excluded_count": 11,
       "link_invalid_count": 0,
       "fetched_at": "2026-05-13T06:03:10.069Z"
     },
@@ -610,7 +610,13 @@
           "extracted_at": "2026-05-13T06:03:10.069Z"
         }
       ],
-      "caveat": "Automatic official-source tracker entry assembled from a verified source event. It is not an official legal registry and does not assert legal force beyond the cited official source."
+      "caveat": "Automatic official-source tracker entry assembled from a verified source event. It is not an official legal registry and does not assert legal force beyond the cited official source.",
+      "digest": {
+        "changed": "licensing reform",
+        "applies_to": "Healthcare services and private-sector participation",
+        "effective_status": "Instructions issued; next step: Revised licensing procedures start (2026-07-01)",
+        "document": "Healthcare system development issues discussed"
+      }
     },
     {
       "package_id": "pkg-urbanization-construction-permits-housing-2026",
@@ -785,7 +791,13 @@
           "extracted_at": "2026-05-13T06:03:10.069Z"
         }
       ],
-      "caveat": "Automatic official-source tracker entry assembled from a verified source event. It is not an official legal registry and does not assert legal force beyond the cited official source."
+      "caveat": "Automatic official-source tracker entry assembled from a verified source event. It is not an official legal registry and does not assert legal force beyond the cited official source.",
+      "digest": {
+        "changed": "master-plan implementation programs",
+        "applies_to": "Urbanization, construction permits, housing, and infrastructure delivery",
+        "effective_status": "Instructions issued; next step: Construction permit and utility connection simplification starts (2026-07-01)",
+        "document": "Progress and priorities in housing construction and urbanization reviewed"
+      }
     },
     {
       "package_id": "pkg-agriculture-subsidy-financing-digital-delivery-2026",
@@ -918,7 +930,128 @@
           "extracted_at": "2026-05-13T06:03:10.069Z"
         }
       ],
-      "caveat": "Automatic official-source tracker entry assembled from a verified source event. It is not an official legal registry and does not assert legal force beyond the cited official source."
+      "caveat": "Automatic official-source tracker entry assembled from a verified source event. It is not an official legal registry and does not assert legal force beyond the cited official source.",
+      "digest": {
+        "changed": "Agricultural Payments Agency setup",
+        "applies_to": "Agriculture financing, subsidies, and digital delivery",
+        "effective_status": "Instructions issued; next step: 2026 proactive subsidy delivery through Agrosubsidy (2026)",
+        "document": "Financing and subsidy plans for the agricultural sector reviewed"
+      }
+    },
+    {
+      "package_id": "pkg-tax-administration-incentives-2026-05-12",
+      "title": "Tax administration and investment incentive reform",
+      "policy_area": "Tax administration and fiscal incentives",
+      "reform_category": "fiscal_tax",
+      "current_stage": "Multiple related official measures",
+      "current_stage_date": "2026-05-12",
+      "next_milestone": "No future milestone published in verified source",
+      "next_milestone_date": "2026-05-12",
+      "responsible_institutions": [
+        "Ministry of Investment, Industry and Trade of the Republic of Uzbekistan",
+        "Ministry of Economy and Finance of Uzbekistan"
+      ],
+      "legal_basis": "Verified official source events: Uzbekistan Expands Tax Incentives for Investors Financing Infrastructure Projects; Information on work completed during the 1st quarter of 2026 on the development of information systems and artificial intelligence technologies.",
+      "official_basis": "Ministry of Investment, Industry and Trade of the Republic of Uzbekistan; Ministry of Economy and Finance of Uzbekistan",
+      "financing_or_incentive": "Tax incentives for investors financing infrastructure projects",
+      "short_summary": "Records tax incentives for investors financing infrastructure projects. The dossier is kept as a fiscal incentive reform and does not infer implementation effects beyond the cited document.",
+      "parameters_or_amounts": [
+        "Tax incentives for investors financing infrastructure projects",
+        "Infrastructure investor incentive measure recorded"
+      ],
+      "source_confidence": "high",
+      "why_tracked": "The verified official source records a fiscal incentive measure for investors financing infrastructure projects. It is tracked as an incentive package while avoiding any inferred implementation deadline not present in the source.",
+      "model_relevance": [
+        "Fiscal balance",
+        "Investment",
+        "Business costs"
+      ],
+      "policy_channels": [
+        "Fiscal incentives",
+        "Private infrastructure investment",
+        "Business cost of capital",
+        "Public-private financing"
+      ],
+      "measure_tracks": [
+        {
+          "id": "tax-administration-incentives-measure-1",
+          "label": "tax incentives for infrastructure investors",
+          "status": "source verified"
+        },
+        {
+          "id": "tax-administration-incentives-measure-2",
+          "label": "tax incentives for infrastructure investors",
+          "status": "source verified"
+        }
+      ],
+      "implementation_milestones": [
+        {
+          "id": "tax-administration-incentives-financing_allocated-2026-04-14",
+          "label": "tax incentive source event recorded",
+          "date": "2026-04-14",
+          "date_precision": "day",
+          "event_type": "financing_allocated",
+          "responsible_institutions": [
+            "Ministry of Investment, Industry and Trade of the Republic of Uzbekistan"
+          ],
+          "evidence_type": "official_policy_announcement",
+          "source_event_ids": [
+            "source-event-2026-04-14-uzbekistan-expands-tax-incentives-for-investors-financing-infrastruct"
+          ],
+          "confidence": "high",
+          "related_next_milestone_ids": [
+            "tax-administration-incentives-financing_allocated-2026-05-12"
+          ]
+        },
+        {
+          "id": "tax-administration-incentives-financing_allocated-2026-05-12",
+          "label": "tax incentive source event recorded",
+          "date": "2026-05-12",
+          "date_precision": "day",
+          "event_type": "financing_allocated",
+          "responsible_institutions": [
+            "Ministry of Economy and Finance of Uzbekistan"
+          ],
+          "evidence_type": "official_policy_announcement",
+          "source_event_ids": [
+            "source-event-2026-05-12-information-on-work-completed-during-the-1st-quarter-of-2026-on-the-d"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "official_source_events": [
+        {
+          "id": "source-event-2026-04-14-uzbekistan-expands-tax-incentives-for-investors-financing-infrastruct",
+          "title": "Uzbekistan Expands Tax Incentives for Investors Financing Infrastructure Projects",
+          "source_institution": "Ministry of Investment, Industry and Trade of the Republic of Uzbekistan",
+          "source_url": "https://gov.uz/en/miit/news/view/153388",
+          "source_published_at": "2026-04-14",
+          "evidence_type": "official_policy_announcement",
+          "event_type": "financing_allocated",
+          "summary": "Official detail page did not expose a separate summary in the configured extraction block.",
+          "source_url_status": "verified",
+          "extracted_at": "2026-05-13T06:03:10.069Z"
+        },
+        {
+          "id": "source-event-2026-05-12-information-on-work-completed-during-the-1st-quarter-of-2026-on-the-d",
+          "title": "Information on work completed during the 1st quarter of 2026 on the development of information systems and artificial intelligence technologies",
+          "source_institution": "Ministry of Economy and Finance of Uzbekistan",
+          "source_url": "https://gov.uz/en/imv/news/view/164666",
+          "source_published_at": "2026-05-12",
+          "evidence_type": "official_policy_announcement",
+          "event_type": "financing_allocated",
+          "summary": "2026-05-12 22:35:00 / News of ministry On the implementation of priority digitalization projects: 4 priority projects aimed at digitalizing the relevant functions and tasks of the Ministry of Economy and Finance were implemented . Specifically: 1) The \"Subsidiya.idm.uz\" information system To ensure the implementation of Resolution No. 49 of the Cabinet of Ministers of the Republic of Uzbekistan, dated February 19, 2026, \"On Additional Measures for the Social Support of Educators with the Highest Qualification Category (Senior Teacher Position),\" a procedure was introduced for allocating subsidies from the State Budget to cover 25 percent of the initial payment for refinanced mortgage loans. ",
+          "source_url_status": "verified",
+          "extracted_at": "2026-05-13T06:03:10.069Z"
+        }
+      ],
+      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
+      "digest": {
+        "changed": "tax incentives for infrastructure investors",
+        "applies_to": "Tax administration and fiscal incentives",
+        "effective_status": "Multiple related official measures (2026-05-12)",
+        "document": "Uzbekistan Expands Tax Incentives for Investors Financing Infrastructure Projects"
+      }
     },
     {
       "package_id": "pkg-public-services-digital-legal-2026-05-12",
@@ -934,11 +1067,10 @@
       ],
       "legal_basis": "Verified official source event: Measures to reduce bureaucracy in public service delivery reviewed.",
       "official_basis": "Official website of the President of the Republic of Uzbekistan",
-      "short_summary": "Tracks one verified official source event under Digital public administration and legal services. The package records the source-backed measure without inferring implementation deadlines or legal effects not published by the cited source.",
+      "short_summary": "Records measures to reduce bureaucracy or update digital public service and legal-service processes. The dossier is relevant for administrative burden and public-service delivery.",
       "parameters_or_amounts": [
-        "Source event date: 2026-05-12",
-        "Evidence type: official_policy_announcement",
-        "No future implementation deadline was published in the extracted source"
+        "Digital public service or legal-process measure recorded",
+        "Administrative burden reduction channel identified"
       ],
       "source_confidence": "high",
       "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
@@ -948,14 +1080,14 @@
         "Productivity"
       ],
       "policy_channels": [
-        "Public administration",
-        "Transaction costs",
-        "Productivity"
+        "Public service delivery",
+        "Administrative burden",
+        "Digital public administration"
       ],
       "measure_tracks": [
         {
           "id": "public-services-digital-legal-measure-1",
-          "label": "verified official measure",
+          "label": "digital public service process measure",
           "status": "source verified"
         }
       ],
@@ -990,13 +1122,19 @@
           "extracted_at": "2026-05-13T06:03:10.069Z"
         }
       ],
-      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
+      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
+      "digest": {
+        "changed": "digital public service process measure",
+        "applies_to": "Digital public administration and legal services",
+        "effective_status": "Verified official measure (2026-05-12)",
+        "document": "Measures to reduce bureaucracy in public service delivery reviewed"
+      }
     },
     {
-      "package_id": "pkg-other-policy-pf-82-12-05-2026-paxta-va-bug-doy-yetishtiruvchilarni-moliyaviy-qo--2026-05-12",
-      "title": "Policy implementation reform",
-      "policy_area": "Official policy implementation",
-      "reform_category": "other_policy",
+      "package_id": "pkg-agriculture-subsidy-financing-2026-05-12",
+      "title": "Agriculture financing and subsidy delivery reform",
+      "policy_area": "Agriculture financing, subsidies, and digital delivery",
+      "reform_category": "agriculture",
       "current_stage": "Rules amended",
       "current_stage_date": "2026-05-12",
       "next_milestone": "No future milestone published in verified source",
@@ -1006,34 +1144,33 @@
       ],
       "legal_basis": "Verified official source event: PF-82 12.05.2026 Paxta va bug‘doy yetishtiruvchilarni moliyaviy qo‘llab-quvvatlashning qo‘shimcha chora-tadbirlari to‘g‘risida.",
       "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
-      "short_summary": "Tracks one verified official source event under Official policy implementation. The package records the source-backed measure without inferring implementation deadlines or legal effects not published by the cited source.",
+      "short_summary": "Records agriculture financing and subsidy delivery measures, including cotton and grain producer support where cited by the official document. The dossier is treated as an agriculture finance reform rather than a generic implementation item.",
       "parameters_or_amounts": [
-        "Source event date: 2026-05-12",
-        "Evidence type: official_policy_announcement",
-        "No future implementation deadline was published in the extracted source"
+        "Cotton and grain producer financial support measures recorded",
+        "Agriculture financing and subsidy delivery measure recorded"
       ],
       "source_confidence": "high",
       "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
       "model_relevance": [
-        "Public administration",
-        "Investment",
-        "Growth"
+        "Agricultural output",
+        "Food prices",
+        "Rural income"
       ],
       "policy_channels": [
-        "Public administration",
-        "Investment",
-        "Growth"
+        "Agricultural producer finance",
+        "Subsidy delivery",
+        "Rural liquidity"
       ],
       "measure_tracks": [
         {
-          "id": "other-policy-pf-82-12-05-2026-paxta-va-bug-doy-yetishtiruvchilarni-moliyaviy-qo--measure-1",
-          "label": "verified official measure",
+          "id": "agriculture-subsidy-financing-measure-1",
+          "label": "agriculture producer financial support",
           "status": "source verified"
         }
       ],
       "implementation_milestones": [
         {
-          "id": "other-policy-pf-82-12-05-2026-paxta-va-bug-doy-yetishtiruvchilarni-moliyaviy-qo--amended-2026-05-12",
+          "id": "agriculture-subsidy-financing-amended-2026-05-12",
           "label": "rules amended",
           "date": "2026-05-12",
           "date_precision": "day",
@@ -1062,13 +1199,19 @@
           "extracted_at": "2026-05-13T06:03:10.069Z"
         }
       ],
-      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
+      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
+      "digest": {
+        "changed": "agriculture producer financial support",
+        "applies_to": "Agriculture financing, subsidies, and digital delivery",
+        "effective_status": "Rules amended (2026-05-12)",
+        "document": "PF-82 12.05.2026 Paxta va bug‘doy yetishtiruvchilarni moliyaviy qo‘llab-quvvatlashning qo‘shimcha chora-tadbirlari to‘g‘risida"
+      }
     },
     {
-      "package_id": "pkg-other-policy-pf-83-12-05-2026-lalmi-va-yaylov-yer-uchastkalarini-foydalanishga-k-2026-05-12",
-      "title": "Policy implementation reform",
-      "policy_area": "Official policy implementation",
-      "reform_category": "other_policy",
+      "package_id": "pkg-pasture-dryland-use-incentives-2026-05-12",
+      "title": "Dryland and pasture land-use incentive reform",
+      "policy_area": "Dryland and pasture land activation incentives",
+      "reform_category": "agriculture",
       "current_stage": "Implementation measure recorded",
       "current_stage_date": "2026-05-12",
       "next_milestone": "No future milestone published in verified source",
@@ -1078,34 +1221,33 @@
       ],
       "legal_basis": "Verified official source event: PF-83 12.05.2026 Lalmi va yaylov yer uchastkalarini foydalanishga kiritishni rag‘batlantirishning yangi mexanizmlarini joriy etish chora-tadbirlari to‘g‘risida.",
       "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
-      "short_summary": "Tracks one verified official source event under Official policy implementation. The package records the source-backed measure without inferring implementation deadlines or legal effects not published by the cited source.",
+      "short_summary": "Records measures introducing new mechanisms to encourage dryland and pasture land plots to be brought into use. The dossier is treated as an agriculture land-use incentive reform, not a generic implementation update.",
       "parameters_or_amounts": [
-        "Source event date: 2026-05-12",
-        "Evidence type: official_policy_announcement",
-        "No future implementation deadline was published in the extracted source"
+        "New incentive mechanisms for dryland and pasture land use introduced",
+        "Agricultural land activation measure recorded"
       ],
       "source_confidence": "high",
       "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
       "model_relevance": [
-        "Public administration",
-        "Investment",
-        "Growth"
+        "Agricultural output",
+        "Rural investment",
+        "Land productivity"
       ],
       "policy_channels": [
-        "Public administration",
-        "Investment",
-        "Growth"
+        "Agricultural land use",
+        "Rural production incentives",
+        "Pasture and dryland activation"
       ],
       "measure_tracks": [
         {
-          "id": "other-policy-pf-83-12-05-2026-lalmi-va-yaylov-yer-uchastkalarini-foydalanishga-k-measure-1",
-          "label": "verified official measure",
+          "id": "pasture-dryland-use-incentives-measure-1",
+          "label": "dryland and pasture land-use incentives",
           "status": "source verified"
         }
       ],
       "implementation_milestones": [
         {
-          "id": "other-policy-pf-83-12-05-2026-lalmi-va-yaylov-yer-uchastkalarini-foydalanishga-k-implementation_milestone-2026-05-12",
+          "id": "pasture-dryland-use-incentives-implementation_milestone-2026-05-12",
           "label": "implementation measure recorded",
           "date": "2026-05-12",
           "date_precision": "day",
@@ -1134,7 +1276,13 @@
           "extracted_at": "2026-05-13T06:03:10.069Z"
         }
       ],
-      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
+      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
+      "digest": {
+        "changed": "dryland and pasture land-use incentives",
+        "applies_to": "Dryland and pasture land activation incentives",
+        "effective_status": "Implementation measure recorded (2026-05-12)",
+        "document": "PF-83 12.05.2026 Lalmi va yaylov yer uchastkalarini foydalanishga kiritishni rag‘batlantirishning yangi mexanizmlarini joriy etish chora-tadbirlari to‘g‘risida"
+      }
     },
     {
       "package_id": "pkg-customs-clearance-digitalization-2026-05-12",
@@ -1150,28 +1298,27 @@
       ],
       "legal_basis": "Verified official source event: Priority tasks identified for food security and livestock development.",
       "official_basis": "Official website of the President of the Republic of Uzbekistan",
-      "short_summary": "Tracks one verified official source event under Trade facilitation and customs digitalization. The package records the source-backed measure without inferring implementation deadlines or legal effects not published by the cited source.",
+      "short_summary": "Records official customs and trade-facilitation measures affecting clearance, declarations, or border processes. The dossier is relevant for trade-cost and sector-exposure analysis.",
       "parameters_or_amounts": [
-        "Source event date: 2026-05-12",
-        "Evidence type: official_policy_announcement",
-        "No future implementation deadline was published in the extracted source"
+        "Customs and trade-facilitation measure recorded",
+        "Clearance or declaration process update identified"
       ],
       "source_confidence": "high",
       "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
       "model_relevance": [
         "Trade flows",
         "Import costs",
-        "Export competitiveness"
+        "Sector linkages"
       ],
       "policy_channels": [
-        "Trade flows",
-        "Import costs",
-        "Export competitiveness"
+        "Customs clearance",
+        "Trade facilitation",
+        "Import and export transaction costs"
       ],
       "measure_tracks": [
         {
           "id": "customs-clearance-digitalization-measure-1",
-          "label": "verified official measure",
+          "label": "customs and trade-facilitation measure",
           "status": "source verified"
         }
       ],
@@ -1206,7 +1353,13 @@
           "extracted_at": "2026-05-13T06:03:10.069Z"
         }
       ],
-      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
+      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
+      "digest": {
+        "changed": "customs and trade-facilitation measure",
+        "applies_to": "Trade facilitation and customs digitalization",
+        "effective_status": "Verified official measure (2026-05-12)",
+        "document": "Priority tasks identified for food security and livestock development"
+      }
     },
     {
       "package_id": "pkg-market-fee-rent-collection-2026-05-08",
@@ -1222,11 +1375,10 @@
       ],
       "legal_basis": "Verified official source event: 2185-3 08.05.2026 Bozorlar, savdo komplekslari va ularning filiallarida bir martalik yigʻimlar, ijara toʻlovlari hamda koʻrsatilgan xizmatlar uchun toʻlovlarni oʻz vaqtida va toʻliq undirilishini tashkil etish va nazorat qilish tartibi toʻgʻrisidagi nizomga oʻzgartirishlar kiritish haqida.",
       "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
-      "short_summary": "Tracks amendments to fee, rent, and service-payment collection rules for markets, trade complexes, and their branches. The package is treated as market-administration and fiscal-compliance regulation, not international trade reform.",
+      "short_summary": "Records amendments to fee, rent, and service-payment collection rules for markets, trade complexes, and their branches. The package is treated as market-administration and fiscal-compliance regulation, not international trade reform.",
       "parameters_or_amounts": [
         "One-time fee, rent, and service-payment collection rules amended",
-        "Legal act registered on 2026-05-08",
-        "No future implementation deadline was published in the extracted source"
+        "Market administration payment collection procedure updated"
       ],
       "source_confidence": "medium",
       "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
@@ -1278,7 +1430,13 @@
           "extracted_at": "2026-05-13T06:03:10.069Z"
         }
       ],
-      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
+      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
+      "digest": {
+        "changed": "market fee and rent collection amendments",
+        "applies_to": "Market complex fee collection and rental-payment administration",
+        "effective_status": "Rules amended (2026-05-08)",
+        "document": "2185-3 08.05.2026 Bozorlar, savdo komplekslari va ularning filiallarida bir martalik yigʻimlar, ijara toʻlovlari hamda koʻrsatilgan xizmatlar uchun toʻlovlarni oʻz vaqtida va toʻliq undirilishini tashkil etish va nazorat qilish tartibi toʻgʻrisidagi nizomga oʻzgartirishlar kiritish haqida"
+      }
     },
     {
       "package_id": "pkg-aml-cft-financial-control-2026-05-08",
@@ -1298,8 +1456,7 @@
       "parameters_or_amounts": [
         "Commercial bank AML/CFT internal-control rules amended",
         "Nonbank credit organization AML/CFT internal-control rules amended",
-        "Payment-system, e-money, and payment-organization AML/CFT internal-control rules amended",
-        "Verified official source event date: 2026-05-08"
+        "Payment-system, e-money, and payment-organization AML/CFT internal-control rules amended"
       ],
       "source_confidence": "medium",
       "why_tracked": "The source events amend binding internal-control rules for financial institutions and payment providers. They are grouped to avoid presenting parallel AML/CFT legal updates as separate reforms.",
@@ -1422,7 +1579,13 @@
           "extracted_at": "2026-05-13T06:03:10.069Z"
         }
       ],
-      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
+      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
+      "digest": {
+        "changed": "AML/CFT internal-control rule amendments",
+        "applies_to": "AML/CFT controls for banks, nonbank lenders, payments, and e-money institutions",
+        "effective_status": "Multiple related official measures (2026-05-08)",
+        "document": "2886-12 08.05.2026 Tijorat banklarida jinoiy faoliyatdan olingan daromadlarni legallashtirishga, terrorizmni moliyalashtirishga va ommaviy qirgʻin qurolini tarqatishni moliyalashtirishga qarshi kurashish boʻyicha ichki nazorat qoidalariga qoʻshimcha va oʻzgartirishlar kiritish haqida"
+      }
     },
     {
       "package_id": "pkg-large-investment-integrity-competition-review-2026-05-08",
@@ -1438,11 +1601,10 @@
       ],
       "legal_basis": "Verified official source event: 3833 08.05.2026 Yirik investitsiya loyihalarini korrupsiyaga qarshi ekspertizadan o‘tkazish va ularning raqobat muhitiga ta’sirini baholash tartibi to‘g‘risidagi yo‘riqnomani tasdiqlash haqida.",
       "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
-      "short_summary": "Tracks approval of procedures for anti-corruption review of large investment projects and assessment of their impact on the competitive environment. The package is a business-climate and competition-policy dossier rather than a generic investment headline.",
+      "short_summary": "Records approval of procedures for anti-corruption review of large investment projects and assessment of their impact on the competitive environment. The package is a business-climate and competition-policy dossier rather than a generic investment headline.",
       "parameters_or_amounts": [
         "Anti-corruption expert review procedure for large investment projects approved",
-        "Competition-environment impact assessment procedure approved",
-        "Legal act registered on 2026-05-08"
+        "Competition-environment impact assessment procedure approved"
       ],
       "source_confidence": "high",
       "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
@@ -1494,7 +1656,13 @@
           "extracted_at": "2026-05-13T06:03:10.069Z"
         }
       ],
-      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
+      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
+      "digest": {
+        "changed": "investment integrity and competition review procedure",
+        "applies_to": "Investment project anti-corruption review and competition impact assessment",
+        "effective_status": "Regulation approved (2026-05-08)",
+        "document": "3833 08.05.2026 Yirik investitsiya loyihalarini korrupsiyaga qarshi ekspertizadan o‘tkazish va ularning raqobat muhitiga ta’sirini baholash tartibi to‘g‘risidagi yo‘riqnomani tasdiqlash haqida"
+      }
     },
     {
       "package_id": "pkg-construction-oversight-inspection-pricing-2026-05-07",
@@ -1514,8 +1682,7 @@
       "parameters_or_amounts": [
         "Construction oversight and bureaucracy-reduction measures recorded",
         "Technical condition and laboratory-work price calculation regulation approved",
-        "Prior instrumental technical inspection pricing order superseded where cited by source event",
-        "Verified official source event dates: 2026-05-07"
+        "Prior instrumental technical inspection pricing order superseded where cited by source event"
       ],
       "source_confidence": "medium",
       "why_tracked": "The official sources identify related construction oversight and inspection-pricing measures. Grouping them prevents a repealed pricing order, a new pricing regulation, and presidential oversight instructions from appearing as unrelated dossiers.",
@@ -1568,7 +1735,13 @@
           "extracted_at": "2026-05-13T06:03:10.069Z"
         }
       ],
-      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
+      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
+      "digest": {
+        "changed": "construction oversight and inspection-pricing measure",
+        "applies_to": "Construction oversight, technical inspection pricing, and inspection bureaucracy",
+        "effective_status": "Regulation approved (2026-05-07)",
+        "document": "3828 07.05.2026 Oʻzbekiston Respublikasi Vazirlar Mahkamasi huzuridagi Qurilish va uy-joy kommunal xoʻjaligi sohasida nazorat qilish inspeksiyasining hududiy nazorat qilish inspeksiyalari tomonidan oʻtkaziladigan bino va inshootlarning texnik holatini oʻrganish va sinov-laboratoriya ishlari narxlarini hisoblash tartibi toʻgʻrisidagi nizomni tasdiqlash haqida"
+      }
     },
     {
       "package_id": "pkg-employment-fund-subsidy-loans-2026-05-07",
@@ -1584,11 +1757,11 @@
       ],
       "legal_basis": "Verified official source event: 3832-сон 07.05.2026. Oʻzbekiston Respublikasi Bandlikka koʻmaklashish davlat jamgʻarmasi mablagʻlari hisobidan subsidiyalar va ssuda ajratish tartibi toʻgʻrisidagi nizomni tasdiqlash haqida.",
       "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
-      "short_summary": "Tracks approval of rules for allocating subsidies and loans from the State Employment Assistance Fund. The dossier is relevant for active labor-market support and public financing of employment measures.",
+      "short_summary": "Records approval of rules for allocating subsidies and loans from the State Employment Assistance Fund. The dossier is relevant for active labor-market support and public financing of employment measures.",
       "parameters_or_amounts": [
         "Subsidy and loan allocation regulation approved",
         "State Employment Assistance Fund resources identified as the funding source",
-        "Legal act registered on 2026-05-07"
+        "Employment support financing procedure updated"
       ],
       "source_confidence": "high",
       "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
@@ -1640,7 +1813,13 @@
           "extracted_at": "2026-05-13T06:03:10.069Z"
         }
       ],
-      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
+      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
+      "digest": {
+        "changed": "employment fund subsidy and loan rules",
+        "applies_to": "Employment fund subsidies, loans, and labor-market support",
+        "effective_status": "Regulation approved (2026-05-07)",
+        "document": "3832-сон 07.05.2026. Oʻzbekiston Respublikasi Bandlikka koʻmaklashish davlat jamgʻarmasi mablagʻlari hisobidan subsidiyalar va ssuda ajratish tartibi toʻgʻrisidagi nizomni tasdiqlash haqida"
+      }
     },
     {
       "package_id": "pkg-public-transport-system-2026-05-07",
@@ -1656,11 +1835,11 @@
       ],
       "legal_basis": "Verified official source event: President reviews measures to further develop public transport system.",
       "official_basis": "Official website of the President of the Republic of Uzbekistan",
-      "short_summary": "Tracks official measures to develop regional public transport, including route coverage, fleet renewal, fare-payment systems, and service delivery. The package records the source-backed transport service reform without inferring unpublished deadlines.",
+      "short_summary": "Records official measures to develop regional public transport, including route coverage, fleet renewal, fare-payment systems, and service delivery.",
       "parameters_or_amounts": [
         "Public transport development measures reviewed",
         "Source-reported recent fleet renewal and route-launch evidence retained in source event",
-        "Official source event published on 2026-05-07"
+        "Urban and regional mobility service measure recorded"
       ],
       "source_confidence": "high",
       "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
@@ -1713,7 +1892,13 @@
           "extracted_at": "2026-05-13T06:03:10.069Z"
         }
       ],
-      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
+      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
+      "digest": {
+        "changed": "public transport development measures",
+        "applies_to": "Public transport routes, fleet renewal, fare systems, and service delivery",
+        "effective_status": "Implementation measure recorded (2026-05-07)",
+        "document": "President reviews measures to further develop public transport system"
+      }
     },
     {
       "package_id": "pkg-remote-mountain-settlement-classification-2026-05-06",
@@ -1729,11 +1914,10 @@
       ],
       "legal_basis": "Verified official source event: 1868-2-сон 06.05.2026. Aholi punktlarini borish qiyin boʻlgan va togʻli hududlar tarkibiga kiritish tartibi toʻgʻrisidagi yoʻriqnomaning muqaddimasiga oʻzgartirish kiritish haqida.",
       "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
-      "short_summary": "Tracks a legal update to the rules for classifying settlements as hard-to-reach or mountainous areas. The dossier is narrow, but it is source-backed and relevant for regional eligibility, service delivery, and targeted public support.",
+      "short_summary": "Records a legal update to the rules for classifying settlements as hard-to-reach or mountainous areas. The dossier is narrow and relevant for regional eligibility, service delivery, and targeted public support.",
       "parameters_or_amounts": [
         "Amendment to the settlement classification instruction preamble",
-        "Legal act registered on 2026-05-06",
-        "No future implementation deadline was published in the extracted source"
+        "Regional eligibility classification rule updated"
       ],
       "source_confidence": "medium",
       "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
@@ -1785,97 +1969,29 @@
           "extracted_at": "2026-05-13T06:03:10.069Z"
         }
       ],
-      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
-    },
-    {
-      "package_id": "pkg-tax-administration-incentives-2026-04-14",
-      "title": "Tax administration and investment incentive reform",
-      "policy_area": "Tax administration and fiscal incentives",
-      "reform_category": "fiscal_tax",
-      "current_stage": "Financing or incentive measure recorded",
-      "current_stage_date": "2026-04-14",
-      "next_milestone": "No future milestone published in verified source",
-      "next_milestone_date": "2026-04-14",
-      "responsible_institutions": [
-        "Ministry of Investment, Industry and Trade of the Republic of Uzbekistan"
-      ],
-      "legal_basis": "Verified official source event: Uzbekistan Expands Tax Incentives for Investors Financing Infrastructure Projects.",
-      "official_basis": "Ministry of Investment, Industry and Trade of the Republic of Uzbekistan",
-      "financing_or_incentive": "Tax incentives for investors financing infrastructure projects",
-      "short_summary": "Tracks a verified official-source event on tax incentives for investors financing infrastructure projects. The current source confirms the incentive measure but does not publish a future implementation deadline, so the tracker records the source event without inferring a forward milestone.",
-      "parameters_or_amounts": [
-        "Tax incentives for investors financing infrastructure projects",
-        "Verified official source event published on 2026-04-14",
-        "No future implementation deadline was published in the extracted source"
-      ],
-      "source_confidence": "high",
-      "why_tracked": "The verified official source records a fiscal incentive measure for investors financing infrastructure projects. It is tracked as an incentive package while avoiding any inferred implementation deadline not present in the source.",
-      "model_relevance": [
-        "Fiscal balance",
-        "Investment",
-        "Business costs"
-      ],
-      "policy_channels": [
-        "Fiscal incentives",
-        "Private infrastructure investment",
-        "Business cost of capital",
-        "Public-private financing"
-      ],
-      "measure_tracks": [
-        {
-          "id": "tax-administration-incentives-measure-1",
-          "label": "tax incentives for infrastructure investors",
-          "status": "source verified"
-        }
-      ],
-      "implementation_milestones": [
-        {
-          "id": "tax-administration-incentives-financing_allocated-2026-04-14",
-          "label": "tax incentive source event recorded",
-          "date": "2026-04-14",
-          "date_precision": "day",
-          "event_type": "financing_allocated",
-          "responsible_institutions": [
-            "Ministry of Investment, Industry and Trade of the Republic of Uzbekistan"
-          ],
-          "evidence_type": "official_policy_announcement",
-          "source_event_ids": [
-            "source-event-2026-04-14-uzbekistan-expands-tax-incentives-for-investors-financing-infrastruct"
-          ],
-          "confidence": "high"
-        }
-      ],
-      "official_source_events": [
-        {
-          "id": "source-event-2026-04-14-uzbekistan-expands-tax-incentives-for-investors-financing-infrastruct",
-          "title": "Uzbekistan Expands Tax Incentives for Investors Financing Infrastructure Projects",
-          "source_institution": "Ministry of Investment, Industry and Trade of the Republic of Uzbekistan",
-          "source_url": "https://gov.uz/en/miit/news/view/153388",
-          "source_published_at": "2026-04-14",
-          "evidence_type": "official_policy_announcement",
-          "event_type": "financing_allocated",
-          "summary": "Official detail page did not expose a separate summary in the configured extraction block.",
-          "source_url_status": "verified",
-          "extracted_at": "2026-05-13T06:03:10.069Z"
-        }
-      ],
-      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources."
+      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
+      "digest": {
+        "changed": "settlement classification rule amendment",
+        "applies_to": "Regional settlement classification and public-service eligibility",
+        "effective_status": "Rules amended (2026-05-06)",
+        "document": "1868-2-сон 06.05.2026. Aholi punktlarini borish qiyin boʻlgan va togʻli hududlar tarkibiga kiritish tartibi toʻgʻrisidagi yoʻriqnomaning muqaddimasiga oʻzgartirish kiritish haqida"
+      }
     }
   ],
   "policy_briefs": [
     {
-      "id": "brief-trade-business-costs-2026-05",
-      "title": "Trade facilitation and business-cost measures",
-      "summary": "Source-backed reform packages point to customs digitalization, market-fee administration, and infrastructure-investment tax incentives as near-term channels for trade costs, compliance costs, and private investment. This internal preview brief summarizes the package evidence only and does not estimate economic effects.",
+      "id": "brief-model-routing-internal-2026-05",
+      "title": "Model routing notes for current reform packages",
+      "summary": "Internal package-routing note retained for non-public workflow compatibility.",
       "package_ids": [
         "pkg-customs-clearance-digitalization-2026-05-12",
-        "pkg-market-fee-rent-collection-2026-05-08",
-        "pkg-tax-administration-incentives-2026-04-14"
+        "pkg-urbanization-construction-permits-housing-2026",
+        "pkg-agriculture-subsidy-financing-digital-delivery-2026"
       ],
       "policy_channels": [
-        "Trade facilitation",
-        "Business costs",
-        "Fiscal incentives"
+        "Macro monitoring",
+        "Sector linkages",
+        "Trade exposure"
       ],
       "possible_lenses": [
         "QPM",
@@ -1884,34 +2000,29 @@
       ],
       "source_event_ids": [
         "source-event-2026-05-12-priority-tasks-identified-for-food-security-and-livestock-development",
-        "source-event-2026-05-08-2185-3-08-05-2026-bozorlar-savdo-komplekslari-va-ularning-filiallarid",
-        "source-event-2026-04-14-uzbekistan-expands-tax-incentives-for-investors-financing-infrastruct"
+        "source-event-2026-04-15-progress-and-priorities-in-housing-construction-and-urbanization-revi",
+        "source-event-2025-12-09-financing-and-subsidy-plans-for-the-agricultural-sector-reviewed"
       ],
       "as_of_date": "2026-05-13",
       "publication_state": "internal_preview",
       "citation_permission": "internal_only",
       "citable": false,
       "caveats": [
-        "Internal preview only. Do not cite, export, or share externally.",
-        "Derived only from verified official-source reform packages in this static artifact.",
-        "Possible model lenses are routing hints, not model outputs or estimated impacts."
+        "Do not cite. Internal compatibility note only."
       ]
     },
     {
-      "id": "brief-infrastructure-service-delivery-2026-05",
-      "title": "Infrastructure delivery and service-access measures",
-      "summary": "Housing, construction oversight, public transport, healthcare participation, and digital public-service packages all affect administrative capacity and service delivery. This brief frames the common implementation channels without treating the page as a legal registry or current official notice.",
+      "id": "brief-sector-linkage-internal-2026-05",
+      "title": "Sector-linkage note for infrastructure and agriculture packages",
+      "summary": "Internal package-routing note retained for non-public workflow compatibility.",
       "package_ids": [
         "pkg-urbanization-construction-permits-housing-2026",
-        "pkg-construction-oversight-inspection-pricing-2026-05-07",
-        "pkg-public-transport-system-2026-05-07",
-        "pkg-healthcare-quality-licensing-private-sector-2026",
-        "pkg-public-services-digital-legal-2026-05-12"
+        "pkg-agriculture-subsidy-financing-digital-delivery-2026"
       ],
       "policy_channels": [
-        "Public service delivery",
-        "Construction and transport services",
-        "Private participation"
+        "Infrastructure delivery",
+        "Agriculture financing",
+        "Regional access"
       ],
       "possible_lenses": [
         "DFM",
@@ -1919,140 +2030,234 @@
       ],
       "source_event_ids": [
         "source-event-2026-04-15-progress-and-priorities-in-housing-construction-and-urbanization-revi",
-        "source-event-2026-05-07-3828-07-05-2026-o-zbekiston-respublikasi-vazirlar-mahkamasi-huzuridag",
-        "source-event-2026-05-07-president-reviews-measures-to-further-develop-public-transport-system",
-        "president-healthcare-quality-2026-05-01",
-        "source-event-2026-05-12-measures-to-reduce-bureaucracy-in-public-service-delivery-reviewed"
+        "source-event-2025-12-09-financing-and-subsidy-plans-for-the-agricultural-sector-reviewed"
       ],
       "as_of_date": "2026-05-13",
       "publication_state": "internal_preview",
       "citation_permission": "internal_only",
       "citable": false,
       "caveats": [
-        "Internal preview only. Do not cite, export, or share externally.",
-        "Summaries are based on package records and official links, not independent legal review.",
-        "I-O and DFM are possible lenses only; no active model output is cited."
+        "Do not cite. Internal compatibility note only."
       ]
     },
     {
-      "id": "brief-social-rural-labor-support-2026-05",
-      "title": "Rural, regional, and labor-support measures",
-      "summary": "Agriculture financing, Employment Fund rules, and regional settlement classification packages share fiscal-delivery and household-access channels. The note is useful for internal scenario scoping, but it is not a reviewed policy recommendation or an externally citable brief.",
+      "id": "brief-financial-monitoring-internal-2026-05",
+      "title": "Financial-sector monitoring note",
+      "summary": "Internal package-routing note retained for non-public workflow compatibility.",
       "package_ids": [
-        "pkg-agriculture-subsidy-financing-digital-delivery-2026",
-        "pkg-employment-fund-subsidy-loans-2026-05-07",
-        "pkg-remote-mountain-settlement-classification-2026-05-06"
+        "pkg-aml-cft-financial-control-2026-05-08"
       ],
       "policy_channels": [
-        "Subsidy delivery",
-        "Labor-market support",
-        "Regional eligibility"
+        "Financial integrity",
+        "Compliance costs",
+        "Credit conditions"
       ],
       "possible_lenses": [
         "QPM",
         "DFM"
       ],
       "source_event_ids": [
-        "source-event-2025-12-09-financing-and-subsidy-plans-for-the-agricultural-sector-reviewed",
-        "source-event-2026-05-07-3832-07-05-2026-o-zbekiston-respublikasi-bandlikka-ko-maklashish-davl",
-        "source-event-2026-05-06-1868-2-06-05-2026-aholi-punktlarini-borish-qiyin-bo-lgan-va-tog-li-hu"
+        "source-event-2026-05-08-2886-12-08-05-2026-tijorat-banklarida-jinoiy-faoliyatdan-olingan-daro"
       ],
       "as_of_date": "2026-05-13",
       "publication_state": "internal_preview",
       "citation_permission": "internal_only",
       "citable": false,
       "caveats": [
-        "Internal preview only. Do not cite, export, or share externally.",
-        "The brief preserves the source-backed package caveats and does not verify fiscal cost or implementation status.",
-        "QPM and DFM references are possible analytical lenses only."
+        "Do not cite. Internal compatibility note only."
       ]
+    }
+  ],
+  "research_updates": [
+    {
+      "id": "research-qpm-tonga-2025",
+      "title": "Quarterly projection model customized for small open-economy policy scenarios",
+      "topic": "QPM scenario design for monetary transmission and external shocks",
+      "summary": "The paper adapts a QPM to a small open economy and uses scenario shocks for financial stress, natural disaster, and external-demand risk. The design is useful for deciding how country-specific transmission channels should enter a CERR-style QPM workspace.",
+      "model_ids": [
+        "QPM"
+      ],
+      "methods": [
+        "Quarterly projection model",
+        "calibration",
+        "scenario analysis",
+        "monetary transmission"
+      ],
+      "source_title": "A Quarterly Projection Model for Tonga",
+      "source_institution": "International Monetary Fund",
+      "source_url": "https://www.imf.org/en/Publications/WP/Issues/2025/06/20/A-Quarterly-Projection-Model-for-Tonga-567845",
+      "published_at": "2025-06-20",
+      "geography": "Tonga",
+      "why_relevant": "Shows how a compact QPM can be adapted for policy-relevant shocks when data and institutional structure differ from larger economies."
     },
     {
-      "id": "brief-financial-integrity-investment-governance-2026-05",
-      "title": "Financial integrity and investment-governance measures",
-      "summary": "AML/CFT internal-control amendments and large-investment integrity review rules affect compliance costs, financial-sector risk monitoring, and investment appraisal. The internal note groups those channels for preview navigation only.",
-      "package_ids": [
-        "pkg-aml-cft-financial-control-2026-05-08",
-        "pkg-large-investment-integrity-competition-review-2026-05-08"
+      "id": "research-dfm-nowcasting-model-comparison-2025",
+      "title": "GDP nowcasting comparison confirms bridge and dynamic-factor models as strong baselines",
+      "topic": "Nowcasting method selection for short GDP series and high-frequency indicators",
+      "summary": "The study compares traditional econometric and machine-learning approaches across simulations and country cases. It finds bridge and dynamic-factor methods among the strongest empirical baselines, especially when data histories are limited.",
+      "model_ids": [
+        "DFM"
       ],
-      "policy_channels": [
-        "Financial integrity supervision",
-        "Investment appraisal",
-        "Competition and governance review"
+      "methods": [
+        "Dynamic factor model",
+        "bridge model",
+        "forecast evaluation",
+        "high-frequency indicators"
       ],
-      "possible_lenses": [
-        "QPM",
+      "source_title": "GDP Nowcasting Performance of Traditional Econometric Models vs Machine-Learning Algorithms",
+      "source_institution": "International Monetary Fund",
+      "source_url": "https://www.imf.org/en/Publications/WP/Issues/2025/12/05/GDP-Nowcasting-Performance-of-Traditional-Econometric-Models-vs-Machine-Learning-572360",
+      "published_at": "2025-12-05",
+      "why_relevant": "Supports keeping the platform nowcast lane interpretable and benchmarked before adding heavier machine-learning methods."
+    },
+    {
+      "id": "research-dfm-world-trade-nowcast-2026",
+      "title": "Multi-region factor model nowcasts world trade with regional spillovers",
+      "topic": "Trade nowcasting and regional spillover structure",
+      "summary": "The paper builds a dynamic-factor nowcast of world trade with regional blocks and spillovers. It is relevant for monitoring external demand and trade-channel stress around Central Asia and Uzbekistan-style open-economy questions.",
+      "model_ids": [
         "DFM",
         "I-O"
       ],
-      "source_event_ids": [
-        "source-event-2026-05-08-2886-12-08-05-2026-tijorat-banklarida-jinoiy-faoliyatdan-olingan-daro",
-        "source-event-2026-05-08-2925-10-08-05-2026-nobank-kredit-tashkilotlarida-jinoiy-faoliyatdan-o",
-        "source-event-2026-05-08-3266-5-08-05-2026-to-lov-tizimlari-operatorlari-elektron-pullar-tizim",
-        "source-event-2026-05-08-3833-08-05-2026-yirik-investitsiya-loyihalarini-korrupsiyaga-qarshi-e"
+      "methods": [
+        "Dynamic factor model",
+        "multi-region blocks",
+        "trade nowcasting",
+        "spillover analysis"
       ],
-      "as_of_date": "2026-05-13",
-      "publication_state": "internal_preview",
-      "citation_permission": "internal_only",
-      "citable": false,
-      "caveats": [
-        "Internal preview only. Do not cite, export, or share externally.",
-        "The grouping is editorial and source-backed; it is not a reviewed legal or supervisory interpretation.",
-        "Model references are not model-output evidence."
-      ]
+      "source_title": "Nowcasting World Trade with a Multi-Region Factor Model",
+      "source_institution": "International Monetary Fund",
+      "source_url": "https://www.imf.org/en/Publications/WP/Issues/2026/03/13/Nowcasting-World-Trade-with-a-Multi-Region-Factor-Model-574626",
+      "published_at": "2026-03-13",
+      "geography": "Global trade",
+      "why_relevant": "Links nowcasting methods to trade exposure monitoring, which can inform external-demand assumptions before sector propagation work."
+    },
+    {
+      "id": "research-oecd-icio-2025",
+      "title": "OECD ICIO and TiVA 2025 data refresh expands current input-output evidence for trade exposure",
+      "topic": "Input-output tables and value-added trade indicators",
+      "summary": "The 2025 ICIO and TiVA release provides current inter-country input-output infrastructure for production, consumption, investment, and trade flows by country and activity. It is a useful external benchmark for sector-linkage and value-added trade analysis.",
+      "model_ids": [
+        "I-O"
+      ],
+      "methods": [
+        "Inter-country input-output tables",
+        "value-added trade",
+        "global value chains",
+        "sector linkages"
+      ],
+      "source_title": "Inter-Country Input-Output tables",
+      "source_institution": "Organisation for Economic Co-operation and Development",
+      "source_url": "https://www.oecd.org/en/data/datasets/inter-country-input-output-tables.html",
+      "as_of_date": "2026-01-15",
+      "geography": "Global",
+      "why_relevant": "Provides a source-linked benchmark for checking sector-linkage assumptions and trade exposure indicators used around the I-O lane."
+    }
+  ],
+  "literature_items": [
+    {
+      "id": "qpm-practical-model-policy-analysis",
+      "title": "Practical Model-Based Monetary Policy Analysis: A How-To Guide",
+      "authors": "Michal Andrle, Jaromir Benes, Andrew Berg, Rafael A. Portillo, and Douglas Laxton",
+      "year": "2006",
+      "source": "IMF Working Paper 2006/081",
+      "url": "https://www.imf.org/en/Publications/WP/Issues/2016/12/31/Practical-Model-Based-Monetary-Policy-Analysis-A-How-To-Guide-18842",
+      "model_ids": [
+        "QPM"
+      ],
+      "methods": [
+        "IS curve",
+        "Phillips curve",
+        "policy reaction function"
+      ],
+      "note": "Core reference for practical semi-structural monetary policy model use."
+    },
+    {
+      "id": "dfm-two-step-estimator",
+      "title": "A two-step estimator for large approximate dynamic factor models based on Kalman filtering",
+      "authors": "Mario Forni, Domenico Giannone, Marco Lippi, and Lucrezia Reichlin",
+      "year": "2011",
+      "source": "Journal of Econometrics",
+      "url": "https://www.sciencedirect.com/science/article/pii/S030440761100039X",
+      "model_ids": [
+        "DFM"
+      ],
+      "methods": [
+        "Dynamic factor model",
+        "Kalman smoother",
+        "principal components"
+      ],
+      "note": "Technical reference for estimating large dynamic-factor systems used in nowcasting."
+    },
+    {
+      "id": "io-foundations-extensions",
+      "title": "Input-Output Analysis: Foundations and Extensions",
+      "authors": "Ronald E. Miller and Peter D. Blair",
+      "year": "2022",
+      "source": "Cambridge University Press",
+      "url": "https://doi.org/10.1017/9781108676212",
+      "model_ids": [
+        "I-O"
+      ],
+      "methods": [
+        "Leontief inverse",
+        "multipliers",
+        "sector linkages"
+      ],
+      "note": "Standard reference for interpreting input-output multipliers and sector linkages."
     }
   ],
   "model_impact_map": {
     "active_lenses": [
       {
         "id": "QPM",
-        "label": "QPM",
+        "label": "Quarterly Projection Model",
         "status": "possible_lens",
-        "caveat": "Possible macro scenario lens only. The map does not cite QPM outputs or estimate reform effects."
+        "caveat": "Use for monetary, inflation, output-gap, and macro-transmission framing only."
       },
       {
         "id": "DFM",
-        "label": "DFM",
+        "label": "Dynamic Factor Model",
         "status": "possible_lens",
-        "caveat": "Possible monitoring lens only. The map does not treat DFM nowcasts as reform impact estimates."
+        "caveat": "Use for nowcasting and high-frequency indicator context only."
       },
       {
         "id": "I-O",
-        "label": "I-O",
+        "label": "Input-output model",
         "status": "possible_lens",
-        "caveat": "Possible sector-linkage lens only. The map does not claim general-equilibrium or behavioral effects."
+        "caveat": "Use for sector linkage and final-demand shock propagation only."
       }
     ],
     "gated_lenses": [
       {
         "id": "PE",
-        "label": "PE",
+        "label": "Partial-equilibrium trade",
         "status": "planned_gated",
-        "caveat": "Planned/gated. Not an active Knowledge Hub model output."
+        "caveat": "Not active in public outputs."
       },
       {
         "id": "CGE",
-        "label": "CGE",
+        "label": "Computable general equilibrium",
         "status": "planned_gated",
-        "caveat": "Planned/gated. Not an active Knowledge Hub model output."
+        "caveat": "Not active in public outputs."
       },
       {
         "id": "FPP",
-        "label": "FPP",
+        "label": "Fiscal programming",
         "status": "planned_gated",
-        "caveat": "Planned/gated. Not an active Knowledge Hub model output."
+        "caveat": "Not active in public outputs."
       },
       {
         "id": "HFI",
-        "label": "HFI",
+        "label": "High-frequency indicators",
         "status": "planned_gated",
-        "caveat": "Planned/gated. Not an active Knowledge Hub model output."
+        "caveat": "Not active in public outputs."
       },
       {
         "id": "Synthesis",
-        "label": "Synthesis",
+        "label": "Cross-model synthesis",
         "status": "planned_gated",
-        "caveat": "Planned/gated. Not an active Knowledge Hub model output."
+        "caveat": "Not active in public outputs."
       }
     ],
     "package_links": [
@@ -2061,199 +2266,609 @@
         "active_lenses": [
           {
             "model_id": "DFM",
-            "channel": "Track service-sector and public-service indicators where source data exist.",
-            "caveat": "Monitoring lens only; no healthcare reform effect is estimated."
+            "channel": "High-frequency monitoring context.",
+            "caveat": "Possible lens only."
           },
           {
             "model_id": "I-O",
-            "channel": "Frame private medical investment and service procurement as sector-linkage questions.",
-            "caveat": "Sector accounting lens only; not a welfare or health-outcome model."
+            "channel": "Sector-linkage and final-demand propagation context.",
+            "caveat": "Possible lens only."
           }
         ],
-        "gated_lenses": []
+        "gated_lenses": [
+          {
+            "model_id": "PE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "CGE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "FPP",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "HFI",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "Synthesis",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          }
+        ]
       },
       {
         "package_id": "pkg-urbanization-construction-permits-housing-2026",
         "active_lenses": [
           {
             "model_id": "DFM",
-            "channel": "Monitor construction and investment indicators around implementation dates.",
-            "caveat": "Monitoring lens only; timing does not prove causality."
+            "channel": "High-frequency monitoring context.",
+            "caveat": "Possible lens only."
           },
           {
             "model_id": "I-O",
-            "channel": "Use sector-linkage tables to frame construction and utility-connection demand channels.",
-            "caveat": "I-O lens is static accounting, not a reform impact estimate."
+            "channel": "Sector-linkage and final-demand propagation context.",
+            "caveat": "Possible lens only."
           }
         ],
-        "gated_lenses": []
+        "gated_lenses": [
+          {
+            "model_id": "PE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "CGE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "FPP",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "HFI",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "Synthesis",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          }
+        ]
       },
       {
         "package_id": "pkg-agriculture-subsidy-financing-digital-delivery-2026",
         "active_lenses": [
           {
-            "model_id": "QPM",
-            "channel": "Frame food-price and fiscal-cost channels for scenario design.",
-            "caveat": "Scenario lens only; no subsidy cost or inflation effect is calculated here."
+            "model_id": "DFM",
+            "channel": "High-frequency monitoring context.",
+            "caveat": "Possible lens only."
           },
           {
-            "model_id": "DFM",
-            "channel": "Monitor agriculture and price indicators if available.",
-            "caveat": "Monitoring lens only; no attribution to the reform package."
+            "model_id": "I-O",
+            "channel": "Sector-linkage and final-demand propagation context.",
+            "caveat": "Possible lens only."
           }
         ],
-        "gated_lenses": []
+        "gated_lenses": [
+          {
+            "model_id": "PE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "CGE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "FPP",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "HFI",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "Synthesis",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          }
+        ]
+      },
+      {
+        "package_id": "pkg-tax-administration-incentives-2026-05-12",
+        "active_lenses": [
+          {
+            "model_id": "DFM",
+            "channel": "High-frequency monitoring context.",
+            "caveat": "Possible lens only."
+          },
+          {
+            "model_id": "I-O",
+            "channel": "Sector-linkage and final-demand propagation context.",
+            "caveat": "Possible lens only."
+          }
+        ],
+        "gated_lenses": [
+          {
+            "model_id": "PE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "CGE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "FPP",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "HFI",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "Synthesis",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          }
+        ]
       },
       {
         "package_id": "pkg-public-services-digital-legal-2026-05-12",
         "active_lenses": [
           {
             "model_id": "DFM",
-            "channel": "Monitor administrative and service-delivery indicators where the data layer supports them.",
-            "caveat": "Monitoring lens only; no productivity effect is estimated."
+            "channel": "General monitoring context.",
+            "caveat": "Possible lens only."
           }
         ],
-        "gated_lenses": []
+        "gated_lenses": [
+          {
+            "model_id": "PE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "CGE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "FPP",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "HFI",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "Synthesis",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          }
+        ]
+      },
+      {
+        "package_id": "pkg-agriculture-subsidy-financing-2026-05-12",
+        "active_lenses": [
+          {
+            "model_id": "DFM",
+            "channel": "High-frequency monitoring context.",
+            "caveat": "Possible lens only."
+          },
+          {
+            "model_id": "I-O",
+            "channel": "Sector-linkage and final-demand propagation context.",
+            "caveat": "Possible lens only."
+          }
+        ],
+        "gated_lenses": [
+          {
+            "model_id": "PE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "CGE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "FPP",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "HFI",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "Synthesis",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          }
+        ]
+      },
+      {
+        "package_id": "pkg-pasture-dryland-use-incentives-2026-05-12",
+        "active_lenses": [
+          {
+            "model_id": "DFM",
+            "channel": "High-frequency monitoring context.",
+            "caveat": "Possible lens only."
+          },
+          {
+            "model_id": "I-O",
+            "channel": "Sector-linkage and final-demand propagation context.",
+            "caveat": "Possible lens only."
+          }
+        ],
+        "gated_lenses": [
+          {
+            "model_id": "PE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "CGE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "FPP",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "HFI",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "Synthesis",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          }
+        ]
       },
       {
         "package_id": "pkg-customs-clearance-digitalization-2026-05-12",
         "active_lenses": [
           {
-            "model_id": "QPM",
-            "channel": "Frame import-cost and external-balance channels for macro scenario discussion.",
-            "caveat": "Scenario lens only; no QPM output is cited."
+            "model_id": "DFM",
+            "channel": "High-frequency monitoring context.",
+            "caveat": "Possible lens only."
           },
           {
             "model_id": "I-O",
-            "channel": "Frame sector exposure to trade-cost and customs-clearance changes.",
-            "caveat": "I-O lens does not model customs behavior or price pass-through."
+            "channel": "Sector-linkage and final-demand propagation context.",
+            "caveat": "Possible lens only."
           }
         ],
-        "gated_lenses": []
+        "gated_lenses": [
+          {
+            "model_id": "PE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "CGE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "FPP",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "HFI",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "Synthesis",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          }
+        ]
       },
       {
         "package_id": "pkg-market-fee-rent-collection-2026-05-08",
         "active_lenses": [
           {
-            "model_id": "QPM",
-            "channel": "Frame fiscal-administration and business-cost channels for scenario discussion.",
-            "caveat": "No revenue or price effect is calculated by this map."
+            "model_id": "DFM",
+            "channel": "General monitoring context.",
+            "caveat": "Possible lens only."
           }
         ],
-        "gated_lenses": []
+        "gated_lenses": [
+          {
+            "model_id": "PE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "CGE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "FPP",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "HFI",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "Synthesis",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          }
+        ]
       },
       {
         "package_id": "pkg-aml-cft-financial-control-2026-05-08",
         "active_lenses": [
           {
             "model_id": "QPM",
-            "channel": "Frame credit-condition and financial-stability channels for macro risk discussion.",
-            "caveat": "No QPM credit or stability effect is estimated."
-          },
-          {
-            "model_id": "DFM",
-            "channel": "Monitor financial indicators where bridge data exist.",
-            "caveat": "Monitoring lens only; compliance effects are not estimated."
+            "channel": "Macro-financial and inflation transmission context.",
+            "caveat": "Possible lens only."
           }
         ],
-        "gated_lenses": []
+        "gated_lenses": [
+          {
+            "model_id": "PE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "CGE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "FPP",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "HFI",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "Synthesis",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          }
+        ]
       },
       {
         "package_id": "pkg-large-investment-integrity-competition-review-2026-05-08",
         "active_lenses": [
           {
-            "model_id": "QPM",
-            "channel": "Frame private-investment and governance-quality channels for scenario design.",
-            "caveat": "No investment response is estimated."
+            "model_id": "DFM",
+            "channel": "High-frequency monitoring context.",
+            "caveat": "Possible lens only."
           },
           {
             "model_id": "I-O",
-            "channel": "Use sector-linkage context if a reviewed investment-sector mapping is later supplied.",
-            "caveat": "No automatic sector mapping is generated."
+            "channel": "Sector-linkage and final-demand propagation context.",
+            "caveat": "Possible lens only."
           }
         ],
-        "gated_lenses": []
+        "gated_lenses": [
+          {
+            "model_id": "PE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "CGE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "FPP",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "HFI",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "Synthesis",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          }
+        ]
       },
       {
         "package_id": "pkg-construction-oversight-inspection-pricing-2026-05-07",
         "active_lenses": [
           {
             "model_id": "DFM",
-            "channel": "Monitor construction indicators around published implementation dates.",
-            "caveat": "Monitoring lens only; no causal impact is claimed."
+            "channel": "High-frequency monitoring context.",
+            "caveat": "Possible lens only."
           },
           {
             "model_id": "I-O",
-            "channel": "Frame construction-service cost channels through sector-linkage tables.",
-            "caveat": "I-O lens is static accounting only."
+            "channel": "Sector-linkage and final-demand propagation context.",
+            "caveat": "Possible lens only."
           }
         ],
-        "gated_lenses": []
+        "gated_lenses": [
+          {
+            "model_id": "PE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "CGE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "FPP",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "HFI",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "Synthesis",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          }
+        ]
       },
       {
         "package_id": "pkg-employment-fund-subsidy-loans-2026-05-07",
         "active_lenses": [
           {
-            "model_id": "QPM",
-            "channel": "Frame public-spending and labor-market support channels for macro scenarios.",
-            "caveat": "No employment or fiscal multiplier is estimated here."
-          },
-          {
             "model_id": "DFM",
-            "channel": "Monitor labor-market indicators where available.",
-            "caveat": "Monitoring lens only."
+            "channel": "General monitoring context.",
+            "caveat": "Possible lens only."
           }
         ],
-        "gated_lenses": []
+        "gated_lenses": [
+          {
+            "model_id": "PE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "CGE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "FPP",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "HFI",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "Synthesis",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          }
+        ]
       },
       {
         "package_id": "pkg-public-transport-system-2026-05-07",
         "active_lenses": [
           {
             "model_id": "DFM",
-            "channel": "Monitor transport, service, or urban activity indicators where available.",
-            "caveat": "Monitoring lens only; no mobility effect is estimated."
+            "channel": "High-frequency monitoring context.",
+            "caveat": "Possible lens only."
           },
           {
             "model_id": "I-O",
-            "channel": "Frame fleet renewal and route expansion as transport-sector linkage questions.",
-            "caveat": "I-O lens does not estimate congestion, modal shift, or welfare effects."
+            "channel": "Sector-linkage and final-demand propagation context.",
+            "caveat": "Possible lens only."
           }
         ],
-        "gated_lenses": []
+        "gated_lenses": [
+          {
+            "model_id": "PE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "CGE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "FPP",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "HFI",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "Synthesis",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          }
+        ]
       },
       {
         "package_id": "pkg-remote-mountain-settlement-classification-2026-05-06",
         "active_lenses": [
           {
-            "model_id": "QPM",
-            "channel": "Frame targeted public-support channels for fiscal scenario discussion.",
-            "caveat": "No fiscal cost or household effect is estimated."
+            "model_id": "DFM",
+            "channel": "General monitoring context.",
+            "caveat": "Possible lens only."
           }
         ],
-        "gated_lenses": []
-      },
-      {
-        "package_id": "pkg-tax-administration-incentives-2026-04-14",
-        "active_lenses": [
+        "gated_lenses": [
           {
-            "model_id": "QPM",
-            "channel": "Frame fiscal-balance and investment channels for macro scenario discussion.",
-            "caveat": "No QPM run or fiscal-cost estimate is cited."
+            "model_id": "PE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
           },
           {
-            "model_id": "I-O",
-            "channel": "Frame private infrastructure investment through sector-linkage tables if a sector mapping is reviewed.",
-            "caveat": "No automatic sector allocation or multiplier is generated."
+            "model_id": "CGE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "FPP",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "HFI",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "Synthesis",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
           }
-        ],
-        "gated_lenses": []
+        ]
       }
     ],
     "caveats": [
-      "Internal preview map only. It routes reform packages to possible analytical lenses and does not cite model outputs.",
-      "QPM, DFM, and I-O are possible lenses only where the source-backed package channel makes that routing cautious.",
-      "PE, CGE, FPP, HFI, and Synthesis remain planned/gated and are not active model outputs on this page."
+      "Model links are routing hints for analyst navigation and do not represent model results."
     ]
   },
   "accepted_reforms": [],

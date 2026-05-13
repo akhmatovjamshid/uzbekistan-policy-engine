@@ -1075,73 +1075,16 @@
           "implementation_program": "Amalga oshirish dasturi",
           "international_agreement": "Xalqaro kelishuv"
         }
-      },
-      "methodology": {
-        "title": "Metodologiya eslatmasi",
-        "includedTitle": "Kiritiladi",
-        "included": "Rasmiy siyosat choralari, farmonlar, amalga oshirish muddatlari, moliyalashtirish mexanizmlari va institutsional islohotlar.",
-        "excludedTitle": "Kiritilmaydi",
-        "excluded": "Siyosat chorasi bo'lmagan uchrashuvlar, nutqlar, treninglar, umumiy hamkorlik yangiliklari va tahliliy hisobotlar.",
-        "caveat": "Sahifa rasmiy manbalarni qisqacha jamlaydi. Bu huquqiy reyestr emas.",
-        "diagnostics": "Manba tekshiruvlari",
-        "sourcesChecked": "{{count}} ta manba tekshirildi",
-        "sourcesChecked_one": "{{count}} ta manba tekshirildi",
-        "sourcesChecked_few": "{{count}} ta manba tekshirildi",
-        "sourcesChecked_many": "{{count}} ta manba tekshirildi",
-        "sourcesChecked_other": "{{count}} ta manba tekshirildi",
-        "invalidLinksBlocked": "{{count}} ta yaroqsiz havola bloklandi",
-        "invalidLinksBlocked_one": "{{count}} ta yaroqsiz havola bloklandi",
-        "invalidLinksBlocked_few": "{{count}} ta yaroqsiz havola bloklandi",
-        "invalidLinksBlocked_many": "{{count}} ta yaroqsiz havola bloklandi",
-        "invalidLinksBlocked_other": "{{count}} ta yaroqsiz havola bloklandi"
       }
-    },
-    "sourceLibrary": {
-      "aria": "Bilimlar markazi manbalar kutubxonasi",
-      "status": "Manbalar",
-      "title": "Manbalar",
-      "description": "Oxirgi yangilanishda tekshirilgan rasmiy saytlar.",
-      "summaryAria": "Manbalar kutubxonasi xulosasi",
-      "sourcesConfigured": "Manbalar",
-      "sourcesChecked": "Tekshirilgan manbalar",
-      "verifiedItems": "Tekshirilgan materiallar",
-      "excludedItems": "Chiqarilgan materiallar",
-      "invalidLinks": "Yaroqsiz havolalar bloklandi",
-      "issueCount": "{{count}} ta manba muammo haqida xabar berdi.",
-      "issueCount_one": "{{count}} ta manba muammo haqida xabar berdi.",
-      "issueCount_few": "{{count}} ta manba muammo haqida xabar berdi.",
-      "issueCount_many": "{{count}} ta manba muammo haqida xabar berdi.",
-      "issueCount_other": "{{count}} ta manba muammo haqida xabar berdi.",
-      "lastChecked": "Oxirgi tekshiruv",
-      "itemsFound": "Topilganlar",
-      "excluded": "Chiqarilgan",
-      "linkStatus": "Havola holati",
-      "statusChecked": "Tekshirildi",
-      "statusIssue": "Muammo",
-      "statusMissing": "Tekshirilmagan",
-      "openSource": "Manba saytini ochish",
-      "openSourceAria": "{{institution}} manba saytini yangi oynada ochish",
-      "empty": "Manba tekshiruvlari mavjud emas."
-    },
-    "policyBriefs": {
-      "aria": "Bilimlar markazi qisqa tahlillari",
-      "title": "Qisqa tahlillar",
-      "description": "Rasmiy manbali islohot paketlaridan olingan statik ichki ko'rish yozuvlari.",
-      "previewLabel": "Ichki ko'rish",
-      "previewCaveat": "Bu yozuvlarni iqtibos qilish mumkin emas; ular taqrizlangan nashr yoki model dalili emas.",
-      "internalOnly": "Faqat ichki",
-      "nonCitable": "Iqtibos qilinmaydi",
-      "packageBasis": "Paket asosi",
-      "possibleLenses": "Mumkin linzalar",
-      "officialSources": "Rasmiy manbalar",
-      "empty": "Ichki ko'rish uchun qisqa tahlillar mavjud emas."
     },
     "researchUpdates": {
       "aria": "Bilimlar markazi tadqiqot yangilanishlari",
       "title": "Tadqiqot yangilanishlari",
-      "description": "Joriy islohot mavzulari, manbalar va analitik kanallar bo'yicha yozuvlar.",
-      "packageBasis": "Islohot paketlari",
-      "policyChannels": "Siyosat kanallari",
+      "description": "Makro, nowcasting, sektor, fiskal va savdo tahlilida modellarni qo'llashga oid so'nggi tadqiqotlar.",
+      "topic": "Mavzu",
+      "models": "Modellar",
+      "methods": "Usullar",
+      "relevance": "Platformaga aloqasi",
       "sources": "Manbalar",
       "empty": "Tadqiqot yangilanishlari hozircha mavjud emas."
     },
@@ -1154,62 +1097,11 @@
       "openSource": "Manbani ochish",
       "empty": "Bu model uchun manbalar hali ko'rsatilmagan."
     },
-    "modelImpactMap": {
-      "aria": "Bilimlar markazi model ta'siri xaritasi",
-      "title": "Model ta'siri xaritasi",
-      "description": "Islohot paketlarini mumkin analitik linzalarga ehtiyotkorlik bilan yo'naltirish.",
-      "possibleLenses": "Mumkin analitik linzalar",
-      "gatedLanes": "Rejalashtirilgan/yopiq yo'nalishlar",
-      "possibleLens": "Mumkin linza",
-      "plannedGated": "Rejalashtirilgan/yopiq",
-      "boundaryTitle": "Chegaralar",
-      "empty": "Model ta'siri xaritasi mavjud emas."
-    },
-    "methodologyDetail": {
-      "aria": "Bilimlar markazi metodologiyasi",
-      "title": "Metodologiya",
-      "description": "Sahifa rasmiy manba materiali islohot ekanini qanday ajratishini ko'rsatadi.",
-      "versionUnavailable": "Versiya mavjud emas",
-      "definitionTitle": "Nima islohot hisoblanadi",
-      "definitionUnavailable": "Islohot ta'rifi mavjud emas.",
-      "includeRules": "Kiritish qoidalari",
-      "excludeRules": "Chiqarish qoidalari",
-      "threshold": "Kiritish chegarasi",
-      "includedTitle": "Kiritiladi",
-      "excludedTitle": "Chiqariladi",
-      "evidenceTypes": "Dalil turlari",
-      "boundaries": "Chegaralar",
-      "showFullRules": "To'liq qoidalarni ko'rsatish",
-      "note": "Izoh"
-    },
     "sections": {
       "aria": "Bilimlar markazi bo'limlari",
       "reformTracker": "Islohotlar trekeri",
       "researchUpdates": "Tadqiqot yangilanishlari",
-      "literatureHub": "Adabiyot",
-      "policyBriefs": "Qisqa tahlillar",
-      "sourceLibrary": "Manbalar kutubxonasi",
-      "methodology": "Metodologiya",
-      "modelImpactMap": "Model ta'siri xaritasi",
-      "plannedStatus": "Rejalashtirilgan"
-    },
-    "planned": {
-      "policyBriefs": {
-        "title": "Policy Briefs rejalashtirilgan",
-        "body": "Kontent governance tayyor bo'lgach, tekshirilgan analitik yozuvlar shu yerda ko'rinadi. AI qoralamalari yoki tekshirilmagan matn yakuniy tahlil sifatida ko'rsatilmaydi."
-      },
-      "sourceLibrary": {
-        "title": "Manbalar kutubxonasi rejalashtirilgan",
-        "body": "Bu bo'lim rasmiy manbalar qamrovi va tekshiruv holatini ko'rsatadi, lekin asosiy oqimda parser ichki diagnostikasini ochmaydi."
-      },
-      "methodology": {
-        "title": "Metodologiya rejalashtirilgan",
-        "body": "Ta'riflar, kiritish qoidalari, izohlar va avtomatlashtirish chegaralari ko'rinadi, ammo Reform Tracker tekshiruv workflowiga aylantirilmaydi."
-      },
-      "modelImpactMap": {
-        "title": "Model ta'siri xaritasi rejalashtirilgan",
-        "body": "Xarita islohotlarni analitik kanallarga ehtiyotkorlik bilan bog'laydi. U yopiq model natijalarini citation qilmaydi yoki model stsenariylarini faollashtirmaydi."
-      }
+      "literatureHub": "Adabiyot"
     }
   },
   "dataRegistry": {

@@ -566,7 +566,7 @@ describe('Knowledge Hub reform intake', () => {
     assert.equal(candidate.source_published_at, '2026-04-15')
   })
 
-  it('assembles generic packages from unrelated verified source events', () => {
+  it('assembles specific topic packages from unrelated verified source events', () => {
     const packages = assembleReformPackagesFromCandidates([
       {
         title: 'Uzbekistan Expands Tax Incentives for Investors Financing Infrastructure Projects',
@@ -592,7 +592,7 @@ describe('Knowledge Hub reform intake', () => {
     assert.equal(packages[0].next_milestone_date, '2026-05-05')
     assert.match(packages[0].short_summary, /tax incentives for investors financing infrastructure projects/)
     assert.ok(packages[0].parameters_or_amounts.includes('Tax incentives for investors financing infrastructure projects'))
-    assert.ok(packages[0].parameters_or_amounts.includes('No future implementation deadline was published in the extracted source'))
+    assert.ok(packages[0].parameters_or_amounts.includes('Infrastructure investor incentive measure recorded'))
     assert.ok(packages[0].policy_channels.includes('Fiscal incentives'))
     assert.equal(packages[0].measure_tracks[0].label, 'tax incentives for infrastructure investors')
     assert.equal(packages[0].implementation_milestones.length, 1)
