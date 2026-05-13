@@ -963,6 +963,18 @@
 }
 
 @media (max-width: 820px) {
+  .hub-section-tabs {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.85rem;
+    overflow-x: visible;
+    padding-bottom: 0.35rem;
+  }
+
+  .hub-section-tabs button {
+    padding-bottom: 0.45rem;
+  }
+
   .tracker-summary,
   .dossier-filters {
     grid-template-columns: 1fr;

@@ -107,7 +107,7 @@
     },
     "knowledgeHub": {
       "title": "Knowledge Hub",
-      "description": "Official reform packages, timelines, source links, and policy channels."
+      "description": "Official reform packages, internal briefs, source links, and cautious model-lens routing."
     }
   },
   "overview": {
@@ -890,10 +890,10 @@
       "errorUnavailable": "Knowledge Hub data is unavailable.",
       "dossierDeskAria": "Reform list and details",
       "header": {
-        "eyebrow": "Reform tracker",
+        "eyebrow": "Knowledge Hub preview",
         "automaticTracker": "Official source tracker",
         "sources": "official sources",
-        "packages": "reforms",
+        "packages": "packages",
         "lastFetch": "Last fetch",
         "updated": "Updated"
       },
@@ -1067,7 +1067,7 @@
       "sourcesConfigured": "Sources",
       "sourcesChecked": "Sources checked",
       "verifiedItems": "Verified items",
-      "excludedItems": "Skipped",
+      "excludedItems": "Excluded items",
       "invalidLinks": "Invalid links blocked",
       "issueCount": "{{count}} source reported an issue.",
       "issueCount_one": "{{count}} source reported an issue.",
@@ -1111,7 +1111,7 @@
     },
     "methodologyDetail": {
       "aria": "Knowledge Hub methodology",
-      "title": "Method",
+      "title": "Methodology",
       "description": "How the page decides whether an official source item is a reform.",
       "versionUnavailable": "Version unavailable",
       "definitionTitle": "What counts as a reform",
@@ -1128,11 +1128,11 @@
     },
     "sections": {
       "aria": "Knowledge Hub subsections",
-      "reformTracker": "Reforms",
-      "policyBriefs": "Briefs",
-      "sourceLibrary": "Sources",
-      "methodology": "Method",
-      "modelImpactMap": "Model links",
+      "reformTracker": "Reform Tracker",
+      "policyBriefs": "Policy Briefs",
+      "sourceLibrary": "Source Library",
+      "methodology": "Methodology",
+      "modelImpactMap": "Model Impact Map",
       "plannedStatus": "Planned"
     },
     "planned": {

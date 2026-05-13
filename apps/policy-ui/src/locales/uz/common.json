@@ -107,7 +107,7 @@
     },
     "knowledgeHub": {
       "title": "Bilimlar markazi",
-      "description": "Rasmiy islohot paketlari, muddatlar, manba havolalari va siyosat kanallari."
+      "description": "Rasmiy manbali islohot paketlari, ichki qisqa tahlillar, manba havolalari va ehtiyotkor model-linza yo'naltirish."
     }
   },
   "overview": {
@@ -890,10 +890,10 @@
       "errorUnavailable": "Bilimlar markazi ma'lumoti mavjud emas.",
       "dossierDeskAria": "Islohotlar ro'yxati va tafsilotlari",
       "header": {
-        "eyebrow": "Islohotlar monitoringi",
+        "eyebrow": "Bilimlar markazi ko'rish",
         "automaticTracker": "Rasmiy manbalar monitoringi",
         "sources": "rasmiy manba",
-        "packages": "islohot",
+        "packages": "paket",
         "lastFetch": "Oxirgi yuklash",
         "updated": "Yangilandi"
       },
@@ -1067,7 +1067,7 @@
       "sourcesConfigured": "Manbalar",
       "sourcesChecked": "Tekshirilgan manbalar",
       "verifiedItems": "Tekshirilgan materiallar",
-      "excludedItems": "O'tkazib yuborildi",
+      "excludedItems": "Chiqarilgan materiallar",
       "invalidLinks": "Yaroqsiz havolalar bloklandi",
       "issueCount": "{{count}} ta manba muammo haqida xabar berdi.",
       "issueCount_one": "{{count}} ta manba muammo haqida xabar berdi.",
@@ -1111,7 +1111,7 @@
     },
     "methodologyDetail": {
       "aria": "Bilimlar markazi metodologiyasi",
-      "title": "Usul",
+      "title": "Metodologiya",
       "description": "Sahifa rasmiy manba materiali islohot ekanini qanday ajratishini ko'rsatadi.",
       "versionUnavailable": "Versiya mavjud emas",
       "definitionTitle": "Nima islohot hisoblanadi",
@@ -1128,11 +1128,11 @@
     },
     "sections": {
       "aria": "Bilimlar markazi bo'limlari",
-      "reformTracker": "Islohotlar",
+      "reformTracker": "Islohotlar trekeri",
       "policyBriefs": "Qisqa tahlillar",
-      "sourceLibrary": "Manbalar",
-      "methodology": "Usul",
-      "modelImpactMap": "Model aloqalari",
+      "sourceLibrary": "Manbalar kutubxonasi",
+      "methodology": "Metodologiya",
+      "modelImpactMap": "Model ta'siri xaritasi",
       "plannedStatus": "Rejalashtirilgan"
     },
     "planned": {
