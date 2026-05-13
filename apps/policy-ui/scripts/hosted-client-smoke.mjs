@@ -773,9 +773,10 @@ function knowledgeHubTrackerExpression() {
         (count, card) => count + card.querySelectorAll('.change-bullet-list li').length,
         0,
       );
-      const compactSummaries = latestCards.every((card) => !!card.querySelector('.latest-change-card__summary'));
       const searchInput = document.querySelector('.knowledge-hub-page .tracker-controls input[type="search"]');
       const archiveItems = Array.from(document.querySelectorAll('.knowledge-hub-page .reform-archive .archive-item'));
+      const archiveBullets = document.querySelectorAll('.knowledge-hub-page .change-bullet-list--archive li').length;
+      const archivePreviews = document.querySelectorAll('.knowledge-hub-page .archive-summary__preview').length;
       const modelActive = document.querySelector('.knowledge-hub-page .model-chip--active');
       const modelPlanned = document.querySelector('.knowledge-hub-page .model-chip--planned');
       const supportPanel = document.querySelector('.knowledge-hub-page .tracker-support');
@@ -823,10 +824,11 @@ function knowledgeHubTrackerExpression() {
           !!latestChanges &&
           latestCards.length >= 3 &&
           !!changeBulletList &&
-          bulletCount >= 9 &&
-          compactSummaries &&
+          bulletCount >= 12 &&
           !!searchInput &&
           archiveItems.length > 0 &&
+          archiveBullets >= 4 &&
+          archivePreviews > 0 &&
           !!modelActive &&
           !!modelPlanned &&
           !!supportPanel &&
@@ -840,9 +842,10 @@ function knowledgeHubTrackerExpression() {
         latestChangeCount: latestCards.length,
         hasChangeBulletList: !!changeBulletList,
         bulletCount,
-        compactSummaries,
         hasSearchInput: !!searchInput,
         archiveItemCount: archiveItems.length,
+        archiveBullets,
+        archivePreviews,
         hasActiveModelLens: !!modelActive,
         hasPlannedModelLens: !!modelPlanned,
         hasSupportPanel: !!supportPanel,

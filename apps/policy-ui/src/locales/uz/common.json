@@ -945,19 +945,14 @@
       "latestChanges": {
         "aria": "Islohotlar bo'yicha so'nggi o'zgarishlar",
         "title": "So'nggi o'zgarishlar",
-        "description": "Rasmiy manbalar asosidagi eng yangi o'zgarishlar xulosasi.",
-        "changed": "Nima o'zgardi",
-        "appliesTo": "Kimga tegishli",
-        "effectiveStatus": "Muddat / status",
-        "document": "Hujjat"
+        "description": "Rasmiy manbalar asosidagi eng yangi o'zgarishlar xulosasi."
       },
       "archive": {
         "aria": "Islohotlar arxivi",
         "title": "Islohotlar arxivi",
         "showing": "{{total}} tadan {{count}} ta islohot ko'rsatilmoqda",
         "empty": "Joriy filtrlarga mos islohot yo'q.",
-        "summary": "Xulosa",
-        "keyMeasures": "Asosiy choralar",
+        "reformChanges": "O'zgarishlar",
         "timeline": "Muddatlar",
         "noTimeline": "Sana bilan belgilangan bosqichlar mavjud emas.",
         "modelLenses": "Model linzalari",
@@ -965,15 +960,7 @@
         "plannedLenses": "Rejadagi linzalar",
         "noActiveLens": "Faol linza yo'q",
         "source": "Manba",
-        "openSource": "Manbani ochish",
-        "keyMeasureLabels": {
-          "whatChanged": "Nima o'zgardi",
-          "whoAffected": "Kimlarga taalluqli",
-          "effectiveStatus": "Kuchga kirish sanasi / holati",
-          "newRule": "Yangi qoida / chora",
-          "amountsDeadlines": "Summalar / chegaralar / muddatlar",
-          "officialDocument": "Rasmiy hujjat"
-        }
+        "openSource": "Manbani ochish"
       },
       "support": {
         "aria": "Islohotlar bo'yicha qo'shimcha ma'lumot",

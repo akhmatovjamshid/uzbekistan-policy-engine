@@ -122,12 +122,12 @@ describe('Knowledge Hub page', () => {
 
     assert.match(contentViewSource, /LatestChangesSection/)
     assert.match(contentViewSource, /latestPackages = packages\.slice\(0, 3\)/)
-    assert.match(contentViewSource, /latestChangeBullets\(reformPackage, t\)/)
+    assert.match(contentViewSource, /changeBullets\(reformPackage, t, 8\)/)
     assert.match(contentViewSource, /className="change-bullet-list"/)
-    assert.match(contentViewSource, /className="latest-change-card__summary"/)
     assert.match(contentViewSource, /className="latest-change-source"/)
     assert.match(contentViewSource, /digestChangeText\(reformPackage, t\)/)
     assert.match(contentViewSource, /reformPackage\.digest\?\.document/)
+    assert.doesNotMatch(contentViewSource, /latest-change-card__summary/)
     assert.doesNotMatch(contentViewSource, /const firstMeasure = parameterList\(reformPackage, t\)\[0\]/)
   })
 
@@ -186,7 +186,7 @@ describe('Knowledge Hub page', () => {
     )
   })
 
-  it('renders structured Key Measures without extraction metadata phrases', async () => {
+  it('renders the archive as source-style reform change bullets without old dossier labels', async () => {
     const artifact = JSON.parse(readFileSync(PUBLIC_KNOWLEDGE_HUB_ARTIFACT, 'utf8'))
     const content = knowledgeHubArtifactToContent(artifact)
     const i18n = await createKnowledgeHubTestI18n()
@@ -196,12 +196,13 @@ describe('Knowledge Hub page', () => {
       </I18nextProvider>,
     )
 
-    assert.match(html, /What changed/)
-    assert.match(html, /Who is affected/)
-    assert.match(html, /Effective date \/ status/)
-    assert.match(html, /New rule \/ measure/)
-    assert.match(html, /Amounts \/ thresholds \/ deadlines/)
-    assert.match(html, /Official document/)
+    assert.match(html, /Reform changes/)
+    assert.match(html, /change-bullet-list--archive/)
+    assert.match(html, /archive-summary__preview/)
+    assert.doesNotMatch(html, /Who is affected/)
+    assert.doesNotMatch(html, /Effective date \/ status/)
+    assert.doesNotMatch(html, /New rule \/ measure/)
+    assert.doesNotMatch(html, /Amounts \/ thresholds \/ deadlines/)
     assert.doesNotMatch(
       html,
       /Source event date|Evidence type|No future implementation deadline|Tracks one verified official source event|Official detail page did not expose|Tracks \d+ verified official source events?|source-backed|without inferring|dossier|measure recorded|source event recorded|Source-reported/i,
@@ -313,21 +314,12 @@ describe('Knowledge Hub page', () => {
       assert.equal(typeof locale.knowledgeHub.sections.reformTracker, 'string')
       assert.equal(typeof locale.knowledgeHub.sections.researchUpdates, 'string')
       assert.equal(typeof locale.knowledgeHub.sections.literatureHub, 'string')
-      assert.equal(typeof locale.knowledgeHub.reformTracker.latestChanges.changed, 'string')
-      assert.equal(typeof locale.knowledgeHub.reformTracker.latestChanges.appliesTo, 'string')
-      assert.equal(typeof locale.knowledgeHub.reformTracker.latestChanges.effectiveStatus, 'string')
-      assert.equal(typeof locale.knowledgeHub.reformTracker.latestChanges.document, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.filters.search, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.filters.status, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.filters.source, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.archive.title, 'string')
+      assert.equal(typeof locale.knowledgeHub.reformTracker.archive.reformChanges, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.archive.modelLenses, 'string')
-      assert.equal(typeof locale.knowledgeHub.reformTracker.archive.keyMeasureLabels.whatChanged, 'string')
-      assert.equal(typeof locale.knowledgeHub.reformTracker.archive.keyMeasureLabels.whoAffected, 'string')
-      assert.equal(typeof locale.knowledgeHub.reformTracker.archive.keyMeasureLabels.effectiveStatus, 'string')
-      assert.equal(typeof locale.knowledgeHub.reformTracker.archive.keyMeasureLabels.newRule, 'string')
-      assert.equal(typeof locale.knowledgeHub.reformTracker.archive.keyMeasureLabels.amountsDeadlines, 'string')
-      assert.equal(typeof locale.knowledgeHub.reformTracker.archive.keyMeasureLabels.officialDocument, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.support.sourcesTitle, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.support.selectionTitle, 'string')
       assert.equal(typeof locale.knowledgeHub.researchUpdates.title, 'string')

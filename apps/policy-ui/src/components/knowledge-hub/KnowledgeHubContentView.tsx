@@ -25,19 +25,6 @@ type KnowledgeHubSectionId = 'reformTracker' | 'researchUpdates' | 'literatureHu
 type LabelNamespace = 'eventType' | 'evidenceType'
 type ModelLensId = KnowledgeHubActiveModelLensId | KnowledgeHubGatedModelLensId
 
-type KeyMeasureLabelKey =
-  | 'whatChanged'
-  | 'whoAffected'
-  | 'effectiveStatus'
-  | 'newRule'
-  | 'amountsDeadlines'
-  | 'officialDocument'
-
-type KeyMeasureRow = {
-  labelKey: KeyMeasureLabelKey
-  values: string[]
-}
-
 type DossierFilters = {
   search: string
   policyArea: string
@@ -210,45 +197,11 @@ function digestChangeText(reformPackage: ReformPackage, t: TFunction): string {
   return reformPackage.digest?.changed ?? parameterList(reformPackage, t)[0] ?? dossierSummary(reformPackage)
 }
 
-function latestChangeBullets(reformPackage: ReformPackage, t: TFunction): string[] {
+function changeBullets(reformPackage: ReformPackage, t: TFunction, limit?: number): string[] {
   const primaryChange = digestChangeText(reformPackage, t)
   const bullets = parameterList(reformPackage, t).filter((value) => value !== primaryChange)
-  return compactUniqueList([primaryChange, ...bullets]).slice(0, 4)
-}
-
-function isAmountThresholdOrDeadline(value: string): boolean {
-  return /\b(\d+(?:[.,]\d+)?|billion|trillion|million|soums?|uzs|loan|credit|subsidy|incentive|financ|deadline|target|from\s+\d{4}|by\s+\d{4}|until\s+\d{4}|payment|fee|rent|threshold|at least|up to)\b/i.test(
-    value,
-  )
-}
-
-function measureTrackText(track: ReformPackage['measure_tracks'][number]): string {
-  const label = humanizeMachineToken(track.label)
-  if (!track.status || /^source verified$/i.test(track.status)) return label
-  return `${label}: ${humanizeMachineToken(track.status)}`
-}
-
-function structuredKeyMeasures(reformPackage: ReformPackage, t: TFunction): KeyMeasureRow[] {
-  const visibleParameters = (reformPackage.parameters_or_amounts ?? [])
-    .filter(isVisibleMeasure)
-    .map((value) => displayParameter(t, value))
-  const amountDeadlineValues = compactUniqueList([
-    ...(reformPackage.financing_or_incentive ? [reformPackage.financing_or_incentive] : []),
-    ...visibleParameters.filter(isAmountThresholdOrDeadline),
-  ])
-  const parameterMeasures = visibleParameters.filter((value) => !isAmountThresholdOrDeadline(value))
-  const fallbackMeasureTracks = reformPackage.measure_tracks.map(measureTrackText)
-  const measureValues = compactUniqueList(parameterMeasures.length > 0 ? parameterMeasures : fallbackMeasureTracks)
-  const rows: KeyMeasureRow[] = [
-    { labelKey: 'whatChanged', values: [digestChangeText(reformPackage, t)] },
-    { labelKey: 'whoAffected', values: [reformPackage.digest?.applies_to ?? reformPackage.policy_area] },
-    { labelKey: 'effectiveStatus', values: [reformPackage.digest?.effective_status ?? reformPackage.current_stage] },
-    { labelKey: 'newRule', values: measureValues },
-    { labelKey: 'amountsDeadlines', values: amountDeadlineValues },
-    { labelKey: 'officialDocument', values: [reformPackage.digest?.document ?? reformPackage.official_basis] },
-  ]
-
-  return rows.filter((row) => row.values.some((value) => value.trim().length > 0))
+  const items = compactUniqueList([primaryChange, ...bullets])
+  return typeof limit === 'number' ? items.slice(0, limit) : items
 }
 
 function stageTone(stage: string): 'green' | 'amber' | 'blue' {
@@ -406,7 +359,7 @@ function LatestChangesSection({ packages, allPackages }: { packages: ReformPacka
         {latestPackages.map((reformPackage) => {
           const sourceEvent = packagePrimarySource(reformPackage)
           const displayTitle = dossierDisplayTitle(reformPackage, allPackages)
-          const bullets = latestChangeBullets(reformPackage, t)
+          const bullets = changeBullets(reformPackage, t, 8)
 
           return (
             <article key={reformPackage.package_id} className="latest-change-card">
@@ -414,7 +367,6 @@ function LatestChangesSection({ packages, allPackages }: { packages: ReformPacka
                 <time dateTime={reformPackage.current_stage_date}>{formatDisplayDate(reformPackage.current_stage_date)}</time>
                 <h3>{displayTitle}</h3>
               </header>
-              <p className="latest-change-card__summary">{dossierSummary(reformPackage)}</p>
               <ul className="change-bullet-list">
                 {bullets.map((bullet) => (
                   <li key={bullet}>{bullet}</li>
@@ -610,12 +562,20 @@ function ReformArchive({
         {packages.map((reformPackage, index) => {
           const sourceEvent = packagePrimarySource(reformPackage)
           const displayTitle = dossierDisplayTitle(reformPackage, allPackages)
-          const measureRows = structuredKeyMeasures(reformPackage, t)
+          const changeItems = changeBullets(reformPackage, t)
+          const previewItems = changeItems.slice(0, 2)
           return (
             <details key={reformPackage.package_id} className="archive-item" open={index === 0}>
               <summary className="archive-summary">
                 <span className="archive-summary__main">
                   <span className="archive-summary__title">{displayTitle}</span>
+                  {previewItems.length > 0 ? (
+                    <span className="archive-summary__preview">
+                      {previewItems.map((item) => (
+                        <span key={item}>{item}</span>
+                      ))}
+                    </span>
+                  ) : null}
                   <span className="archive-summary__meta">
                     <span>{hostLabel(sourceEvent?.source_url)}</span>
                     <time dateTime={reformPackage.current_stage_date}>{formatDisplayDate(reformPackage.current_stage_date)}</time>
@@ -628,34 +588,13 @@ function ReformArchive({
                 </span>
               </summary>
               <div className="archive-body">
-                <section>
-                  <h3>{t('knowledgeHub.reformTracker.archive.summary')}</h3>
-                  <p>{dossierSummary(reformPackage)}</p>
-                </section>
-                <section>
-                  <h3>{t('knowledgeHub.reformTracker.archive.keyMeasures')}</h3>
-                  <dl className="structured-measure-list">
-                    {measureRows.map((row) => (
-                      <div key={row.labelKey}>
-                        <dt>{t(`knowledgeHub.reformTracker.archive.keyMeasureLabels.${row.labelKey}`)}</dt>
-                        <dd>
-                          {row.labelKey === 'officialDocument' && sourceEvent ? (
-                            <a href={sourceEvent.source_url} className="text-source-link" {...EXTERNAL_LINK_PROPS}>
-                              {row.values[0]}
-                            </a>
-                          ) : row.values.length === 1 ? (
-                            row.values[0]
-                          ) : (
-                            <ul>
-                              {row.values.map((value) => (
-                                <li key={value}>{value}</li>
-                              ))}
-                            </ul>
-                          )}
-                        </dd>
-                      </div>
+                <section className="archive-change-section">
+                  <h3>{t('knowledgeHub.reformTracker.archive.reformChanges')}</h3>
+                  <ul className="change-bullet-list change-bullet-list--archive">
+                    {changeItems.map((item) => (
+                      <li key={item}>{item}</li>
                     ))}
-                  </dl>
+                  </ul>
                 </section>
                 <section>
                   <h3>{t('knowledgeHub.reformTracker.archive.timeline')}</h3>

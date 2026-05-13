@@ -945,19 +945,14 @@
       "latestChanges": {
         "aria": "Latest reform changes",
         "title": "Latest changes",
-        "description": "Short summary of the newest official changes.",
-        "changed": "Changed",
-        "appliesTo": "Applies to",
-        "effectiveStatus": "Effective / status",
-        "document": "Document"
+        "description": "Short summary of the newest official changes."
       },
       "archive": {
         "aria": "Reform archive",
         "title": "Reform archive",
         "showing": "Showing {{count}} of {{total}} reforms",
         "empty": "No reforms match the current filters.",
-        "summary": "Summary",
-        "keyMeasures": "Key measures",
+        "reformChanges": "Reform changes",
         "timeline": "Timeline",
         "noTimeline": "No dated milestones are available.",
         "modelLenses": "Model lenses",
@@ -965,15 +960,7 @@
         "plannedLenses": "Planned lenses",
         "noActiveLens": "No active lens",
         "source": "Source",
-        "openSource": "Open source",
-        "keyMeasureLabels": {
-          "whatChanged": "What changed",
-          "whoAffected": "Who is affected",
-          "effectiveStatus": "Effective date / status",
-          "newRule": "New rule / measure",
-          "amountsDeadlines": "Amounts / thresholds / deadlines",
-          "officialDocument": "Official document"
-        }
+        "openSource": "Open source"
       },
       "support": {
         "aria": "Reform supporting information",
