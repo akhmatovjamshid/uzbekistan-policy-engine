@@ -2,11 +2,10 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { TFunction } from 'i18next'
 import type {
+  KnowledgeHubActiveModelLensId,
   KnowledgeHubContent,
-  KnowledgeHubConfiguredSource,
+  KnowledgeHubGatedModelLensId,
   KnowledgeHubPolicyBrief,
-  KnowledgeHubRulebookRule,
-  KnowledgeHubSourceDiagnostic,
   ReformPackage,
   ReformPackageMilestone,
   ReformPackageSourceEvent,
@@ -16,13 +15,25 @@ type KnowledgeHubContentViewProps = {
   content: KnowledgeHubContent
 }
 
-type KnowledgeHubSectionId = 'reformTracker' | 'policyBriefs' | 'modelImpactMap' | 'sourceLibrary' | 'methodology'
+type KnowledgeHubSectionId = 'reformTracker' | 'researchUpdates' | 'literatureHub'
 type LabelNamespace = 'eventType' | 'evidenceType'
+type ModelLensId = KnowledgeHubActiveModelLensId | KnowledgeHubGatedModelLensId
 
 type DossierFilters = {
+  search: string
   policyArea: string
   stage: string
-  institution: string
+  sourceHost: string
+}
+
+type LiteratureItem = {
+  id: string
+  title: string
+  source: string
+  year: string
+  url: string
+  modelIds: ModelLensId[]
+  methods: string[]
 }
 
 const EXTERNAL_LINK_PROPS = {
@@ -30,12 +41,36 @@ const EXTERNAL_LINK_PROPS = {
   rel: 'noopener noreferrer',
 } as const
 
-const HUB_SECTIONS: KnowledgeHubSectionId[] = [
-  'reformTracker',
-  'policyBriefs',
-  'modelImpactMap',
-  'sourceLibrary',
-  'methodology',
+const HUB_SECTIONS: KnowledgeHubSectionId[] = ['reformTracker', 'researchUpdates', 'literatureHub']
+
+const LITERATURE_ITEMS: LiteratureItem[] = [
+  {
+    id: 'qpm-practical-model-policy-analysis',
+    title: 'Practical Model-Based Monetary Policy Analysis: A How-To Guide',
+    source: 'IMF Working Paper 2006/081',
+    year: '2006',
+    url: 'https://www.imf.org/en/Publications/WP/Issues/2016/12/31/Practical-Model-Based-Monetary-Policy-Analysis-A-How-To-Guide-18842',
+    modelIds: ['QPM'],
+    methods: ['IS curve', 'Phillips curve', 'policy reaction function'],
+  },
+  {
+    id: 'dfm-two-step-estimator',
+    title: 'A two-step estimator for large approximate dynamic factor models based on Kalman filtering',
+    source: 'Journal of Econometrics',
+    year: '2011',
+    url: 'https://www.sciencedirect.com/science/article/pii/S030440761100039X',
+    modelIds: ['DFM'],
+    methods: ['dynamic factor model', 'Kalman smoother', 'principal components'],
+  },
+  {
+    id: 'io-foundations-extensions',
+    title: 'Input-Output Analysis: Foundations and Extensions',
+    source: 'Cambridge University Press',
+    year: '2022',
+    url: 'https://doi.org/10.1017/9781108676212',
+    modelIds: ['I-O'],
+    methods: ['Leontief inverse', 'multipliers', 'sector linkages'],
+  },
 ]
 
 function dateSortKey(value: string): string {
@@ -81,6 +116,12 @@ function packageTimeline(reformPackage: ReformPackage): ReformPackageMilestone[]
   )
 }
 
+function flattenMilestones(packages: ReformPackage[]): ReformPackageMilestone[] {
+  return packages
+    .flatMap((reformPackage) => reformPackage.implementation_milestones)
+    .sort((left, right) => dateSortKey(left.date).localeCompare(dateSortKey(right.date)))
+}
+
 function hasDuplicateTitle(reformPackage: ReformPackage, packages: ReformPackage[]): boolean {
   const normalizedTitle = reformPackage.title.trim().toLowerCase()
   return packages.filter((item) => item.title.trim().toLowerCase() === normalizedTitle).length > 1
@@ -112,12 +153,6 @@ function sourceEventsByIds(packages: ReformPackage[], ids: string[]): ReformPack
   })
 }
 
-function flattenMilestones(packages: ReformPackage[]): ReformPackageMilestone[] {
-  return packages
-    .flatMap((reformPackage) => reformPackage.implementation_milestones)
-    .sort((left, right) => dateSortKey(left.date).localeCompare(dateSortKey(right.date)))
-}
-
 function trackerLabel(t: TFunction, namespace: LabelNamespace, value: string): string {
   return t(`knowledgeHub.reformTracker.labels.${namespace}.${value}`)
 }
@@ -140,14 +175,6 @@ function displayEvidenceType(t: TFunction, value: string): string {
 function uniqueSorted(values: string[]): string[] {
   return Array.from(new Set(values.filter((value) => value.trim().length > 0))).sort((left, right) =>
     left.localeCompare(right),
-  )
-}
-
-function packageMatchesFilters(reformPackage: ReformPackage, filters: DossierFilters): boolean {
-  return (
-    (!filters.policyArea || reformPackage.policy_area === filters.policyArea) &&
-    (!filters.stage || reformPackage.current_stage === filters.stage) &&
-    (!filters.institution || reformPackage.responsible_institutions.includes(filters.institution))
   )
 }
 
@@ -175,7 +202,7 @@ function dossierSummary(reformPackage: ReformPackage): string {
   if (reformPackage.short_summary) return cleanDossierText(reformPackage.short_summary)
   const sourceSummary = splitSentences(reformPackage.official_source_events[0]?.summary ?? '')
   const summary = sourceSummary.slice(0, 2).join(' ')
-  return summary || reformPackage.why_tracked
+  return summary || cleanDossierText(reformPackage.why_tracked)
 }
 
 function compactUniqueList(values: string[]): string[] {
@@ -194,8 +221,12 @@ function displayParameter(t: TFunction, value: string): string {
   return value.replace(/\b[a-z]+(?:_[a-z]+)+\b/g, (token) => humanizeMachineToken(token).toLowerCase())
 }
 
+function isVisibleMeasure(value: string): boolean {
+  return !/^Evidence type:/i.test(value.trim())
+}
+
 function parameterList(reformPackage: ReformPackage, t: TFunction): string[] {
-  const parameters = reformPackage.parameters_or_amounts ?? []
+  const parameters = (reformPackage.parameters_or_amounts ?? []).filter(isVisibleMeasure)
   const derived = [
     reformPackage.financing_or_incentive,
     ...reformPackage.measure_tracks.map((track) => (track.status ? `${track.label}: ${track.status}` : track.label)),
@@ -205,10 +236,8 @@ function parameterList(reformPackage: ReformPackage, t: TFunction): string[] {
   )
 }
 
-function policyChannels(reformPackage: ReformPackage): string[] {
-  return reformPackage.policy_channels && reformPackage.policy_channels.length > 0
-    ? reformPackage.policy_channels
-    : reformPackage.model_relevance
+function digestChangeText(reformPackage: ReformPackage, t: TFunction): string {
+  return parameterList(reformPackage, t)[0] ?? dossierSummary(reformPackage)
 }
 
 function stageTone(stage: string): 'green' | 'amber' | 'blue' {
@@ -237,13 +266,72 @@ function milestoneDisplayLabel(milestone: ReformPackageMilestone, sourceEvent: R
   return compactTimelineLabel(humanizeMachineToken(milestone.label))
 }
 
-function MetricIcon({ type }: { type: 'dossier' | 'sources' | 'calendar' | 'clock' | 'info' }) {
+function sourceHosts(packages: ReformPackage[]): string[] {
+  return uniqueSorted(
+    packages.flatMap((reformPackage) => reformPackage.official_source_events.map((event) => hostLabel(event.source_url))),
+  )
+}
+
+function packagePrimarySource(reformPackage: ReformPackage): ReformPackageSourceEvent | undefined {
+  return reformPackage.official_source_events[0]
+}
+
+function packageSearchText(reformPackage: ReformPackage, displayTitle: string): string {
+  return [
+    displayTitle,
+    reformPackage.policy_area,
+    reformPackage.current_stage,
+    reformPackage.legal_basis,
+    reformPackage.official_basis,
+    reformPackage.financing_or_incentive ?? '',
+    reformPackage.responsible_institutions.join(' '),
+    reformPackage.measure_tracks.map((track) => `${track.label} ${track.status ?? ''}`).join(' '),
+    reformPackage.parameters_or_amounts?.join(' ') ?? '',
+    reformPackage.official_source_events.map((event) => `${event.title} ${event.source_institution}`).join(' '),
+  ]
+    .join(' ')
+    .toLowerCase()
+}
+
+function packageMatchesFilters(reformPackage: ReformPackage, filters: DossierFilters, allPackages: ReformPackage[]): boolean {
+  const displayTitle = dossierDisplayTitle(reformPackage, allPackages)
+  const query = filters.search.trim().toLowerCase()
+  const primaryHost = hostLabel(packagePrimarySource(reformPackage)?.source_url)
+  return (
+    (!query || packageSearchText(reformPackage, displayTitle).includes(query)) &&
+    (!filters.policyArea || reformPackage.policy_area === filters.policyArea) &&
+    (!filters.stage || reformPackage.current_stage === filters.stage) &&
+    (!filters.sourceHost || primaryHost === filters.sourceHost)
+  )
+}
+
+function sourceDiagnosticsSummary(content: KnowledgeHubContent) {
+  const diagnostics = content.source_diagnostics ?? []
+  return {
+    sourceCount: content.meta.sources_configured ?? content.sources?.length ?? diagnostics.length,
+    checkedCount: diagnostics.filter((diagnostic) => diagnostic.ok).length,
+    brokenLinkCount: diagnostics.reduce((sum, diagnostic) => sum + diagnostic.link_invalid_count, 0),
+  }
+}
+
+function modelLensMap(content: KnowledgeHubContent): Map<string, KnowledgeHubActiveModelLensId[]> {
+  return new Map(
+    (content.model_impact_map?.package_links ?? []).map((link) => [
+      link.package_id,
+      uniqueSorted(link.active_lenses.map((lens) => lens.model_id)) as KnowledgeHubActiveModelLensId[],
+    ]),
+  )
+}
+
+function gatedLenses(content: KnowledgeHubContent): KnowledgeHubGatedModelLensId[] {
+  return (content.model_impact_map?.gated_lenses ?? []).map((lens) => lens.id as KnowledgeHubGatedModelLensId)
+}
+
+function MetricIcon({ type }: { type: 'dossier' | 'sources' | 'calendar' }) {
   const paths = {
     dossier: 'M7 3h7l4 4v14H7V3zm7 0v5h5M10 12h6M10 16h6',
     sources: 'M4 20h16M6 18V9l6-4 6 4v9M9 18v-6M12 18v-6M15 18v-6M5 9h14',
     calendar: 'M7 3v4M17 3v4M4 9h16M6 5h12a2 2 0 0 1 2 2v13H4V7a2 2 0 0 1 2-2zM8 13h3M13 13h3M8 17h3M13 17h3',
-    clock: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zm0-14v6l4 2',
-    info: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zm0-10v6M12 7h.01',
   }
 
   return (
@@ -255,7 +343,7 @@ function MetricIcon({ type }: { type: 'dossier' | 'sources' | 'calendar' | 'cloc
 
 function MetricStrip({ content, packages }: { content: KnowledgeHubContent; packages: ReformPackage[] }) {
   const { t } = useTranslation()
-  const sourceDiagnostics = content.source_diagnostics ?? []
+  const sourceSummary = sourceDiagnosticsSummary(content)
   const generatedReference = referenceTime(content.generated_at)
   const upcomingMilestones = flattenMilestones(packages).filter((milestone) =>
     isFutureDate(milestone.date, generatedReference),
@@ -269,7 +357,7 @@ function MetricStrip({ content, packages }: { content: KnowledgeHubContent; pack
     {
       icon: 'sources' as const,
       label: t('knowledgeHub.reformTracker.metrics.officialSources'),
-      value: String(content.meta.sources_configured ?? sourceDiagnostics.length),
+      value: String(sourceSummary.sourceCount),
     },
     {
       icon: 'calendar' as const,
@@ -291,7 +379,71 @@ function MetricStrip({ content, packages }: { content: KnowledgeHubContent; pack
   )
 }
 
-function DossierFiltersPanel({
+function LatestChangesSection({ packages, allPackages }: { packages: ReformPackage[]; allPackages: ReformPackage[] }) {
+  const { t } = useTranslation()
+  const latestPackages = packages.slice(0, 3)
+
+  return (
+    <section className="latest-changes" aria-label={t('knowledgeHub.reformTracker.latestChanges.aria')}>
+      <header className="section-header section-header--compact">
+        <div>
+          <h2>{t('knowledgeHub.reformTracker.latestChanges.title')}</h2>
+          <p>{t('knowledgeHub.reformTracker.latestChanges.description')}</p>
+        </div>
+      </header>
+      <div className="latest-change-list">
+        {latestPackages.map((reformPackage) => {
+          const sourceEvent = packagePrimarySource(reformPackage)
+          const displayTitle = dossierDisplayTitle(reformPackage, allPackages)
+          const firstMeasure = digestChangeText(reformPackage, t)
+          const nextMilestone =
+            reformPackage.next_milestone && reformPackage.next_milestone_date
+              ? `${reformPackage.current_stage}; ${reformPackage.next_milestone} ${formatDisplayDate(
+                  reformPackage.next_milestone_date,
+                )}`
+              : reformPackage.current_stage
+
+          return (
+            <article key={reformPackage.package_id} className="latest-change-card">
+              <header>
+                <time dateTime={reformPackage.current_stage_date}>{formatDisplayDate(reformPackage.current_stage_date)}</time>
+                <h3>{displayTitle}</h3>
+              </header>
+              <dl className="change-digest">
+                <div>
+                  <dt>{t('knowledgeHub.reformTracker.latestChanges.changed')}</dt>
+                  <dd>{firstMeasure}</dd>
+                </div>
+                <div>
+                  <dt>{t('knowledgeHub.reformTracker.latestChanges.appliesTo')}</dt>
+                  <dd>{reformPackage.responsible_institutions.slice(0, 2).join(', ')}</dd>
+                </div>
+                <div>
+                  <dt>{t('knowledgeHub.reformTracker.latestChanges.effectiveStatus')}</dt>
+                  <dd>{nextMilestone}</dd>
+                </div>
+                <div>
+                  <dt>{t('knowledgeHub.reformTracker.latestChanges.document')}</dt>
+                  <dd>
+                    {sourceEvent ? (
+                      <a href={sourceEvent.source_url} className="text-source-link" {...EXTERNAL_LINK_PROPS}>
+                        {hostLabel(sourceEvent.source_url)}
+                      </a>
+                    ) : (
+                      reformPackage.official_basis
+                    )}
+                  </dd>
+                </div>
+              </dl>
+            </article>
+          )
+        })}
+      </div>
+    </section>
+  )
+}
+
+function TrackerControlsPanel({
   filters,
   onFiltersChange,
   packages,
@@ -303,24 +455,23 @@ function DossierFiltersPanel({
   const { t } = useTranslation()
   const policyAreas = uniqueSorted(packages.map((item) => item.policy_area))
   const stages = uniqueSorted(packages.map((item) => item.current_stage))
-  const institutions = uniqueSorted(packages.flatMap((item) => item.responsible_institutions))
+  const hosts = sourceHosts(packages)
 
   function updateFilter(key: keyof DossierFilters, value: string) {
     onFiltersChange({ ...filters, [key]: value })
   }
 
   return (
-    <section className="dossier-filters" aria-label={t('knowledgeHub.reformTracker.filters.aria')}>
-      <div className="dossier-filters__topline">
-        <span>{t('knowledgeHub.reformTracker.filters.title')}</span>
-        <button
-          type="button"
-          className="dossier-filters__clear"
-          onClick={() => onFiltersChange({ policyArea: '', stage: '', institution: '' })}
-        >
-          {t('knowledgeHub.reformTracker.filters.clearAll')}
-        </button>
-      </div>
+    <section className="tracker-controls" aria-label={t('knowledgeHub.reformTracker.filters.aria')}>
+      <label className="tracker-controls__search">
+        <span>{t('knowledgeHub.reformTracker.filters.search')}</span>
+        <input
+          type="search"
+          value={filters.search}
+          placeholder={t('knowledgeHub.reformTracker.filters.searchPlaceholder')}
+          onChange={(event) => updateFilter('search', event.target.value)}
+        />
+      </label>
       <label>
         <span>{t('knowledgeHub.reformTracker.filters.policyArea')}</span>
         <select value={filters.policyArea} onChange={(event) => updateFilter('policyArea', event.target.value)}>
@@ -333,7 +484,7 @@ function DossierFiltersPanel({
         </select>
       </label>
       <label>
-        <span>{t('knowledgeHub.reformTracker.filters.stage')}</span>
+        <span>{t('knowledgeHub.reformTracker.filters.status')}</span>
         <select value={filters.stage} onChange={(event) => updateFilter('stage', event.target.value)}>
           <option value="">{t('knowledgeHub.reformTracker.filters.allStages')}</option>
           {stages.map((stage) => (
@@ -344,254 +495,236 @@ function DossierFiltersPanel({
         </select>
       </label>
       <label>
-        <span>{t('knowledgeHub.reformTracker.filters.institution')}</span>
-        <select value={filters.institution} onChange={(event) => updateFilter('institution', event.target.value)}>
-          <option value="">{t('knowledgeHub.reformTracker.filters.allInstitutions')}</option>
-          {institutions.map((institution) => (
-            <option key={institution} value={institution}>
-              {institution}
+        <span>{t('knowledgeHub.reformTracker.filters.source')}</span>
+        <select value={filters.sourceHost} onChange={(event) => updateFilter('sourceHost', event.target.value)}>
+          <option value="">{t('knowledgeHub.reformTracker.filters.allSources')}</option>
+          {hosts.map((host) => (
+            <option key={host} value={host}>
+              {host}
             </option>
           ))}
         </select>
       </label>
+      <button
+        type="button"
+        className="tracker-controls__clear"
+        onClick={() => onFiltersChange({ search: '', policyArea: '', stage: '', sourceHost: '' })}
+      >
+        {t('knowledgeHub.reformTracker.filters.clearAll')}
+      </button>
     </section>
   )
 }
 
-function DossierList({
-  packages,
-  allPackages,
-  selectedPackageId,
-  onSelect,
-  onClearFilters,
-  totalCount,
+function TimelineChips({ reformPackage }: { reformPackage: ReformPackage }) {
+  const { t } = useTranslation()
+  const milestones = packageTimeline(reformPackage)
+
+  if (milestones.length === 0) {
+    return <p className="empty-state empty-state--compact">{t('knowledgeHub.reformTracker.archive.noTimeline')}</p>
+  }
+
+  return (
+    <div className="timeline-chip-list">
+      {milestones.slice(0, 5).map((milestone) => {
+        const sourceEvent = sourceById(reformPackage, milestone.source_event_ids[0] ?? '')
+        return (
+          <span key={milestone.id} className="timeline-chip">
+            <time dateTime={milestone.date}>{formatDisplayDate(milestone.date)}</time>
+            <span>{milestoneDisplayLabel(milestone, sourceEvent)}</span>
+          </span>
+        )
+      })}
+    </div>
+  )
+}
+
+function ModelLensChips({
+  activeLenses,
+  plannedLenses,
 }: {
-  packages: ReformPackage[]
-  allPackages: ReformPackage[]
-  selectedPackageId: string
-  onSelect: (packageId: string) => void
-  onClearFilters: () => void
-  totalCount: number
+  activeLenses: KnowledgeHubActiveModelLensId[]
+  plannedLenses: KnowledgeHubGatedModelLensId[]
 }) {
   const { t } = useTranslation()
 
+  return (
+    <div className="model-lens-strip">
+      <div>
+        <span className="model-lens-strip__label">{t('knowledgeHub.reformTracker.archive.possibleLenses')}</span>
+        <div className="chip-row">
+          {activeLenses.length > 0 ? (
+            activeLenses.map((lens) => (
+              <span key={lens} className="model-chip model-chip--active">
+                {lens}
+              </span>
+            ))
+          ) : (
+            <span className="model-chip">{t('knowledgeHub.reformTracker.archive.noActiveLens')}</span>
+          )}
+        </div>
+      </div>
+      <div>
+        <span className="model-lens-strip__label">{t('knowledgeHub.reformTracker.archive.plannedLenses')}</span>
+        <div className="chip-row">
+          {plannedLenses.map((lens) => (
+            <span key={lens} className="model-chip model-chip--planned">
+              {lens}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function ReformArchive({
+  packages,
+  allPackages,
+  content,
+  onClearFilters,
+}: {
+  packages: ReformPackage[]
+  allPackages: ReformPackage[]
+  content: KnowledgeHubContent
+  onClearFilters: () => void
+}) {
+  const { t } = useTranslation()
+  const activeLensMap = modelLensMap(content)
+  const plannedLenses = gatedLenses(content)
+
   if (packages.length === 0) {
     return (
-      <section className="dossier-list dossier-list--empty" aria-label={t('knowledgeHub.reformTracker.packages.aria')}>
-        <p className="empty-state empty-state--compact">{t('knowledgeHub.reformTracker.packages.empty')}</p>
-        {totalCount > 0 ? (
-          <button type="button" className="ui-secondary-action" onClick={onClearFilters}>
-            {t('knowledgeHub.reformTracker.filters.clearAll')}
-          </button>
-        ) : null}
+      <section className="reform-archive reform-archive--empty" aria-label={t('knowledgeHub.reformTracker.archive.aria')}>
+        <p className="empty-state empty-state--compact">{t('knowledgeHub.reformTracker.archive.empty')}</p>
+        <button type="button" className="ui-secondary-action" onClick={onClearFilters}>
+          {t('knowledgeHub.reformTracker.filters.clearAll')}
+        </button>
       </section>
     )
   }
 
   return (
-    <section className="dossier-list" aria-label={t('knowledgeHub.reformTracker.packages.aria')}>
-      <div className="dossier-list__topline">
-        <span>{t('knowledgeHub.reformTracker.packages.count', { count: packages.length })}</span>
-        <span>{t('knowledgeHub.reformTracker.packages.sortRecent')}</span>
-      </div>
-      <div className="dossier-list__items">
-        {packages.map((reformPackage) => {
+    <section className="reform-archive" aria-label={t('knowledgeHub.reformTracker.archive.aria')}>
+      <header className="section-header section-header--compact">
+        <div>
+          <h2>{t('knowledgeHub.reformTracker.archive.title')}</h2>
+          <p>{t('knowledgeHub.reformTracker.archive.showing', { count: packages.length, total: allPackages.length })}</p>
+        </div>
+      </header>
+      <div className="archive-list">
+        {packages.map((reformPackage, index) => {
+          const sourceEvent = packagePrimarySource(reformPackage)
           const displayTitle = dossierDisplayTitle(reformPackage, allPackages)
+          const measures = parameterList(reformPackage, t).slice(0, 4)
           return (
-            <button
-              key={reformPackage.package_id}
-              type="button"
-              className={`dossier-row${reformPackage.package_id === selectedPackageId ? ' is-selected' : ''}`}
-              onClick={() => onSelect(reformPackage.package_id)}
-            >
-              <span className="dossier-row__title">{displayTitle}</span>
-              <span className="dossier-row__meta">
-                <span>{reformPackage.responsible_institutions[0]}</span>
-                <span>{formatDisplayDate(reformPackage.current_stage_date)}</span>
-              </span>
-              <span className="dossier-row__chips">
+            <details key={reformPackage.package_id} className="archive-item" open={index === 0}>
+              <summary className="archive-summary">
+                <span className="archive-summary__main">
+                  <span className="archive-summary__title">{displayTitle}</span>
+                  <span className="archive-summary__meta">
+                    <span>{hostLabel(sourceEvent?.source_url)}</span>
+                    <time dateTime={reformPackage.current_stage_date}>{formatDisplayDate(reformPackage.current_stage_date)}</time>
+                  </span>
+                </span>
                 <span className={`ui-chip ui-chip--${stageTone(reformPackage.current_stage)}`}>
                   {reformPackage.current_stage}
                 </span>
-                <span className="ui-chip">{t('knowledgeHub.reformTracker.packages.officialSource')}</span>
-              </span>
-            </button>
+                <span className="archive-summary__chevron" aria-hidden="true">
+                  v
+                </span>
+              </summary>
+              <div className="archive-body">
+                <section>
+                  <h3>{t('knowledgeHub.reformTracker.archive.summary')}</h3>
+                  <p>{dossierSummary(reformPackage)}</p>
+                </section>
+                <section>
+                  <h3>{t('knowledgeHub.reformTracker.archive.keyMeasures')}</h3>
+                  <ul className="measure-list">
+                    {measures.map((measure) => (
+                      <li key={measure}>{measure}</li>
+                    ))}
+                  </ul>
+                </section>
+                <section>
+                  <h3>{t('knowledgeHub.reformTracker.archive.timeline')}</h3>
+                  <TimelineChips reformPackage={reformPackage} />
+                </section>
+                <section>
+                  <h3>{t('knowledgeHub.reformTracker.archive.modelLenses')}</h3>
+                  <ModelLensChips
+                    activeLenses={activeLensMap.get(reformPackage.package_id) ?? []}
+                    plannedLenses={plannedLenses}
+                  />
+                </section>
+                <section className="archive-source-row">
+                  <div>
+                    <h3>{t('knowledgeHub.reformTracker.archive.source')}</h3>
+                    <p>{sourceEvent?.source_institution ?? reformPackage.official_basis}</p>
+                  </div>
+                  {sourceEvent ? (
+                    <a
+                      href={sourceEvent.source_url}
+                      className="external-source-link"
+                      aria-label={t('knowledgeHub.reformTracker.dossier.openOfficialSourceAria', {
+                        title: sourceEvent.title,
+                      })}
+                      {...EXTERNAL_LINK_PROPS}
+                    >
+                      <span>{t('knowledgeHub.reformTracker.archive.openSource')}</span>
+                      <span>{t('knowledgeHub.reformTracker.dossier.sourceLinkMeta', { host: hostLabel(sourceEvent.source_url) })}</span>
+                    </a>
+                  ) : null}
+                </section>
+              </div>
+            </details>
           )
         })}
       </div>
-      <p className="dossier-list__footer">{t('knowledgeHub.reformTracker.packages.showing', { count: packages.length, total: totalCount })}</p>
     </section>
   )
 }
 
-function ResponsibleInstitutions({ reformPackage }: { reformPackage: ReformPackage }) {
+function SupportingInfo({ content, packages }: { content: KnowledgeHubContent; packages: ReformPackage[] }) {
   const { t } = useTranslation()
+  const sourceSummary = sourceDiagnosticsSummary(content)
+  const rulebook = content.rulebook
 
   return (
-    <section className="dossier-section dossier-section--institutions">
-      <h3>{t('knowledgeHub.reformTracker.dossier.responsibleInstitutions')}</h3>
-      <ul className="institution-list">
-        {reformPackage.responsible_institutions.map((institution, index) => (
-          <li key={institution}>
-            <span className="institution-list__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <path d="M4 20h16M6 18V9l6-4 6 4v9M9 18v-6M12 18v-6M15 18v-6M5 9h14" />
-              </svg>
-            </span>
-            <span>{institution}</span>
-            <span className="ui-chip">{index === 0 ? t('knowledgeHub.reformTracker.dossier.lead') : t('knowledgeHub.reformTracker.dossier.partner')}</span>
-          </li>
-        ))}
-      </ul>
-    </section>
-  )
-}
-
-function ImplementationTimeline({ reformPackage }: { reformPackage: ReformPackage }) {
-  const { t } = useTranslation()
-  const milestones = packageTimeline(reformPackage)
-
-  return (
-    <section className="dossier-section dossier-section--timeline">
-      <h3>{t('knowledgeHub.reformTracker.dossier.implementationTimeline')}</h3>
-      {milestones.length > 0 ? (
-        <ol className="dossier-timeline">
-          {milestones.map((milestone) => {
-            const sourceEvent = sourceById(reformPackage, milestone.source_event_ids[0] ?? '')
-            return (
-              <li key={milestone.id}>
-                <time dateTime={milestone.date}>{formatDisplayDate(milestone.date)}</time>
-                <span className="dossier-timeline__dot" aria-hidden="true" />
-                <div>
-                  <strong>{milestoneDisplayLabel(milestone, sourceEvent)}</strong>
-                  <span>{trackerLabel(t, 'eventType', milestone.event_type)}</span>
-                  {sourceEvent ? <span>{sourceEvent.source_institution}</span> : null}
-                </div>
-              </li>
-            )
-          })}
-        </ol>
-      ) : (
-        <p className="empty-state empty-state--compact">
-          {t('knowledgeHub.reformTracker.dossier.noPackageTimeline')}
-        </p>
-      )}
-    </section>
-  )
-}
-
-function OfficialSourceBasis({ reformPackage }: { reformPackage: ReformPackage }) {
-  const { t } = useTranslation()
-  const sourceEvent = reformPackage.official_source_events[0]
-  const sourceHost = hostLabel(sourceEvent?.source_url)
-
-  return (
-    <section className="dossier-section dossier-section--source">
-      <h3>{t('knowledgeHub.reformTracker.dossier.source')}</h3>
-      {sourceEvent ? (
-        <article className="source-basis">
-          <h4>{sourceEvent.title}</h4>
-          <dl>
-            <div>
-              <dt>{t('knowledgeHub.reformTracker.dossier.sourceInstitution')}</dt>
-              <dd>{sourceEvent.source_institution}</dd>
-            </div>
-            <div>
-              <dt>{t('knowledgeHub.reformTracker.dossier.publicationDate')}</dt>
-              <dd>{formatDisplayDate(sourceEvent.source_published_at)}</dd>
-            </div>
-          </dl>
-          <a
-            href={sourceEvent.source_url}
-            className="external-source-link"
-            aria-label={t('knowledgeHub.reformTracker.dossier.openOfficialSourceAria', {
-              title: sourceEvent.title,
-            })}
-            {...EXTERNAL_LINK_PROPS}
-          >
-            <span>{t('knowledgeHub.reformTracker.dossier.openOfficialSource')}</span>
-            <span>{t('knowledgeHub.reformTracker.dossier.sourceLinkMeta', { host: sourceHost })}</span>
-          </a>
-        </article>
-      ) : (
-        <p className="empty-state empty-state--compact">{reformPackage.official_basis}</p>
-      )}
-    </section>
-  )
-}
-
-function DossierDetail({ reformPackage, allPackages }: { reformPackage: ReformPackage; allPackages: ReformPackage[] }) {
-  const { t } = useTranslation()
-  const displayTitle = dossierDisplayTitle(reformPackage, allPackages)
-  const parameters = parameterList(reformPackage, t)
-  const channels = policyChannels(reformPackage)
-
-  return (
-    <article className="reform-dossier" aria-label={t('knowledgeHub.reformTracker.dossier.aria')}>
-      <header className="reform-dossier__head">
-        <div className="reform-dossier__headline">
-          <h2>{displayTitle}</h2>
-          <span>{t('knowledgeHub.reformTracker.dossier.lastUpdated', { date: formatDisplayDate(reformPackage.current_stage_date) })}</span>
-        </div>
-        <div className="reform-dossier__badges">
-          <span className={`ui-chip ui-chip--${stageTone(reformPackage.current_stage)}`}>{reformPackage.current_stage}</span>
-          <span className="ui-chip">{reformPackage.policy_area}</span>
-        </div>
-      </header>
-
-      <div className="reform-dossier__body">
-        <main className="reform-dossier__main">
-          <section className="dossier-section">
-            <h3>{t('knowledgeHub.reformTracker.dossier.whatChanged')}</h3>
-            <p>{dossierSummary(reformPackage)}</p>
-          </section>
-
-          <section className="dossier-section">
-            <h3>{t('knowledgeHub.reformTracker.dossier.keyMeasures')}</h3>
-            <ul className="measure-list">
-              {parameters.map((parameter) => (
-                <li key={parameter}>{parameter}</li>
-              ))}
-            </ul>
-          </section>
-
-          <ResponsibleInstitutions reformPackage={reformPackage} />
-        </main>
-
-        <aside className="reform-dossier__aside">
-          <OfficialSourceBasis reformPackage={reformPackage} />
-        </aside>
-
-        <ImplementationTimeline reformPackage={reformPackage} />
-
-        <section className="dossier-section dossier-section--model">
-          <h3>{t('knowledgeHub.reformTracker.dossier.policyChannels')}</h3>
-          <p>{cleanDossierText(reformPackage.why_tracked)}</p>
-          <div className="chip-row">
-            {channels.map((channel) => (
-              <span key={channel} className="attribution-badge">
-                {channel}
-              </span>
-            ))}
+    <section className="tracker-support" aria-label={t('knowledgeHub.reformTracker.support.aria')}>
+      <details className="support-panel">
+        <summary>{t('knowledgeHub.reformTracker.support.sourcesTitle')}</summary>
+        <div className="support-stat-grid">
+          <div>
+            <strong>{formatCount(sourceSummary.sourceCount)}</strong>
+            <span>{t('knowledgeHub.reformTracker.support.sourcesChecked')}</span>
           </div>
-        </section>
-
-        <section className="dossier-section dossier-section--caveats">
-          <h3>{t('knowledgeHub.reformTracker.dossier.note')}</h3>
-          <p>{t('knowledgeHub.reformTracker.dossier.registryNote')}</p>
-        </section>
-      </div>
-    </article>
+          <div>
+            <strong>{formatCount(packages.length)}</strong>
+            <span>{t('knowledgeHub.reformTracker.support.reforms')}</span>
+          </div>
+          <div>
+            <strong>{formatCount(sourceSummary.brokenLinkCount)}</strong>
+            <span>{t('knowledgeHub.reformTracker.support.brokenLinks')}</span>
+          </div>
+        </div>
+      </details>
+      <details className="support-panel">
+        <summary>{t('knowledgeHub.reformTracker.support.selectionTitle')}</summary>
+        <p>{rulebook?.actual_reform_definition ?? t('knowledgeHub.reformTracker.support.selectionFallback')}</p>
+      </details>
+    </section>
   )
 }
 
 function ReformTrackerDesk({ content }: { content: KnowledgeHubContent }) {
-  const { t } = useTranslation()
   const packages = useMemo(() => content.reform_packages ?? [], [content.reform_packages])
   const [filters, setFilters] = useState<DossierFilters>({
+    search: '',
     policyArea: '',
     stage: '',
-    institution: '',
+    sourceHost: '',
   })
   const sortedPackages = useMemo(
     () =>
@@ -601,32 +734,23 @@ function ReformTrackerDesk({ content }: { content: KnowledgeHubContent }) {
     [packages],
   )
   const filteredPackages = useMemo(
-    () => sortedPackages.filter((reformPackage) => packageMatchesFilters(reformPackage, filters)),
+    () => sortedPackages.filter((reformPackage) => packageMatchesFilters(reformPackage, filters, sortedPackages)),
     [filters, sortedPackages],
   )
-  const [selectedPackageId, setSelectedPackageId] = useState(sortedPackages[0]?.package_id ?? '')
-  const clearFilters = () => setFilters({ policyArea: '', stage: '', institution: '' })
-
-  const selectedPackage =
-    filteredPackages.find((item) => item.package_id === selectedPackageId) ?? filteredPackages[0]
+  const clearFilters = () => setFilters({ search: '', policyArea: '', stage: '', sourceHost: '' })
 
   return (
     <>
       <MetricStrip content={content} packages={packages} />
-      <section className="dossier-desk" aria-label={t('knowledgeHub.reformTracker.dossierDeskAria')}>
-        <div className="dossier-rail">
-          <DossierFiltersPanel filters={filters} onFiltersChange={setFilters} packages={sortedPackages} />
-          <DossierList
-            packages={filteredPackages}
-            allPackages={sortedPackages}
-            selectedPackageId={selectedPackage?.package_id ?? ''}
-            onSelect={setSelectedPackageId}
-            onClearFilters={clearFilters}
-            totalCount={sortedPackages.length}
-          />
-        </div>
-        {selectedPackage ? <DossierDetail reformPackage={selectedPackage} allPackages={sortedPackages} /> : null}
-      </section>
+      <LatestChangesSection packages={sortedPackages} allPackages={sortedPackages} />
+      <TrackerControlsPanel filters={filters} onFiltersChange={setFilters} packages={sortedPackages} />
+      <ReformArchive
+        packages={filteredPackages}
+        allPackages={sortedPackages}
+        content={content}
+        onClearFilters={clearFilters}
+      />
+      <SupportingInfo content={content} packages={packages} />
     </>
   )
 }
@@ -637,68 +761,56 @@ function BriefPackageList({ brief, packages }: { brief: KnowledgeHubPolicyBrief;
 
   return (
     <div className="brief-package-list">
-      <h4>{t('knowledgeHub.policyBriefs.packageBasis')}</h4>
+      <h4>{t('knowledgeHub.researchUpdates.packageBasis')}</h4>
       <ul>
         {brief.package_ids.map((packageId) => {
           const reformPackage = packagesById.get(packageId)
-          return (
-            <li key={packageId}>
-              {reformPackage ? dossierDisplayTitle(reformPackage, packages) : packageId}
-            </li>
-          )
+          return <li key={packageId}>{reformPackage ? dossierDisplayTitle(reformPackage, packages) : packageId}</li>
         })}
       </ul>
     </div>
   )
 }
 
-function PolicyBriefsSection({ content }: { content: KnowledgeHubContent }) {
+function ResearchUpdatesSection({ content }: { content: KnowledgeHubContent }) {
   const { t } = useTranslation()
   const packages = content.reform_packages ?? []
   const briefs = content.policy_briefs ?? []
 
   return (
-    <section className="hub-detail-panel policy-briefs-panel" aria-label={t('knowledgeHub.policyBriefs.aria')}>
+    <section className="hub-detail-panel research-updates-panel" aria-label={t('knowledgeHub.researchUpdates.aria')}>
       <header className="hub-detail-panel__head">
         <div>
-          <h2>{t('knowledgeHub.policyBriefs.title')}</h2>
-          <p>{t('knowledgeHub.policyBriefs.description')}</p>
+          <h2>{t('knowledgeHub.researchUpdates.title')}</h2>
+          <p>{t('knowledgeHub.researchUpdates.description')}</p>
         </div>
       </header>
 
-      <div className="internal-preview-note" role="note">
-        <strong>{t('knowledgeHub.policyBriefs.previewLabel')}</strong>
-        <span>{t('knowledgeHub.policyBriefs.previewCaveat')}</span>
-      </div>
-
       {briefs.length > 0 ? (
-        <div className="policy-brief-list">
+        <div className="research-update-list">
           {briefs.map((brief) => {
             const sourceEvents = sourceEventsByIds(packages, brief.source_event_ids)
             return (
-              <article key={brief.id} className="policy-brief-card">
+              <article key={brief.id} className="research-update-card">
                 <header>
-                  <div>
-                    <span className="ui-chip ui-chip--amber">{t('knowledgeHub.policyBriefs.internalOnly')}</span>
-                    <span className="ui-chip">{t('knowledgeHub.policyBriefs.nonCitable')}</span>
-                  </div>
+                  <time dateTime={brief.as_of_date}>{formatDisplayDate(brief.as_of_date)}</time>
                   <h3>{brief.title}</h3>
                   <p>{brief.summary}</p>
                 </header>
                 <div className="brief-card-grid">
                   <BriefPackageList brief={brief} packages={packages} />
                   <div className="brief-package-list">
-                    <h4>{t('knowledgeHub.policyBriefs.possibleLenses')}</h4>
+                    <h4>{t('knowledgeHub.researchUpdates.policyChannels')}</h4>
                     <div className="chip-row">
-                      {brief.possible_lenses.map((lens) => (
-                        <span key={lens} className="attribution-badge">
-                          {lens}
+                      {brief.policy_channels.map((channel) => (
+                        <span key={channel} className="attribution-badge">
+                          {channel}
                         </span>
                       ))}
                     </div>
                   </div>
                   <div className="brief-package-list">
-                    <h4>{t('knowledgeHub.policyBriefs.officialSources')}</h4>
+                    <h4>{t('knowledgeHub.researchUpdates.sources')}</h4>
                     <div className="source-link-list">
                       {sourceEvents.map((event) => (
                         <a key={event.id} href={event.source_url} className="external-source-link" {...EXTERNAL_LINK_PROPS}>
@@ -709,281 +821,77 @@ function PolicyBriefsSection({ content }: { content: KnowledgeHubContent }) {
                     </div>
                   </div>
                 </div>
-                <ul className="brief-caveats">
-                  {brief.caveats.map((caveat) => (
-                    <li key={caveat}>{caveat}</li>
-                  ))}
-                </ul>
               </article>
             )
           })}
         </div>
       ) : (
-        <p className="empty-state empty-state--compact">{t('knowledgeHub.policyBriefs.empty')}</p>
+        <p className="empty-state empty-state--compact">{t('knowledgeHub.researchUpdates.empty')}</p>
       )}
     </section>
   )
 }
 
-function ModelImpactMapSection({ content }: { content: KnowledgeHubContent }) {
+function LiteratureHubSection() {
   const { t } = useTranslation()
-  const packages = content.reform_packages ?? []
-  const packagesById = new Map(packages.map((reformPackage) => [reformPackage.package_id, reformPackage]))
-  const impactMap = content.model_impact_map
-
-  if (!impactMap) {
-    return (
-      <section className="hub-detail-panel" aria-label={t('knowledgeHub.modelImpactMap.aria')}>
-        <p className="empty-state empty-state--compact">{t('knowledgeHub.modelImpactMap.empty')}</p>
-      </section>
-    )
-  }
+  const [selectedModel, setSelectedModel] = useState<ModelLensId | 'all'>('all')
+  const modelOptions: Array<ModelLensId | 'all'> = ['all', 'QPM', 'DFM', 'I-O', 'PE', 'CGE', 'FPP', 'HFI', 'Synthesis']
+  const items = LITERATURE_ITEMS.filter((item) => selectedModel === 'all' || item.modelIds.includes(selectedModel))
 
   return (
-    <section className="hub-detail-panel model-impact-panel" aria-label={t('knowledgeHub.modelImpactMap.aria')}>
+    <section className="hub-detail-panel literature-hub-panel" aria-label={t('knowledgeHub.literatureHub.aria')}>
       <header className="hub-detail-panel__head">
         <div>
-          <h2>{t('knowledgeHub.modelImpactMap.title')}</h2>
-          <p>{t('knowledgeHub.modelImpactMap.description')}</p>
+          <h2>{t('knowledgeHub.literatureHub.title')}</h2>
+          <p>{t('knowledgeHub.literatureHub.description')}</p>
         </div>
       </header>
 
-      <div className="model-lens-grid">
-        <section>
-          <h3>{t('knowledgeHub.modelImpactMap.possibleLenses')}</h3>
-          <div className="model-lens-list">
-            {impactMap.active_lenses.map((lens) => (
-              <article key={lens.id} className="model-lens-card">
-                <strong>{lens.label}</strong>
-                <span className="ui-chip ui-chip--blue">{t('knowledgeHub.modelImpactMap.possibleLens')}</span>
-                <p>{lens.caveat}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-        <section>
-          <h3>{t('knowledgeHub.modelImpactMap.gatedLanes')}</h3>
-          <div className="model-lens-list">
-            {impactMap.gated_lenses.map((lens) => (
-              <article key={lens.id} className="model-lens-card model-lens-card--gated">
-                <strong>{lens.label}</strong>
-                <span className="ui-chip">{t('knowledgeHub.modelImpactMap.plannedGated')}</span>
-                <p>{lens.caveat}</p>
-              </article>
-            ))}
-          </div>
-        </section>
+      <div className="literature-filter" role="group" aria-label={t('knowledgeHub.literatureHub.filterAria')}>
+        {modelOptions.map((modelId) => (
+          <button
+            key={modelId}
+            type="button"
+            className={selectedModel === modelId ? 'is-active' : ''}
+            onClick={() => setSelectedModel(modelId)}
+          >
+            {modelId === 'all' ? t('knowledgeHub.literatureHub.allModels') : modelId}
+          </button>
+        ))}
       </div>
 
-      <div className="impact-package-list">
-        {impactMap.package_links.map((link) => {
-          const reformPackage = packagesById.get(link.package_id)
-          return (
-            <article key={link.package_id} className="impact-package-card">
+      {items.length > 0 ? (
+        <div className="literature-list">
+          {items.map((item) => (
+            <article key={item.id} className="literature-card">
               <header>
-                <h3>{reformPackage ? dossierDisplayTitle(reformPackage, packages) : link.package_id}</h3>
-                {reformPackage ? <span>{reformPackage.policy_area}</span> : null}
+                <h3>{item.title}</h3>
+                <span>
+                  {item.source} · {item.year}
+                </span>
               </header>
-              <div className="impact-lens-links">
-                {link.active_lenses.map((lens) => (
-                  <section key={`${link.package_id}-${lens.model_id}`}>
-                    <strong>{lens.model_id}</strong>
-                    <p>{lens.channel}</p>
-                    <span>{lens.caveat}</span>
-                  </section>
+              <div className="chip-row">
+                {item.modelIds.map((modelId) => (
+                  <span key={modelId} className="model-chip model-chip--active">
+                    {modelId}
+                  </span>
                 ))}
               </div>
+              <div className="literature-methods">
+                {item.methods.map((method) => (
+                  <span key={method}>{method}</span>
+                ))}
+              </div>
+              <a href={item.url} className="external-source-link" {...EXTERNAL_LINK_PROPS}>
+                <span>{t('knowledgeHub.literatureHub.openSource')}</span>
+                <span>{t('knowledgeHub.reformTracker.dossier.sourceLinkMeta', { host: hostLabel(item.url) })}</span>
+              </a>
             </article>
-          )
-        })}
-      </div>
-
-      <section className="dossier-section dossier-section--caveats model-impact-caveats">
-        <h3>{t('knowledgeHub.modelImpactMap.boundaryTitle')}</h3>
-        <ul>
-          {impactMap.caveats.map((caveat) => (
-            <li key={caveat}>{caveat}</li>
           ))}
-        </ul>
-      </section>
-    </section>
-  )
-}
-
-function sourceRows(content: KnowledgeHubContent): Array<KnowledgeHubConfiguredSource & { diagnostic?: KnowledgeHubSourceDiagnostic }> {
-  const diagnosticsById = new Map((content.source_diagnostics ?? []).map((diagnostic) => [diagnostic.id, diagnostic]))
-  const configuredSources = content.sources ?? []
-  if (configuredSources.length > 0) {
-    return configuredSources.map((source) => ({ ...source, diagnostic: diagnosticsById.get(source.id) }))
-  }
-  return (content.source_diagnostics ?? []).map((diagnostic) => ({
-    id: diagnostic.id,
-    institution: diagnostic.institution,
-    url: diagnostic.url,
-    diagnostic,
-  }))
-}
-
-function SourceLibrarySection({ content }: { content: KnowledgeHubContent }) {
-  const { t } = useTranslation()
-  const rows = sourceRows(content)
-  const diagnostics = content.source_diagnostics ?? []
-  const checkedCount = diagnostics.filter((diagnostic) => diagnostic.ok).length
-  const issueCount = diagnostics.filter((diagnostic) => !diagnostic.ok).length
-  const verifiedItemCount = diagnostics.reduce((sum, diagnostic) => sum + diagnostic.candidate_count, 0)
-  const excludedCount = diagnostics.reduce((sum, diagnostic) => sum + diagnostic.excluded_count, 0)
-  const invalidLinkCount = diagnostics.reduce((sum, diagnostic) => sum + diagnostic.link_invalid_count, 0)
-
-  return (
-    <section className="hub-detail-panel" aria-label={t('knowledgeHub.sourceLibrary.aria')}>
-      <header className="hub-detail-panel__head">
-        <div>
-          <h2>{t('knowledgeHub.sourceLibrary.title')}</h2>
-          <p>{t('knowledgeHub.sourceLibrary.description')}</p>
-        </div>
-      </header>
-
-      <div className="hub-stat-grid" aria-label={t('knowledgeHub.sourceLibrary.summaryAria')}>
-        <div className="hub-stat">
-          <strong>{formatCount(rows.length)}</strong>
-          <span>{t('knowledgeHub.sourceLibrary.sourcesConfigured')}</span>
-        </div>
-        <div className="hub-stat">
-          <strong>{formatCount(checkedCount)}</strong>
-          <span>{t('knowledgeHub.sourceLibrary.sourcesChecked')}</span>
-        </div>
-        <div className="hub-stat">
-          <strong>{formatCount(verifiedItemCount)}</strong>
-          <span>{t('knowledgeHub.sourceLibrary.verifiedItems')}</span>
-        </div>
-        <div className="hub-stat">
-          <strong>{formatCount(excludedCount)}</strong>
-          <span>{t('knowledgeHub.sourceLibrary.excludedItems')}</span>
-        </div>
-        <div className="hub-stat">
-          <strong>{formatCount(invalidLinkCount)}</strong>
-          <span>{t('knowledgeHub.sourceLibrary.invalidLinks')}</span>
-        </div>
-      </div>
-
-      {issueCount > 0 ? (
-        <p className="source-library-note">
-          {t('knowledgeHub.sourceLibrary.issueCount', { count: issueCount })}
-        </p>
-      ) : null}
-
-      {rows.length > 0 ? (
-        <div className="source-library-list">
-          {rows.map((source) => {
-            const diagnostic = source.diagnostic
-            return (
-              <article key={source.id} className="source-library-card">
-                <div>
-                  <h3>{source.institution}</h3>
-                  <p>{hostLabel(source.url)}</p>
-                </div>
-                <dl>
-                  <div>
-                    <dt>{t('knowledgeHub.sourceLibrary.lastChecked')}</dt>
-                    <dd>{formatDisplayDate(diagnostic?.fetched_at)}</dd>
-                  </div>
-                  <div>
-                    <dt>{t('knowledgeHub.sourceLibrary.itemsFound')}</dt>
-                    <dd>{formatCount(diagnostic?.candidate_count)}</dd>
-                  </div>
-                  <div>
-                    <dt>{t('knowledgeHub.sourceLibrary.excluded')}</dt>
-                    <dd>{formatCount(diagnostic?.excluded_count)}</dd>
-                  </div>
-                  <div>
-                    <dt>{t('knowledgeHub.sourceLibrary.linkStatus')}</dt>
-                    <dd>
-                      <span
-                        className={`source-status${
-                          diagnostic?.ok === false ? ' source-status--issue' : diagnostic ? '' : ' source-status--pending'
-                        }`}
-                      >
-                        {diagnostic
-                          ? diagnostic.ok
-                            ? t('knowledgeHub.sourceLibrary.statusChecked')
-                            : t('knowledgeHub.sourceLibrary.statusIssue')
-                          : t('knowledgeHub.sourceLibrary.statusMissing')}
-                      </span>
-                    </dd>
-                  </div>
-                </dl>
-                <a
-                  href={source.url}
-                  className="external-source-link"
-                  aria-label={t('knowledgeHub.sourceLibrary.openSourceAria', { institution: source.institution })}
-                  {...EXTERNAL_LINK_PROPS}
-                >
-                  <span>{t('knowledgeHub.sourceLibrary.openSource')}</span>
-                  <span>{t('knowledgeHub.reformTracker.dossier.sourceLinkMeta', { host: hostLabel(source.url) })}</span>
-                </a>
-              </article>
-            )
-          })}
         </div>
       ) : (
-        <p className="empty-state empty-state--compact">{t('knowledgeHub.sourceLibrary.empty')}</p>
+        <p className="empty-state empty-state--compact">{t('knowledgeHub.literatureHub.empty')}</p>
       )}
-    </section>
-  )
-}
-
-function RuleList({ rules }: { rules: KnowledgeHubRulebookRule[] }) {
-  return (
-    <ol className="methodology-rule-list">
-      {rules.map((rule) => (
-        <li key={rule.id}>
-          <strong>{rule.label ?? rule.id}</strong>
-          {rule.description ? <span>{rule.description}</span> : null}
-        </li>
-      ))}
-    </ol>
-  )
-}
-
-function MethodologySection({ content }: { content: KnowledgeHubContent }) {
-  const { t } = useTranslation()
-  const rulebook = content.rulebook
-
-  return (
-    <section className="hub-detail-panel methodology-panel" aria-label={t('knowledgeHub.methodologyDetail.aria')}>
-      <header className="hub-detail-panel__head">
-        <div>
-          <h2>{t('knowledgeHub.methodologyDetail.title')}</h2>
-          <p>{t('knowledgeHub.methodologyDetail.description')}</p>
-        </div>
-      </header>
-
-      <div className="methodology-definition">
-        <h3>{t('knowledgeHub.methodologyDetail.definitionTitle')}</h3>
-        <p>{rulebook?.actual_reform_definition ?? t('knowledgeHub.methodologyDetail.definitionUnavailable')}</p>
-      </div>
-
-      <details className="methodology-rules">
-        <summary>{t('knowledgeHub.methodologyDetail.showFullRules')}</summary>
-        <div className="methodology-columns">
-          <section>
-            <h3>{t('knowledgeHub.methodologyDetail.includedTitle')}</h3>
-            <RuleList rules={rulebook?.include_rules ?? []} />
-          </section>
-          <section>
-            <h3>{t('knowledgeHub.methodologyDetail.excludedTitle')}</h3>
-            <RuleList rules={rulebook?.exclude_rules ?? []} />
-          </section>
-        </div>
-      </details>
-
-      <section className="dossier-section dossier-section--caveats">
-        <h3>{t('knowledgeHub.methodologyDetail.note')}</h3>
-        <ul>
-          <li>{t('knowledgeHub.reformTracker.methodology.caveat')}</li>
-          <li>{t('knowledgeHub.reformTracker.notice.sourceLanguage')}</li>
-        </ul>
-      </section>
     </section>
   )
 }
@@ -1009,10 +917,8 @@ export function KnowledgeHubContentView({ content }: KnowledgeHubContentViewProp
         ))}
       </div>
       {activeSection === 'reformTracker' ? <ReformTrackerDesk content={content} /> : null}
-      {activeSection === 'policyBriefs' ? <PolicyBriefsSection content={content} /> : null}
-      {activeSection === 'modelImpactMap' ? <ModelImpactMapSection content={content} /> : null}
-      {activeSection === 'sourceLibrary' ? <SourceLibrarySection content={content} /> : null}
-      {activeSection === 'methodology' ? <MethodologySection content={content} /> : null}
+      {activeSection === 'researchUpdates' ? <ResearchUpdatesSection content={content} /> : null}
+      {activeSection === 'literatureHub' ? <LiteratureHubSection /> : null}
     </>
   )
 }

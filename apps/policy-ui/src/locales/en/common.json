@@ -107,7 +107,7 @@
     },
     "knowledgeHub": {
       "title": "Knowledge Hub",
-      "description": "Official reform packages, internal briefs, source links, and cautious model-lens routing."
+      "description": "Reform changes, research updates, and model literature in one place."
     }
   },
   "overview": {
@@ -877,7 +877,7 @@
     },
     "briefs": {
       "title": "Research briefs",
-      "helper": "CERR team analysis. AI-drafted briefs are flagged and reviewer-attributed.",
+      "helper": "CERR team analysis linked to official sources and models.",
       "empty": "No research briefs are currently available.",
       "aiDraftedChip": "AI-drafted",
       "byline": {
@@ -890,7 +890,7 @@
       "errorUnavailable": "Knowledge Hub data is unavailable.",
       "dossierDeskAria": "Reform list and details",
       "header": {
-        "eyebrow": "Knowledge Hub preview",
+        "eyebrow": "Knowledge Hub",
         "automaticTracker": "Official source tracker",
         "sources": "official sources",
         "packages": "packages",
@@ -929,7 +929,11 @@
         "aria": "Reform dossier filters",
         "title": "Filters",
         "clearAll": "Clear all",
+        "search": "Search reforms",
+        "searchPlaceholder": "Search by measure, source, institution, or area",
         "policyArea": "Policy area",
+        "status": "Status",
+        "source": "Source",
         "stage": "Stage",
         "institution": "Institution",
         "sourceType": "Evidence",
@@ -937,6 +941,40 @@
         "allStages": "All stages",
         "allInstitutions": "All institutions",
         "allSources": "All sources"
+      },
+      "latestChanges": {
+        "aria": "Latest reform changes",
+        "title": "Latest changes",
+        "description": "Short source-based summary of the newest tracked changes.",
+        "changed": "Changed",
+        "appliesTo": "Applies to",
+        "effectiveStatus": "Effective / status",
+        "document": "Document"
+      },
+      "archive": {
+        "aria": "Reform archive",
+        "title": "Reform archive",
+        "showing": "Showing {{count}} of {{total}} reforms",
+        "empty": "No reforms match the current filters.",
+        "summary": "Summary",
+        "keyMeasures": "Key measures",
+        "timeline": "Timeline",
+        "noTimeline": "No dated milestones are available.",
+        "modelLenses": "Model lenses",
+        "possibleLenses": "Possible lenses",
+        "plannedLenses": "Planned lenses",
+        "noActiveLens": "No active lens",
+        "source": "Source",
+        "openSource": "Open source"
+      },
+      "support": {
+        "aria": "Reform tracker supporting information",
+        "sourcesTitle": "Sources checked",
+        "sourcesChecked": "Official sources",
+        "reforms": "Reforms",
+        "brokenLinks": "Broken links",
+        "selectionTitle": "How reforms are selected",
+        "selectionFallback": "The tracker keeps items with a clear policy instrument, adopted measure, parameter change, or dated implementation step."
       },
       "packages": {
         "aria": "Reform dossier list",
@@ -1098,6 +1136,24 @@
       "officialSources": "Official sources",
       "empty": "No internal-preview briefs are available."
     },
+    "researchUpdates": {
+      "aria": "Knowledge Hub research updates",
+      "title": "Research Updates",
+      "description": "Source-linked notes on current reform topics and relevant analytical channels.",
+      "packageBasis": "Reform packages",
+      "policyChannels": "Policy channels",
+      "sources": "Sources",
+      "empty": "No research updates are available."
+    },
+    "literatureHub": {
+      "aria": "Knowledge Hub literature hub",
+      "title": "Literature Hub",
+      "description": "Core references for understanding the models used in the platform.",
+      "filterAria": "Filter literature by model",
+      "allModels": "All models",
+      "openSource": "Open reference",
+      "empty": "No references are listed for this model yet."
+    },
     "modelImpactMap": {
       "aria": "Knowledge Hub model impact map",
       "title": "Model Impact Map",
@@ -1129,6 +1185,8 @@
     "sections": {
       "aria": "Knowledge Hub subsections",
       "reformTracker": "Reform Tracker",
+      "researchUpdates": "Research Updates",
+      "literatureHub": "Literature Hub",
       "policyBriefs": "Policy Briefs",
       "sourceLibrary": "Source Library",
       "methodology": "Methodology",

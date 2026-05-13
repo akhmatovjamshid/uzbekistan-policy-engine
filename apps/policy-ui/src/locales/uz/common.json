@@ -107,7 +107,7 @@
     },
     "knowledgeHub": {
       "title": "Bilimlar markazi",
-      "description": "Rasmiy manbali islohot paketlari, ichki qisqa tahlillar, manba havolalari va ehtiyotkor model-linza yo'naltirish."
+      "description": "Islohot o'zgarishlari, tadqiqot yangilanishlari va model adabiyoti bir joyda."
     }
   },
   "overview": {
@@ -877,7 +877,7 @@
     },
     "briefs": {
       "title": "Tadqiqot yozuvlari",
-      "helper": "CERR jamoasi tahlili. AI yordamida tayyorlangan yozuvlar belgilanadi va taqrizchiga biriktiriladi.",
+      "helper": "Rasmiy manbalar va modellar bilan bog'langan CERR tahlili.",
       "empty": "Hozircha tadqiqot yozuvlari mavjud emas.",
       "aiDraftedChip": "AI tayyorlagan",
       "byline": {
@@ -890,7 +890,7 @@
       "errorUnavailable": "Bilimlar markazi ma'lumoti mavjud emas.",
       "dossierDeskAria": "Islohotlar ro'yxati va tafsilotlari",
       "header": {
-        "eyebrow": "Bilimlar markazi ko'rish",
+        "eyebrow": "Bilimlar markazi",
         "automaticTracker": "Rasmiy manbalar monitoringi",
         "sources": "rasmiy manba",
         "packages": "paket",
@@ -929,7 +929,11 @@
         "aria": "Islohot dosyelari filtrlari",
         "title": "Filtrlar",
         "clearAll": "Hammasini tozalash",
+        "search": "Islohotlarni qidirish",
+        "searchPlaceholder": "Chora, manba, tashkilot yoki soha bo'yicha qidirish",
         "policyArea": "Siyosat sohasi",
+        "status": "Status",
+        "source": "Manba",
         "stage": "Bosqich",
         "institution": "Tashkilot",
         "sourceType": "Asos",
@@ -937,6 +941,40 @@
         "allStages": "Barcha bosqichlar",
         "allInstitutions": "Barcha tashkilotlar",
         "allSources": "Barcha manbalar"
+      },
+      "latestChanges": {
+        "aria": "Islohotlar bo'yicha so'nggi o'zgarishlar",
+        "title": "So'nggi o'zgarishlar",
+        "description": "Rasmiy manbalar asosidagi eng yangi o'zgarishlar xulosasi.",
+        "changed": "Nima o'zgardi",
+        "appliesTo": "Kimga tegishli",
+        "effectiveStatus": "Muddat / status",
+        "document": "Hujjat"
+      },
+      "archive": {
+        "aria": "Islohotlar arxivi",
+        "title": "Islohotlar arxivi",
+        "showing": "{{total}} tadan {{count}} ta islohot ko'rsatilmoqda",
+        "empty": "Joriy filtrlarga mos islohot yo'q.",
+        "summary": "Xulosa",
+        "keyMeasures": "Asosiy choralar",
+        "timeline": "Muddatlar",
+        "noTimeline": "Sana bilan belgilangan bosqichlar mavjud emas.",
+        "modelLenses": "Model linzalari",
+        "possibleLenses": "Mumkin linzalar",
+        "plannedLenses": "Rejadagi linzalar",
+        "noActiveLens": "Faol linza yo'q",
+        "source": "Manba",
+        "openSource": "Manbani ochish"
+      },
+      "support": {
+        "aria": "Islohotlar monitoringi uchun qo'shimcha ma'lumot",
+        "sourcesTitle": "Tekshirilgan manbalar",
+        "sourcesChecked": "Rasmiy manbalar",
+        "reforms": "Islohotlar",
+        "brokenLinks": "Ishlamaydigan havolalar",
+        "selectionTitle": "Islohotlar qanday tanlanadi",
+        "selectionFallback": "Monitoring aniq siyosat instrumenti, qabul qilingan chora, parametr o'zgarishi yoki sanali amalga oshirish bosqichi bo'lgan materiallarni qoldiradi."
       },
       "packages": {
         "aria": "Islohot dosyelari ro'yxati",
@@ -1098,6 +1136,24 @@
       "officialSources": "Rasmiy manbalar",
       "empty": "Ichki ko'rish uchun qisqa tahlillar mavjud emas."
     },
+    "researchUpdates": {
+      "aria": "Bilimlar markazi tadqiqot yangilanishlari",
+      "title": "Tadqiqot yangilanishlari",
+      "description": "Joriy islohot mavzulari, manbalar va analitik kanallar bo'yicha yozuvlar.",
+      "packageBasis": "Islohot paketlari",
+      "policyChannels": "Siyosat kanallari",
+      "sources": "Manbalar",
+      "empty": "Tadqiqot yangilanishlari hozircha mavjud emas."
+    },
+    "literatureHub": {
+      "aria": "Bilimlar markazi adabiyot bo'limi",
+      "title": "Adabiyot",
+      "description": "Platforma modellarini tushunish uchun asosiy manbalar.",
+      "filterAria": "Adabiyotni model bo'yicha filtrlash",
+      "allModels": "Barcha modellar",
+      "openSource": "Manbani ochish",
+      "empty": "Bu model uchun manbalar hali ko'rsatilmagan."
+    },
     "modelImpactMap": {
       "aria": "Bilimlar markazi model ta'siri xaritasi",
       "title": "Model ta'siri xaritasi",
@@ -1129,6 +1185,8 @@
     "sections": {
       "aria": "Bilimlar markazi bo'limlari",
       "reformTracker": "Islohotlar trekeri",
+      "researchUpdates": "Tadqiqot yangilanishlari",
+      "literatureHub": "Adabiyot",
       "policyBriefs": "Qisqa tahlillar",
       "sourceLibrary": "Manbalar kutubxonasi",
       "methodology": "Metodologiya",

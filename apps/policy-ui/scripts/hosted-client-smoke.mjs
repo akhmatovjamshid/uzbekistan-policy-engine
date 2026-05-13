@@ -2,11 +2,11 @@
 
 import { createHash, randomBytes } from 'node:crypto'
 import { EventEmitter } from 'node:events'
-import { mkdtemp, readFile, rm } from 'node:fs/promises'
+import { access, mkdtemp, readFile, rm } from 'node:fs/promises'
 import http from 'node:http'
 import net from 'node:net'
 import { tmpdir } from 'node:os'
-import { basename, join } from 'node:path'
+import { basename, isAbsolute, join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { spawn } from 'node:child_process'
 
@@ -78,7 +78,7 @@ const HASH_ROUTES = [
   },
   {
     hash: '#/knowledge-hub',
-    selector: '.dossier-desk',
+    selector: '.latest-changes',
     titles: {
       en: 'Knowledge Hub',
       ru: '\u0411\u0430\u0437\u0430 \u0437\u043d\u0430\u043d\u0438\u0439',
@@ -254,6 +254,14 @@ function shellCommandCandidates() {
 
 async function commandWorks(command) {
   if (!command) return false
+  if (process.platform === 'win32' && isAbsolute(command)) {
+    try {
+      await access(command)
+      return true
+    } catch {
+      return false
+    }
+  }
   return await new Promise((resolve) => {
     const child = spawn(command, ['--version'], {
       stdio: ['ignore', 'ignore', 'ignore'],
@@ -755,66 +763,87 @@ function languageSwitchExpression(language, expectedTitle) {
 function knowledgeHubTrackerExpression() {
   return `
     (() => {
-      const dossierDesk = document.querySelector('.knowledge-hub-page .dossier-desk');
-      const dossierRail = document.querySelector('.knowledge-hub-page .dossier-rail');
-      const dossierRow = document.querySelector('.knowledge-hub-page .dossier-row');
-      const dossier = document.querySelector('.knowledge-hub-page .reform-dossier');
       const sectionTabs = document.querySelector('.knowledge-hub-page .hub-section-tabs');
+      const sectionTabCount = sectionTabs ? sectionTabs.querySelectorAll('button').length : 0;
       const metrics = document.querySelector('.knowledge-hub-page .tracker-summary');
+      const latestChanges = document.querySelector('.knowledge-hub-page .latest-changes');
+      const latestCards = Array.from(document.querySelectorAll('.knowledge-hub-page .latest-change-card'));
+      const changeDigest = document.querySelector('.knowledge-hub-page .change-digest');
+      const digestTermCount = latestCards.reduce(
+        (count, card) => count + card.querySelectorAll('.change-digest dt').length,
+        0,
+      );
+      const searchInput = document.querySelector('.knowledge-hub-page .tracker-controls input[type="search"]');
+      const archiveItems = Array.from(document.querySelectorAll('.knowledge-hub-page .reform-archive .archive-item'));
+      const modelActive = document.querySelector('.knowledge-hub-page .model-chip--active');
+      const modelPlanned = document.querySelector('.knowledge-hub-page .model-chip--planned');
+      const supportPanel = document.querySelector('.knowledge-hub-page .tracker-support');
       const forbiddenSelectors = [
         '.pending-surface',
         '.knowledge-hub-static-banner',
         '.candidate-section',
         '.accepted-section',
         '.hub-grid',
+        '.dossier-desk',
+        '.dossier-rail',
+        '.reform-dossier',
         '.reform-package-table',
+        '.source-library-list',
+        '.methodology-panel',
+        '.model-impact-panel',
+        '.policy-brief-card',
       ];
       const forbiddenSelector = forbiddenSelectors.find((selector) => document.querySelector(selector));
       const text = document.body.innerText || '';
       const normalizedText = text.toLowerCase();
       const forbiddenText = [
         'Curated static pilot content',
-        'Research briefs',
         'BriefCard',
         'ResearchBriefList',
         'WTO accession',
         'Review queue',
+        'Unreviewed candidates',
+        'SOURCE-EXTRACTED',
+        'FIXTURE/DEMO',
+        'Source Library',
+        'Methodology',
+        'Model Impact Map',
+        'Why it matters',
+        'intelligence feed',
+        'RSS',
       ].find((snippet) => normalizedText.includes(snippet.toLowerCase()));
-      const requiredNormalizedText = [
-        'reform packages',
-        'implementation timeline',
-      ];
-      const missingText = requiredNormalizedText.filter((snippet) => !normalizedText.includes(snippet));
-      const hasCaveat =
-        normalizedText.includes('not a legal registry') ||
-        normalizedText.includes('not an official legal registry') ||
-        normalizedText.includes('source summary') ||
-        normalizedText.includes('official source links');
       const hasSourceMetadata =
-        !!dossier &&
-        !!dossier.querySelector('a[href^="http"][target="_blank"][rel~="noopener"][rel~="noreferrer"]');
+        !!document.querySelector('.knowledge-hub-page a[href^="http"][target="_blank"][rel~="noopener"][rel~="noreferrer"]');
       return {
         ok:
-          !!dossierDesk &&
-          !!dossierRail &&
-          !!dossierRow &&
-          !!dossier &&
           !!sectionTabs &&
+          sectionTabCount === 3 &&
           !!metrics &&
-          missingText.length === 0 &&
-          hasCaveat &&
+          !!latestChanges &&
+          latestCards.length >= 3 &&
+          !!changeDigest &&
+          digestTermCount >= 12 &&
+          !!searchInput &&
+          archiveItems.length > 0 &&
+          !!modelActive &&
+          !!modelPlanned &&
+          !!supportPanel &&
           hasSourceMetadata &&
           !forbiddenSelector &&
           !forbiddenText,
-        hasDossierDesk: !!dossierDesk,
-        hasDossierRail: !!dossierRail,
-        hasDossierRow: !!dossierRow,
-        hasDossier: !!dossier,
         hasSectionTabs: !!sectionTabs,
+        sectionTabCount,
         hasMetrics: !!metrics,
-        hasCaveat,
+        hasLatestChanges: !!latestChanges,
+        latestChangeCount: latestCards.length,
+        hasChangeDigest: !!changeDigest,
+        digestTermCount,
+        hasSearchInput: !!searchInput,
+        archiveItemCount: archiveItems.length,
+        hasActiveModelLens: !!modelActive,
+        hasPlannedModelLens: !!modelPlanned,
+        hasSupportPanel: !!supportPanel,
         hasSourceMetadata,
-        missingText,
         forbiddenSelector: forbiddenSelector ?? null,
         forbiddenText: forbiddenText ?? null,
       };
