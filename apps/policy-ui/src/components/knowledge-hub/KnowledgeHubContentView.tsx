@@ -16,7 +16,7 @@ type KnowledgeHubContentViewProps = {
 }
 
 type KnowledgeHubSectionId = 'reformTracker' | 'sourceLibrary' | 'methodology'
-type LabelNamespace = 'eventType'
+type LabelNamespace = 'eventType' | 'evidenceType'
 
 type DossierFilters = {
   policyArea: string
@@ -74,6 +74,23 @@ function packageTimeline(reformPackage: ReformPackage): ReformPackageMilestone[]
   )
 }
 
+function hasDuplicateTitle(reformPackage: ReformPackage, packages: ReformPackage[]): boolean {
+  const normalizedTitle = reformPackage.title.trim().toLowerCase()
+  return packages.filter((item) => item.title.trim().toLowerCase() === normalizedTitle).length > 1
+}
+
+function isGenericDossierTitle(title: string): boolean {
+  return /^policy implementation reform$/i.test(title.trim())
+}
+
+function dossierDisplayTitle(reformPackage: ReformPackage, packages: ReformPackage[]): string {
+  if (!isGenericDossierTitle(reformPackage.title) && !hasDuplicateTitle(reformPackage, packages)) {
+    return reformPackage.title
+  }
+
+  return `${reformPackage.title}: ${reformPackage.policy_area}`
+}
+
 function sourceById(reformPackage: ReformPackage, id: string): ReformPackageSourceEvent | undefined {
   return reformPackage.official_source_events.find((event) => event.id === id)
 }
@@ -86,6 +103,21 @@ function flattenMilestones(packages: ReformPackage[]): ReformPackageMilestone[] 
 
 function trackerLabel(t: TFunction, namespace: LabelNamespace, value: string): string {
   return t(`knowledgeHub.reformTracker.labels.${namespace}.${value}`)
+}
+
+function humanizeMachineToken(value: string): string {
+  return value
+    .replaceAll('_', ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/^\w/, (letter) => letter.toUpperCase())
+}
+
+function displayEvidenceType(t: TFunction, value: string): string {
+  const translated = trackerLabel(t, 'evidenceType', value)
+  return translated === `knowledgeHub.reformTracker.labels.evidenceType.${value}`
+    ? humanizeMachineToken(value)
+    : translated
 }
 
 function uniqueSorted(values: string[]): string[] {
@@ -136,13 +168,24 @@ function compactUniqueList(values: string[]): string[] {
   })
 }
 
-function parameterList(reformPackage: ReformPackage): string[] {
+function displayParameter(t: TFunction, value: string): string {
+  const evidenceTypeMatch = value.match(/^Evidence type:\s*([a-z_]+)$/i)
+  if (evidenceTypeMatch) {
+    return `${t('knowledgeHub.reformTracker.timeline.evidenceType')}: ${displayEvidenceType(t, evidenceTypeMatch[1])}`
+  }
+
+  return value.replace(/\b[a-z]+(?:_[a-z]+)+\b/g, (token) => humanizeMachineToken(token).toLowerCase())
+}
+
+function parameterList(reformPackage: ReformPackage, t: TFunction): string[] {
   const parameters = reformPackage.parameters_or_amounts ?? []
   const derived = [
     reformPackage.financing_or_incentive,
     ...reformPackage.measure_tracks.map((track) => (track.status ? `${track.label}: ${track.status}` : track.label)),
   ]
-  return compactUniqueList([...parameters, ...derived].filter((value): value is string => Boolean(value)))
+  return compactUniqueList([...parameters, ...derived].filter((value): value is string => Boolean(value))).map((value) =>
+    displayParameter(t, value),
+  )
 }
 
 function policyChannels(reformPackage: ReformPackage): string[] {
@@ -156,6 +199,25 @@ function stageTone(stage: string): 'green' | 'amber' | 'blue' {
   if (normalized.includes('adopt') || normalized.includes('approved')) return 'amber'
   if (normalized.includes('verified')) return 'blue'
   return 'green'
+}
+
+function compactTimelineLabel(value: string): string {
+  const normalized = value.replace(/\s+/g, ' ').trim()
+  return normalized.length > 150 ? `${normalized.slice(0, 147)}...` : normalized
+}
+
+function isGenericMilestoneLabel(value: string): boolean {
+  return /^(official measure recorded|official measure approved|implementation measure recorded|tax incentive source event recorded|previous rule superseded)$/i.test(
+    value.trim(),
+  )
+}
+
+function milestoneDisplayLabel(milestone: ReformPackageMilestone, sourceEvent: ReformPackageSourceEvent | undefined): string {
+  if (isGenericMilestoneLabel(milestone.label) && sourceEvent?.title) {
+    return compactTimelineLabel(sourceEvent.title)
+  }
+
+  return compactTimelineLabel(humanizeMachineToken(milestone.label))
 }
 
 function MetricIcon({ type }: { type: 'dossier' | 'sources' | 'calendar' | 'clock' | 'info' }) {
@@ -281,12 +343,14 @@ function DossierFiltersPanel({
 
 function DossierList({
   packages,
+  allPackages,
   selectedPackageId,
   onSelect,
   onClearFilters,
   totalCount,
 }: {
   packages: ReformPackage[]
+  allPackages: ReformPackage[]
   selectedPackageId: string
   onSelect: (packageId: string) => void
   onClearFilters: () => void
@@ -315,6 +379,7 @@ function DossierList({
       </div>
       <div className="dossier-list__items">
         {packages.map((reformPackage) => {
+          const displayTitle = dossierDisplayTitle(reformPackage, allPackages)
           return (
             <button
               key={reformPackage.package_id}
@@ -322,7 +387,7 @@ function DossierList({
               className={`dossier-row${reformPackage.package_id === selectedPackageId ? ' is-selected' : ''}`}
               onClick={() => onSelect(reformPackage.package_id)}
             >
-              <span className="dossier-row__title">{reformPackage.title}</span>
+              <span className="dossier-row__title">{displayTitle}</span>
               <span className="dossier-row__meta">
                 <span>{reformPackage.responsible_institutions[0]}</span>
                 <span>{formatDisplayDate(reformPackage.current_stage_date)}</span>
@@ -381,7 +446,7 @@ function ImplementationTimeline({ reformPackage }: { reformPackage: ReformPackag
                 <time dateTime={milestone.date}>{formatDisplayDate(milestone.date)}</time>
                 <span className="dossier-timeline__dot" aria-hidden="true" />
                 <div>
-                  <strong>{milestone.label}</strong>
+                  <strong>{milestoneDisplayLabel(milestone, sourceEvent)}</strong>
                   <span>{trackerLabel(t, 'eventType', milestone.event_type)}</span>
                   {sourceEvent ? <span>{sourceEvent.source_institution}</span> : null}
                 </div>
@@ -438,16 +503,17 @@ function OfficialSourceBasis({ reformPackage }: { reformPackage: ReformPackage }
   )
 }
 
-function DossierDetail({ reformPackage }: { reformPackage: ReformPackage }) {
+function DossierDetail({ reformPackage, allPackages }: { reformPackage: ReformPackage; allPackages: ReformPackage[] }) {
   const { t } = useTranslation()
-  const parameters = parameterList(reformPackage)
+  const displayTitle = dossierDisplayTitle(reformPackage, allPackages)
+  const parameters = parameterList(reformPackage, t)
   const channels = policyChannels(reformPackage)
 
   return (
     <article className="reform-dossier" aria-label={t('knowledgeHub.reformTracker.dossier.aria')}>
       <header className="reform-dossier__head">
         <div className="reform-dossier__headline">
-          <h2>{reformPackage.title}</h2>
+          <h2>{displayTitle}</h2>
           <span>{t('knowledgeHub.reformTracker.dossier.lastUpdated', { date: formatDisplayDate(reformPackage.current_stage_date) })}</span>
         </div>
         <div className="reform-dossier__badges">
@@ -535,13 +601,14 @@ function ReformTrackerDesk({ content }: { content: KnowledgeHubContent }) {
           <DossierFiltersPanel filters={filters} onFiltersChange={setFilters} packages={sortedPackages} />
           <DossierList
             packages={filteredPackages}
+            allPackages={sortedPackages}
             selectedPackageId={selectedPackage?.package_id ?? ''}
             onSelect={setSelectedPackageId}
             onClearFilters={clearFilters}
             totalCount={sortedPackages.length}
           />
         </div>
-        {selectedPackage ? <DossierDetail reformPackage={selectedPackage} /> : null}
+        {selectedPackage ? <DossierDetail reformPackage={selectedPackage} allPackages={sortedPackages} /> : null}
       </section>
     </>
   )
