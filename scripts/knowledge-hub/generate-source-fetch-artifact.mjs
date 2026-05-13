@@ -1,6 +1,10 @@
-import { mkdirSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import {
+  buildKnowledgeHubChangeSummary,
+  renderKnowledgeHubChangeSummaryMarkdown,
+} from './change-summary.mjs'
 import { buildKnowledgeHubCandidateArtifactWithDiagnostics } from './reform-intake.mjs'
 
 const scriptPath = fileURLToPath(import.meta.url)
@@ -10,8 +14,10 @@ const defaultOutputPath = resolve(repoRoot, 'apps', 'policy-ui', 'public', 'data
 function parseArgs(argv) {
   const args = {
     output: defaultOutputPath,
+    previous: defaultOutputPath,
     report: null,
     summary: null,
+    changeSummary: null,
     extractedAt: new Date().toISOString(),
   }
 
@@ -20,11 +26,17 @@ function parseArgs(argv) {
     if (arg === '--output') {
       args.output = resolve(argv[index + 1])
       index += 1
+    } else if (arg === '--previous') {
+      args.previous = resolve(argv[index + 1])
+      index += 1
     } else if (arg === '--report') {
       args.report = resolve(argv[index + 1])
       index += 1
     } else if (arg === '--summary') {
       args.summary = resolve(argv[index + 1])
+      index += 1
+    } else if (arg === '--change-summary') {
+      args.changeSummary = resolve(argv[index + 1])
       index += 1
     } else if (arg === '--extracted-at') {
       args.extractedAt = argv[index + 1]
@@ -46,7 +58,12 @@ function writeJson(path, value) {
   writeFileSync(path, `${JSON.stringify(value, null, 2)}\n`, 'utf8')
 }
 
-function workflowSummary(diagnostics, outputPath) {
+function readJsonIfExists(path) {
+  if (!path || !existsSync(path)) return null
+  return JSON.parse(readFileSync(path, 'utf8'))
+}
+
+function workflowSummary(diagnostics, outputPath, changeSummary) {
   const sourceRows = diagnostics.source_results
     .map((source) => {
       const status = source.ok ? 'ok' : `failed: ${source.error}`
@@ -66,6 +83,8 @@ function workflowSummary(diagnostics, outputPath) {
     '| --- | --- | ---: | ---: | --- |',
     sourceRows,
     '',
+    changeSummary ? renderKnowledgeHubChangeSummaryMarkdown(changeSummary) : '## Change summary versus previous public artifact\n\n- Previous public artifact was not available.',
+    '',
     'This run prepares a static package-based public artifact after source-link validation. It does not publish Pages directly, create admin CRUD, call a backend API, or make official legal-registry claims.',
     '',
   ].join('\n')
@@ -73,17 +92,23 @@ function workflowSummary(diagnostics, outputPath) {
 
 try {
   const args = parseArgs(process.argv.slice(2))
+  const previousArtifact = readJsonIfExists(args.previous)
   const diagnostics = await buildKnowledgeHubCandidateArtifactWithDiagnostics({
     fetchSource: true,
     extractedAt: args.extractedAt,
     generatedBy: 'scripts/knowledge-hub/generate-source-fetch-artifact.mjs',
     includeCandidatesInArtifact: false,
   })
+  const changeSummary = buildKnowledgeHubChangeSummary(previousArtifact, diagnostics.artifact, diagnostics, {
+    previousPath: args.previous,
+    currentPath: args.output,
+  })
   writeJson(args.output, diagnostics.artifact)
   if (args.report) writeJson(args.report, diagnostics)
+  if (args.changeSummary) writeJson(args.changeSummary, changeSummary)
   if (args.summary) {
     ensureParent(args.summary)
-    writeFileSync(args.summary, workflowSummary(diagnostics, args.output), 'utf8')
+    writeFileSync(args.summary, workflowSummary(diagnostics, args.output, changeSummary), 'utf8')
   }
   console.log(`Wrote fetched-source Knowledge Hub package artifact: ${args.output}`)
   console.log(`Verified source item count: ${diagnostics.candidate_count}`)

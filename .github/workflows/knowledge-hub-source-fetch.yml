@@ -29,6 +29,7 @@ jobs:
       GENERATED_PUBLIC_PATH: knowledge-hub-source-fetch-output/apps/policy-ui/public/data/knowledge-hub.json
       REPORT_PATH: knowledge-hub-source-fetch-output/source-fetch-report.json
       SUMMARY_PATH: knowledge-hub-source-fetch-output/summary.md
+      CHANGE_SUMMARY_PATH: knowledge-hub-source-fetch-output/change-summary.json
       DIFF_PATH: knowledge-hub-source-fetch-output/knowledge-hub-json.diff
       PUBLIC_ARTIFACT_PATH: apps/policy-ui/public/data/knowledge-hub.json
       INPUT_EXTRACTED_AT: ${{ inputs.extracted_at }}
@@ -50,6 +51,7 @@ jobs:
 
       - name: Check Knowledge Hub intake scripts
         run: |
+          node --check scripts/knowledge-hub/change-summary.mjs
           node --check scripts/knowledge-hub/reform-intake.mjs
           node --check scripts/knowledge-hub/generate-source-fetch-artifact.mjs
           node --test scripts/knowledge-hub/tests/*.test.mjs
@@ -62,8 +64,10 @@ jobs:
           args=(
             "scripts/knowledge-hub/generate-source-fetch-artifact.mjs"
             "--output" "$GENERATED_PUBLIC_PATH"
+            "--previous" "$PUBLIC_ARTIFACT_PATH"
             "--report" "$REPORT_PATH"
             "--summary" "$SUMMARY_PATH"
+            "--change-summary" "$CHANGE_SUMMARY_PATH"
           )
 
           if [ -n "$INPUT_EXTRACTED_AT" ]; then
@@ -228,4 +232,5 @@ jobs:
             ${{ env.GENERATED_PUBLIC_PATH }}
             ${{ env.REPORT_PATH }}
             ${{ env.SUMMARY_PATH }}
+            ${{ env.CHANGE_SUMMARY_PATH }}
             ${{ env.DIFF_PATH }}
