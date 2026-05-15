@@ -126,7 +126,7 @@ describe('Knowledge Hub page', () => {
 
     assert.match(contentViewSource, /LatestChangesSection/)
     assert.match(contentViewSource, /latestPackages = packages\.slice\(0, 3\)/)
-    assert.match(contentViewSource, /changeBullets\(reformPackage, t, language, 8\)/)
+    assert.match(contentViewSource, /changeBullets\(reformPackage, t, language, 5\)/)
     assert.match(contentViewSource, /className="change-bullet-list"/)
     assert.match(contentViewSource, /className="latest-change-source"/)
     assert.match(contentViewSource, /digestChangeText\(reformPackage, t, language\)/)
@@ -279,6 +279,8 @@ describe('Knowledge Hub page', () => {
       `${visibleCopy}\n${html}`,
       /Digital public-service procedures are updated|Legal-service processes are simplified|Administrative burden reduction is the stated channel/i,
     )
+    assert.doesNotMatch(`${visibleCopy}\n${html}`, /&(laquo|raquo|ndash|mdash|amp);/i)
+    assert.doesNotMatch(`${visibleCopy}\n${html}`, /\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} \/ Презентации/i)
   })
 
   it('renders search and compact archive controls instead of a selected-dossier desk', () => {

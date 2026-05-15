@@ -1006,10 +1006,20 @@ function decodeHtml(value) {
   return value
     .replace(/&nbsp;/g, ' ')
     .replace(/&amp;/g, '&')
+    .replace(/&laquo;/g, '«')
+    .replace(/&raquo;/g, '»')
+    .replace(/&ldquo;/g, '“')
+    .replace(/&rdquo;/g, '”')
+    .replace(/&lsquo;/g, '‘')
+    .replace(/&rsquo;/g, '’')
+    .replace(/&ndash;/g, '–')
+    .replace(/&mdash;/g, '—')
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
+    .replace(/&#x([a-f0-9]+);/gi, (_, code) => String.fromCodePoint(Number.parseInt(code, 16)))
+    .replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(Number.parseInt(code, 10)))
 }
 
 function normalizeWhitespace(value) {
@@ -1554,14 +1564,23 @@ function sourceSummarySentences(text, title = '') {
   const normalizedTitle = normalizeWhitespace(title).toLowerCase()
   const navigationNoise =
     /(official web-site|official pages in social networks|president of the republic|share|print|telegram|facebook|twitter|instagram|youtube|rss|search|site map|расмий веб|ижтимоий тармоқ|социальн|поделиться|печать)/i
+  const introNoise =
+    /^(?:Президент\s+Шавкат|Шавкат\s+Мирзиёев|Президенту|The President|The Head of State|Давлат раҳбари|Президент).{0,180}(?:ознаком|представ|презентац|briefed|presented|presentation|таниш)/iu
   const measureSignal =
     /\d{4}|(?:from|by|until|will|planned|approved|adopted|introduced|launched|transferred|created|reduced|increased|будет|утвержд|принят|внедр|переда|созда|сокращ|ошир|режалаштир|тасдиқ|жорий|бошлаб|гача|йил|года|фоиз|сўм|сум|млрд|трлн|percent|soums?)/i
 
   return normalizeWhitespace(text)
     .split(/(?<=[.!?])\s+|(?<=[.;])\s+(?=[A-ZА-ЯЁЎҚҒҲ0-9"“«])/u)
-    .map((sentence) => sentence.trim())
+    .map((sentence) =>
+      sentence
+        .replace(/^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}\s*\/\s*[^/]{1,80}\s+/u, '')
+        .trim(),
+    )
     .filter((sentence) => sentence.length >= 40 && sentence.length <= 320)
     .filter((sentence) => !navigationNoise.test(sentence))
+    .filter((sentence) => !introNoise.test(sentence))
+    .filter((sentence) => !/[–—-]\s*$/.test(sentence))
+    .filter((sentence) => !/[«"“][^»"”]{1,90}$/.test(sentence))
     .filter((sentence) => sentence.toLowerCase() !== normalizedTitle)
     .filter((sentence) => measureSignal.test(sentence))
 }
@@ -1608,7 +1627,7 @@ async function enrichSourceEventWithOfficialLanguages(event, { fetchSource, fetc
 
   const localized = {
     title: cleanLocalizedTextMap(event.localized?.title),
-    summary: cleanLocalizedTextMap(event.localized?.summary),
+    summary: {},
     source_url: cleanLocalizedTextMap(event.localized?.source_url),
     source_url_status: cleanLocalizedStatusMap(event.localized?.source_url_status),
   }
@@ -1622,11 +1641,12 @@ async function enrichSourceEventWithOfficialLanguages(event, { fetchSource, fetc
     try {
       const item = await fetchOfficialLanguageItem(event, language, sourceUrl, fetchImpl)
       if (!item?.title) continue
+      const itemSnippets = localizedPackageSnippetsFromItem(item)
       localized.title[language] = item.title
-      if (item.summary?.trim()) localized.summary[language] = item.summary
+      if (itemSnippets.length > 0) localized.summary[language] = itemSnippets.slice(0, 2).join(' ')
       localized.source_url[language] = sourceUrl
       localized.source_url_status[language] = event.source_url_status
-      snippets[language] = localizedPackageSnippetsFromItem(item)
+      snippets[language] = itemSnippets
     } catch {
       // Missing language pages should not block the official-source refresh.
     }

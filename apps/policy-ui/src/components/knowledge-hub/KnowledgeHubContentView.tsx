@@ -466,7 +466,7 @@ function LatestChangesSection({
         {latestPackages.map((reformPackage) => {
           const sourceEvent = packagePrimarySource(reformPackage)
           const displayTitle = dossierDisplayTitle(reformPackage, allPackages, language)
-          const bullets = changeBullets(reformPackage, t, language, 8)
+          const bullets = changeBullets(reformPackage, t, language, 5)
           const sourceUrl = sourceEventText(sourceEvent, 'source_url', language)
           const sourceTitle = sourceEventText(sourceEvent, 'title', language)
           const digest = packageDigest(reformPackage, language)

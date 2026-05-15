@@ -408,7 +408,8 @@ describe('Knowledge Hub reform intake', () => {
           return new Response(`
             <html><body>
               <h1>Обсуждены вопросы развития системы здравоохранения</h1>
-              <p>С 1 июля 2026 года изменится порядок лицензирования медицинской деятельности и аккредитации клиник.</p>
+              <p>2026-05-01 17:05:00 / Презентации Президент Шавкат Мирзиёев ознакомился с презентацией по мерам развития системы здравоохранения.</p>
+              <p>С 1 июля 2026 года изменится порядок лицензирования медицинской деятельности и &laquo;аккредитации&raquo; клиник.</p>
               <p>До 2028 года планируется внедрить государственное медицинское страхование.</p>
             </body></html>
           `)
@@ -432,8 +433,9 @@ describe('Knowledge Hub reform intake', () => {
     assert.equal(reformPackage.localized.title.ru, 'Обсуждены вопросы развития системы здравоохранения')
     assert.equal(
       reformPackage.localized.digest.ru.changed,
-      'С 1 июля 2026 года изменится порядок лицензирования медицинской деятельности и аккредитации клиник.',
+      'С 1 июля 2026 года изменится порядок лицензирования медицинской деятельности и «аккредитации» клиник.',
     )
+    assert.doesNotMatch(sourceEvent.localized.summary.ru, /Презентации|&laquo;/)
     assert.equal(
       reformPackage.localized.parameters_or_amounts.uz[0],
       '2026-yil 1-iyuldan tibbiy faoliyatni litsenziyalash va klinikalarni akkreditatsiyadan o‘tkazish tartibi o‘zgaradi.',
