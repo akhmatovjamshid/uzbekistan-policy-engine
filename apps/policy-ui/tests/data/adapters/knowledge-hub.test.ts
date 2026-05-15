@@ -242,7 +242,14 @@ describe('knowledge hub adapter', () => {
       ),
     )
     assert.ok(content.reform_packages?.some((reformPackage) => reformPackage.package_id === 'pkg-urbanization-construction-permits-housing-2026'))
-    assert.ok(content.reform_packages?.some((reformPackage) => reformPackage.package_id === 'pkg-agriculture-subsidy-financing-digital-delivery-2026'))
+    assert.ok(
+      content.reform_packages?.some(
+        (reformPackage) =>
+          reformPackage.reform_category === 'agriculture' &&
+          reformPackage.title === 'Agriculture financing and subsidy delivery reform' &&
+          (reformPackage.parameters_or_amounts?.length ?? 0) > 0,
+      ),
+    )
     assert.ok(content.caveats?.some((caveat) => caveat.includes('configured source URLs')))
     assert.ok(content.caveats?.some((caveat) => caveat.includes('official links passed validation')))
   })
