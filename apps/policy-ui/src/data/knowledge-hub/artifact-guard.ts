@@ -5,6 +5,7 @@ import type {
   ReformEvidenceType,
   ReformArtifactExtractionMode,
   KnowledgeHubActiveModelLensId,
+  KnowledgeHubContentLanguage,
   KnowledgeHubGatedModelLensId,
   KnowledgeHubLiteratureItem,
   KnowledgeHubModelImpactMap,
@@ -62,6 +63,79 @@ function stringArray(value: unknown, path: string, issues: KnowledgeHubArtifactV
     issues.push({ path: `${path}[${index}]`, message: 'Expected a string.', severity: 'error' })
     return []
   })
+}
+
+const KNOWLEDGE_HUB_CONTENT_LANGUAGE_VALUES: KnowledgeHubContentLanguage[] = ['en', 'ru', 'uz']
+
+function validateLocalizedText(
+  value: unknown,
+  path: string,
+  issues: KnowledgeHubArtifactValidationIssue[],
+): Partial<Record<KnowledgeHubContentLanguage, string>> | undefined {
+  if (typeof value === 'undefined') return undefined
+  if (!isRecord(value)) {
+    issues.push({ path, message: 'Expected a localized text object.', severity: 'error' })
+    return undefined
+  }
+
+  const localized: Partial<Record<KnowledgeHubContentLanguage, string>> = {}
+  for (const language of KNOWLEDGE_HUB_CONTENT_LANGUAGE_VALUES) {
+    const entry = value[language]
+    if (typeof entry === 'undefined') continue
+    if (typeof entry !== 'string' || entry.trim().length === 0) {
+      issues.push({ path: `${path}.${language}`, message: 'Expected a non-empty localized string.', severity: 'error' })
+      continue
+    }
+    localized[language] = entry
+  }
+
+  return Object.keys(localized).length > 0 ? localized : undefined
+}
+
+function validateLocalizedList(
+  value: unknown,
+  path: string,
+  issues: KnowledgeHubArtifactValidationIssue[],
+): Partial<Record<KnowledgeHubContentLanguage, string[]>> | undefined {
+  if (typeof value === 'undefined') return undefined
+  if (!isRecord(value)) {
+    issues.push({ path, message: 'Expected a localized string-list object.', severity: 'error' })
+    return undefined
+  }
+
+  const localized: Partial<Record<KnowledgeHubContentLanguage, string[]>> = {}
+  for (const language of KNOWLEDGE_HUB_CONTENT_LANGUAGE_VALUES) {
+    const entry = value[language]
+    if (typeof entry === 'undefined') continue
+    localized[language] = stringArray(entry, `${path}.${language}`, issues)
+  }
+
+  return Object.keys(localized).length > 0 ? localized : undefined
+}
+
+function validateLocalizedStatusMap(
+  value: unknown,
+  path: string,
+  issues: KnowledgeHubArtifactValidationIssue[],
+): Partial<Record<KnowledgeHubContentLanguage, 'verified' | 'not_checked_fixture'>> | undefined {
+  if (typeof value === 'undefined') return undefined
+  if (!isRecord(value)) {
+    issues.push({ path, message: 'Expected a localized source URL status object.', severity: 'error' })
+    return undefined
+  }
+
+  const statuses: Partial<Record<KnowledgeHubContentLanguage, 'verified' | 'not_checked_fixture'>> = {}
+  for (const language of KNOWLEDGE_HUB_CONTENT_LANGUAGE_VALUES) {
+    const entry = value[language]
+    if (typeof entry === 'undefined') continue
+    if (entry !== 'verified' && entry !== 'not_checked_fixture') {
+      issues.push({ path: `${path}.${language}`, message: 'Expected verified or not_checked_fixture.', severity: 'error' })
+      continue
+    }
+    statuses[language] = entry
+  }
+
+  return Object.keys(statuses).length > 0 ? statuses : undefined
 }
 
 const REFORM_EVIDENCE_TYPE_VALUES: ReformEvidenceType[] = [
@@ -462,6 +536,7 @@ function validatePackageSourceEvent(
     summary: requireString(value, 'summary', path, issues),
     source_url_status: requireEnum(value, 'source_url_status', path, REFORM_SOURCE_URL_STATUS_VALUES, issues),
     extracted_at: stringValue(value.extracted_at) ?? undefined,
+    localized: validatePackageSourceEventLocalized(value.localized, `${path}.localized`, extractionMode, issues),
   }
 
   validateProductionSourceUrl(event.source_url, event.source_url_status, extractionMode, `${path}.source_url`, issues)
@@ -473,6 +548,38 @@ function validatePackageSourceEvent(
   }
 
   return event
+}
+
+function validatePackageSourceEventLocalized(
+  value: unknown,
+  path: string,
+  extractionMode: unknown,
+  issues: KnowledgeHubArtifactValidationIssue[],
+): ReformPackageSourceEvent['localized'] | undefined {
+  if (typeof value === 'undefined') return undefined
+  if (!isRecord(value)) {
+    issues.push({ path, message: 'Expected a localized source-event object.', severity: 'error' })
+    return undefined
+  }
+
+  const localized = {
+    title: validateLocalizedText(value.title, `${path}.title`, issues),
+    summary: validateLocalizedText(value.summary, `${path}.summary`, issues),
+    source_url: validateLocalizedText(value.source_url, `${path}.source_url`, issues),
+    source_url_status: validateLocalizedStatusMap(value.source_url_status, `${path}.source_url_status`, issues),
+  }
+
+  for (const [language, url] of Object.entries(localized.source_url ?? {})) {
+    validateProductionSourceUrl(
+      url,
+      localized.source_url_status?.[language as KnowledgeHubContentLanguage] ?? 'verified',
+      extractionMode,
+      `${path}.source_url.${language}`,
+      issues,
+    )
+  }
+
+  return Object.values(localized).some(Boolean) ? localized : undefined
 }
 
 function validatePackageDigest(
@@ -502,6 +609,64 @@ function validatePackageDigest(
     }
   }
   return digest
+}
+
+function validateLocalizedDigest(
+  value: unknown,
+  path: string,
+  issues: KnowledgeHubArtifactValidationIssue[],
+): Partial<Record<KnowledgeHubContentLanguage, Partial<ReformPackageDigest>>> | undefined {
+  if (typeof value === 'undefined') return undefined
+  if (!isRecord(value)) {
+    issues.push({ path, message: 'Expected a localized package digest object.', severity: 'error' })
+    return undefined
+  }
+
+  const localizedDigest: Partial<Record<KnowledgeHubContentLanguage, Partial<ReformPackageDigest>>> = {}
+  for (const language of KNOWLEDGE_HUB_CONTENT_LANGUAGE_VALUES) {
+    const entry = value[language]
+    if (typeof entry === 'undefined') continue
+    if (!isRecord(entry)) {
+      issues.push({ path: `${path}.${language}`, message: 'Expected a digest object for this language.', severity: 'error' })
+      continue
+    }
+    localizedDigest[language] = {
+      changed: stringValue(entry.changed) ?? undefined,
+      applies_to: stringValue(entry.applies_to) ?? undefined,
+      effective_status: stringValue(entry.effective_status) ?? undefined,
+      document: stringValue(entry.document) ?? undefined,
+    }
+  }
+
+  return Object.keys(localizedDigest).length > 0 ? localizedDigest : undefined
+}
+
+function validatePackageLocalized(
+  value: unknown,
+  path: string,
+  issues: KnowledgeHubArtifactValidationIssue[],
+): ReformPackage['localized'] | undefined {
+  if (typeof value === 'undefined') return undefined
+  if (!isRecord(value)) {
+    issues.push({ path, message: 'Expected a localized package object.', severity: 'error' })
+    return undefined
+  }
+
+  const localized: ReformPackage['localized'] = {
+    title: validateLocalizedText(value.title, `${path}.title`, issues),
+    short_summary: validateLocalizedText(value.short_summary, `${path}.short_summary`, issues),
+    policy_area: validateLocalizedText(value.policy_area, `${path}.policy_area`, issues),
+    current_stage: validateLocalizedText(value.current_stage, `${path}.current_stage`, issues),
+    next_milestone: validateLocalizedText(value.next_milestone, `${path}.next_milestone`, issues),
+    legal_basis: validateLocalizedText(value.legal_basis, `${path}.legal_basis`, issues),
+    official_basis: validateLocalizedText(value.official_basis, `${path}.official_basis`, issues),
+    financing_or_incentive: validateLocalizedText(value.financing_or_incentive, `${path}.financing_or_incentive`, issues),
+    why_tracked: validateLocalizedText(value.why_tracked, `${path}.why_tracked`, issues),
+    parameters_or_amounts: validateLocalizedList(value.parameters_or_amounts, `${path}.parameters_or_amounts`, issues),
+    digest: validateLocalizedDigest(value.digest, `${path}.digest`, issues),
+  }
+
+  return Object.values(localized).some(Boolean) ? localized : undefined
 }
 
 function validateReformPackage(
@@ -588,6 +753,7 @@ function validateReformPackage(
     implementation_milestones: milestones,
     official_source_events: sourceEvents,
     caveat: requireString(value, 'caveat', path, issues),
+    localized: validatePackageLocalized(value.localized, `${path}.localized`, issues),
   }
 
   if (!isIsoLike(reformPackage.current_stage_date)) {

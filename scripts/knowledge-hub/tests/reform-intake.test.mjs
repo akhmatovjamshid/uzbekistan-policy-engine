@@ -392,6 +392,57 @@ describe('Knowledge Hub reform intake', () => {
     )
   })
 
+  it('adds official-language package content when RU and UZ source pages are available', async () => {
+    const basePackage = JSON.parse(JSON.stringify(FIXTURE_DEMO_REFORM_PACKAGES[0]))
+    basePackage.official_source_events[0].source_url = 'https://president.uz/en/lists/view/9164'
+    basePackage.official_source_events[0].source_url_status = 'verified'
+
+    const diagnostics = await buildKnowledgeHubCandidateArtifactWithDiagnostics({
+      fetchSource: true,
+      extractedAt: '2026-05-05T08:00:00.000Z',
+      sources: [],
+      reformPackages: [basePackage],
+      fetchImpl: async (url) => {
+        const sourceUrl = String(url)
+        if (sourceUrl.includes('/ru/')) {
+          return new Response(`
+            <html><body>
+              <h1>Обсуждены вопросы развития системы здравоохранения</h1>
+              <p>С 1 июля 2026 года изменится порядок лицензирования медицинской деятельности и аккредитации клиник.</p>
+              <p>До 2028 года планируется внедрить государственное медицинское страхование.</p>
+            </body></html>
+          `)
+        }
+        if (sourceUrl.includes('/uz/')) {
+          return new Response(`
+            <html><body>
+              <h1>Sog‘liqni saqlash tizimini rivojlantirish masalalari muhokama qilindi</h1>
+              <p>2026-yil 1-iyuldan tibbiy faoliyatni litsenziyalash va klinikalarni akkreditatsiyadan o‘tkazish tartibi o‘zgaradi.</p>
+              <p>2028-yilgacha davlat tibbiy sug‘urtasini joriy etish rejalashtirilgan.</p>
+            </body></html>
+          `)
+        }
+        return new Response('<html><body><h1>Healthcare system development issues discussed</h1><p>From 1 July 2026, medical licensing procedures change.</p></body></html>')
+      },
+    })
+
+    const reformPackage = diagnostics.artifact.reform_packages[0]
+    const sourceEvent = reformPackage.official_source_events[0]
+
+    assert.equal(reformPackage.localized.title.ru, 'Обсуждены вопросы развития системы здравоохранения')
+    assert.equal(
+      reformPackage.localized.digest.ru.changed,
+      'С 1 июля 2026 года изменится порядок лицензирования медицинской деятельности и аккредитации клиник.',
+    )
+    assert.equal(
+      reformPackage.localized.parameters_or_amounts.uz[0],
+      '2026-yil 1-iyuldan tibbiy faoliyatni litsenziyalash va klinikalarni akkreditatsiyadan o‘tkazish tartibi o‘zgaradi.',
+    )
+    assert.equal(sourceEvent.localized.source_url.ru, 'https://president.uz/ru/lists/view/9164')
+    assert.equal(sourceEvent.localized.source_url.uz, 'https://president.uz/uz/lists/view/9164')
+    assert.equal(sourceEvent.localized.source_url_status.ru, 'verified')
+  })
+
   it('assembles configured-source housing and agriculture packages from verified official detail pages', () => {
     const baseCandidate = {
       extraction_mode: CONFIGURED_SOURCE_FETCH_EXTRACTION_MODE,

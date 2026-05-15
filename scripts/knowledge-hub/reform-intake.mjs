@@ -1432,10 +1432,289 @@ function sourceItemFromOfficialDetail(source, html, fallbackItem = {}) {
     id: fallbackItem.id ?? 'detail',
     title,
     summary,
+    bodyText,
     publishedAt,
     sourceUrl: fallbackItem.sourceUrl ?? source.url,
     text: `${title} ${bodyText}`,
   }
+}
+
+const OFFICIAL_CONTENT_LANGUAGES = ['en', 'ru', 'uz']
+
+function cleanLocalizedTextMap(value) {
+  const clean = {}
+  for (const language of OFFICIAL_CONTENT_LANGUAGES) {
+    const entry = value?.[language]
+    if (typeof entry === 'string' && entry.trim().length > 0) {
+      clean[language] = entry
+    }
+  }
+  return clean
+}
+
+function cleanLocalizedListMap(value) {
+  const clean = {}
+  for (const language of OFFICIAL_CONTENT_LANGUAGES) {
+    const entry = value?.[language]
+    if (!Array.isArray(entry)) continue
+    const values = entry.filter((item) => typeof item === 'string' && item.trim().length > 0)
+    if (values.length > 0) clean[language] = values
+  }
+  return clean
+}
+
+function cleanLocalizedStatusMap(value) {
+  const clean = {}
+  for (const language of OFFICIAL_CONTENT_LANGUAGES) {
+    const entry = value?.[language]
+    if (entry === 'verified' || entry === 'not_checked_fixture') {
+      clean[language] = entry
+    }
+  }
+  return clean
+}
+
+function cleanLocalizedDigestMap(value) {
+  const clean = {}
+  for (const language of OFFICIAL_CONTENT_LANGUAGES) {
+    const entry = value?.[language]
+    if (!entry || typeof entry !== 'object' || Array.isArray(entry)) continue
+    const digest = {}
+    for (const field of ['changed', 'applies_to', 'effective_status', 'document']) {
+      const text = entry[field]
+      if (typeof text === 'string' && text.trim().length > 0) {
+        digest[field] = text
+      }
+    }
+    if (Object.keys(digest).length > 0) clean[language] = digest
+  }
+  return clean
+}
+
+function compactRecord(record) {
+  return Object.fromEntries(Object.entries(record).filter(([, value]) => value && Object.keys(value).length > 0))
+}
+
+function sourceUrlLanguage(sourceUrl) {
+  try {
+    const firstSegment = new URL(sourceUrl).pathname.split('/').filter(Boolean)[0]
+    return OFFICIAL_CONTENT_LANGUAGES.includes(firstSegment) ? firstSegment : null
+  } catch {
+    return null
+  }
+}
+
+function officialLanguageUrl(sourceUrl, language) {
+  try {
+    const parsed = new URL(sourceUrl)
+    const path = parsed.pathname
+
+    if (parsed.hostname === 'president.uz' || parsed.hostname.endsWith('.president.uz')) {
+      if (/^\/(?:en|ru|uz)\/lists\/view\/\d+/i.test(path)) {
+        parsed.pathname = path.replace(/^\/(?:en|ru|uz)\//i, `/${language}/`)
+        return parsed.toString()
+      }
+    }
+
+    if (parsed.hostname === 'gov.uz' || parsed.hostname.endsWith('.gov.uz')) {
+      if (/^\/(?:en|ru|uz)\//i.test(path)) {
+        parsed.pathname = path.replace(/^\/(?:en|ru|uz)\//i, `/${language}/`)
+        return parsed.toString()
+      }
+    }
+
+    if (parsed.hostname === 'lex.uz' || parsed.hostname.endsWith('.lex.uz')) {
+      const docsMatch = path.match(/^\/(?:(?:en|ru|uz)\/)?docs\/(-?\d+)/i)
+      if (docsMatch && (language === 'ru' || language === 'uz')) {
+        parsed.pathname = `/${language}/docs/${docsMatch[1]}`
+        return parsed.toString()
+      }
+    }
+  } catch {
+    return null
+  }
+
+  return null
+}
+
+function officialLanguageUrls(sourceUrl) {
+  const entries = {}
+  const existingLanguage = sourceUrlLanguage(sourceUrl)
+  if (existingLanguage) entries[existingLanguage] = sourceUrl
+
+  for (const language of OFFICIAL_CONTENT_LANGUAGES) {
+    const languageUrl = officialLanguageUrl(sourceUrl, language)
+    if (languageUrl) entries[language] = languageUrl
+  }
+
+  return entries
+}
+
+function sourceSummarySentences(text, title = '') {
+  const normalizedTitle = normalizeWhitespace(title).toLowerCase()
+  const navigationNoise =
+    /(official web-site|official pages in social networks|president of the republic|share|print|telegram|facebook|twitter|instagram|youtube|rss|search|site map|расмий веб|ижтимоий тармоқ|социальн|поделиться|печать)/i
+  const measureSignal =
+    /\d{4}|(?:from|by|until|will|planned|approved|adopted|introduced|launched|transferred|created|reduced|increased|будет|утвержд|принят|внедр|переда|созда|сокращ|ошир|режалаштир|тасдиқ|жорий|бошлаб|гача|йил|года|фоиз|сўм|сум|млрд|трлн|percent|soums?)/i
+
+  return normalizeWhitespace(text)
+    .split(/(?<=[.!?])\s+|(?<=[.;])\s+(?=[A-ZА-ЯЁЎҚҒҲ0-9"“«])/u)
+    .map((sentence) => sentence.trim())
+    .filter((sentence) => sentence.length >= 40 && sentence.length <= 320)
+    .filter((sentence) => !navigationNoise.test(sentence))
+    .filter((sentence) => sentence.toLowerCase() !== normalizedTitle)
+    .filter((sentence) => measureSignal.test(sentence))
+}
+
+function localizedPackageSnippetsFromItem(item) {
+  const sentences = sourceSummarySentences(item.summary, item.title)
+  return uniqueStrings(sentences).slice(0, 8)
+}
+
+async function fetchOfficialLanguageItem(event, language, sourceUrl, fetchImpl) {
+  if (sourceUrl === event.source_url) {
+    return {
+      title: event.title,
+      summary: event.summary,
+      sourceUrl,
+    }
+  }
+
+  const response = await fetchImpl(sourceUrl, {
+    headers: SOURCE_LINK_VALIDATION_HEADERS,
+  })
+  if (!response.ok) return null
+
+  const detailHtml = await response.text()
+  const item = sourceItemFromOfficialDetail({ url: sourceUrl }, detailHtml, {
+    id: event.id,
+    title: event.title,
+    publishedAt: event.source_published_at,
+    sourceUrl,
+  })
+
+  return item
+    ? {
+        title: item.title,
+        summary: item.bodyText ?? item.summary,
+        sourceUrl,
+      }
+    : null
+}
+
+async function enrichSourceEventWithOfficialLanguages(event, { fetchSource, fetchImpl }) {
+  const languageUrls = officialLanguageUrls(event.source_url)
+  if (Object.keys(languageUrls).length === 0) return { event, snippets: {} }
+
+  const localized = {
+    title: cleanLocalizedTextMap(event.localized?.title),
+    summary: cleanLocalizedTextMap(event.localized?.summary),
+    source_url: cleanLocalizedTextMap(event.localized?.source_url),
+    source_url_status: cleanLocalizedStatusMap(event.localized?.source_url_status),
+  }
+  const snippets = {}
+
+  for (const language of OFFICIAL_CONTENT_LANGUAGES) {
+    const sourceUrl = languageUrls[language]
+    if (!sourceUrl) continue
+    if (!fetchSource && sourceUrl !== event.source_url) continue
+
+    try {
+      const item = await fetchOfficialLanguageItem(event, language, sourceUrl, fetchImpl)
+      if (!item?.title) continue
+      localized.title[language] = item.title
+      if (item.summary?.trim()) localized.summary[language] = item.summary
+      localized.source_url[language] = sourceUrl
+      localized.source_url_status[language] = event.source_url_status
+      snippets[language] = localizedPackageSnippetsFromItem(item)
+    } catch {
+      // Missing language pages should not block the official-source refresh.
+    }
+  }
+
+  const cleanLocalized = compactRecord({
+    title: cleanLocalizedTextMap(localized.title),
+    summary: cleanLocalizedTextMap(localized.summary),
+    source_url: cleanLocalizedTextMap(localized.source_url),
+    source_url_status: cleanLocalizedStatusMap(localized.source_url_status),
+  })
+
+  return {
+    event: Object.keys(cleanLocalized).length > 0 ? { ...event, localized: cleanLocalized } : event,
+    snippets,
+  }
+}
+
+async function enrichReformPackageWithOfficialLanguages(reformPackage, { fetchSource, fetchImpl }) {
+  const enrichedEvents = []
+  const snippetsByLanguage = {}
+
+  for (const event of reformPackage.official_source_events ?? []) {
+    const enriched = await enrichSourceEventWithOfficialLanguages(event, { fetchSource, fetchImpl })
+    enrichedEvents.push(enriched.event)
+    for (const [language, snippets] of Object.entries(enriched.snippets)) {
+      if (language === 'en' || snippetsByLanguage[language]?.length > 0) continue
+      snippetsByLanguage[language] = snippets
+    }
+  }
+
+  const primaryEvent = enrichedEvents[0]
+  const localized = {
+    title: cleanLocalizedTextMap(reformPackage.localized?.title),
+    short_summary: cleanLocalizedTextMap(reformPackage.localized?.short_summary),
+    policy_area: cleanLocalizedTextMap(reformPackage.localized?.policy_area),
+    current_stage: cleanLocalizedTextMap(reformPackage.localized?.current_stage),
+    next_milestone: cleanLocalizedTextMap(reformPackage.localized?.next_milestone),
+    legal_basis: cleanLocalizedTextMap(reformPackage.localized?.legal_basis),
+    official_basis: cleanLocalizedTextMap(reformPackage.localized?.official_basis),
+    financing_or_incentive: cleanLocalizedTextMap(reformPackage.localized?.financing_or_incentive),
+    why_tracked: cleanLocalizedTextMap(reformPackage.localized?.why_tracked),
+    parameters_or_amounts: cleanLocalizedListMap(reformPackage.localized?.parameters_or_amounts),
+    digest: cleanLocalizedDigestMap(reformPackage.localized?.digest),
+  }
+
+  for (const language of OFFICIAL_CONTENT_LANGUAGES.filter((entry) => entry !== 'en')) {
+    const eventTitle = primaryEvent?.localized?.title?.[language]
+    const snippets = snippetsByLanguage[language] ?? []
+    if (!eventTitle && snippets.length === 0) continue
+
+    if (eventTitle) localized.title[language] = eventTitle
+    if (snippets[0]) localized.short_summary[language] = snippets[0]
+    if (snippets.length > 0) localized.parameters_or_amounts[language] = snippets
+    localized.digest[language] = {
+      ...(localized.digest[language] ?? {}),
+      ...(snippets[0] ? { changed: snippets[0] } : {}),
+      ...(eventTitle ? { document: eventTitle } : {}),
+    }
+  }
+
+  const cleanLocalized = compactRecord({
+    title: cleanLocalizedTextMap(localized.title),
+    short_summary: cleanLocalizedTextMap(localized.short_summary),
+    policy_area: cleanLocalizedTextMap(localized.policy_area),
+    current_stage: cleanLocalizedTextMap(localized.current_stage),
+    next_milestone: cleanLocalizedTextMap(localized.next_milestone),
+    legal_basis: cleanLocalizedTextMap(localized.legal_basis),
+    official_basis: cleanLocalizedTextMap(localized.official_basis),
+    financing_or_incentive: cleanLocalizedTextMap(localized.financing_or_incentive),
+    why_tracked: cleanLocalizedTextMap(localized.why_tracked),
+    parameters_or_amounts: cleanLocalizedListMap(localized.parameters_or_amounts),
+    digest: cleanLocalizedDigestMap(localized.digest),
+  })
+
+  return {
+    ...reformPackage,
+    official_source_events: enrichedEvents,
+    ...(Object.keys(cleanLocalized).length > 0 ? { localized: cleanLocalized } : {}),
+  }
+}
+
+async function enrichReformPackagesWithOfficialLanguages(reformPackages, { fetchSource, fetchImpl }) {
+  const enriched = []
+  for (const reformPackage of reformPackages) {
+    enriched.push(await enrichReformPackageWithOfficialLanguages(reformPackage, { fetchSource, fetchImpl }))
+  }
+  return enriched
 }
 
 function extractDecisionsFromPresidentUzDetail(source, html, extractedAt) {
@@ -2876,7 +3155,10 @@ export async function buildKnowledgeHubCandidateArtifactWithDiagnostics(options 
   const carryForward = fetchSource
     ? mergeWithPreviousPublicPackages(generatedPublicReformPackages, options.previousArtifact)
     : { packages: generatedPublicReformPackages, retainedPackageCount: 0 }
-  const publicReformPackages = carryForward.packages
+  const publicReformPackages = await enrichReformPackagesWithOfficialLanguages(carryForward.packages, {
+    fetchSource,
+    fetchImpl,
+  })
   const policyBriefs = options.policyBriefs ?? buildInternalPolicyBriefs(publicReformPackages)
   const researchUpdates = options.researchUpdates ?? STATIC_RESEARCH_UPDATES
   const literatureItems = options.literatureItems ?? STATIC_LITERATURE_ITEMS

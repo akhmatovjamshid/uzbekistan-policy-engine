@@ -3,10 +3,12 @@ import { useTranslation } from 'react-i18next'
 import type { TFunction } from 'i18next'
 import type {
   KnowledgeHubActiveModelLensId,
+  KnowledgeHubContentLanguage,
   KnowledgeHubContent,
   KnowledgeHubGatedModelLensId,
   KnowledgeHubLiteratureItem,
   ReformPackage,
+  ReformPackageDigest,
   ReformPackageMilestone,
   ReformPackageSourceEvent,
 } from '../../contracts/data-contract.js'
@@ -24,7 +26,6 @@ type KnowledgeHubContentViewProps = {
 type KnowledgeHubSectionId = 'reformTracker' | 'researchUpdates' | 'literatureHub'
 type LabelNamespace = 'eventType' | 'evidenceType'
 type ModelLensId = KnowledgeHubActiveModelLensId | KnowledgeHubGatedModelLensId
-
 type DossierFilters = {
   search: string
   policyArea: string
@@ -45,6 +46,50 @@ function formatDisplayDate(value: string | undefined): string {
   const parsed = new Date(value)
   if (!Number.isFinite(parsed.getTime())) return value
   return parsed.toISOString().slice(0, 10)
+}
+
+function normalizeContentLanguage(value: string | undefined): KnowledgeHubContentLanguage {
+  if (value === 'ru' || value?.startsWith('ru-')) return 'ru'
+  if (value === 'uz' || value?.startsWith('uz-')) return 'uz'
+  return 'en'
+}
+
+function localizedText(
+  values: Partial<Record<KnowledgeHubContentLanguage, string>> | undefined,
+  language: KnowledgeHubContentLanguage,
+): string | undefined {
+  return values?.[language] ?? (language !== 'en' ? values?.en : undefined)
+}
+
+function localizedList(
+  values: Partial<Record<KnowledgeHubContentLanguage, string[]>> | undefined,
+  language: KnowledgeHubContentLanguage,
+): string[] | undefined {
+  return values?.[language] ?? (language !== 'en' ? values?.en : undefined)
+}
+
+function localizedPackageField(
+  reformPackage: ReformPackage,
+  field: 'title' | 'short_summary' | 'policy_area' | 'current_stage' | 'next_milestone' | 'legal_basis' | 'official_basis' | 'financing_or_incentive' | 'why_tracked',
+  language: KnowledgeHubContentLanguage,
+): string | undefined {
+  return localizedText(reformPackage.localized?.[field], language)
+}
+
+function packageDigest(reformPackage: ReformPackage, language: KnowledgeHubContentLanguage): ReformPackageDigest {
+  return {
+    ...reformPackage.digest,
+    ...(reformPackage.localized?.digest?.[language] ?? {}),
+  }
+}
+
+function sourceEventText(
+  sourceEvent: ReformPackageSourceEvent | undefined,
+  field: 'title' | 'summary' | 'source_url',
+  language: KnowledgeHubContentLanguage,
+): string | undefined {
+  if (!sourceEvent) return undefined
+  return localizedText(sourceEvent.localized?.[field], language) ?? sourceEvent[field]
 }
 
 function referenceTime(value: string | undefined): number {
@@ -80,21 +125,34 @@ function flattenMilestones(packages: ReformPackage[]): ReformPackageMilestone[] 
     .sort((left, right) => dateSortKey(left.date).localeCompare(dateSortKey(right.date)))
 }
 
-function hasDuplicateTitle(reformPackage: ReformPackage, packages: ReformPackage[]): boolean {
-  const normalizedTitle = reformPackage.title.trim().toLowerCase()
-  return packages.filter((item) => item.title.trim().toLowerCase() === normalizedTitle).length > 1
+function hasDuplicateTitle(
+  reformPackage: ReformPackage,
+  packages: ReformPackage[],
+  language: KnowledgeHubContentLanguage,
+): boolean {
+  const title = localizedPackageField(reformPackage, 'title', language) ?? reformPackage.title
+  const normalizedTitle = title.trim().toLowerCase()
+  return packages.filter((item) => {
+    const itemTitle = localizedPackageField(item, 'title', language) ?? item.title
+    return itemTitle.trim().toLowerCase() === normalizedTitle
+  }).length > 1
 }
 
 function isGenericDossierTitle(title: string): boolean {
   return /^policy implementation reform$/i.test(title.trim())
 }
 
-function dossierDisplayTitle(reformPackage: ReformPackage, packages: ReformPackage[]): string {
-  if (!isGenericDossierTitle(reformPackage.title) && !hasDuplicateTitle(reformPackage, packages)) {
-    return reformPackage.title
+function dossierDisplayTitle(
+  reformPackage: ReformPackage,
+  packages: ReformPackage[],
+  language: KnowledgeHubContentLanguage,
+): string {
+  const title = localizedPackageField(reformPackage, 'title', language) ?? reformPackage.title
+  if (!isGenericDossierTitle(title) && !hasDuplicateTitle(reformPackage, packages, language)) {
+    return title
   }
 
-  return `${reformPackage.title}: ${reformPackage.policy_area}`
+  return `${title}: ${localizedPackageField(reformPackage, 'policy_area', language) ?? reformPackage.policy_area}`
 }
 
 function sourceById(reformPackage: ReformPackage, id: string): ReformPackageSourceEvent | undefined {
@@ -146,11 +204,12 @@ function cleanDossierText(value: string): string {
   return usefulSentences.join(' ')
 }
 
-function dossierSummary(reformPackage: ReformPackage): string {
-  if (reformPackage.short_summary) return cleanDossierText(reformPackage.short_summary)
-  const sourceSummary = splitSentences(reformPackage.official_source_events[0]?.summary ?? '')
+function dossierSummary(reformPackage: ReformPackage, language: KnowledgeHubContentLanguage): string {
+  const shortSummary = localizedPackageField(reformPackage, 'short_summary', language) ?? reformPackage.short_summary
+  if (shortSummary) return cleanDossierText(shortSummary)
+  const sourceSummary = splitSentences(sourceEventText(reformPackage.official_source_events[0], 'summary', language) ?? '')
   const summary = sourceSummary.slice(0, 2).join(' ')
-  return summary || cleanDossierText(reformPackage.why_tracked)
+  return summary || cleanDossierText(localizedPackageField(reformPackage, 'why_tracked', language) ?? reformPackage.why_tracked)
 }
 
 function compactUniqueList(values: string[]): string[] {
@@ -190,21 +249,28 @@ function isVisibleMeasure(value: string): boolean {
   return !HIDDEN_MEASURE_PATTERNS.some((pattern) => pattern.test(normalized))
 }
 
-function parameterList(reformPackage: ReformPackage, t: TFunction): string[] {
-  const parameters = (reformPackage.parameters_or_amounts ?? []).filter(isVisibleMeasure)
-  const derived = [reformPackage.financing_or_incentive]
+function parameterList(reformPackage: ReformPackage, t: TFunction, language: KnowledgeHubContentLanguage): string[] {
+  const parameters = (localizedList(reformPackage.localized?.parameters_or_amounts, language) ?? reformPackage.parameters_or_amounts ?? []).filter(
+    isVisibleMeasure,
+  )
+  const derived = [localizedPackageField(reformPackage, 'financing_or_incentive', language) ?? reformPackage.financing_or_incentive]
   return compactUniqueList([...parameters, ...derived].filter((value): value is string => Boolean(value))).map((value) =>
     displayParameter(t, value),
   )
 }
 
-function digestChangeText(reformPackage: ReformPackage, t: TFunction): string {
-  return reformPackage.digest?.changed ?? parameterList(reformPackage, t)[0] ?? dossierSummary(reformPackage)
+function digestChangeText(reformPackage: ReformPackage, t: TFunction, language: KnowledgeHubContentLanguage): string {
+  return packageDigest(reformPackage, language).changed ?? parameterList(reformPackage, t, language)[0] ?? dossierSummary(reformPackage, language)
 }
 
-function changeBullets(reformPackage: ReformPackage, t: TFunction, limit?: number): string[] {
-  const primaryChange = digestChangeText(reformPackage, t)
-  const bullets = parameterList(reformPackage, t).filter((value) => value !== primaryChange)
+function changeBullets(
+  reformPackage: ReformPackage,
+  t: TFunction,
+  language: KnowledgeHubContentLanguage,
+  limit?: number,
+): string[] {
+  const primaryChange = digestChangeText(reformPackage, t, language)
+  const bullets = parameterList(reformPackage, t, language).filter((value) => value !== primaryChange)
   const items = compactUniqueList([primaryChange, ...bullets])
   return typeof limit === 'number' ? items.slice(0, limit) : items
 }
@@ -227,9 +293,14 @@ function isGenericMilestoneLabel(value: string): boolean {
   )
 }
 
-function milestoneDisplayLabel(milestone: ReformPackageMilestone, sourceEvent: ReformPackageSourceEvent | undefined): string {
-  if (isGenericMilestoneLabel(milestone.label) && sourceEvent?.title) {
-    return compactTimelineLabel(sourceEvent.title)
+function milestoneDisplayLabel(
+  milestone: ReformPackageMilestone,
+  sourceEvent: ReformPackageSourceEvent | undefined,
+  language: KnowledgeHubContentLanguage,
+): string {
+  const localizedTitle = sourceEventText(sourceEvent, 'title', language)
+  if (isGenericMilestoneLabel(milestone.label) && localizedTitle) {
+    return compactTimelineLabel(localizedTitle)
   }
 
   return compactTimelineLabel(humanizeMachineToken(milestone.label))
@@ -241,33 +312,56 @@ function sourceHosts(packages: ReformPackage[]): string[] {
   )
 }
 
+function localizedFilterLabel(
+  packages: ReformPackage[],
+  field: 'policy_area' | 'current_stage',
+  value: string,
+  language: KnowledgeHubContentLanguage,
+): string {
+  const packageMatch = packages.find((item) => item[field] === value)
+  if (!packageMatch) return value
+  const localizedField = field === 'policy_area' ? 'policy_area' : 'current_stage'
+  return localizedPackageField(packageMatch, localizedField, language) ?? value
+}
+
 function packagePrimarySource(reformPackage: ReformPackage): ReformPackageSourceEvent | undefined {
   return reformPackage.official_source_events[0]
 }
 
-function packageSearchText(reformPackage: ReformPackage, displayTitle: string): string {
+function packageSearchText(
+  reformPackage: ReformPackage,
+  displayTitle: string,
+  language: KnowledgeHubContentLanguage,
+): string {
   return [
     displayTitle,
-    reformPackage.policy_area,
-    reformPackage.current_stage,
-    reformPackage.legal_basis,
-    reformPackage.official_basis,
-    reformPackage.financing_or_incentive ?? '',
+    localizedPackageField(reformPackage, 'policy_area', language) ?? reformPackage.policy_area,
+    localizedPackageField(reformPackage, 'current_stage', language) ?? reformPackage.current_stage,
+    localizedPackageField(reformPackage, 'legal_basis', language) ?? reformPackage.legal_basis,
+    localizedPackageField(reformPackage, 'official_basis', language) ?? reformPackage.official_basis,
+    localizedPackageField(reformPackage, 'financing_or_incentive', language) ?? reformPackage.financing_or_incentive ?? '',
     reformPackage.responsible_institutions.join(' '),
     reformPackage.measure_tracks.map((track) => `${track.label} ${track.status ?? ''}`).join(' '),
-    reformPackage.parameters_or_amounts?.join(' ') ?? '',
-    reformPackage.official_source_events.map((event) => `${event.title} ${event.source_institution}`).join(' '),
+    (localizedList(reformPackage.localized?.parameters_or_amounts, language) ?? reformPackage.parameters_or_amounts)?.join(' ') ?? '',
+    reformPackage.official_source_events
+      .map((event) => `${sourceEventText(event, 'title', language) ?? event.title} ${event.source_institution}`)
+      .join(' '),
   ]
     .join(' ')
     .toLowerCase()
 }
 
-function packageMatchesFilters(reformPackage: ReformPackage, filters: DossierFilters, allPackages: ReformPackage[]): boolean {
-  const displayTitle = dossierDisplayTitle(reformPackage, allPackages)
+function packageMatchesFilters(
+  reformPackage: ReformPackage,
+  filters: DossierFilters,
+  allPackages: ReformPackage[],
+  language: KnowledgeHubContentLanguage,
+): boolean {
+  const displayTitle = dossierDisplayTitle(reformPackage, allPackages, language)
   const query = filters.search.trim().toLowerCase()
   const primaryHost = hostLabel(packagePrimarySource(reformPackage)?.source_url)
   return (
-    (!query || packageSearchText(reformPackage, displayTitle).includes(query)) &&
+    (!query || packageSearchText(reformPackage, displayTitle, language).includes(query)) &&
     (!filters.policyArea || reformPackage.policy_area === filters.policyArea) &&
     (!filters.stage || reformPackage.current_stage === filters.stage) &&
     (!filters.sourceHost || primaryHost === filters.sourceHost)
@@ -348,7 +442,15 @@ function MetricStrip({ content, packages }: { content: KnowledgeHubContent; pack
   )
 }
 
-function LatestChangesSection({ packages, allPackages }: { packages: ReformPackage[]; allPackages: ReformPackage[] }) {
+function LatestChangesSection({
+  packages,
+  allPackages,
+  language,
+}: {
+  packages: ReformPackage[]
+  allPackages: ReformPackage[]
+  language: KnowledgeHubContentLanguage
+}) {
   const { t } = useTranslation()
   const latestPackages = packages.slice(0, 3)
 
@@ -363,8 +465,11 @@ function LatestChangesSection({ packages, allPackages }: { packages: ReformPacka
       <div className="latest-change-list">
         {latestPackages.map((reformPackage) => {
           const sourceEvent = packagePrimarySource(reformPackage)
-          const displayTitle = dossierDisplayTitle(reformPackage, allPackages)
-          const bullets = changeBullets(reformPackage, t, 8)
+          const displayTitle = dossierDisplayTitle(reformPackage, allPackages, language)
+          const bullets = changeBullets(reformPackage, t, language, 8)
+          const sourceUrl = sourceEventText(sourceEvent, 'source_url', language)
+          const sourceTitle = sourceEventText(sourceEvent, 'title', language)
+          const digest = packageDigest(reformPackage, language)
 
           return (
             <article key={reformPackage.package_id} className="latest-change-card">
@@ -378,12 +483,12 @@ function LatestChangesSection({ packages, allPackages }: { packages: ReformPacka
                 ))}
               </ul>
               <p className="latest-change-source">
-                {sourceEvent ? (
-                  <a href={sourceEvent.source_url} className="text-source-link" {...EXTERNAL_LINK_PROPS}>
-                    {reformPackage.digest?.document ?? hostLabel(sourceEvent.source_url)}
+                {sourceEvent && sourceUrl ? (
+                  <a href={sourceUrl} className="text-source-link" {...EXTERNAL_LINK_PROPS}>
+                    {digest.document ?? sourceTitle ?? hostLabel(sourceUrl)}
                   </a>
                 ) : (
-                  reformPackage.digest?.document ?? reformPackage.official_basis
+                  digest.document ?? localizedPackageField(reformPackage, 'official_basis', language) ?? reformPackage.official_basis
                 )}
               </p>
             </article>
@@ -398,10 +503,12 @@ function TrackerControlsPanel({
   filters,
   onFiltersChange,
   packages,
+  language,
 }: {
   filters: DossierFilters
   onFiltersChange: (filters: DossierFilters) => void
   packages: ReformPackage[]
+  language: KnowledgeHubContentLanguage
 }) {
   const { t } = useTranslation()
   const policyAreas = uniqueSorted(packages.map((item) => item.policy_area))
@@ -432,7 +539,7 @@ function TrackerControlsPanel({
               <option value="">{t('knowledgeHub.reformTracker.filters.allAreas')}</option>
               {policyAreas.map((area) => (
                 <option key={area} value={area}>
-                  {area}
+                  {localizedFilterLabel(packages, 'policy_area', area, language)}
                 </option>
               ))}
             </select>
@@ -443,7 +550,7 @@ function TrackerControlsPanel({
               <option value="">{t('knowledgeHub.reformTracker.filters.allStages')}</option>
               {stages.map((stage) => (
                 <option key={stage} value={stage}>
-                  {stage}
+                  {localizedFilterLabel(packages, 'current_stage', stage, language)}
                 </option>
               ))}
             </select>
@@ -472,7 +579,13 @@ function TrackerControlsPanel({
   )
 }
 
-function TimelineChips({ reformPackage }: { reformPackage: ReformPackage }) {
+function TimelineChips({
+  reformPackage,
+  language,
+}: {
+  reformPackage: ReformPackage
+  language: KnowledgeHubContentLanguage
+}) {
   const { t } = useTranslation()
   const milestones = packageTimeline(reformPackage)
 
@@ -487,7 +600,7 @@ function TimelineChips({ reformPackage }: { reformPackage: ReformPackage }) {
         return (
           <span key={milestone.id} className="timeline-chip">
             <time dateTime={milestone.date}>{formatDisplayDate(milestone.date)}</time>
-            <span>{milestoneDisplayLabel(milestone, sourceEvent)}</span>
+            <span>{milestoneDisplayLabel(milestone, sourceEvent, language)}</span>
           </span>
         )
       })}
@@ -539,11 +652,13 @@ function ReformArchive({
   allPackages,
   content,
   onClearFilters,
+  language,
 }: {
   packages: ReformPackage[]
   allPackages: ReformPackage[]
   content: KnowledgeHubContent
   onClearFilters: () => void
+  language: KnowledgeHubContentLanguage
 }) {
   const { t } = useTranslation()
   const activeLensMap = modelLensMap(content)
@@ -571,9 +686,12 @@ function ReformArchive({
       <div className="archive-list">
         {packages.map((reformPackage, index) => {
           const sourceEvent = packagePrimarySource(reformPackage)
-          const displayTitle = dossierDisplayTitle(reformPackage, allPackages)
-          const changeItems = changeBullets(reformPackage, t)
+          const sourceUrl = sourceEventText(sourceEvent, 'source_url', language)
+          const sourceTitle = sourceEventText(sourceEvent, 'title', language)
+          const displayTitle = dossierDisplayTitle(reformPackage, allPackages, language)
+          const changeItems = changeBullets(reformPackage, t, language)
           const previewItems = changeItems.slice(0, 2)
+          const currentStage = localizedPackageField(reformPackage, 'current_stage', language) ?? reformPackage.current_stage
           return (
             <details key={reformPackage.package_id} className="archive-item" open={index === 0}>
               <summary className="archive-summary">
@@ -592,7 +710,7 @@ function ReformArchive({
                   </span>
                 </span>
                 <span className={`ui-chip ui-chip--${stageTone(reformPackage.current_stage)}`}>
-                  {reformPackage.current_stage}
+                  {currentStage}
                 </span>
                 <span className="archive-summary__chevron" aria-hidden="true">
                 </span>
@@ -609,25 +727,25 @@ function ReformArchive({
                 <section className="archive-source-row">
                   <div>
                     <h3>{t('knowledgeHub.reformTracker.archive.source')}</h3>
-                    <p>{sourceEvent?.source_institution ?? reformPackage.official_basis}</p>
+                    <p>{sourceEvent?.source_institution ?? localizedPackageField(reformPackage, 'official_basis', language) ?? reformPackage.official_basis}</p>
                   </div>
-                  {sourceEvent ? (
+                  {sourceEvent && sourceUrl ? (
                     <a
-                      href={sourceEvent.source_url}
+                      href={sourceUrl}
                       className="external-source-link"
                       aria-label={t('knowledgeHub.reformTracker.dossier.openOfficialSourceAria', {
-                        title: sourceEvent.title,
+                        title: sourceTitle ?? sourceEvent.title,
                       })}
                       {...EXTERNAL_LINK_PROPS}
                     >
                       <span>{t('knowledgeHub.reformTracker.archive.openSource')}</span>
-                      <span>{t('knowledgeHub.reformTracker.dossier.sourceLinkMeta', { host: hostLabel(sourceEvent.source_url) })}</span>
+                      <span>{t('knowledgeHub.reformTracker.dossier.sourceLinkMeta', { host: hostLabel(sourceUrl) })}</span>
                     </a>
                   ) : null}
                 </section>
                 <section>
                   <h3>{t('knowledgeHub.reformTracker.archive.timeline')}</h3>
-                  <TimelineChips reformPackage={reformPackage} />
+                  <TimelineChips reformPackage={reformPackage} language={language} />
                 </section>
                 <section>
                   <h3>{t('knowledgeHub.reformTracker.archive.modelLenses')}</h3>
@@ -678,6 +796,8 @@ function SupportingInfo({ content, packages }: { content: KnowledgeHubContent; p
 }
 
 function ReformTrackerDesk({ content }: { content: KnowledgeHubContent }) {
+  const { i18n } = useTranslation()
+  const language = normalizeContentLanguage(i18n.resolvedLanguage ?? i18n.language)
   const packages = useMemo(() => content.reform_packages ?? [], [content.reform_packages])
   const [filters, setFilters] = useState<DossierFilters>({
     search: '',
@@ -687,20 +807,21 @@ function ReformTrackerDesk({ content }: { content: KnowledgeHubContent }) {
   })
   const sortedPackages = useMemo(() => sortReformPackagesNewestFirst(packages), [packages])
   const filteredPackages = useMemo(
-    () => sortedPackages.filter((reformPackage) => packageMatchesFilters(reformPackage, filters, sortedPackages)),
-    [filters, sortedPackages],
+    () => sortedPackages.filter((reformPackage) => packageMatchesFilters(reformPackage, filters, sortedPackages, language)),
+    [filters, language, sortedPackages],
   )
   const clearFilters = () => setFilters({ search: '', policyArea: '', stage: '', sourceHost: '' })
 
   return (
     <>
-      <LatestChangesSection packages={sortedPackages} allPackages={sortedPackages} />
-      <TrackerControlsPanel filters={filters} onFiltersChange={setFilters} packages={sortedPackages} />
+      <LatestChangesSection packages={sortedPackages} allPackages={sortedPackages} language={language} />
+      <TrackerControlsPanel filters={filters} onFiltersChange={setFilters} packages={sortedPackages} language={language} />
       <ReformArchive
         packages={filteredPackages}
         allPackages={sortedPackages}
         content={content}
         onClearFilters={clearFilters}
+        language={language}
       />
       <MetricStrip content={content} packages={packages} />
       <SupportingInfo content={content} packages={packages} />

@@ -701,6 +701,9 @@ export type KnowledgeHubPreviewCitationPermission = 'internal_only'
 export type KnowledgeHubPolicyBriefState = 'internal_preview'
 export type KnowledgeHubActiveModelLensId = 'QPM' | 'DFM' | 'I-O'
 export type KnowledgeHubGatedModelLensId = 'PE' | 'CGE' | 'FPP' | 'HFI' | 'Synthesis'
+export type KnowledgeHubContentLanguage = 'en' | 'ru' | 'uz'
+export type KnowledgeHubLocalizedText = Partial<Record<KnowledgeHubContentLanguage, string>>
+export type KnowledgeHubLocalizedList = Partial<Record<KnowledgeHubContentLanguage, string[]>>
 
 export type KnowledgeHubPolicyBrief = {
   id: string
@@ -895,6 +898,12 @@ export type ReformPackageSourceEvent = {
   summary: string
   source_url_status: 'verified' | 'not_checked_fixture'
   extracted_at?: string
+  localized?: {
+    title?: KnowledgeHubLocalizedText
+    summary?: KnowledgeHubLocalizedText
+    source_url?: KnowledgeHubLocalizedText
+    source_url_status?: Partial<Record<KnowledgeHubContentLanguage, 'verified' | 'not_checked_fixture'>>
+  }
 }
 
 export type ReformPackageDigest = {
@@ -902,6 +911,20 @@ export type ReformPackageDigest = {
   applies_to: string
   effective_status: string
   document: string
+}
+
+export type ReformPackageLocalizedContent = {
+  title?: KnowledgeHubLocalizedText
+  short_summary?: KnowledgeHubLocalizedText
+  policy_area?: KnowledgeHubLocalizedText
+  current_stage?: KnowledgeHubLocalizedText
+  next_milestone?: KnowledgeHubLocalizedText
+  legal_basis?: KnowledgeHubLocalizedText
+  official_basis?: KnowledgeHubLocalizedText
+  financing_or_incentive?: KnowledgeHubLocalizedText
+  why_tracked?: KnowledgeHubLocalizedText
+  parameters_or_amounts?: KnowledgeHubLocalizedList
+  digest?: Partial<Record<KnowledgeHubContentLanguage, Partial<ReformPackageDigest>>>
 }
 
 export type ReformPackage = {
@@ -928,6 +951,7 @@ export type ReformPackage = {
   implementation_milestones: ReformPackageMilestone[]
   official_source_events: ReformPackageSourceEvent[]
   caveat: string
+  localized?: ReformPackageLocalizedContent
 }
 
 export type KnowledgeHubMeta = {

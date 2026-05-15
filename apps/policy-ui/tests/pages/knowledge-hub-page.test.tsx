@@ -27,7 +27,6 @@ const LOCALE_SOURCES = ['en', 'ru', 'uz'].map((locale) =>
 const PUBLIC_KNOWLEDGE_HUB_ARTIFACT = fileURLToPath(
   new URL('../../../public/data/knowledge-hub.json', import.meta.url),
 )
-const EN_LOCALE_SOURCE = fileURLToPath(new URL('../../../src/locales/en/common.json', import.meta.url))
 
 function collectStrings(value: unknown): string[] {
   if (typeof value === 'string') return [value]
@@ -54,16 +53,21 @@ function datesNewestFirst(values: string[]): boolean {
   return values.every((value, index) => index === 0 || value <= values[index - 1])
 }
 
-async function createKnowledgeHubTestI18n() {
+async function createKnowledgeHubTestI18n(language = 'en') {
   const instance = i18next.createInstance()
-  const common = JSON.parse(readFileSync(EN_LOCALE_SOURCE, 'utf8'))
+  const resources = Object.fromEntries(
+    ['en', language].map((locale) => {
+      const localePath = fileURLToPath(new URL(`../../../src/locales/${locale}/common.json`, import.meta.url))
+      return [locale, { common: JSON.parse(readFileSync(localePath, 'utf8')) }]
+    }),
+  )
   await instance.use(initReactI18next).init({
-    lng: 'en',
+    lng: language,
     fallbackLng: 'en',
     defaultNS: 'common',
     ns: ['common'],
     interpolation: { escapeValue: false },
-    resources: { en: { common } },
+    resources,
   })
   return instance
 }
@@ -122,11 +126,11 @@ describe('Knowledge Hub page', () => {
 
     assert.match(contentViewSource, /LatestChangesSection/)
     assert.match(contentViewSource, /latestPackages = packages\.slice\(0, 3\)/)
-    assert.match(contentViewSource, /changeBullets\(reformPackage, t, 8\)/)
+    assert.match(contentViewSource, /changeBullets\(reformPackage, t, language, 8\)/)
     assert.match(contentViewSource, /className="change-bullet-list"/)
     assert.match(contentViewSource, /className="latest-change-source"/)
-    assert.match(contentViewSource, /digestChangeText\(reformPackage, t\)/)
-    assert.match(contentViewSource, /reformPackage\.digest\?\.document/)
+    assert.match(contentViewSource, /digestChangeText\(reformPackage, t, language\)/)
+    assert.match(contentViewSource, /packageDigest\(reformPackage, language\)/)
     assert.doesNotMatch(contentViewSource, /latest-change-card__summary/)
     assert.doesNotMatch(contentViewSource, /const firstMeasure = parameterList\(reformPackage, t\)\[0\]/)
   })
@@ -211,6 +215,40 @@ describe('Knowledge Hub page', () => {
       html,
       /Source event date|Evidence type|No future implementation deadline|Tracks one verified official source event|Official detail page did not expose|Tracks \d+ verified official source events?|source-backed|source verified|without inferring|dossier|measure recorded|source event recorded|Source-reported/i,
     )
+  })
+
+  it('uses official-language reform content when the artifact provides it', async () => {
+    const artifact = JSON.parse(readFileSync(PUBLIC_KNOWLEDGE_HUB_ARTIFACT, 'utf8'))
+    const firstPackage = artifact.reform_packages[0]
+    firstPackage.localized = {
+      title: { ru: 'Русское название реформы из официального источника' },
+      parameters_or_amounts: {
+        ru: ['С 1 июля 2026 года меняется порядок лицензирования медицинской деятельности.'],
+      },
+      digest: {
+        ru: {
+          changed: 'С 1 июля 2026 года меняется порядок лицензирования медицинской деятельности.',
+          document: 'Русский официальный документ',
+        },
+      },
+    }
+    firstPackage.official_source_events[0].localized = {
+      title: { ru: 'Русский официальный документ' },
+      source_url: { ru: 'https://president.uz/ru/lists/view/9164' },
+      source_url_status: { ru: 'verified' },
+    }
+
+    const content = knowledgeHubArtifactToContent(artifact)
+    const i18n = await createKnowledgeHubTestI18n('ru')
+    const html = renderToStaticMarkup(
+      <I18nextProvider i18n={i18n}>
+        <KnowledgeHubContentView content={content} />
+      </I18nextProvider>,
+    )
+
+    assert.match(html, /Русское название реформы из официального источника/)
+    assert.match(html, /С 1 июля 2026 года меняется порядок лицензирования медицинской деятельности\./)
+    assert.match(html, /https:\/\/president\.uz\/ru\/lists\/view\/9164/)
   })
 
   it('keeps visible reform summaries and Key Measures copy short and change-focused', async () => {
@@ -387,7 +425,7 @@ describe('Knowledge Hub page', () => {
 
     assert.match(contentViewSource, /target: '_blank'/)
     assert.match(contentViewSource, /rel: 'noopener noreferrer'/)
-    assert.match(contentViewSource, /href=\{sourceEvent\.source_url\}/)
+    assert.match(contentViewSource, /href=\{sourceUrl\}/)
     assert.match(contentViewSource, /href=\{update\.source_url\}/)
     assert.match(contentViewSource, /href=\{item\.url\}/)
     assert.match(contentViewSource, /openOfficialSourceAria/)
