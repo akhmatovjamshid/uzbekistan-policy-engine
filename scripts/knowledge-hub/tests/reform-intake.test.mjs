@@ -968,6 +968,29 @@ describe('Knowledge Hub reform intake', () => {
     assert.ok(diagnostics.artifact.caveats.some((caveat) => caveat.includes('carried forward')))
   })
 
+  it('retains previous configured packages when the latest source window has no matching reforms', async () => {
+    const previousArtifact = await buildKnowledgeHubCandidateArtifact({
+      extractedAt: '2026-05-05T08:00:00.000Z',
+    })
+    previousArtifact.extraction_mode = CONFIGURED_SOURCE_FETCH_EXTRACTION_MODE
+    previousArtifact.extraction_mode_label = 'Configured source fetch'
+    const previousPackage = previousArtifact.reform_packages[0]
+
+    const diagnostics = await buildKnowledgeHubCandidateArtifactWithDiagnostics({
+      fetchSource: true,
+      extractedAt: '2026-05-15T09:00:00.000Z',
+      includeCandidatesInArtifact: false,
+      previousArtifact,
+      sources: [],
+    })
+
+    assert.equal(diagnostics.source_failures.length, 0)
+    assert.equal(diagnostics.retained_package_count, 1)
+    assert.equal(diagnostics.artifact.candidates.length, 0)
+    assert.equal(diagnostics.artifact.reform_packages.length, 1)
+    assert.equal(diagnostics.artifact.reform_packages[0].package_id, previousPackage.package_id)
+  })
+
   it('blocks synthetic or unusable source links from configured-source artifacts', async () => {
     const diagnostics = await buildKnowledgeHubCandidateArtifactWithDiagnostics({
       fetchSource: true,

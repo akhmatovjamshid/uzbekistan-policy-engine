@@ -2505,15 +2505,101 @@ function configuredPreviousPackages(previousArtifact) {
   return previousArtifact.reform_packages.filter((reformPackage) => reformPackage?.package_id)
 }
 
-function carryForwardPreviousPackages(currentPackages, previousArtifact) {
-  const packageIds = new Set(currentPackages.map((reformPackage) => reformPackage.package_id))
-  const retainedPackages = configuredPreviousPackages(previousArtifact).filter(
-    (reformPackage) => !packageIds.has(reformPackage.package_id),
+function publicPackageIdentityKey(reformPackage) {
+  return slugify(
+    [
+      reformPackage.reform_category,
+      reformPackage.title,
+      reformPackage.policy_area,
+    ]
+      .filter(Boolean)
+      .join(' '),
   )
+}
+
+function uniquePackageItemsById(items) {
+  const seen = new Set()
+  return items.filter((item) => {
+    const id = item?.id
+    if (!id || seen.has(id)) return false
+    seen.add(id)
+    return true
+  })
+}
+
+function sortSourceEvents(events) {
+  return uniquePackageItemsById(events).sort((left, right) => {
+    const leftDate = left.source_published_at ?? ''
+    const rightDate = right.source_published_at ?? ''
+    return leftDate.localeCompare(rightDate) || String(left.title ?? '').localeCompare(String(right.title ?? ''))
+  })
+}
+
+function sortMilestones(milestones) {
+  return uniquePackageItemsById(milestones).sort((left, right) => {
+    const leftDate = left.date ?? ''
+    const rightDate = right.date ?? ''
+    return leftDate.localeCompare(rightDate) || String(left.label ?? '').localeCompare(String(right.label ?? ''))
+  })
+}
+
+function packageStageDate(reformPackage) {
+  return reformPackage.current_stage_date ?? reformPackage.official_source_events?.at(-1)?.source_published_at ?? ''
+}
+
+function shouldPreferPreviousPackage(previousPackage, currentPackage) {
+  const previousDate = packageStageDate(previousPackage)
+  const currentDate = packageStageDate(currentPackage)
+  if (previousDate !== currentDate) return previousDate > currentDate
+  return (previousPackage.official_source_events?.length ?? 0) > (currentPackage.official_source_events?.length ?? 0)
+}
+
+function mergePublicPackageRecords(primaryPackage, secondaryPackage) {
+  const officialSourceEvents = sortSourceEvents([
+    ...(secondaryPackage.official_source_events ?? []),
+    ...(primaryPackage.official_source_events ?? []),
+  ])
+  const implementationMilestones = sortMilestones([
+    ...(secondaryPackage.implementation_milestones ?? []),
+    ...(primaryPackage.implementation_milestones ?? []),
+  ])
+  const latestEvent = officialSourceEvents.at(-1)
+  const latestMilestone = implementationMilestones.at(-1)
 
   return {
-    packages: sortPublicReformPackages([...currentPackages, ...retainedPackages]),
-    retainedPackageCount: retainedPackages.length,
+    ...primaryPackage,
+    current_stage_date: packageStageDate(primaryPackage) || latestEvent?.source_published_at || latestMilestone?.date,
+    official_source_events: officialSourceEvents,
+    implementation_milestones: implementationMilestones,
+  }
+}
+
+function mergeWithPreviousPublicPackages(currentPackages, previousArtifact) {
+  const previousPackages = configuredPreviousPackages(previousArtifact)
+  const packagesByKey = new Map(currentPackages.map((reformPackage) => [publicPackageIdentityKey(reformPackage), reformPackage]))
+  let retainedPackageCount = 0
+
+  for (const previousPackage of previousPackages) {
+    const key = publicPackageIdentityKey(previousPackage)
+    const currentPackage = packagesByKey.get(key)
+
+    if (!currentPackage) {
+      packagesByKey.set(key, previousPackage)
+      retainedPackageCount += 1
+      continue
+    }
+
+    if (shouldPreferPreviousPackage(previousPackage, currentPackage)) {
+      packagesByKey.set(key, mergePublicPackageRecords(previousPackage, currentPackage))
+      retainedPackageCount += 1
+    } else {
+      packagesByKey.set(key, mergePublicPackageRecords(currentPackage, previousPackage))
+    }
+  }
+
+  return {
+    packages: sortPublicReformPackages([...packagesByKey.values()].map(addPublicDigest)),
+    retainedPackageCount,
   }
 }
 
@@ -2787,8 +2873,8 @@ export async function buildKnowledgeHubCandidateArtifactWithDiagnostics(options 
       ? assembleReformPackagesFromCandidates(candidates)
       : FIXTURE_DEMO_REFORM_PACKAGES
   const generatedPublicReformPackages = sortPublicReformPackages(reformPackages.map(addPublicDigest))
-  const carryForward = fetchSource && sourceFailures.length > 0
-    ? carryForwardPreviousPackages(generatedPublicReformPackages, options.previousArtifact)
+  const carryForward = fetchSource
+    ? mergeWithPreviousPublicPackages(generatedPublicReformPackages, options.previousArtifact)
     : { packages: generatedPublicReformPackages, retainedPackageCount: 0 }
   const publicReformPackages = carryForward.packages
   const policyBriefs = options.policyBriefs ?? buildInternalPolicyBriefs(publicReformPackages)
