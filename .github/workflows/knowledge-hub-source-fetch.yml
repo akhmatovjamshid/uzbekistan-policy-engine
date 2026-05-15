@@ -85,13 +85,13 @@ jobs:
 
           echo "status=$status" >> "$GITHUB_OUTPUT"
           if [ "$status" -ne 0 ]; then
-            echo "::error::Knowledge Hub source fetch completed with one or more configured-source failures. See uploaded report artifact."
+            echo "::error::Knowledge Hub artifact generation failed. See uploaded report artifact."
           fi
 
-      - name: Fail if configured-source fetch had source failures
+      - name: Fail if artifact generation failed
         run: |
           if [ "${{ steps.generate.outputs.status }}" != "0" ]; then
-            echo "::error::Knowledge Hub configured-source fetch reported source failures. Nothing will be published."
+            echo "::error::Knowledge Hub artifact generation failed. Nothing will be published."
             exit 1
           fi
 

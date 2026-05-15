@@ -2491,6 +2491,32 @@ function addPublicDigest(reformPackage) {
   }
 }
 
+function sortPublicReformPackages(reformPackages) {
+  return [...reformPackages].sort((left, right) => {
+    const leftDate = left.current_stage_date ?? ''
+    const rightDate = right.current_stage_date ?? ''
+    return rightDate.localeCompare(leftDate) || String(left.title ?? '').localeCompare(String(right.title ?? ''))
+  })
+}
+
+function configuredPreviousPackages(previousArtifact) {
+  if (previousArtifact?.extraction_mode !== CONFIGURED_SOURCE_FETCH_EXTRACTION_MODE) return []
+  if (!Array.isArray(previousArtifact.reform_packages)) return []
+  return previousArtifact.reform_packages.filter((reformPackage) => reformPackage?.package_id)
+}
+
+function carryForwardPreviousPackages(currentPackages, previousArtifact) {
+  const packageIds = new Set(currentPackages.map((reformPackage) => reformPackage.package_id))
+  const retainedPackages = configuredPreviousPackages(previousArtifact).filter(
+    (reformPackage) => !packageIds.has(reformPackage.package_id),
+  )
+
+  return {
+    packages: sortPublicReformPackages([...currentPackages, ...retainedPackages]),
+    retainedPackageCount: retainedPackages.length,
+  }
+}
+
 function buildModelImpactMap(reformPackages) {
   return {
     active_lenses: MODEL_IMPACT_ACTIVE_LENSES,
@@ -2752,21 +2778,25 @@ export async function buildKnowledgeHubCandidateArtifactWithDiagnostics(options 
   const candidates = uniqueCandidatesAcrossSources(
     uniqueCandidatesById(sortCandidates(sourceResults.flatMap((result) => result.candidates))),
   )
+  const sourceFailures = sourceResults
+    .filter((result) => !result.ok)
+    .map(({ id, institution, url, parser, fetch_url, error }) => ({ id, institution, url, parser, fetch_url, error }))
   const reformPackages = Array.isArray(options.reformPackages)
     ? options.reformPackages
     : fetchSource
       ? assembleReformPackagesFromCandidates(candidates)
       : FIXTURE_DEMO_REFORM_PACKAGES
-  const publicReformPackages = reformPackages.map(addPublicDigest)
+  const generatedPublicReformPackages = sortPublicReformPackages(reformPackages.map(addPublicDigest))
+  const carryForward = fetchSource && sourceFailures.length > 0
+    ? carryForwardPreviousPackages(generatedPublicReformPackages, options.previousArtifact)
+    : { packages: generatedPublicReformPackages, retainedPackageCount: 0 }
+  const publicReformPackages = carryForward.packages
   const policyBriefs = options.policyBriefs ?? buildInternalPolicyBriefs(publicReformPackages)
   const researchUpdates = options.researchUpdates ?? STATIC_RESEARCH_UPDATES
   const literatureItems = options.literatureItems ?? STATIC_LITERATURE_ITEMS
   const modelImpactMap = options.modelImpactMap ?? buildModelImpactMap(publicReformPackages)
   const includeCandidatesInArtifact = options.includeCandidatesInArtifact !== false
   const artifactCandidates = includeCandidatesInArtifact ? candidates : []
-  const sourceFailures = sourceResults
-    .filter((result) => !result.ok)
-    .map(({ id, institution, url, parser, fetch_url, error }) => ({ id, institution, url, parser, fetch_url, error }))
   const caveats = includeCandidatesInArtifact
     ? [
         'This is a deterministic reform-candidate intake artifact.',
@@ -2786,7 +2816,7 @@ export async function buildKnowledgeHubCandidateArtifactWithDiagnostics(options 
       ]
 
   if (sourceFailures.length > 0) {
-    caveats.push('One or more configured sources failed during this manual intake run; inspect the workflow report before review.')
+    caveats.push('One or more configured sources failed during this automatic refresh; previous verified packages were carried forward when needed to avoid deleting reforms during a temporary source outage.')
   }
 
   const artifact = {
@@ -2813,6 +2843,7 @@ export async function buildKnowledgeHubCandidateArtifactWithDiagnostics(options 
     candidate_count: candidates.length,
     source_results: sourceResults.map(({ candidates: _candidates, ...result }) => result),
     source_failures: sourceFailures,
+    retained_package_count: carryForward.retainedPackageCount,
   }
 }
 

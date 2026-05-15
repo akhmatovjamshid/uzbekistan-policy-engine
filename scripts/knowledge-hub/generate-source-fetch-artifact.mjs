@@ -78,6 +78,7 @@ function workflowSummary(diagnostics, outputPath, changeSummary) {
     `- Extraction mode: \`${diagnostics.artifact.extraction_mode}\``,
     `- Verified source item count: ${diagnostics.candidate_count}`,
     `- Source failures: ${diagnostics.source_failures.length}`,
+    `- Carried-forward reform packages: ${diagnostics.retained_package_count ?? 0}`,
     '',
     '| Source | Institution | Verified items | Invalid links blocked | Status |',
     '| --- | --- | ---: | ---: | --- |',
@@ -98,6 +99,7 @@ try {
     extractedAt: args.extractedAt,
     generatedBy: 'scripts/knowledge-hub/generate-source-fetch-artifact.mjs',
     includeCandidatesInArtifact: false,
+    previousArtifact,
   })
   const changeSummary = buildKnowledgeHubChangeSummary(previousArtifact, diagnostics.artifact, diagnostics, {
     previousPath: args.previous,
@@ -112,6 +114,7 @@ try {
   }
   console.log(`Wrote fetched-source Knowledge Hub package artifact: ${args.output}`)
   console.log(`Verified source item count: ${diagnostics.candidate_count}`)
+  console.log(`Carried-forward reform packages: ${diagnostics.retained_package_count ?? 0}`)
   for (const source of diagnostics.source_results) {
     if (source.ok) {
       console.log(`Source ${source.id}: ${source.candidate_count} verified item(s), ${source.link_invalid_count} invalid link(s) blocked`)
@@ -120,7 +123,14 @@ try {
     }
   }
   if (diagnostics.source_failures.length > 0) {
-    process.exitCode = 1
+    const hasPreviousConfiguredPackages =
+      previousArtifact?.extraction_mode === 'configured-source-fetch' &&
+      (previousArtifact?.reform_packages?.length ?? 0) > 0
+    if (hasPreviousConfiguredPackages) {
+      console.error('One or more configured sources failed; previous verified packages were carried forward where needed.')
+    } else {
+      process.exitCode = 1
+    }
   }
 } catch (error) {
   console.error(error instanceof Error ? error.message : String(error))
