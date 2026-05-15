@@ -445,6 +445,50 @@ describe('Knowledge Hub reform intake', () => {
     assert.equal(sourceEvent.localized.source_url_status.ru, 'verified')
   })
 
+  it('keeps localized reform digests focused on mechanisms instead of past allocation statistics', async () => {
+    const basePackage = JSON.parse(JSON.stringify(FIXTURE_DEMO_REFORM_PACKAGES[0]))
+    basePackage.official_source_events[0].source_url = 'https://gov.uz/en/news/view/109178'
+    basePackage.official_source_events[0].source_url_status = 'verified'
+
+    const diagnostics = await buildKnowledgeHubCandidateArtifactWithDiagnostics({
+      fetchSource: true,
+      extractedAt: '2026-05-16T09:00:00.000Z',
+      sources: [],
+      reformPackages: [basePackage],
+      fetchImpl: async (url) => {
+        const sourceUrl = String(url)
+        if (sourceUrl.includes('/ru/')) {
+          return new Response(`
+            <html><body>
+              <h1>Рассмотрены планы финансирования и субсидирования аграрного сектора</h1>
+              <p>Как отмечалось, на финансирование хлопководства и зерноводства, закупку сельскохозяйственной техники и внедрение водосберегающих технологий было выделено 29 триллионов сумов.</p>
+              <p>Кроме того, в сферу направлено 2,35 триллиона сумов субсидий.</p>
+              <p>Выделение субсидий в размере 10 процентов от стоимости хлопка позволило им вырастить хлопок за счет собственных средств, благодаря чему сэкономлено 1,9 триллиона сумов ресурсов.</p>
+              <p>На урожай хлопка и зерновых, субсидии и другие расходы в следующем году запланировано выделение в общей сложности 34,2 триллиона сумов.</p>
+              <p>Улучшение качества регулирования будет способствовать привлечению дополнительных 800 миллионов долларов иностранных инвестиций.</p>
+              <p>Глава государства дал конкретные поручения по дальнейшему совершенствованию механизмов финансирования, обеспечению адресности и оперативности субсидирования.</p>
+              <p>В частности, предложено в 2026 году выделить дополнительно 5 триллионов сумов на агротехнические мероприятия, включая расходы на плёнку и шланги.</p>
+              <p>В связи с этим для внедрения модели “дисциплинированность – дешевле кредит” хозяйствам с кредитным рейтингом “A” предлагается предоставлять кредиты со снижением ставки на 2 процента.</p>
+              <p>Согласно Указу Президента для совершенствования механизмов государственной поддержки аграрной сферы создано Агентство по платежам в аграрной сфере.</p>
+            </body></html>
+          `)
+        }
+        return new Response('<html><body><h1>Agriculture financing plans reviewed</h1><p>New agriculture payment mechanisms were proposed.</p></body></html>')
+      },
+    })
+
+    const ruMeasures = diagnostics.artifact.reform_packages[0].localized.parameters_or_amounts.ru
+    const joined = ruMeasures.join('\n')
+
+    assert.ok(ruMeasures.some((value) => /5 триллионов сумов на агротехнические мероприятия/.test(value)))
+    assert.ok(ruMeasures.some((value) => /дисциплинированность.*дешевле кредит/.test(value)))
+    assert.ok(ruMeasures.some((value) => /Агентство по платежам в аграрной сфере/.test(value)))
+    assert.doesNotMatch(
+      joined,
+      /2,35 триллиона|29 триллионов|34,2 триллиона|благодаря чему|сэкономлено|привлечению дополнительных|Глава государства дал/,
+    )
+  })
+
   it('assembles configured-source housing and agriculture packages from verified official detail pages', () => {
     const baseCandidate = {
       extraction_mode: CONFIGURED_SOURCE_FETCH_EXTRACTION_MODE,
@@ -490,7 +534,11 @@ describe('Knowledge Hub reform intake', () => {
     assert.equal(packages[1].reform_category, 'agriculture')
     assert.equal(packages[1].financing_or_incentive.includes('34.2 trillion soums'), true)
     assert.match(packages[1].short_summary, /payment agency/)
-    assert.ok(packages[1].parameters_or_amounts.includes('1.3 trillion soums of 2026 subsidies will be provided proactively.'))
+    assert.ok(
+      packages[1].parameters_or_amounts.includes(
+        'A “discipline-cheaper credit” model links lower interest rates to producer credit ratings.',
+      ),
+    )
     assert.ok(packages[1].policy_channels.includes('Agricultural producer finance'))
     assert.deepEqual(
       packages[1].implementation_milestones.map((milestone) => milestone.date),

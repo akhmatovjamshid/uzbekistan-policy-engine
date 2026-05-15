@@ -204,9 +204,9 @@ const AGRICULTURE_SUBSIDY_PACKAGE_DEPTH = {
     'Agriculture financing package creates a payment agency and moves subsidy delivery to digital channels.',
   parameters_or_amounts: [
     'Agricultural Payments Agency is established to administer subsidies and payments.',
-    '34.2 trillion soums are planned for cotton and grain harvest financing.',
-    '1.3 trillion soums of 2026 subsidies will be provided proactively.',
     'An additional 5 trillion soums is proposed for agrotechnical measures; subsidy delivery moves through Agroportal and Agrosubsidy.',
+    'A “discipline-cheaper credit” model links lower interest rates to producer credit ratings.',
+    'Subsidy and payment workflows move to digital and proactive delivery channels.',
   ],
   policy_channels: [
     'Agricultural producer finance',
@@ -1574,6 +1574,7 @@ function sourceSummarySentences(text, title = '') {
     .map((sentence) =>
       sentence
         .replace(/^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}\s*\/\s*[^/]{1,80}\s+/u, '')
+        .replace(/,\s*(?:что позволит|благодаря чему|which (?:will|would)|resulting in).+$/iu, '.')
         .trim(),
     )
     .filter((sentence) => sentence.length >= 40 && sentence.length <= 320)
@@ -1583,6 +1584,61 @@ function sourceSummarySentences(text, title = '') {
     .filter((sentence) => !/[«"“][^»"”]{1,90}$/.test(sentence))
     .filter((sentence) => sentence.toLowerCase() !== normalizedTitle)
     .filter((sentence) => measureSignal.test(sentence))
+    .filter((sentence) => sourceInitiativeScore(sentence) >= 2)
+}
+
+function sourceInitiativeScore(sentence) {
+  const text = sentence.toLowerCase()
+  let score = 0
+
+  if (
+    /(?:предложено|планируется|будут|будет|будут приняты|намечено|запланировано|предлагается|поставлена задача|создан|создаётся|утвержд|внедр|жорий|taklif|rejalashtir|o[‘'ʻ`]?zgar|joriy et|ташкил этил|белгилан|from|will|planned|proposed|introduced|launched|created|approved|adopted|to be)/iu.test(
+      text,
+    )
+  ) {
+    score += 3
+  }
+
+  if (
+    /(?:механизм|модель|система|агентств|платформ|единая ис|рейтинг|возмещ|компенсац|льгот|имтиёз|агентлиги|тизим|механизм|модель|кредит|субсид|private sector|single window|agency|platform|mechanism|model|rating|compensation|reimbursement|preferential|subsidy|credit)/iu.test(
+      text,
+    )
+  ) {
+    score += 2
+  }
+
+  if (
+    /(?:как отмечалось|кроме того, в сферу направлено|было выделено|было направлено|направлено\s+[\d,.\s]+(?:триллион|миллиард|млрд|трлн)|выделение субсидий.*позволило|благодаря чему|сэкономлено|досрочно погасили|as noted|was allocated|were allocated|has been allocated|thanks to this|saved|enabled them to)/iu.test(
+      text,
+    )
+  ) {
+    score -= 4
+  }
+
+  if (
+    /(?:в результате|это позволит|позволит ежегодно|сможет экономить|даст.*эффект|will save|resulting in|as a result)/iu.test(
+      text,
+    )
+  ) {
+    score -= 2
+  }
+
+  if (
+    /(?:будет способствовать|будет повышать|способствуют.*(?:доход|увеличен)|улучшение качества регулирования|упрощение взаимодействия|президент.*отметил|глава государства дал.*поручени|было отмечено|как отмечено|в стране созданы широкие возможности|контролирующие органы ограничивались|will contribute to|will increase productivity|increase revenue|the president noted|it was noted)/iu.test(
+      text,
+    )
+  ) {
+    score -= 4
+  }
+
+  if (
+    /(?:в общей сложности|общей сложности|totaling|in total|total amount)/iu.test(text) &&
+    !/(?:предложено|предлагается|will|proposed|модель|mechanism|agency|агентств|система)/iu.test(text)
+  ) {
+    score -= 6
+  }
+
+  return score
 }
 
 function localizedPackageSnippetsFromItem(item) {
