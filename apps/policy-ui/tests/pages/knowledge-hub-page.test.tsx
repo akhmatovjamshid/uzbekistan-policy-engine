@@ -137,12 +137,17 @@ describe('Knowledge Hub page', () => {
     const sorted = sortReformPackagesNewestFirst(artifact.reform_packages)
     const sortedDates = sorted.map((reformPackage) => reformPackage.current_stage_date)
 
-    assert.equal(sorted[0].current_stage_date, '2026-05-13')
+    assert.equal(sorted[0].current_stage_date, '2026-05-14')
     assert.equal(sorted.at(-1)?.current_stage_date, '2025-12-09')
     assert.equal(datesNewestFirst(sortedDates), true)
     assert.match(contentViewSource, /sortReformPackagesNewestFirst\(packages\)/)
     assert.match(contentViewSource, /<LatestChangesSection packages=\{sortedPackages\}/)
     assert.match(contentViewSource, /packages=\{filteredPackages\}/)
+    assert.ok(
+      contentViewSource.indexOf('<LatestChangesSection packages={sortedPackages}') <
+        contentViewSource.indexOf('<ReformArchive'),
+    )
+    assert.ok(contentViewSource.indexOf('<ReformArchive') < contentViewSource.indexOf('<MetricStrip'))
   })
 
   it('sorts Research Updates newest to oldest before rendering', () => {
@@ -205,7 +210,7 @@ describe('Knowledge Hub page', () => {
     assert.doesNotMatch(html, /Amounts \/ thresholds \/ deadlines/)
     assert.doesNotMatch(
       html,
-      /Source event date|Evidence type|No future implementation deadline|Tracks one verified official source event|Official detail page did not expose|Tracks \d+ verified official source events?|source-backed|without inferring|dossier|measure recorded|source event recorded|Source-reported/i,
+      /Source event date|Evidence type|No future implementation deadline|Tracks one verified official source event|Official detail page did not expose|Tracks \d+ verified official source events?|source-backed|source verified|without inferring|dossier|measure recorded|source event recorded|Source-reported/i,
     )
   })
 
@@ -223,6 +228,8 @@ describe('Knowledge Hub page', () => {
     assert.match(visibleCopy, /From 2026-07-01, medical licensing procedures change/)
     assert.match(visibleCopy, /Platform screen doors will be tested at Shahriston metro station/)
     assert.match(visibleCopy, /34\.2 trillion soums are planned for cotton and grain harvest financing/)
+    assert.match(visibleCopy, /The “zero bureaucracy” principle is proposed for 783 public services/)
+    assert.match(visibleCopy, /550 public services are to be converted to electronic format/)
     assert.ok(
       artifact.reform_packages.every((reformPackage: { short_summary?: string }) =>
         (reformPackage.short_summary ?? '').split(/(?<=[.!?])\s+/).filter(Boolean).length <= 1,
@@ -230,7 +237,11 @@ describe('Knowledge Hub page', () => {
     )
     assert.doesNotMatch(
       `${visibleCopy}\n${html}`,
-      /\b(Tracks|source-backed|verified official source event|without inferring|dossier|measure recorded|source event recorded|Source-reported)\b/i,
+      /\b(Tracks|source-backed|source verified|verified official source event|without inferring|dossier|measure recorded|source event recorded|Source-reported)\b/i,
+    )
+    assert.doesNotMatch(
+      `${visibleCopy}\n${html}`,
+      /Digital public-service procedures are updated|Legal-service processes are simplified|Administrative burden reduction is the stated channel/i,
     )
   })
 
@@ -239,6 +250,7 @@ describe('Knowledge Hub page', () => {
 
     assert.match(contentViewSource, /TrackerControlsPanel/)
     assert.match(contentViewSource, /type="search"/)
+    assert.match(contentViewSource, /tracker-controls__advanced/)
     assert.match(contentViewSource, /sourceHost/)
     assert.match(contentViewSource, /ReformArchive/)
     assert.match(contentViewSource, /className="archive-item"/)
@@ -315,6 +327,7 @@ describe('Knowledge Hub page', () => {
       assert.equal(typeof locale.knowledgeHub.sections.researchUpdates, 'string')
       assert.equal(typeof locale.knowledgeHub.sections.literatureHub, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.filters.search, 'string')
+      assert.equal(typeof locale.knowledgeHub.reformTracker.filters.more, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.filters.status, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.filters.source, 'string')
       assert.equal(typeof locale.knowledgeHub.reformTracker.archive.title, 'string')

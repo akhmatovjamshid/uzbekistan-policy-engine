@@ -154,7 +154,15 @@ function dossierSummary(reformPackage: ReformPackage): string {
 }
 
 function compactUniqueList(values: string[]): string[] {
-  return uniqueSorted(values).filter((value, index, entries) => {
+  const entries = values.reduce<string[]>((accumulator, value) => {
+    const normalized = value.trim()
+    if (normalized.length > 0 && !accumulator.some((entry) => entry.toLowerCase() === normalized.toLowerCase())) {
+      accumulator.push(normalized)
+    }
+    return accumulator
+  }, [])
+
+  return entries.filter((value, index) => {
     const normalized = value.toLowerCase()
     return !entries.some((other, otherIndex) => otherIndex !== index && other.toLowerCase().includes(normalized))
   })
@@ -184,10 +192,7 @@ function isVisibleMeasure(value: string): boolean {
 
 function parameterList(reformPackage: ReformPackage, t: TFunction): string[] {
   const parameters = (reformPackage.parameters_or_amounts ?? []).filter(isVisibleMeasure)
-  const derived = [
-    reformPackage.financing_or_incentive,
-    ...reformPackage.measure_tracks.map((track) => (track.status ? `${track.label}: ${track.status}` : track.label)),
-  ]
+  const derived = [reformPackage.financing_or_incentive]
   return compactUniqueList([...parameters, ...derived].filter((value): value is string => Boolean(value))).map((value) =>
     displayParameter(t, value),
   )
@@ -418,46 +423,51 @@ function TrackerControlsPanel({
           onChange={(event) => updateFilter('search', event.target.value)}
         />
       </label>
-      <label>
-        <span>{t('knowledgeHub.reformTracker.filters.policyArea')}</span>
-        <select value={filters.policyArea} onChange={(event) => updateFilter('policyArea', event.target.value)}>
-          <option value="">{t('knowledgeHub.reformTracker.filters.allAreas')}</option>
-          {policyAreas.map((area) => (
-            <option key={area} value={area}>
-              {area}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label>
-        <span>{t('knowledgeHub.reformTracker.filters.status')}</span>
-        <select value={filters.stage} onChange={(event) => updateFilter('stage', event.target.value)}>
-          <option value="">{t('knowledgeHub.reformTracker.filters.allStages')}</option>
-          {stages.map((stage) => (
-            <option key={stage} value={stage}>
-              {stage}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label>
-        <span>{t('knowledgeHub.reformTracker.filters.source')}</span>
-        <select value={filters.sourceHost} onChange={(event) => updateFilter('sourceHost', event.target.value)}>
-          <option value="">{t('knowledgeHub.reformTracker.filters.allSources')}</option>
-          {hosts.map((host) => (
-            <option key={host} value={host}>
-              {host}
-            </option>
-          ))}
-        </select>
-      </label>
-      <button
-        type="button"
-        className="tracker-controls__clear"
-        onClick={() => onFiltersChange({ search: '', policyArea: '', stage: '', sourceHost: '' })}
-      >
-        {t('knowledgeHub.reformTracker.filters.clearAll')}
-      </button>
+      <details className="tracker-controls__advanced">
+        <summary>{t('knowledgeHub.reformTracker.filters.more')}</summary>
+        <div className="tracker-controls__advanced-grid">
+          <label>
+            <span>{t('knowledgeHub.reformTracker.filters.policyArea')}</span>
+            <select value={filters.policyArea} onChange={(event) => updateFilter('policyArea', event.target.value)}>
+              <option value="">{t('knowledgeHub.reformTracker.filters.allAreas')}</option>
+              {policyAreas.map((area) => (
+                <option key={area} value={area}>
+                  {area}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            <span>{t('knowledgeHub.reformTracker.filters.status')}</span>
+            <select value={filters.stage} onChange={(event) => updateFilter('stage', event.target.value)}>
+              <option value="">{t('knowledgeHub.reformTracker.filters.allStages')}</option>
+              {stages.map((stage) => (
+                <option key={stage} value={stage}>
+                  {stage}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            <span>{t('knowledgeHub.reformTracker.filters.source')}</span>
+            <select value={filters.sourceHost} onChange={(event) => updateFilter('sourceHost', event.target.value)}>
+              <option value="">{t('knowledgeHub.reformTracker.filters.allSources')}</option>
+              {hosts.map((host) => (
+                <option key={host} value={host}>
+                  {host}
+                </option>
+              ))}
+            </select>
+          </label>
+          <button
+            type="button"
+            className="tracker-controls__clear"
+            onClick={() => onFiltersChange({ search: '', policyArea: '', stage: '', sourceHost: '' })}
+          >
+            {t('knowledgeHub.reformTracker.filters.clearAll')}
+          </button>
+        </div>
+      </details>
     </section>
   )
 }
@@ -596,17 +606,6 @@ function ReformArchive({
                     ))}
                   </ul>
                 </section>
-                <section>
-                  <h3>{t('knowledgeHub.reformTracker.archive.timeline')}</h3>
-                  <TimelineChips reformPackage={reformPackage} />
-                </section>
-                <section>
-                  <h3>{t('knowledgeHub.reformTracker.archive.modelLenses')}</h3>
-                  <ModelLensChips
-                    activeLenses={activeLensMap.get(reformPackage.package_id) ?? []}
-                    plannedLenses={plannedLenses}
-                  />
-                </section>
                 <section className="archive-source-row">
                   <div>
                     <h3>{t('knowledgeHub.reformTracker.archive.source')}</h3>
@@ -625,6 +624,17 @@ function ReformArchive({
                       <span>{t('knowledgeHub.reformTracker.dossier.sourceLinkMeta', { host: hostLabel(sourceEvent.source_url) })}</span>
                     </a>
                   ) : null}
+                </section>
+                <section>
+                  <h3>{t('knowledgeHub.reformTracker.archive.timeline')}</h3>
+                  <TimelineChips reformPackage={reformPackage} />
+                </section>
+                <section>
+                  <h3>{t('knowledgeHub.reformTracker.archive.modelLenses')}</h3>
+                  <ModelLensChips
+                    activeLenses={activeLensMap.get(reformPackage.package_id) ?? []}
+                    plannedLenses={plannedLenses}
+                  />
                 </section>
               </div>
             </details>
@@ -684,7 +694,6 @@ function ReformTrackerDesk({ content }: { content: KnowledgeHubContent }) {
 
   return (
     <>
-      <MetricStrip content={content} packages={packages} />
       <LatestChangesSection packages={sortedPackages} allPackages={sortedPackages} />
       <TrackerControlsPanel filters={filters} onFiltersChange={setFilters} packages={sortedPackages} />
       <ReformArchive
@@ -693,6 +702,7 @@ function ReformTrackerDesk({ content }: { content: KnowledgeHubContent }) {
         content={content}
         onClearFilters={clearFilters}
       />
+      <MetricStrip content={content} packages={packages} />
       <SupportingInfo content={content} packages={packages} />
     </>
   )

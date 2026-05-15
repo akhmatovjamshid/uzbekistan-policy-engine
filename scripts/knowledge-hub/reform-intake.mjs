@@ -2222,15 +2222,23 @@ function topicPackageEnrichment(topic, sortedCandidates, sourceEvents) {
     },
     'public-services-digital-legal': {
       short_summary:
-        'Public-service and legal-service procedures are simplified.',
+        'Bureaucracy-reduction measures set targets to cut state functions, simplify services, and move more delivery online.',
       parameters_or_amounts: [
-        'Digital public-service procedures are updated.',
-        'Legal-service processes are simplified.',
-        'Administrative burden reduction is the stated channel.',
+        'The “Eliminating Bureaucracy – 2030” program targets a 30 percent reduction in state-body functions.',
+        'Business requirements are to be optimized by up to 20 percent.',
+        'The share of electronic public services is targeted to exceed 90 percent.',
+        'The “zero bureaucracy” principle is proposed for 783 public services.',
+        '550 public services are to be converted to electronic format, with service stages halved.',
+        '80 services are planned for proactive and composite delivery formats.',
+        'Another 80 services are to be shortened from an average 13 days to 6 days.',
+        'Fees for 25 service types are to be reduced, with estimated annual savings of up to 851 billion soums.',
+        '10 services are planned for transfer to the private sector.',
+        '15 certificate and document types are to be digitized, removing repeat requests across more than 270 services.',
+        'State functions, mandatory requirements, and public services are to be maintained on reestr.gov.uz.',
       ],
       policy_channels: ['Public service delivery', 'Administrative burden', 'Digital public administration'],
       model_relevance: ['Public administration', 'Transaction costs', 'Productivity'],
-      measure_label: 'Digital public-service procedures were updated',
+      measure_label: 'Bureaucracy-reduction targets and public-service simplification measures were published',
     },
     'large-investment-integrity-competition-review': {
       short_summary:

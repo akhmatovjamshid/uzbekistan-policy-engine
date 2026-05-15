@@ -1,6 +1,6 @@
 {
   "schema_version": "knowledge-hub-reform-tracker.v1",
-  "generated_at": "2026-05-13T12:00:00.000Z",
+  "generated_at": "2026-05-15T09:00:00.000Z",
   "generated_by": "scripts/knowledge-hub/generate-source-fetch-artifact.mjs",
   "extraction_mode": "configured-source-fetch",
   "extraction_mode_label": "Configured source fetch",
@@ -304,10 +304,10 @@
       "parser": "lexuz-official-search",
       "fetch_url": "https://lex.uz/uz/search/official?lang=4&pub_date=month",
       "ok": true,
-      "candidate_count": 11,
-      "excluded_count": 1,
+      "candidate_count": 12,
+      "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-13T12:00:00.000Z"
+      "fetched_at": "2026-05-15T09:00:00.000Z"
     },
     {
       "id": "president-reform-news",
@@ -316,10 +316,10 @@
       "parser": "president-uz-list",
       "fetch_url": "https://president.uz/en/lists/news",
       "ok": true,
-      "candidate_count": 4,
-      "excluded_count": 8,
+      "candidate_count": 7,
+      "excluded_count": 5,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-13T12:00:00.000Z"
+      "fetched_at": "2026-05-15T09:00:00.000Z"
     },
     {
       "id": "president-healthcare-reform-detail",
@@ -331,7 +331,7 @@
       "candidate_count": 1,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-13T12:00:00.000Z"
+      "fetched_at": "2026-05-15T09:00:00.000Z"
     },
     {
       "id": "gov-housing-urbanization-detail",
@@ -343,7 +343,7 @@
       "candidate_count": 1,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-13T12:00:00.000Z"
+      "fetched_at": "2026-05-15T09:00:00.000Z"
     },
     {
       "id": "gov-agriculture-subsidy-detail",
@@ -355,7 +355,7 @@
       "candidate_count": 1,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-13T12:00:00.000Z"
+      "fetched_at": "2026-05-15T09:00:00.000Z"
     },
     {
       "id": "gov-portal-reform-news",
@@ -367,7 +367,7 @@
       "candidate_count": 0,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-13T12:00:00.000Z"
+      "fetched_at": "2026-05-15T09:00:00.000Z"
     },
     {
       "id": "cbu-policy-news",
@@ -379,7 +379,7 @@
       "candidate_count": 0,
       "excluded_count": 347,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-13T12:00:00.000Z"
+      "fetched_at": "2026-05-15T09:00:00.000Z"
     },
     {
       "id": "customs-committee-news",
@@ -391,7 +391,7 @@
       "candidate_count": 0,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-13T12:00:00.000Z"
+      "fetched_at": "2026-05-15T09:00:00.000Z"
     },
     {
       "id": "mef-policy-news",
@@ -403,7 +403,7 @@
       "candidate_count": 1,
       "excluded_count": 11,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-13T12:00:00.000Z"
+      "fetched_at": "2026-05-15T09:00:00.000Z"
     },
     {
       "id": "tax-committee-news",
@@ -415,7 +415,7 @@
       "candidate_count": 0,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-13T12:00:00.000Z"
+      "fetched_at": "2026-05-15T09:00:00.000Z"
     },
     {
       "id": "energy-ministry-news",
@@ -427,7 +427,7 @@
       "candidate_count": 0,
       "excluded_count": 12,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-13T12:00:00.000Z"
+      "fetched_at": "2026-05-15T09:00:00.000Z"
     },
     {
       "id": "investment-trade-ministry-news",
@@ -439,7 +439,7 @@
       "candidate_count": 1,
       "excluded_count": 11,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-13T12:00:00.000Z"
+      "fetched_at": "2026-05-15T09:00:00.000Z"
     },
     {
       "id": "justice-ministry-news",
@@ -451,7 +451,7 @@
       "candidate_count": 0,
       "excluded_count": 12,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-13T12:00:00.000Z"
+      "fetched_at": "2026-05-15T09:00:00.000Z"
     }
   ],
   "reform_packages": [
@@ -605,7 +605,7 @@
           "event_type": "instructions_issued",
           "summary": "Official web-site of the President of Uzbekistan Official pages in social networks President of the Republic of Uzbekistan Healthcare system development issues discussed President Shavkat Mirziyoyev reviewed measures for the further development of the healthcare system, enhancement of the quality of medical services, and expansion of private sector participation. Consistent efforts are underway nationwide to provide the population with high-quality, modern medical care, improve management efficiency in the sector, make broader use of private sector potential, and elevate regional healthcare infrastructure to a new level. The role of the private sector in advancing the industry, along with th",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-13T12:00:00.000Z"
+          "extracted_at": "2026-05-15T09:00:00.000Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from a verified source event. It is not an official legal registry and does not assert legal force beyond the cited official source.",
@@ -785,7 +785,7 @@
           "event_type": "instructions_issued",
           "summary": "2026-04-15 09:10:00 / Meetings On April 14, President Shavkat Mirziyoyev chaired a meeting to review progress, address existing challenges, and outline priority tasks in housing construction and urbanization. More than 500 industry representatives, including entrepreneurs, construction professionals, designers, architects, and urban plannersparticipated via regional studios. The Head of State emphasized that the construction sector plays a special role in achieving the ambitious goals set to ensure high economic growth across all sectors and regions. According to studies, each dollar invested in construction can generate an additional two to three dollars for the economy, while each job crea",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-13T12:00:00.000Z"
+          "extracted_at": "2026-05-15T09:00:00.000Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from a verified source event. It is not an official legal registry and does not assert legal force beyond the cited official source.",
@@ -923,7 +923,7 @@
           "event_type": "financing_allocated",
           "summary": "2025-12-09 17:05:00 / Presentations President Shavkat Mirziyoyev reviewed a presentation on the effective organization of financing for cotton and grain cultivation, as well as a new subsidy system for the agriculture complex. The presentation began with an overview of the funds allocated to the sector this year and their effectiveness. It was noted that 29 trillion soums were allocated for financing cotton and grain cultivation, purchasing agricultural machinery, and implementing water-saving technologies. Furthermore, 2,35 trillion soums in subsidies were directed to the sector. Allocating subsidies equivalent to 10 percent of the cotton value to 3,430 farms and clusters enabled them to cu",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-13T12:00:00.000Z"
+          "extracted_at": "2026-05-15T09:00:00.000Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from a verified source event. It is not an official legal registry and does not assert legal force beyond the cited official source.",
@@ -932,6 +932,127 @@
         "applies_to": "Agriculture financing, subsidies, and digital delivery",
         "effective_status": "Instructions issued; next step: 2026 proactive subsidy delivery through Agrosubsidy (2026)",
         "document": "Financing and subsidy plans for the agricultural sector reviewed"
+      }
+    },
+    {
+      "package_id": "pkg-public-services-digital-legal-2026-05-14",
+      "title": "Digital public service and legal process reform",
+      "policy_area": "Digital public administration and legal services",
+      "reform_category": "digital_public_admin",
+      "current_stage": "Instructions issued",
+      "current_stage_date": "2026-05-14",
+      "next_milestone": "No future milestone published in verified source",
+      "next_milestone_date": "2026-05-14",
+      "responsible_institutions": [
+        "Official website of the President of the Republic of Uzbekistan"
+      ],
+      "legal_basis": "Verified official source events: Measures to reduce bureaucracy in public service delivery reviewed; President of Uzbekistan to pay working visit to Kazakhstan.",
+      "official_basis": "Official website of the President of the Republic of Uzbekistan",
+      "short_summary": "Bureaucracy-reduction measures set targets to cut state functions, simplify services, and move more delivery online.",
+      "parameters_or_amounts": [
+        "The “Eliminating Bureaucracy – 2030” program targets a 30 percent reduction in state-body functions.",
+        "Business requirements are to be optimized by up to 20 percent.",
+        "The share of electronic public services is targeted to exceed 90 percent.",
+        "The “zero bureaucracy” principle is proposed for 783 public services.",
+        "550 public services are to be converted to electronic format, with service stages halved.",
+        "80 services are planned for proactive and composite delivery formats.",
+        "Another 80 services are to be shortened from an average 13 days to 6 days.",
+        "Fees for 25 service types are to be reduced, with estimated annual savings of up to 851 billion soums.",
+        "10 services are planned for transfer to the private sector.",
+        "15 certificate and document types are to be digitized, removing repeat requests across more than 270 services.",
+        "State functions, mandatory requirements, and public services are to be maintained on reestr.gov.uz."
+      ],
+      "source_confidence": "medium",
+      "why_tracked": "The package is assembled from 2 verified official source events with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
+      "model_relevance": [
+        "Public administration",
+        "Transaction costs",
+        "Productivity"
+      ],
+      "policy_channels": [
+        "Public service delivery",
+        "Administrative burden",
+        "Digital public administration"
+      ],
+      "measure_tracks": [
+        {
+          "id": "public-services-digital-legal-measure-1",
+          "label": "Bureaucracy-reduction targets and public-service simplification measures were published",
+          "status": "source verified"
+        },
+        {
+          "id": "public-services-digital-legal-measure-2",
+          "label": "Bureaucracy-reduction targets and public-service simplification measures were published",
+          "status": "source verified"
+        }
+      ],
+      "implementation_milestones": [
+        {
+          "id": "public-services-digital-legal-instructions_issued-2026-05-12",
+          "label": "official measure recorded",
+          "date": "2026-05-12",
+          "date_precision": "day",
+          "event_type": "instructions_issued",
+          "responsible_institutions": [
+            "Official website of the President of the Republic of Uzbekistan"
+          ],
+          "evidence_type": "official_policy_announcement",
+          "source_event_ids": [
+            "source-event-2026-05-12-measures-to-reduce-bureaucracy-in-public-service-delivery-reviewed"
+          ],
+          "confidence": "medium",
+          "related_next_milestone_ids": [
+            "public-services-digital-legal-instructions_issued-2026-05-14"
+          ]
+        },
+        {
+          "id": "public-services-digital-legal-instructions_issued-2026-05-14",
+          "label": "official measure recorded",
+          "date": "2026-05-14",
+          "date_precision": "day",
+          "event_type": "instructions_issued",
+          "responsible_institutions": [
+            "Official website of the President of the Republic of Uzbekistan"
+          ],
+          "evidence_type": "official_policy_announcement",
+          "source_event_ids": [
+            "source-event-2026-05-14-president-of-uzbekistan-to-pay-working-visit-to-kazakhstan"
+          ],
+          "confidence": "medium"
+        }
+      ],
+      "official_source_events": [
+        {
+          "id": "source-event-2026-05-12-measures-to-reduce-bureaucracy-in-public-service-delivery-reviewed",
+          "title": "Measures to reduce bureaucracy in public service delivery reviewed",
+          "source_institution": "Official website of the President of the Republic of Uzbekistan",
+          "source_url": "https://president.uz/en/lists/view/9197",
+          "source_published_at": "2026-05-12",
+          "evidence_type": "official_policy_announcement",
+          "event_type": "instructions_issued",
+          "summary": "Official web-site of the President of Uzbekistan Official pages in social networks President of the Republic of Uzbekistan Measures to reduce bureaucracy in public service delivery reviewed President Shavkat Mirziyoyev was briefed on measures to reduce bureaucracy in public service delivery. In recent years, the country has carried out extensive work to improve the convenience, speed, and transparency of public services for the population and businesses. The coverage of public services has increased tenfold, exceeding 61 million, with 80 percent of services provided online. In 2023 alone, more than 2,000 mandatory requirements in the field of entrepreneurial activity were abolished. However,",
+          "source_url_status": "verified",
+          "extracted_at": "2026-05-15T09:00:00.000Z"
+        },
+        {
+          "id": "source-event-2026-05-14-president-of-uzbekistan-to-pay-working-visit-to-kazakhstan",
+          "title": "President of Uzbekistan to pay working visit to Kazakhstan",
+          "source_institution": "Official website of the President of the Republic of Uzbekistan",
+          "source_url": "https://president.uz/en/lists/view/9207",
+          "source_published_at": "2026-05-14",
+          "evidence_type": "official_policy_announcement",
+          "event_type": "instructions_issued",
+          "summary": "Official web-site of the President of Uzbekistan Official pages in social networks President of the Republic of Uzbekistan President of Uzbekistan to pay working visit to Kazakhstan At the invitation of President of the Republic of Kazakhstan Kassym-Jomart Tokayev, President of the Republic of Uzbekistan Shavkat Mirziyoyev will pay a working visit to Kazakhstan on May 15. The Head of State will take part in the informal summit of the Organization of Turkic States, to be held in Turkestan under the theme &ldquo;Artificial Intelligence and Digital Development.&rdquo; At the summit, the participants will discuss the further expansion of multilateral cooperation, particularly in the trade and ec",
+          "source_url_status": "verified",
+          "extracted_at": "2026-05-15T09:00:00.000Z"
+        }
+      ],
+      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
+      "digest": {
+        "changed": "The “Eliminating Bureaucracy – 2030” program targets a 30 percent reduction in state-body functions.",
+        "applies_to": "Digital public administration and legal services",
+        "effective_status": "Instructions issued (2026-05-14)",
+        "document": "Measures to reduce bureaucracy in public service delivery reviewed"
       }
     },
     {
@@ -1004,7 +1125,7 @@
           "event_type": "instructions_issued",
           "summary": "Official web-site of the President of Uzbekistan Official pages in social networks President of the Republic of Uzbekistan Proposals to improve efficiency of Tashkent Metro reviewed President Shavkat Mirziyoyev was briefed on proposals to ensure high-quality and safe passenger services, as well as increase the efficiency of infrastructure use in the Tashkent Metro. The growth in the population and the number of visitors to the capital, the expansion of the city, and increasing demand for public transport require taking metro development to a new level. In this regard, targets have been set to increase daily metro passenger traffic to 1.8 million people, expand the number of stations to 79, a",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-13T12:00:00.000Z"
+          "extracted_at": "2026-05-15T09:00:00.000Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
@@ -1107,7 +1228,7 @@
           "event_type": "financing_allocated",
           "summary": "Official detail page did not expose a separate summary in the configured extraction block.",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-13T12:00:00.000Z"
+          "extracted_at": "2026-05-15T09:00:00.000Z"
         },
         {
           "id": "source-event-2026-05-12-information-on-work-completed-during-the-1st-quarter-of-2026-on-the-d",
@@ -1119,7 +1240,7 @@
           "event_type": "financing_allocated",
           "summary": "2026-05-12 22:35:00 / News of ministry On the implementation of priority digitalization projects: 4 priority projects aimed at digitalizing the relevant functions and tasks of the Ministry of Economy and Finance were implemented . Specifically: 1) The \"Subsidiya.idm.uz\" information system To ensure the implementation of Resolution No. 49 of the Cabinet of Ministers of the Republic of Uzbekistan, dated February 19, 2026, \"On Additional Measures for the Social Support of Educators with the Highest Qualification Category (Senior Teacher Position),\" a procedure was introduced for allocating subsidies from the State Budget to cover 25 percent of the initial payment for refinanced mortgage loans. ",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-13T12:00:00.000Z"
+          "extracted_at": "2026-05-15T09:00:00.000Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
@@ -1128,84 +1249,6 @@
         "applies_to": "Tax administration and fiscal incentives",
         "effective_status": "Incentive published (2026-05-12)",
         "document": "Uzbekistan Expands Tax Incentives for Investors Financing Infrastructure Projects"
-      }
-    },
-    {
-      "package_id": "pkg-public-services-digital-legal-2026-05-12",
-      "title": "Digital public service and legal process reform",
-      "policy_area": "Digital public administration and legal services",
-      "reform_category": "digital_public_admin",
-      "current_stage": "Instructions issued",
-      "current_stage_date": "2026-05-12",
-      "next_milestone": "No future milestone published in verified source",
-      "next_milestone_date": "2026-05-12",
-      "responsible_institutions": [
-        "Official website of the President of the Republic of Uzbekistan"
-      ],
-      "legal_basis": "Verified official source event: Measures to reduce bureaucracy in public service delivery reviewed.",
-      "official_basis": "Official website of the President of the Republic of Uzbekistan",
-      "short_summary": "Public-service and legal-service procedures are simplified.",
-      "parameters_or_amounts": [
-        "Digital public-service procedures are updated.",
-        "Legal-service processes are simplified.",
-        "Administrative burden reduction is the stated channel."
-      ],
-      "source_confidence": "high",
-      "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
-      "model_relevance": [
-        "Public administration",
-        "Transaction costs",
-        "Productivity"
-      ],
-      "policy_channels": [
-        "Public service delivery",
-        "Administrative burden",
-        "Digital public administration"
-      ],
-      "measure_tracks": [
-        {
-          "id": "public-services-digital-legal-measure-1",
-          "label": "Digital public-service procedures were updated",
-          "status": "source verified"
-        }
-      ],
-      "implementation_milestones": [
-        {
-          "id": "public-services-digital-legal-instructions_issued-2026-05-12",
-          "label": "official measure recorded",
-          "date": "2026-05-12",
-          "date_precision": "day",
-          "event_type": "instructions_issued",
-          "responsible_institutions": [
-            "Official website of the President of the Republic of Uzbekistan"
-          ],
-          "evidence_type": "official_policy_announcement",
-          "source_event_ids": [
-            "source-event-2026-05-12-measures-to-reduce-bureaucracy-in-public-service-delivery-reviewed"
-          ],
-          "confidence": "high"
-        }
-      ],
-      "official_source_events": [
-        {
-          "id": "source-event-2026-05-12-measures-to-reduce-bureaucracy-in-public-service-delivery-reviewed",
-          "title": "Measures to reduce bureaucracy in public service delivery reviewed",
-          "source_institution": "Official website of the President of the Republic of Uzbekistan",
-          "source_url": "https://president.uz/en/lists/view/9197",
-          "source_published_at": "2026-05-12",
-          "evidence_type": "official_policy_announcement",
-          "event_type": "instructions_issued",
-          "summary": "Official web-site of the President of Uzbekistan Official pages in social networks President of the Republic of Uzbekistan Measures to reduce bureaucracy in public service delivery reviewed President Shavkat Mirziyoyev was briefed on measures to reduce bureaucracy in public service delivery. In recent years, the country has carried out extensive work to improve the convenience, speed, and transparency of public services for the population and businesses. The coverage of public services has increased tenfold, exceeding 61 million, with 80 percent of services provided online. In 2023 alone, more than 2,000 mandatory requirements in the field of entrepreneurial activity were abolished. However,",
-          "source_url_status": "verified",
-          "extracted_at": "2026-05-13T12:00:00.000Z"
-        }
-      ],
-      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
-      "digest": {
-        "changed": "Digital public-service procedures are updated.",
-        "applies_to": "Digital public administration and legal services",
-        "effective_status": "Instructions issued (2026-05-12)",
-        "document": "Measures to reduce bureaucracy in public service delivery reviewed"
       }
     },
     {
@@ -1274,7 +1317,7 @@
           "event_type": "amended",
           "summary": "Oʻzbekiston Respublikasi Prezidentining Farmoni, 08.05.2026 yildagi PF-82-son Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-13T12:00:00.000Z"
+          "extracted_at": "2026-05-15T09:00:00.000Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
@@ -1351,7 +1394,7 @@
           "event_type": "implementation_milestone",
           "summary": "Oʻzbekiston Respublikasi Prezidentining Farmoni, 08.05.2026 yildagi PF-83-son Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-13T12:00:00.000Z"
+          "extracted_at": "2026-05-15T09:00:00.000Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
@@ -1432,7 +1475,7 @@
           "event_type": "instructions_issued",
           "summary": "Official web-site of the President of Uzbekistan Official pages in social networks President of the Republic of Uzbekistan Priority tasks identified for food security and livestock development President Shavkat Mirziyoyev chaired a meeting on measures to improve state administration in the areas of food safety and support for livestock farming. Uzbekistan has created broad opportunities for maintaining a stable food supply, as well as for cultivating, storing, processing, and exporting agricultural products. The country&rsquo;s 4 million hectares of cultivated land, storage facilities with a capacity of 1.5 million tons, and processing capacities of 3.5 million tons enable the supply of affo",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-13T12:00:00.000Z"
+          "extracted_at": "2026-05-15T09:00:00.000Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
@@ -1455,14 +1498,14 @@
       "responsible_institutions": [
         "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)"
       ],
-      "legal_basis": "Verified official source event: 2185-3 08.05.2026 Bozorlar, savdo komplekslari va ularning filiallarida bir martalik yigʻimlar, ijara toʻlovlari hamda koʻrsatilgan xizmatlar uchun toʻlovlarni oʻz vaqtida va toʻliq undirilishini tashkil etish va nazorat qilish tartibi toʻgʻrisidagi nizomga oʻzgartirishlar kiritish haqida.",
+      "legal_basis": "Verified official source event: 2185-3-сон 08.05.2026. Bozorlar, savdo komplekslari va ularning filiallarida bir martalik yigʻimlar, ijara toʻlovlari hamda koʻrsatilgan xizmatlar uchun toʻlovlarni oʻz vaqtida va toʻliq undirilishini tashkil etish va nazorat qilish tartibi toʻgʻrisidagi nizomga oʻzgartirishlar kiritish haqida.",
       "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
       "short_summary": "Market fee, rent, and service-payment collection rules are amended.",
       "parameters_or_amounts": [
         "One-time fee, rent, and service-payment collection rules are amended.",
         "Payment collection procedures are updated for markets, trade complexes, and their branches."
       ],
-      "source_confidence": "medium",
+      "source_confidence": "high",
       "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
       "model_relevance": [
         "Business costs",
@@ -1495,21 +1538,21 @@
           "source_event_ids": [
             "source-event-2026-05-08-2185-3-08-05-2026-bozorlar-savdo-komplekslari-va-ularning-filiallarid"
           ],
-          "confidence": "medium"
+          "confidence": "high"
         }
       ],
       "official_source_events": [
         {
           "id": "source-event-2026-05-08-2185-3-08-05-2026-bozorlar-savdo-komplekslari-va-ularning-filiallarid",
-          "title": "2185-3 08.05.2026 Bozorlar, savdo komplekslari va ularning filiallarida bir martalik yigʻimlar, ijara toʻlovlari hamda koʻrsatilgan xizmatlar uchun toʻlovlarni oʻz vaqtida va toʻliq undirilishini tashkil etish va nazorat qilish tartibi toʻgʻrisidagi nizomga oʻzgartirishlar kiritish haqida",
+          "title": "2185-3-сон 08.05.2026. Bozorlar, savdo komplekslari va ularning filiallarida bir martalik yigʻimlar, ijara toʻlovlari hamda koʻrsatilgan xizmatlar uchun toʻlovlarni oʻz vaqtida va toʻliq undirilishini tashkil etish va nazorat qilish tartibi toʻgʻrisidagi nizomga oʻzgartirishlar kiritish haqida",
           "source_institution": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
           "source_url": "https://lex.uz/uz/docs/8184197",
           "source_published_at": "2026-05-08",
           "evidence_type": "official_policy_announcement",
           "event_type": "amended",
-          "summary": "Oʻzbekiston Respublikasi Iqtisodiyot va moliya vazirligi, Oʻzbekiston Respublikasi Soliq qoʻmitasining qarori, 08.05.2026 yilda ro‘yxatdan o‘tgan, ro‘yxat raqami 2185-3 Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
+          "summary": "Oʻzbekiston Respublikasi Iqtisodiyot va moliya vazirligi, Oʻzbekiston Respublikasi Soliq qoʻmitasining qarori, 08.05.2026 yilda ro‘yxatdan o‘tgan, ro‘yxat raqami 2185-3 Qo‘shimcha axborot Asosiy rekvizitlar Kodifikatsiya Qayta ko‘rib chiqilgan hujjatlar Hujjatni qayta ko‘rib chiqishga asos bo‘lgan hujjatlar Korrespondentlar Respondentlar Ulashish Telegram Facebook Twitter Instagram [ OKOZ: 1. 07.00.00.00 Moliya va kredit toʻgʻrisidagi qonunchilik. Bank faoliyati / 07.09.00.00 Soliq qonunchiligi / 07.09.03.00 Soliqlar va yigʻimlar; 2. 09.00.00.00 Tadbirkorlik va xoʻjalik faoliyati / 09.17.00.00 Savdo / 09.17.02.00 Savdo sohasini boshqarish; 3. 21.00.00.00 Oʻzgartirish va qoʻshimchalar kiritis",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-13T12:00:00.000Z"
+          "extracted_at": "2026-05-15T09:00:00.000Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
@@ -1517,7 +1560,7 @@
         "changed": "One-time fee, rent, and service-payment collection rules are amended.",
         "applies_to": "Market complex fee collection and rental-payment administration",
         "effective_status": "Rules amended (2026-05-08)",
-        "document": "2185-3 08.05.2026 Bozorlar, savdo komplekslari va ularning filiallarida bir martalik yigʻimlar, ijara toʻlovlari hamda koʻrsatilgan xizmatlar uchun toʻlovlarni oʻz vaqtida va toʻliq undirilishini tashkil etish va nazorat qilish tartibi toʻgʻrisidagi nizomga oʻzgartirishlar kiritish haqida"
+        "document": "2185-3-сон 08.05.2026. Bozorlar, savdo komplekslari va ularning filiallarida bir martalik yigʻimlar, ijara toʻlovlari hamda koʻrsatilgan xizmatlar uchun toʻlovlarni oʻz vaqtida va toʻliq undirilishini tashkil etish va nazorat qilish tartibi toʻgʻrisidagi nizomga oʻzgartirishlar kiritish haqida"
       }
     },
     {
@@ -1532,7 +1575,7 @@
       "responsible_institutions": [
         "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)"
       ],
-      "legal_basis": "Verified official source events: 2886-12 08.05.2026 Tijorat banklarida jinoiy faoliyatdan olingan daromadlarni legallashtirishga, terrorizmni moliyalashtirishga va ommaviy qirgʻin qurolini tarqatishni moliyalashtirishga qarshi kurashish boʻyicha ichki nazorat qoidalariga qoʻshimcha va oʻzgartirishlar kiritish haqida; 2925-10 08.05.2026 Nobank kredit tashkilotlarida jinoiy faoliyatdan olingan daromadlarni legallashtirishga, terrorizmni moliyalashtirishga va ommaviy qirgʻin qurolini tarqatishni moliyalashtirishga qarshi kurashish boʻyicha ichki nazorat qoidalariga qoʻshimcha va oʻzgartirishlar kiritish haqida; 3266-5 08.05.2026 Toʻlov tizimlari operatorlari, elektron pullar tizimlari operatorlari va toʻlov tashkilotlarida jinoiy faoliyatdan olingan daromadlarni legallashtirishga, terrorizmni moliyalashtirishga va ommaviy qirgʻin qurolini tarqatishni moliyalashtirishga qarshi kurashish boʻyicha ichki nazorat qoidalariga oʻzgartirish va qoʻshimchalar kiritish haqida.",
+      "legal_basis": "Verified official source events: 2886-12 08.05.2026 Tijorat banklarida jinoiy faoliyatdan olingan daromadlarni legallashtirishga, terrorizmni moliyalashtirishga va ommaviy qirgʻin qurolini tarqatishni moliyalashtirishga qarshi kurashish boʻyicha ichki nazorat qoidalariga qoʻshimcha va oʻzgartirishlar kiritish haqida; 2925-10-сон 08.05.2026. Nobank kredit tashkilotlarida jinoiy faoliyatdan olingan daromadlarni legallashtirishga, terrorizmni moliyalashtirishga va ommaviy qirgʻin qurolini tarqatishni moliyalashtirishga qarshi kurashish boʻyicha ichki nazorat qoidalariga qoʻshimcha va oʻzgartirishlar kiritish haqida; 3266-5 08.05.2026 Toʻlov tizimlari operatorlari, elektron pullar tizimlari operatorlari va toʻlov tashkilotlarida jinoiy faoliyatdan olingan daromadlarni legallashtirishga, terrorizmni moliyalashtirishga va ommaviy qirgʻin qurolini tarqatishni moliyalashtirishga qarshi kurashish boʻyicha ichki nazorat qoidalariga oʻzgartirish va qoʻshimchalar kiritish haqida.",
       "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
       "short_summary": "AML/CFT internal-control rules change across banks, nonbank lenders, payments, and e-money institutions.",
       "parameters_or_amounts": [
@@ -1634,19 +1677,19 @@
           "event_type": "amended",
           "summary": "Oʻzbekiston Respublikasi Markaziy banki boshqaruvi, Oʻzbekiston Respublikasi bosh prokuraturasi huzuridagi iqtisodiy jinoyatlarga qarshi kurashish departamentining qarori, 08.05.2026 yilda ro‘yxatdan o‘tgan, ro‘yxat raqami 2886-12 Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-13T12:00:00.000Z"
+          "extracted_at": "2026-05-15T09:00:00.000Z"
         },
         {
           "id": "source-event-2026-05-08-2925-10-08-05-2026-nobank-kredit-tashkilotlarida-jinoiy-faoliyatdan-o",
-          "title": "2925-10 08.05.2026 Nobank kredit tashkilotlarida jinoiy faoliyatdan olingan daromadlarni legallashtirishga, terrorizmni moliyalashtirishga va ommaviy qirgʻin qurolini tarqatishni moliyalashtirishga qarshi kurashish boʻyicha ichki nazorat qoidalariga qoʻshimcha va oʻzgartirishlar kiritish haqida",
+          "title": "2925-10-сон 08.05.2026. Nobank kredit tashkilotlarida jinoiy faoliyatdan olingan daromadlarni legallashtirishga, terrorizmni moliyalashtirishga va ommaviy qirgʻin qurolini tarqatishni moliyalashtirishga qarshi kurashish boʻyicha ichki nazorat qoidalariga qoʻshimcha va oʻzgartirishlar kiritish haqida",
           "source_institution": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
           "source_url": "https://lex.uz/uz/docs/8184204",
           "source_published_at": "2026-05-08",
           "evidence_type": "official_policy_announcement",
           "event_type": "amended",
-          "summary": "Oʻzbekiston Respublikasi Markaziy banki boshqaruvi, Oʻzbekiston Respublikasi Bosh prokuraturasi huzuridagi iqtisodiy jinoyatlarga qarshi kurashish departamentining qarori, 08.05.2026 yilda ro‘yxatdan o‘tgan, ro‘yxat raqami 2925-10 Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
+          "summary": "Oʻzbekiston Respublikasi Markaziy banki boshqaruvi, Oʻzbekiston Respublikasi Bosh prokuraturasi huzuridagi iqtisodiy jinoyatlarga qarshi kurashish departamentining qarori, 08.05.2026 yilda ro‘yxatdan o‘tgan, ro‘yxat raqami 2925-10 Qo‘shimcha axborot Asosiy rekvizitlar Kodifikatsiya Qayta ko‘rib chiqilgan hujjatlar Hujjatni qayta ko‘rib chiqishga asos bo‘lgan hujjatlar Korrespondentlar Respondentlar Ulashish Telegram Facebook Twitter Instagram [ OKOZ: 1. 21.00.00.00 Oʻzgartirish va qoʻshimchalar kiritish boʻyicha kompleks tusdagi hujjatlar / 21.04.00.00 Idoraviy normativ-huquqiy hujjatlar] [ TSZ: 1. Davlat va jamiyat qurilishi / Qonunchilik tashabbusi. Norma ijodkorligi faoliyati] Hujjatga ta",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-13T12:00:00.000Z"
+          "extracted_at": "2026-05-15T09:00:00.000Z"
         },
         {
           "id": "source-event-2026-05-08-3266-5-08-05-2026-to-lov-tizimlari-operatorlari-elektron-pullar-tizim",
@@ -1658,7 +1701,7 @@
           "event_type": "amended",
           "summary": "Oʻzbekiston Respublikasi Markaziy banki boshqaruvining, Oʻzbekiston Respublikasi Bosh prokuraturasi huzuridagi iqtisodiy jinoyatlarga qarshi kurashish departamentining qarori, 08.05.2026 yilda ro‘yxatdan o‘tgan, ro‘yxat raqami 3266-5 Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-13T12:00:00.000Z"
+          "extracted_at": "2026-05-15T09:00:00.000Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
@@ -1735,7 +1778,7 @@
           "event_type": "approved",
           "summary": "Oʻzbekiston Respublikasi Korrupsiyaga qarshi kurashish agentligi, Oʻzbekiston Respublikasi Raqobatni rivojlantirish va isteʼmolchilar huquqlarini himoya qilish qoʻmitasining qarori, 08.05.2026 yilda ro‘yxatdan o‘tgan, ro‘yxat raqami 3833 Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-13T12:00:00.000Z"
+          "extracted_at": "2026-05-15T09:00:00.000Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
@@ -1744,85 +1787,6 @@
         "applies_to": "Investment project anti-corruption review and competition impact assessment",
         "effective_status": "Regulation approved (2026-05-08)",
         "document": "3833 08.05.2026 Yirik investitsiya loyihalarini korrupsiyaga qarshi ekspertizadan o‘tkazish va ularning raqobat muhitiga ta’sirini baholash tartibi to‘g‘risidagi yo‘riqnomani tasdiqlash haqida"
-      }
-    },
-    {
-      "package_id": "pkg-construction-oversight-inspection-pricing-2026-05-07",
-      "title": "Construction oversight and technical inspection pricing reform",
-      "policy_area": "Construction oversight, technical inspection pricing, and inspection bureaucracy",
-      "reform_category": "infrastructure_investment",
-      "current_stage": "Regulation approved",
-      "current_stage_date": "2026-05-07",
-      "next_milestone": "No future milestone published in verified source",
-      "next_milestone_date": "2026-05-07",
-      "responsible_institutions": [
-        "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)"
-      ],
-      "legal_basis": "Verified official source event: 3828 07.05.2026 Oʻzbekiston Respublikasi Vazirlar Mahkamasi huzuridagi Qurilish va uy-joy kommunal xoʻjaligi sohasida nazorat qilish inspeksiyasining hududiy nazorat qilish inspeksiyalari tomonidan oʻtkaziladigan bino va inshootlarning texnik holatini oʻrganish va sinov-laboratoriya ishlari narxlarini hisoblash tartibi toʻgʻrisidagi nizomni tasdiqlash haqida.",
-      "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
-      "short_summary": "Construction oversight and technical-inspection pricing rules are approved.",
-      "parameters_or_amounts": [
-        "Technical condition review and laboratory-work price calculation regulation is approved.",
-        "Construction oversight and bureaucracy-reduction measures are grouped under the construction reform package.",
-        "The previous technical-inspection pricing order is superseded where cited by the source."
-      ],
-      "source_confidence": "medium",
-      "why_tracked": "The official sources identify related construction oversight and inspection-pricing measures. Grouping them prevents a repealed pricing order, a new pricing regulation, and presidential oversight instructions from appearing as unrelated dossiers.",
-      "model_relevance": [
-        "Construction output",
-        "Investment",
-        "Public administration"
-      ],
-      "policy_channels": [
-        "Construction inspection oversight",
-        "Technical inspection pricing",
-        "Administrative burden in construction",
-        "Construction quality and safety"
-      ],
-      "measure_tracks": [
-        {
-          "id": "construction-oversight-inspection-pricing-measure-1",
-          "label": "Construction oversight and inspection-pricing rules were approved",
-          "status": "approved"
-        }
-      ],
-      "implementation_milestones": [
-        {
-          "id": "construction-oversight-inspection-pricing-approved-2026-05-07",
-          "label": "official measure approved",
-          "date": "2026-05-07",
-          "date_precision": "day",
-          "event_type": "approved",
-          "responsible_institutions": [
-            "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)"
-          ],
-          "evidence_type": "official_policy_announcement",
-          "source_event_ids": [
-            "source-event-2026-05-07-3828-07-05-2026-o-zbekiston-respublikasi-vazirlar-mahkamasi-huzuridag"
-          ],
-          "confidence": "medium"
-        }
-      ],
-      "official_source_events": [
-        {
-          "id": "source-event-2026-05-07-3828-07-05-2026-o-zbekiston-respublikasi-vazirlar-mahkamasi-huzuridag",
-          "title": "3828 07.05.2026 Oʻzbekiston Respublikasi Vazirlar Mahkamasi huzuridagi Qurilish va uy-joy kommunal xoʻjaligi sohasida nazorat qilish inspeksiyasining hududiy nazorat qilish inspeksiyalari tomonidan oʻtkaziladigan bino va inshootlarning texnik holatini oʻrganish va sinov-laboratoriya ishlari narxlarini hisoblash tartibi toʻgʻrisidagi nizomni tasdiqlash haqida",
-          "source_institution": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
-          "source_url": "https://lex.uz/uz/docs/8180898",
-          "source_published_at": "2026-05-07",
-          "evidence_type": "official_policy_announcement",
-          "event_type": "approved",
-          "summary": "Oʻzbekiston Respublikasi Vazirlar Mahkamasi huzuridagi Qurilish va uy-joy kommunal xoʻjaligi sohasida nazorat qilish inspeksiyasi boshligʻining buyrugʻi, 06.05.2026 yilda ro‘yxatdan o‘tgan, ro‘yxat raqami 3828 Qo‘shimcha axborot Asosiy rekvizitlar Qayta ko‘rib chiqish tarixi Ulashish Telegram Facebook Twitter Instagram",
-          "source_url_status": "verified",
-          "extracted_at": "2026-05-13T12:00:00.000Z"
-        }
-      ],
-      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
-      "digest": {
-        "changed": "Technical condition review and laboratory-work price calculation regulation is approved.",
-        "applies_to": "Construction oversight, technical inspection pricing, and inspection bureaucracy",
-        "effective_status": "Regulation approved (2026-05-07)",
-        "document": "3828 07.05.2026 Oʻzbekiston Respublikasi Vazirlar Mahkamasi huzuridagi Qurilish va uy-joy kommunal xoʻjaligi sohasida nazorat qilish inspeksiyasining hududiy nazorat qilish inspeksiyalari tomonidan oʻtkaziladigan bino va inshootlarning texnik holatini oʻrganish va sinov-laboratoriya ishlari narxlarini hisoblash tartibi toʻgʻrisidagi nizomni tasdiqlash haqida"
       }
     },
     {
@@ -1892,7 +1856,7 @@
           "event_type": "approved",
           "summary": "Oʻzbekiston Respublikasi kambagʻallikni qisqartirish va bandlik vazirining buyrugʻi, 07.05.2026 yilda ro‘yxatdan o‘tgan, ro‘yxat raqami 3832 Qo‘shimcha axborot Asosiy rekvizitlar Kodifikatsiya Qayta ko‘rib chiqilgan hujjatlar Hujjatni qayta ko‘rib chiqishga asos bo‘lgan hujjatlar Korrespondentlar Respondentlar Ulashish Telegram Facebook Twitter Instagram [ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.01.00.00 Ishga joylash va aholi bandligi / 05.01.08.00 Bandlikka koʻmaklashuvchi Davlat jamgʻarmasi (shuningdek, 06.03.03.00, 07.07.02.01larga qarang)] [ TSZ: 1. Ijtimoiy-madaniy masalalar / Mehnat. Aholining bandligi] Hujjatga taklif yuborish Audioni tinglash",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-13T12:00:00.000Z"
+          "extracted_at": "2026-05-15T09:00:00.000Z"
         }
       ],
       "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
@@ -1901,83 +1865,6 @@
         "applies_to": "Employment fund subsidies, loans, and labor-market support",
         "effective_status": "Regulation approved (2026-05-07)",
         "document": "3832-сон 07.05.2026. Oʻzbekiston Respublikasi Bandlikka koʻmaklashish davlat jamgʻarmasi mablagʻlari hisobidan subsidiyalar va ssuda ajratish tartibi toʻgʻrisidagi nizomni tasdiqlash haqida"
-      }
-    },
-    {
-      "package_id": "pkg-remote-mountain-settlement-classification-2026-05-06",
-      "title": "Remote and mountain settlement classification rules update",
-      "policy_area": "Regional settlement classification and public-service eligibility",
-      "reform_category": "social_protection",
-      "current_stage": "Rules amended",
-      "current_stage_date": "2026-05-06",
-      "next_milestone": "No future milestone published in verified source",
-      "next_milestone_date": "2026-05-06",
-      "responsible_institutions": [
-        "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)"
-      ],
-      "legal_basis": "Verified official source event: 1868-2-сон 06.05.2026. Aholi punktlarini borish qiyin boʻlgan va togʻli hududlar tarkibiga kiritish tartibi toʻgʻrisidagi yoʻriqnomaning muqaddimasiga oʻzgartirish kiritish haqida.",
-      "official_basis": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
-      "short_summary": "Settlement classification rules change for hard-to-reach and mountainous areas.",
-      "parameters_or_amounts": [
-        "The preamble to the settlement classification instruction is amended.",
-        "Regional eligibility classification rules are updated for hard-to-reach and mountainous areas."
-      ],
-      "source_confidence": "medium",
-      "why_tracked": "The package is assembled from 1 verified official source event with legal, fiscal, regulatory, parameter, or implementation evidence accepted by the intake rulebook.",
-      "model_relevance": [
-        "Public spending",
-        "Regional development",
-        "Household access"
-      ],
-      "policy_channels": [
-        "Regional classification",
-        "Targeted public support",
-        "Service-delivery eligibility"
-      ],
-      "measure_tracks": [
-        {
-          "id": "remote-mountain-settlement-classification-measure-1",
-          "label": "Settlement classification rules were amended",
-          "status": "source verified"
-        }
-      ],
-      "implementation_milestones": [
-        {
-          "id": "remote-mountain-settlement-classification-amended-2026-05-06",
-          "label": "rules amended",
-          "date": "2026-05-06",
-          "date_precision": "day",
-          "event_type": "amended",
-          "responsible_institutions": [
-            "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)"
-          ],
-          "evidence_type": "official_policy_announcement",
-          "source_event_ids": [
-            "source-event-2026-05-06-1868-2-06-05-2026-aholi-punktlarini-borish-qiyin-bo-lgan-va-tog-li-hu"
-          ],
-          "confidence": "medium"
-        }
-      ],
-      "official_source_events": [
-        {
-          "id": "source-event-2026-05-06-1868-2-06-05-2026-aholi-punktlarini-borish-qiyin-bo-lgan-va-tog-li-hu",
-          "title": "1868-2-сон 06.05.2026. Aholi punktlarini borish qiyin boʻlgan va togʻli hududlar tarkibiga kiritish tartibi toʻgʻrisidagi yoʻriqnomaning muqaddimasiga oʻzgartirish kiritish haqida",
-          "source_institution": "National Database of Legislation of the Republic of Uzbekistan (Lex.uz)",
-          "source_url": "https://lex.uz/uz/docs/8182563",
-          "source_published_at": "2026-05-06",
-          "evidence_type": "official_policy_announcement",
-          "event_type": "amended",
-          "summary": "Oʻzbekiston Respublikasi Iqtisodiyot va moliya vazirligi, Oʻzbekiston Respublikasi Urbanizatsiya va uy-joy bozorini barqaror rivojlantirish milliy qoʻmitasi huzuridagi Kadastr agentligi, Oʻzbekiston Respublikasi Soliq qoʻmitasining qarori, 06.05.2026 yilda ro‘yxatdan o‘tgan, ro‘yxat raqami 1868-2 Qo‘shimcha axborot Asosiy rekvizitlar Kodifikatsiya Qayta ko‘rib chiqilgan hujjatlar Hujjatni qayta ko‘rib chiqishga asos bo‘lgan hujjatlar Korrespondentlar Respondentlar Ulashish Telegram Facebook Twitter Instagram [ OKOZ: 1. 01.00.00.00 Konstitutsiyaviy tuzum / 01.04.00.00 Hudud / 01.04.03.00 Maʼmuriy-hududiy boʻlinish; 2. 21.00.00.00 Oʻzgartirish va qoʻshimchalar kiritish boʻyicha kompleks tusdag",
-          "source_url_status": "verified",
-          "extracted_at": "2026-05-13T12:00:00.000Z"
-        }
-      ],
-      "caveat": "Automatic official-source tracker entry assembled from verified source events. It is not an official legal registry and does not assert legal force beyond the cited official sources.",
-      "digest": {
-        "changed": "The preamble to the settlement classification instruction is amended.",
-        "applies_to": "Regional settlement classification and public-service eligibility",
-        "effective_status": "Rules amended (2026-05-06)",
-        "document": "1868-2-сон 06.05.2026. Aholi punktlarini borish qiyin boʻlgan va togʻli hududlar tarkibiga kiritish tartibi toʻgʻrisidagi yoʻriqnomaning muqaddimasiga oʻzgartirish kiritish haqida"
       }
     }
   ],
@@ -2391,6 +2278,43 @@
         ]
       },
       {
+        "package_id": "pkg-public-services-digital-legal-2026-05-14",
+        "active_lenses": [
+          {
+            "model_id": "DFM",
+            "channel": "General monitoring context.",
+            "caveat": "Possible lens only."
+          }
+        ],
+        "gated_lenses": [
+          {
+            "model_id": "PE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "CGE",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "FPP",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "HFI",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          },
+          {
+            "model_id": "Synthesis",
+            "status": "planned_gated",
+            "caveat": "Not active in public outputs."
+          }
+        ]
+      },
+      {
         "package_id": "pkg-public-transport-system-2026-05-13",
         "active_lenses": [
           {
@@ -2443,43 +2367,6 @@
           {
             "model_id": "I-O",
             "channel": "Sector-linkage and final-demand propagation context.",
-            "caveat": "Possible lens only."
-          }
-        ],
-        "gated_lenses": [
-          {
-            "model_id": "PE",
-            "status": "planned_gated",
-            "caveat": "Not active in public outputs."
-          },
-          {
-            "model_id": "CGE",
-            "status": "planned_gated",
-            "caveat": "Not active in public outputs."
-          },
-          {
-            "model_id": "FPP",
-            "status": "planned_gated",
-            "caveat": "Not active in public outputs."
-          },
-          {
-            "model_id": "HFI",
-            "status": "planned_gated",
-            "caveat": "Not active in public outputs."
-          },
-          {
-            "model_id": "Synthesis",
-            "status": "planned_gated",
-            "caveat": "Not active in public outputs."
-          }
-        ]
-      },
-      {
-        "package_id": "pkg-public-services-digital-legal-2026-05-12",
-        "active_lenses": [
-          {
-            "model_id": "DFM",
-            "channel": "General monitoring context.",
             "caveat": "Possible lens only."
           }
         ],
@@ -2754,86 +2641,7 @@
         ]
       },
       {
-        "package_id": "pkg-construction-oversight-inspection-pricing-2026-05-07",
-        "active_lenses": [
-          {
-            "model_id": "DFM",
-            "channel": "High-frequency monitoring context.",
-            "caveat": "Possible lens only."
-          },
-          {
-            "model_id": "I-O",
-            "channel": "Sector-linkage and final-demand propagation context.",
-            "caveat": "Possible lens only."
-          }
-        ],
-        "gated_lenses": [
-          {
-            "model_id": "PE",
-            "status": "planned_gated",
-            "caveat": "Not active in public outputs."
-          },
-          {
-            "model_id": "CGE",
-            "status": "planned_gated",
-            "caveat": "Not active in public outputs."
-          },
-          {
-            "model_id": "FPP",
-            "status": "planned_gated",
-            "caveat": "Not active in public outputs."
-          },
-          {
-            "model_id": "HFI",
-            "status": "planned_gated",
-            "caveat": "Not active in public outputs."
-          },
-          {
-            "model_id": "Synthesis",
-            "status": "planned_gated",
-            "caveat": "Not active in public outputs."
-          }
-        ]
-      },
-      {
         "package_id": "pkg-employment-fund-subsidy-loans-2026-05-07",
-        "active_lenses": [
-          {
-            "model_id": "DFM",
-            "channel": "General monitoring context.",
-            "caveat": "Possible lens only."
-          }
-        ],
-        "gated_lenses": [
-          {
-            "model_id": "PE",
-            "status": "planned_gated",
-            "caveat": "Not active in public outputs."
-          },
-          {
-            "model_id": "CGE",
-            "status": "planned_gated",
-            "caveat": "Not active in public outputs."
-          },
-          {
-            "model_id": "FPP",
-            "status": "planned_gated",
-            "caveat": "Not active in public outputs."
-          },
-          {
-            "model_id": "HFI",
-            "status": "planned_gated",
-            "caveat": "Not active in public outputs."
-          },
-          {
-            "model_id": "Synthesis",
-            "status": "planned_gated",
-            "caveat": "Not active in public outputs."
-          }
-        ]
-      },
-      {
-        "package_id": "pkg-remote-mountain-settlement-classification-2026-05-06",
         "active_lenses": [
           {
             "model_id": "DFM",

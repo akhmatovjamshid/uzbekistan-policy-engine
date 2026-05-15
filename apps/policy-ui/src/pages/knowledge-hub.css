@@ -309,13 +309,12 @@
 }
 
 .tracker-controls {
-  align-items: end;
   background: var(--hub-panel);
   border: 1px solid var(--hub-line);
   border-radius: var(--radius-sm);
   display: grid;
   gap: var(--space-sm);
-  grid-template-columns: minmax(16rem, 1.6fr) repeat(3, minmax(9rem, 1fr)) auto;
+  grid-template-columns: minmax(18rem, 1fr) auto;
   padding: var(--space-md);
 }
 
@@ -329,6 +328,41 @@
   color: var(--color-text);
   font-size: 0.78rem;
   font-weight: 650;
+}
+
+.tracker-controls__advanced {
+  align-self: end;
+  position: relative;
+}
+
+.tracker-controls__advanced summary {
+  border: 1px solid var(--hub-line);
+  border-radius: var(--radius-sm);
+  color: var(--hub-blue);
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 700;
+  list-style: none;
+  padding: 0.55rem 0.75rem;
+}
+
+.tracker-controls__advanced summary::-webkit-details-marker {
+  display: none;
+}
+
+.tracker-controls__advanced-grid {
+  background: var(--hub-panel);
+  border: 1px solid var(--hub-line);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--hub-ink) 10%, transparent);
+  display: grid;
+  gap: var(--space-sm);
+  min-width: min(42rem, calc(100vw - 3rem));
+  padding: var(--space-md);
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.35rem);
+  z-index: 5;
 }
 
 .tracker-controls input,
@@ -365,6 +399,7 @@
 .tracker-controls input:focus-visible,
 .tracker-controls select:focus-visible,
 .tracker-controls__clear:focus-visible,
+.tracker-controls__advanced summary:focus-visible,
 .archive-summary:focus-visible,
 .literature-filter button:focus-visible {
   outline: 2px solid var(--hub-blue);
@@ -424,6 +459,10 @@
   color: var(--hub-muted);
   content: "–";
   margin-right: 0.35rem;
+}
+
+.archive-item[open] .archive-summary__preview {
+  display: none;
 }
 
 .archive-summary__meta {
@@ -724,7 +763,6 @@
 
 @media (max-width: 1180px) {
   .latest-change-list,
-  .tracker-controls,
   .archive-body,
   .tracker-support,
   .research-update-row {
@@ -776,6 +814,20 @@
 
   .archive-summary {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tracker-controls__advanced {
+    align-self: stretch;
+  }
+
+  .tracker-controls__advanced summary {
+    text-align: center;
+  }
+
+  .tracker-controls__advanced-grid {
+    margin-top: var(--space-sm);
+    min-width: 0;
+    position: static;
   }
 
   .hub-detail-panel {
