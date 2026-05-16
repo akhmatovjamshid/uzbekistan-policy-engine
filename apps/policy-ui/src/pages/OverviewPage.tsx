@@ -167,6 +167,8 @@ export function OverviewPage() {
       .map((metric) => metric.metric_id) ?? [],
   ).size
   const overviewNowcastMetrics = [...(artifact_summary_metrics ?? []), ...headline_metrics]
+  const primaryHeadlineMetrics = headline_metrics.slice(0, 3)
+  const supportingHeadlineMetrics = headline_metrics.slice(3)
   const macroPulseTokens = buildOverviewMacroPulseTokens(overviewNowcastMetrics, locale, t)
   const artifactAlignedNowcastChart = buildArtifactAlignedNowcastChart(overviewNowcastMetrics)
   const useLiveDfmNowcastChart =
@@ -202,24 +204,58 @@ export function OverviewPage() {
     <PageContainer className="overview-page">
       <PageHeader title={t('pages.overview.title')} description={t('pages.overview.description')} meta={pageHeaderMeta} />
 
-      <EconomicStateHeader
-        summary={summary}
-        updatedAt={generated_at}
-        modelIds={model_ids}
-        outputAction={output_action}
-        provenance={provenance}
-        artifactSummaryMetrics={artifact_summary_metrics}
-        artifactProvisionalCount={artifactProvisionalCount}
-        isArtifactMode={sourceState.sourceKind === 'overview-artifact'}
-        macroPulseTokens={macroPulseTokens}
-      />
+      <section className="overview-briefing" aria-labelledby="overview-briefing-title">
+        <div className="overview-briefing__main">
+          <div className="overview-briefing__header">
+            <p className="overview-section-kicker">{t('overview.briefing.kicker')}</p>
+            <h2 id="overview-briefing-title">{t('overview.briefing.title')}</h2>
+            <p>{t('overview.briefing.description')}</p>
+          </div>
 
-      <KpiStrip metrics={headline_metrics} />
+          <div className="overview-briefing__state">
+            <EconomicStateHeader
+              summary={summary}
+              updatedAt={generated_at}
+              modelIds={model_ids}
+              outputAction={output_action}
+              provenance={provenance}
+              artifactSummaryMetrics={artifact_summary_metrics}
+              artifactProvisionalCount={artifactProvisionalCount}
+              isArtifactMode={sourceState.sourceKind === 'overview-artifact'}
+              macroPulseTokens={macroPulseTokens}
+            />
+          </div>
 
-      <div className="overview-two-column overview-two-column--operations">
-        <RiskPanel risks={top_risks} />
-        <QuickActions actions={analysis_actions} />
-      </div>
+          <div className="overview-briefing__signals" aria-label={t('overview.briefing.primarySignalsAria')}>
+            <KpiStrip
+              metrics={primaryHeadlineMetrics}
+              headingId="overview-primary-kpi-title"
+              title={t('overview.briefing.primarySignalsTitle')}
+              variant="primary"
+            />
+          </div>
+        </div>
+
+        <div className="overview-briefing__workbench">
+          <RiskPanel risks={top_risks} />
+          <QuickActions actions={analysis_actions} />
+        </div>
+      </section>
+
+      {supportingHeadlineMetrics.length > 0 ? (
+        <section className="overview-supporting-signals" aria-labelledby="overview-supporting-signals-title">
+          <div className="overview-section-head">
+            <h2 id="overview-supporting-signals-title">{t('overview.briefing.supportingSignalsTitle')}</h2>
+            <p>{t('overview.briefing.supportingSignalsDescription')}</p>
+          </div>
+          <KpiStrip
+            metrics={supportingHeadlineMetrics}
+            headingId="overview-supporting-kpi-title"
+            title={t('overview.briefing.supportingSignalsTitle')}
+            variant="supporting"
+          />
+        </section>
+      ) : null}
 
       {nowcast_forecast ? (
         <div className="overview-nowcast-column">

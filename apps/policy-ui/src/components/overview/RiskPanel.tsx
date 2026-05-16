@@ -23,7 +23,7 @@ export function RiskPanel({ risks }: RiskPanelProps) {
           risks.map((risk) => (
             <article key={risk.risk_id} className="risk-item overview-risk-card">
               <div className="risk-item__body">
-                <h4>{risk.title}</h4>
+                <h3>{risk.title}</h3>
                 <p>{risk.why_it_matters}</p>
                 <p className="channel">
                   {t('overview.risks.hitsPrefix')}
@@ -32,7 +32,11 @@ export function RiskPanel({ risks }: RiskPanelProps) {
               </div>
               <div className="risk-item__action">
                 {risk.scenario_query ? (
-                  <Link className="btn-secondary ui-secondary-action" to={`/scenario-lab?${risk.scenario_query}`}>
+                  <Link
+                    aria-label={t('overview.risks.testActionAria', { title: risk.title })}
+                    className="btn-secondary ui-secondary-action"
+                    to={`/scenario-lab?${risk.scenario_query}`}
+                  >
                     {t('overview.risks.testAction')}
                   </Link>
                 ) : null}

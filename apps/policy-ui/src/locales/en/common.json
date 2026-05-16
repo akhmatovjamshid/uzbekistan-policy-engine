@@ -144,6 +144,15 @@
       "yoy": "YoY",
       "mom": "MoM"
     },
+    "briefing": {
+      "kicker": "Macro brief",
+      "title": "Decision signals before the dashboard",
+      "description": "Read the current state first, then use the watch list and scenario tests to pressure-check the baseline.",
+      "primarySignalsTitle": "Primary signals",
+      "primarySignalsAria": "Primary overview signals",
+      "supportingSignalsTitle": "Supporting indicators",
+      "supportingSignalsDescription": "Secondary metrics kept visible for context without competing with the first decision read."
+    },
     "topbar": {
       "freshness": "Data · {{days}}d ago"
     },
@@ -254,16 +263,20 @@
       "description": "Three near-term risks that most affect baseline interpretation.",
       "empty": "No active risks are flagged for this snapshot.",
       "hitsPrefix": "Hits · ",
-      "testAction": "Test →"
+      "testAction": "Run risk test",
+      "testActionAria": "Run scenario test for {{title}}"
     },
     "quickActions": {
       "title": "Quick actions",
       "description": "Direct entry points from monitoring to scenario analysis.",
       "empty": "No quick actions are configured for this snapshot.",
-      "kindAnalysis": "Analysis"
+      "kindAnalysis": "Analysis",
+      "openAction": "Open analysis"
     },
     "feeds": {
       "sectionAria": "Overview feed panels",
+      "title": "Evidence trail",
+      "description": "Recent policy actions, data refreshes, and saved work that explain why the snapshot changed.",
       "reforms": {
         "title": "Reforms",
         "empty": "No recent policy actions on file.",

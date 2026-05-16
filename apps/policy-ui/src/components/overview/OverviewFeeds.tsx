@@ -27,9 +27,13 @@ export function OverviewFeeds({ activityFeed }: OverviewFeedsProps) {
     .slice(0, 5)
 
   return (
-    <section className="feed" aria-label={t('overview.feeds.sectionAria')}>
+    <section className="feed" aria-labelledby="overview-feeds-title">
+      <div className="overview-section-head feed__head">
+        <h2 id="overview-feeds-title">{t('overview.feeds.title')}</h2>
+        <p>{t('overview.feeds.description')}</p>
+      </div>
       <article className="feed-col">
-        <h4>{t('overview.feeds.reforms.title')}</h4>
+        <h3>{t('overview.feeds.reforms.title')}</h3>
         {policyActions.length === 0 ? (
           <p className="empty-state">{t('overview.feeds.reforms.empty')}</p>
         ) : (
@@ -53,7 +57,7 @@ export function OverviewFeeds({ activityFeed }: OverviewFeedsProps) {
       </article>
 
       <article className="feed-col">
-        <h4>{t('overview.feeds.dataRefreshes.title')}</h4>
+        <h3>{t('overview.feeds.dataRefreshes.title')}</h3>
         {dataRefreshes.length === 0 ? (
           <p className="empty-state">{t('overview.feeds.dataRefreshes.empty')}</p>
         ) : (
@@ -78,7 +82,7 @@ export function OverviewFeeds({ activityFeed }: OverviewFeedsProps) {
       </article>
 
       <article className="feed-col">
-        <h4>{t('overview.feeds.savedScenarios.title')}</h4>
+        <h3>{t('overview.feeds.savedScenarios.title')}</h3>
         {savedScenarios.length === 0 ? (
           <p className="empty-state">{t('overview.feeds.savedScenarios.empty')}</p>
         ) : (

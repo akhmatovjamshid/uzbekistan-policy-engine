@@ -144,6 +144,15 @@
       "yoy": "y/y",
       "mom": "m/m"
     },
+    "briefing": {
+      "kicker": "Makro brif",
+      "title": "Dashboarddan oldingi qaror signallari",
+      "description": "Avval joriy holatni o'qing, keyin bazaviy stsenariyni tekshirish uchun kuzatuv ro'yxati va stsenariy testlaridan foydalaning.",
+      "primarySignalsTitle": "Asosiy signallar",
+      "primarySignalsAria": "Overview asosiy signallari",
+      "supportingSignalsTitle": "Qo'shimcha ko'rsatkichlar",
+      "supportingSignalsDescription": "Ikkinchi darajali metrikalar kontekst uchun ko'rinadi, lekin birinchi qaror o'qishiga raqobat qilmaydi."
+    },
     "topbar": {
       "freshness": "Ma'lumotlar · {{days}} kun oldin"
     },
@@ -254,16 +263,20 @@
       "description": "Bazaviy talqinga eng ko'p ta'sir qiladigan 3 ta yaqin muddatli risk.",
       "empty": "Bu snapshot uchun faol risklar belgilanmagan.",
       "hitsPrefix": "Ta'sir kanali · ",
-      "testAction": "Sinov →"
+      "testAction": "Risk testini ishga tushirish",
+      "testActionAria": "{{title}} uchun stsenariy testini ishga tushirish"
     },
     "quickActions": {
       "title": "Tezkor amallar",
       "description": "Monitoringdan stsenariy tahliliga to'g'ridan-to'g'ri o'tish nuqtalari.",
       "empty": "Bu snapshot uchun tezkor amallar sozlanmagan.",
-      "kindAnalysis": "Tahlil"
+      "kindAnalysis": "Tahlil",
+      "openAction": "Tahlilni ochish"
     },
     "feeds": {
       "sectionAria": "Umumiy ko'rinish lentasi panellari",
+      "title": "Dalillar izi",
+      "description": "Kesim nima uchun o'zgarganini tushuntiradigan so'nggi siyosiy harakatlar, ma'lumot yangilanishlari va saqlangan ishlar.",
       "reforms": {
         "title": "Islohotlar",
         "empty": "So'nggi siyosiy qarorlar yo'q.",

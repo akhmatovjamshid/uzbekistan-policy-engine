@@ -27,8 +27,9 @@ export function QuickActions({ actions }: QuickActionsProps) {
               to={`/scenario-lab?${action.scenario_query}`}
             >
               <span className="qa-kind">{t('overview.quickActions.kindAnalysis')}</span>
-              <h5 className="overview-action-card__title">{action.title}</h5>
+              <h3 className="overview-action-card__title">{action.title}</h3>
               <p className="overview-action-card__summary">{action.summary}</p>
+              <span className="overview-action-card__cta">{t('overview.quickActions.openAction')}</span>
             </Link>
           ))
         )}

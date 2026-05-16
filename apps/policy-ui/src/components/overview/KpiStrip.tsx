@@ -10,11 +10,14 @@ import {
 
 type KpiStripProps = {
   metrics: HeadlineMetric[]
+  headingId?: string
+  title?: string
+  variant?: 'primary' | 'supporting'
 }
 
 const SME_CONTENT_PENDING = '[SME content pending]'
 
-export function KpiStrip({ metrics }: KpiStripProps) {
+export function KpiStrip({ metrics, headingId = 'overview-kpi-title', title, variant = 'primary' }: KpiStripProps) {
   const { t, i18n } = useTranslation()
   const locale = i18n.resolvedLanguage ?? 'en'
 
@@ -23,9 +26,9 @@ export function KpiStrip({ metrics }: KpiStripProps) {
   }
 
   return (
-    <section className="kpi-strip" aria-labelledby="overview-kpi-title">
-      <h2 id="overview-kpi-title" className="sr-only">
-        {t('overview.kpi.title')}
+    <section className={`kpi-strip kpi-strip--${variant}`} aria-labelledby={headingId}>
+      <h2 id={headingId} className="sr-only">
+        {title ?? t('overview.kpi.title')}
       </h2>
 
       <div className="overview-kpi-grid">
