@@ -1,6 +1,6 @@
 {
   "schema_version": "knowledge-hub-reform-tracker.v1",
-  "generated_at": "2026-05-16T05:40:43.543Z",
+  "generated_at": "2026-05-17T06:01:40.660Z",
   "generated_by": "scripts/knowledge-hub/generate-source-fetch-artifact.mjs",
   "extraction_mode": "configured-source-fetch",
   "extraction_mode_label": "Configured source fetch",
@@ -303,12 +303,11 @@
       "url": "https://lex.uz/uz/search/official?lang=4&pub_date=month",
       "parser": "lexuz-official-search",
       "fetch_url": "https://lex.uz/uz/search/official?lang=4&pub_date=month",
-      "ok": false,
-      "candidate_count": 0,
-      "excluded_count": 0,
+      "ok": true,
+      "candidate_count": 11,
+      "excluded_count": 1,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-16T05:40:43.543Z",
-      "error": "TypeError: fetch failed"
+      "fetched_at": "2026-05-17T06:01:40.660Z"
     },
     {
       "id": "president-reform-news",
@@ -320,7 +319,7 @@
       "candidate_count": 3,
       "excluded_count": 9,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-16T05:40:43.543Z"
+      "fetched_at": "2026-05-17T06:01:40.660Z"
     },
     {
       "id": "president-healthcare-reform-detail",
@@ -332,7 +331,7 @@
       "candidate_count": 1,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-16T05:40:43.543Z"
+      "fetched_at": "2026-05-17T06:01:40.660Z"
     },
     {
       "id": "gov-housing-urbanization-detail",
@@ -344,7 +343,7 @@
       "candidate_count": 1,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-16T05:40:43.543Z"
+      "fetched_at": "2026-05-17T06:01:40.660Z"
     },
     {
       "id": "gov-agriculture-subsidy-detail",
@@ -356,7 +355,7 @@
       "candidate_count": 1,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-16T05:40:43.543Z"
+      "fetched_at": "2026-05-17T06:01:40.660Z"
     },
     {
       "id": "gov-portal-reform-news",
@@ -368,7 +367,7 @@
       "candidate_count": 0,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-16T05:40:43.543Z"
+      "fetched_at": "2026-05-17T06:01:40.660Z"
     },
     {
       "id": "cbu-policy-news",
@@ -380,7 +379,7 @@
       "candidate_count": 0,
       "excluded_count": 347,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-16T05:40:43.543Z"
+      "fetched_at": "2026-05-17T06:01:40.660Z"
     },
     {
       "id": "customs-committee-news",
@@ -392,7 +391,7 @@
       "candidate_count": 0,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-16T05:40:43.543Z"
+      "fetched_at": "2026-05-17T06:01:40.660Z"
     },
     {
       "id": "mef-policy-news",
@@ -404,7 +403,7 @@
       "candidate_count": 0,
       "excluded_count": 12,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-16T05:40:43.543Z"
+      "fetched_at": "2026-05-17T06:01:40.660Z"
     },
     {
       "id": "tax-committee-news",
@@ -416,7 +415,7 @@
       "candidate_count": 0,
       "excluded_count": 0,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-16T05:40:43.543Z"
+      "fetched_at": "2026-05-17T06:01:40.660Z"
     },
     {
       "id": "energy-ministry-news",
@@ -428,7 +427,7 @@
       "candidate_count": 0,
       "excluded_count": 12,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-16T05:40:43.543Z"
+      "fetched_at": "2026-05-17T06:01:40.660Z"
     },
     {
       "id": "investment-trade-ministry-news",
@@ -436,12 +435,11 @@
       "url": "https://gov.uz/en/miit/news/news",
       "parser": "govuz-api",
       "fetch_url": "https://api-portal.gov.uz/authorities/news/category?code_name=news&page=1",
-      "ok": false,
-      "candidate_count": 0,
-      "excluded_count": 0,
+      "ok": true,
+      "candidate_count": 1,
+      "excluded_count": 11,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-16T05:40:43.543Z",
-      "error": "TypeError: fetch failed"
+      "fetched_at": "2026-05-17T06:01:40.660Z"
     },
     {
       "id": "justice-ministry-news",
@@ -453,7 +451,7 @@
       "candidate_count": 0,
       "excluded_count": 12,
       "link_invalid_count": 0,
-      "fetched_at": "2026-05-16T05:40:43.543Z"
+      "fetched_at": "2026-05-17T06:01:40.660Z"
     }
   ],
   "reform_packages": [
@@ -588,7 +586,7 @@
           "event_type": "instructions_issued",
           "summary": "Official web-site of the President of Uzbekistan Official pages in social networks President of the Republic of Uzbekistan President of Uzbekistan to pay working visit to Kazakhstan At the invitation of President of the Republic of Kazakhstan Kassym-Jomart Tokayev, President of the Republic of Uzbekistan Shavkat Mirziyoyev will pay a working visit to Kazakhstan on May 15. The Head of State will take part in the informal summit of the Organization of Turkic States, to be held in Turkestan under the theme “Artificial Intelligence and Digital Development.” At the summit, the participants will discuss the further expansion of multilateral cooperation, particularly in the trade and economic, inve",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-16T05:40:43.543Z",
+          "extracted_at": "2026-05-17T06:01:40.660Z",
           "localized": {
             "title": {
               "en": "President of Uzbekistan to pay working visit to Kazakhstan",
@@ -912,7 +910,7 @@
           "event_type": "financing_allocated",
           "summary": "2025-12-09 17:05:00 / Presentations President Shavkat Mirziyoyev reviewed a presentation on the effective organization of financing for cotton and grain cultivation, as well as a new subsidy system for the agriculture complex. The presentation began with an overview of the funds allocated to the sector this year and their effectiveness. It was noted that 29 trillion soums were allocated for financing cotton and grain cultivation, purchasing agricultural machinery, and implementing water-saving technologies. Furthermore, 2,35 trillion soums in subsidies were directed to the sector. Allocating subsidies equivalent to 10 percent of the cotton value to 3,430 farms and clusters enabled them to cu",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-16T05:40:43.543Z",
+          "extracted_at": "2026-05-17T06:01:40.660Z",
           "localized": {
             "title": {
               "en": "Financing and subsidy plans for the agricultural sector reviewed",
@@ -1363,7 +1361,7 @@
           "event_type": "financing_allocated",
           "summary": "Official detail page did not expose a separate summary in the configured extraction block.",
           "source_url_status": "verified",
-          "extracted_at": "2026-05-16T09:00:00.000Z",
+          "extracted_at": "2026-05-17T06:01:40.660Z",
           "localized": {
             "title": {
               "en": "Uzbekistan Expands Tax Incentives for Investors Financing Infrastructure Projects",
@@ -3187,7 +3185,6 @@
     "This is a deterministic official-source reform package artifact.",
     "Generated from configured source URLs at artifact build time.",
     "Public packages are assembled only from source events whose official links passed validation.",
-    "The frontend loads this static JSON artifact only and does not scrape source pages in the browser.",
-    "One or more configured sources failed during this automatic refresh; previous verified packages were carried forward when needed to avoid deleting reforms during a temporary source outage."
+    "The frontend loads this static JSON artifact only and does not scrape source pages in the browser."
   ]
 }
